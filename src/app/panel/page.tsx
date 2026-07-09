@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
+import { computeSliceMetrics } from "@/modules/assessment/metrics";
 import { InviteForm } from "./invite-form";
 import { CancelInvitationButton } from "./cancel-button";
 
@@ -26,6 +27,7 @@ export default async function PanelPage() {
   // Idempotent self-repair: the domain mirror always matches the auth org.
   const org = await ensureOrganization(active.id, active.name);
   const patients = await listPatientsWithLatestAssessment(org.id);
+  const metrics = await computeSliceMetrics(org.id);
 
   const { data: pending } = await auth.organization.listInvitations({
     query: { organizationId: active.id },
@@ -41,7 +43,34 @@ export default async function PanelPage() {
         <span className="text-sm text-zinc-600">{session.user.name}</span>
       </header>
 
-      <section className="flex flex-col gap-6 py-8">
+      <section className="grid grid-cols-2 gap-4 py-6">
+        <div className="rounded-lg border border-zinc-200 p-4">
+          <p className="text-sm text-zinc-500">{t("metrics.completionRate")}</p>
+          <p className="mt-1 text-2xl font-bold">
+            {metrics.completionRate !== null
+              ? `${metrics.completionRate}%`
+              : "—"}
+          </p>
+          <p className="text-xs text-zinc-500">
+            {t("metrics.completionTarget")} ·{" "}
+            {t("metrics.completedOf", {
+              completed: metrics.patientsCompleted,
+              active: metrics.activePatients,
+            })}
+          </p>
+        </div>
+        <div className="rounded-lg border border-zinc-200 p-4">
+          <p className="text-sm text-zinc-500">{t("metrics.medianTime")}</p>
+          <p className="mt-1 text-2xl font-bold">
+            {metrics.medianCompletionMinutes !== null
+              ? t("metrics.minutes", { min: metrics.medianCompletionMinutes })
+              : "—"}
+          </p>
+          <p className="text-xs text-zinc-500">{t("metrics.timeTarget")}</p>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-6 py-2">
         <h2 className="text-lg font-semibold">{t("patients.title")}</h2>
 
         {patients.length === 0 ? (

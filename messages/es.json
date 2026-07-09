@@ -9,6 +9,14 @@
     "signedInAs": "Sesión iniciada como {name}"
   },
   "panel": {
+    "metrics": {
+      "completionRate": "Tasa de finalización de evaluaciones",
+      "completionTarget": "Objetivo ≥ 80%",
+      "completedOf": "{completed} de {active} pacientes activos",
+      "medianTime": "Tiempo mediano de evaluación",
+      "timeTarget": "Objetivo ≤ 15 min",
+      "minutes": "{min} min"
+    },
     "patients": {
       "title": "Pacientes",
       "empty": "Todavía no hay pacientes. Invita al primero con el formulario de abajo.",
