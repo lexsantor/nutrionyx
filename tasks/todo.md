@@ -16,7 +16,10 @@
 - [ ] Confirm provisional guardrail thresholds with owner (info <5%, healthy 5-15%, aggressive >15% - src/modules/assessment/computed.ts)
 - [x] Deviation 0001: Neon Auth replaces Clerk (owner decision 2026-07-09; first real deviation of the LPEF loop)
 - [x] Step 2a: Neon Auth wired (@neondatabase/auth 0.4.2-beta): server/client instances, /api/auth handler, proxy.ts protection, sign-in/sign-up pages in es via next-intl. Verified: tsc, lint, 10/10 tests, build green.
-- [ ] Step 2b: smoke test sign-up/sign-in against owner's Neon project (.env.local), then Organizations plugin (org bootstrap, nutritionist role)
+- [x] Step 2b: org bootstrap (create + Prisma mirror + setActive), protected /panel with empty patients section, slugify with tests. Verified: tsc, lint, 15/15 tests, build green (7 routes).
+- [ ] Owner: smoke test - sign-up, create organization, see /panel (requires migration below)
+- [ ] Owner: run first migration on their Mac: `npx prisma migrate dev --name init` (sandbox cannot reach binaries.prisma.sh; prisma.config.ts loads .env.local)
+- [ ] Step 3: patient invitation -> activation (decision pending: patient as Better Auth org member with role "member"; plugin RBAC governs plugin APIs only, domain access stays in our repository layer)
 - [ ] Step 3: patient invitation -> activation
 - [ ] Step 4: assessment wizard (es strings via next-intl)
 - [ ] Step 5: capture-time guardrail UI

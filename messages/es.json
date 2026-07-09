@@ -8,6 +8,25 @@
     "signUp": "Crear cuenta",
     "signedInAs": "Sesión iniciada como {name}"
   },
+  "panel": {
+    "patients": {
+      "title": "Pacientes",
+      "empty": "Todavía no hay pacientes. Las invitaciones llegan en el siguiente paso de construcción."
+    }
+  },
+  "org": {
+    "create": {
+      "title": "Crea tu organización",
+      "subtitle": "El espacio de trabajo de tu consulta. Podrás invitar pacientes a ella.",
+      "name": "Nombre de la consulta",
+      "submit": "Crear organización",
+      "submitting": "Creando...",
+      "errors": {
+        "nameRequired": "El nombre es obligatorio.",
+        "generic": "No se pudo crear la organización. Inténtalo de nuevo."
+      }
+    }
+  },
   "auth": {
     "signIn": {
       "title": "Inicia sesión en tu cuenta",
