@@ -1,0 +1,4 @@
+# LPEF binding (see ADR-0002 in the framework repository)
+source: https://github.com/lexsantor/lpef
+version: v0.2.0
+stack: stack-2026
