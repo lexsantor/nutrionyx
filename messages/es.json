@@ -45,6 +45,9 @@
     "subtitle": "Tu nutricionista te ha invitado a su consulta. Acepta para empezar.",
     "submit": "Aceptar invitación",
     "submitting": "Aceptando...",
+    "wrongAccount": "Esta invitación es para {invitedEmail}, pero tu sesión actual es {sessionEmail}. Cambia de cuenta para aceptarla.",
+    "switchAccount": "Cerrar sesión y continuar",
+    "switchingAccount": "Cambiando de cuenta...",
     "errors": {
       "missing": "Falta el identificador de la invitación.",
       "notSignedIn": "Inicia sesión para aceptar la invitación.",
