@@ -90,6 +90,17 @@ export async function listPatients(organizationId: string): Promise<Patient[]> {
   });
 }
 
+/** Panel view: each patient with their latest assessment, org-scoped. */
+export async function listPatientsWithLatestAssessment(organizationId: string) {
+  return prisma.patient.findMany({
+    where: { organizationId },
+    orderBy: { createdAt: "desc" },
+    include: {
+      assessments: { orderBy: { version: "desc" }, take: 1 },
+    },
+  });
+}
+
 export async function findPatientByAuthUserId(
   authUserId: string,
 ): Promise<Patient | null> {

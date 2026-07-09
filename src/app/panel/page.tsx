@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { ensureOrganization } from "@/modules/organization/repository";
-import { listPatients } from "@/modules/patient/repository";
+import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { InviteForm } from "./invite-form";
 import { cancelInvitation } from "./actions";
 
@@ -25,7 +25,7 @@ export default async function PanelPage() {
   const active = organizations[0];
   // Idempotent self-repair: the domain mirror always matches the auth org.
   const org = await ensureOrganization(active.id, active.name);
-  const patients = await listPatients(org.id);
+  const patients = await listPatientsWithLatestAssessment(org.id);
 
   const { data: pending } = await auth.organization.listInvitations({
     query: { organizationId: active.id },
@@ -56,29 +56,42 @@ export default async function PanelPage() {
                 <th scope="col" className="py-2 pr-4 font-medium">
                   {t("patients.email")}
                 </th>
-                <th scope="col" className="py-2 font-medium">
+                <th scope="col" className="py-2 pr-4 font-medium">
                   {t("patients.status")}
+                </th>
+                <th scope="col" className="py-2 font-medium">
+                  {t("patients.assessment")}
                 </th>
               </tr>
             </thead>
             <tbody>
-              {patients.map((patient) => (
-                <tr key={patient.id} className="border-b border-zinc-100">
-                  <td className="py-2 pr-4">{patient.fullName}</td>
-                  <td className="py-2 pr-4">{patient.email}</td>
-                  <td className="py-2">
-                    <span
-                      className={
-                        patient.status === "ACTIVE"
-                          ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
-                          : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
-                      }
-                    >
-                      {t(`patients.statuses.${patient.status}`)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
+              {patients.map((patient) => {
+                const assessment = patient.assessments[0] ?? null;
+                return (
+                  <tr key={patient.id} className="border-b border-zinc-100">
+                    <td className="py-2 pr-4">{patient.fullName}</td>
+                    <td className="py-2 pr-4">{patient.email}</td>
+                    <td className="py-2 pr-4">
+                      <span
+                        className={
+                          patient.status === "ACTIVE"
+                            ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
+                            : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
+                        }
+                      >
+                        {t(`patients.statuses.${patient.status}`)}
+                      </span>
+                    </td>
+                    <td className="py-2 text-sm">
+                      {assessment?.status === "COMPLETED"
+                        ? `${t("patients.assessments.completed")} · ${t("patients.assessments.bmi")} ${Number(assessment.bmi)}`
+                        : assessment?.status === "IN_PROGRESS"
+                          ? t("patients.assessments.inProgress")
+                          : t("patients.assessments.pending")}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         )}

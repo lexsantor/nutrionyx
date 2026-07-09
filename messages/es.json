@@ -18,6 +18,13 @@
       "statuses": {
         "INVITED": "Invitado",
         "ACTIVE": "Activo"
+      },
+      "assessment": "Evaluación",
+      "assessments": {
+        "pending": "Pendiente",
+        "inProgress": "En curso",
+        "completed": "Completada",
+        "bmi": "IMC"
       }
     },
     "invite": {
@@ -58,7 +65,81 @@
   },
   "patientHome": {
     "welcome": "Hola, {name}",
-    "assessmentPending": "Tu espacio está listo. La evaluación inicial estará disponible muy pronto; tu nutricionista te avisará."
+    "start": "Comenzar evaluación",
+    "startHint": "Tu nutricionista necesita conocerte. Son unos minutos y puedes pausar cuando quieras.",
+    "continue": "Continuar evaluación",
+    "continueHint": "La dejaste en el paso {step} de {total}.",
+    "summary": {
+      "title": "Tu evaluación",
+      "bmi": "IMC",
+      "goal": "Peso objetivo",
+      "completedAt": "Completada el {date}"
+    },
+    "bmiCategories": {
+      "underweight": "Bajo peso",
+      "normal": "Peso normal",
+      "overweight": "Sobrepeso",
+      "obesity": "Obesidad"
+    }
+  },
+  "wizard": {
+    "progress": "Paso {step} de {total}",
+    "next": "Continuar",
+    "back": "Anterior",
+    "optionalHint": "Opcional: déjalo vacío si no aplica.",
+    "fields": {
+      "sex": { "title": "¿Cuál es tu sexo biológico?" },
+      "birthDate": { "title": "¿Cuál es tu fecha de nacimiento?" },
+      "heightCm": { "title": "¿Cuánto mides?", "hint": "En centímetros" },
+      "weightKg": { "title": "¿Cuánto pesas actualmente?", "hint": "En kilogramos" },
+      "targetWeightKg": { "title": "¿Cuál es tu peso objetivo?", "hint": "En kilogramos" },
+      "activityLevel": { "title": "¿Cuál es tu nivel de actividad física?" },
+      "goals": { "title": "¿Cuáles son tus objetivos?", "hint": "Puedes elegir varios" },
+      "conditions": { "title": "¿Tienes alguna condición médica relevante?" },
+      "allergies": { "title": "¿Alergias o intolerancias alimentarias?" },
+      "currentMedication": { "title": "¿Tomas alguna medicación actualmente?" }
+    },
+    "options": {
+      "sex": { "FEMALE": "Mujer", "MALE": "Hombre" },
+      "activityLevel": {
+        "LOW": "Bajo (sedentario)",
+        "MEDIUM": "Medio (ejercicio ocasional)",
+        "HIGH": "Alto (ejercicio regular)"
+      },
+      "goals": {
+        "lose-weight": "Perder peso",
+        "gain-muscle": "Ganar músculo",
+        "improve-health": "Mejorar mi salud general",
+        "more-energy": "Más energía",
+        "better-habits": "Mejores hábitos",
+        "joint-health": "Salud articular",
+        "gut-health": "Salud digestiva",
+        "reduce-cravings": "Reducir antojos"
+      }
+    },
+    "guardrail": {
+      "info": "Tu objetivo implica mantener peso, ganarlo o una pérdida ligera (menos del 5%). Tu nutricionista lo ajustará contigo.",
+      "healthy": "Perder un {percent}% de tu peso está en un rango saludable: pérdidas en torno al 10% se asocian a beneficios claros de salud.",
+      "aggressive": "Perder un {percent}% de tu peso es un objetivo exigente y requiere seguimiento profesional cercano. Tu nutricionista valorará si es adecuado."
+    },
+    "errors": {
+      "invalidOption": "Elige una opción válida.",
+      "invalidDate": "La fecha no es válida.",
+      "tooYoung": "Debes tener al menos 16 años para usar Nutrionyx.",
+      "invalidNumber": "Introduce un número válido.",
+      "outOfRange": "El valor está fuera del rango permitido.",
+      "selectAtLeastOne": "Elige al menos una opción.",
+      "tooLong": "El texto es demasiado largo.",
+      "generic": "No se pudo guardar. Inténtalo de nuevo."
+    },
+    "review": {
+      "title": "Revisa tus respuestas",
+      "subtitle": "Al completar, tus respuestas se congelan y tu nutricionista podrá verlas.",
+      "bmiPreview": "Tu IMC será",
+      "empty": "Sin indicar",
+      "complete": "Completar evaluación",
+      "completing": "Completando..."
+    }
   },
   "org": {
     "create": {
