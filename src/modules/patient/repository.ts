@@ -90,6 +90,12 @@ export async function listPatients(organizationId: string): Promise<Patient[]> {
   });
 }
 
+export async function findPatientByAuthUserId(
+  authUserId: string,
+): Promise<Patient | null> {
+  return prisma.patient.findUnique({ where: { authUserId } });
+}
+
 export async function findPatientByEmail(
   organizationId: string,
   email: string,
