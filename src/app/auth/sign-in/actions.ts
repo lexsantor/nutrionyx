@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth/server";
+import { safeRedirect } from "@/lib/safe-redirect";
 import { redirect } from "next/navigation";
 
 export type AuthFormState = { errorKey: string } | null;
@@ -20,5 +21,5 @@ export async function signInWithEmail(
     return { errorKey: "invalidCredentials" };
   }
 
-  redirect("/");
+  redirect(safeRedirect(formData.get("redirectTo")));
 }

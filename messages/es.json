@@ -11,8 +11,49 @@
   "panel": {
     "patients": {
       "title": "Pacientes",
-      "empty": "Todavía no hay pacientes. Las invitaciones llegan en el siguiente paso de construcción."
+      "empty": "Todavía no hay pacientes. Invita al primero con el formulario de abajo.",
+      "name": "Nombre",
+      "email": "Correo",
+      "status": "Estado",
+      "statuses": {
+        "INVITED": "Invitado",
+        "ACTIVE": "Activo"
+      }
+    },
+    "invite": {
+      "title": "Invitar paciente",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "submit": "Enviar invitación",
+      "submitting": "Enviando...",
+      "sent": "Invitación creada. El enlace aparece en la lista de invitaciones pendientes.",
+      "errors": {
+        "invalidEmail": "El correo no es válido.",
+        "nameRequired": "El nombre es obligatorio.",
+        "noOrganization": "No hay organización activa.",
+        "alreadyInvited": "Ya existe un paciente con ese correo.",
+        "generic": "No se pudo crear la invitación. Inténtalo de nuevo."
+      }
+    },
+    "invitations": {
+      "title": "Invitaciones pendientes",
+      "hint": "Comparte este enlace con el paciente (o activa el email de invitación en Neon para que le llegue automáticamente)."
     }
+  },
+  "acceptInvitation": {
+    "title": "Invitación a Nutrionyx",
+    "subtitle": "Tu nutricionista te ha invitado a su consulta. Acepta para empezar.",
+    "submit": "Aceptar invitación",
+    "submitting": "Aceptando...",
+    "errors": {
+      "missing": "Falta el identificador de la invitación.",
+      "notSignedIn": "Inicia sesión para aceptar la invitación.",
+      "invalid": "La invitación no es válida o ha caducado."
+    }
+  },
+  "patientHome": {
+    "welcome": "Hola, {name}",
+    "assessmentPending": "Tu espacio está listo. La evaluación inicial estará disponible muy pronto; tu nutricionista te avisará."
   },
   "org": {
     "create": {

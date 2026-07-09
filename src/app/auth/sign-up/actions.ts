@@ -1,6 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth/server";
+import { safeRedirect } from "@/lib/safe-redirect";
 import { redirect } from "next/navigation";
 import type { AuthFormState } from "../sign-in/actions";
 
@@ -24,5 +25,5 @@ export async function signUpWithEmail(
     return { errorKey: "generic" };
   }
 
-  redirect("/");
+  redirect(safeRedirect(formData.get("redirectTo")));
 }

@@ -1,0 +1,76 @@
+"use client";
+
+import { useActionState } from "react";
+import { useTranslations } from "next-intl";
+import { signUpWithEmail } from "./actions";
+
+export function SignUpForm({ redirectTo }: { redirectTo?: string }) {
+  const t = useTranslations("auth.signUp");
+  const [state, formAction, isPending] = useActionState(signUpWithEmail, null);
+
+  return (
+    <main className="flex min-h-screen items-center justify-center px-4">
+      <form action={formAction} className="flex w-full max-w-sm flex-col gap-5">
+        <input type="hidden" name="redirectTo" value={redirectTo ?? ""} />
+        <h1 className="text-center text-2xl font-bold">{t("title")}</h1>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="name" className="text-sm font-medium">
+            {t("name")}
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            required
+            className="block w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="email" className="text-sm font-medium">
+            {t("email")}
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            className="block w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+          />
+        </div>
+
+        <div className="flex flex-col gap-1.5">
+          <label htmlFor="password" className="text-sm font-medium">
+            {t("password")}
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            autoComplete="new-password"
+            required
+            minLength={8}
+            className="block w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900"
+          />
+        </div>
+
+        {state?.errorKey ? (
+          <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+            {t(`errors.${state.errorKey}`)}
+          </p>
+        ) : null}
+
+        <button
+          type="submit"
+          disabled={isPending}
+          className="flex w-full justify-center rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60"
+        >
+          {isPending ? t("submitting") : t("submit")}
+        </button>
+      </form>
+    </main>
+  );
+}

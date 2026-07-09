@@ -19,7 +19,9 @@
 - [x] Step 2b: org bootstrap (create + Prisma mirror + setActive), protected /panel with empty patients section, slugify with tests. Verified: tsc, lint, 15/15 tests, build green (7 routes).
 - [ ] Owner: smoke test - sign-up, create organization, see /panel (requires migration below)
 - [ ] Owner: run first migration on their Mac: `npx prisma migrate dev --name init` (sandbox cannot reach binaries.prisma.sh; prisma.config.ts loads .env.local)
-- [ ] Step 3: patient invitation -> activation (decision pending: patient as Better Auth org member with role "member"; plugin RBAC governs plugin APIs only, domain access stays in our repository layer)
+- [x] Step 3: patient invitation -> activation. Invite form in /panel (Better Auth inviteMember role=member + Patient INVITED + PatientCreated event), pending-invitations list with shareable link, /auth/accept-invitation (sign-up redirect with safe returnTo, accept, authUserId link, ACTIVE), /mi-espacio patient landing. Verified: tsc, lint, 18/18 tests, build green (8 routes).
+- [ ] Owner smoke: invite a second email, open the invitation link in an incognito window, accept, verify patient shows ACTIVE in /panel
+- [ ] Optional (owner, Neon console): Auth -> Configuration -> enable "Verify email at signup", then Plugins -> Organizations -> enable "Send Invitation Email" for automatic emails
 - [ ] Step 3: patient invitation -> activation
 - [ ] Step 4: assessment wizard (es strings via next-intl)
 - [ ] Step 5: capture-time guardrail UI

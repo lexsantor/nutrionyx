@@ -7,7 +7,8 @@ export default auth.middleware({
 
 export const config = {
   matcher: [
-    // Protected areas (nutritionist console and patient area, steps 3-6)
+    // Protected areas (nutritionist console and patient area)
     "/panel/:path*",
+    "/mi-espacio/:path*",
   ],
 };
