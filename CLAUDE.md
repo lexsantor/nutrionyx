@@ -20,4 +20,4 @@ This project is governed by LPEF at the version pinned in [lpef.yml](lpef.yml). 
 
 ## Project context
 
-Nutrionyx is a nutrition platform and the first LPEF reference project (M2). Discovery material lives in `docs/` (PRDs, personas, domain model, journeys) and the flow screenshots (`paso-*.jpeg`).
+Nutrionyx is a nutrition platform and the first LPEF reference project (M2). Discovery material lives in `docs/` (PRDs, personas, domain model, journeys), with research inputs under `docs/research/`.
