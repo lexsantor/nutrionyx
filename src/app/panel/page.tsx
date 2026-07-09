@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth/server";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { listPatients } from "@/modules/patient/repository";
 import { InviteForm } from "./invite-form";
+import { cancelInvitation } from "./actions";
 
 export const dynamic = "force-dynamic";
 
@@ -95,6 +96,19 @@ export default async function PanelPage() {
                   <code className="rounded bg-zinc-100 px-2 py-0.5 text-xs">
                     /auth/accept-invitation?invitationId={invitation.id}
                   </code>
+                  <form action={cancelInvitation}>
+                    <input
+                      type="hidden"
+                      name="invitationId"
+                      value={invitation.id}
+                    />
+                    <button
+                      type="submit"
+                      className="rounded-md border border-red-200 px-2 py-0.5 text-xs font-medium text-red-700 hover:bg-red-50"
+                    >
+                      {t("invitations.cancel")}
+                    </button>
+                  </form>
                 </li>
               ))}
             </ul>

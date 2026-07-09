@@ -37,7 +37,8 @@
     },
     "invitations": {
       "title": "Invitaciones pendientes",
-      "hint": "Comparte este enlace con el paciente (o activa el email de invitación en Neon para que le llegue automáticamente)."
+      "hint": "Comparte este enlace con el paciente (o activa el email de invitación en Neon para que le llegue automáticamente).",
+      "cancel": "Cancelar"
     }
   },
   "acceptInvitation": {

@@ -6,6 +6,7 @@ import { ensureOrganization } from "@/modules/organization/repository";
 import {
   createInvitedPatient,
   findPatientByEmail,
+  removeInvitedPatient,
 } from "@/modules/patient/repository";
 
 export type InviteFormState =
@@ -58,4 +59,27 @@ export async function invitePatient(
 
   revalidatePath("/panel");
   return { ok: true };
+}
+
+export async function cancelInvitation(formData: FormData): Promise<void> {
+  const invitationId = formData.get("invitationId") as string;
+  if (!invitationId) return;
+
+  const { data: activeOrg } = await auth.organization.getFullOrganization();
+  if (!activeOrg) return;
+
+  // Read the invitation first: we need the email to clean up the
+  // domain row, and cancelling must stay scoped to the active org.
+  const { data: invitation } = await auth.organization.getInvitation({
+    query: { id: invitationId },
+  });
+  if (!invitation || invitation.organizationId !== activeOrg.id) return;
+
+  const { error } = await auth.organization.cancelInvitation({ invitationId });
+  if (error) return;
+
+  const org = await ensureOrganization(activeOrg.id, activeOrg.name);
+  await removeInvitedPatient({ organizationId: org.id, email: invitation.email });
+
+  revalidatePath("/panel");
 }
