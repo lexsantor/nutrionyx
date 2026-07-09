@@ -61,25 +61,40 @@ export async function invitePatient(
   return { ok: true };
 }
 
-export async function cancelInvitation(formData: FormData): Promise<void> {
+export type CancelFormState = { errorKey: string } | null;
+
+export async function cancelInvitation(
+  _prevState: CancelFormState,
+  formData: FormData,
+): Promise<CancelFormState> {
   const invitationId = formData.get("invitationId") as string;
-  if (!invitationId) return;
+  if (!invitationId) return { errorKey: "generic" };
 
   const { data: activeOrg } = await auth.organization.getFullOrganization();
-  if (!activeOrg) return;
+  if (!activeOrg) return { errorKey: "noOrganization" };
 
   // Read the invitation first: we need the email to clean up the
   // domain row, and cancelling must stay scoped to the active org.
-  const { data: invitation } = await auth.organization.getInvitation({
-    query: { id: invitationId },
-  });
-  if (!invitation || invitation.organizationId !== activeOrg.id) return;
+  const { data: invitation, error: getError } =
+    await auth.organization.getInvitation({ query: { id: invitationId } });
+
+  if (getError || !invitation) {
+    console.error("[cancelInvitation] getInvitation failed", getError);
+    return { errorKey: "generic" };
+  }
+  if (invitation.organizationId !== activeOrg.id) {
+    return { errorKey: "generic" };
+  }
 
   const { error } = await auth.organization.cancelInvitation({ invitationId });
-  if (error) return;
+  if (error) {
+    console.error("[cancelInvitation] cancelInvitation failed", error);
+    return { errorKey: "generic" };
+  }
 
   const org = await ensureOrganization(activeOrg.id, activeOrg.name);
   await removeInvitedPatient({ organizationId: org.id, email: invitation.email });
 
   revalidatePath("/panel");
+  return null;
 }
