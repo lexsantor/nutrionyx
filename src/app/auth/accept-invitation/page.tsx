@@ -31,8 +31,22 @@ export default async function AcceptInvitationPage({
   const { data: invitation } = await auth.organization.getInvitation({
     query: { id: invitationId },
   });
+
+  // Consumed, cancelled, expired, or unreadable: dead end, say so.
+  if (!invitation || invitation.status !== "pending") {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-4">
+        <div className="flex w-full max-w-sm flex-col gap-5 text-center">
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p role="alert" className="rounded-md bg-zinc-100 px-3 py-2 text-sm text-zinc-700">
+            {t("unavailable")}
+          </p>
+        </div>
+      </main>
+    );
+  }
+
   const mismatch =
-    invitation != null &&
     invitation.email.toLowerCase() !== session.user.email.toLowerCase();
 
   return (
