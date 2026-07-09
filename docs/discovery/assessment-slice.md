@@ -1,6 +1,6 @@
 # Discovery: Assessment Slice (Slice 1)
 
-Status: open - blocks build until the Owner Inputs section is answered.
+Status: closed - owner inputs answered 2026-07-09; spec lives in [09_Domain_Model](../09_Domain_Model.md) Assessment Aggregate section.
 Created: 2026-07-09. Owner: Lex.
 
 ## Why this slice
@@ -37,12 +37,12 @@ Out: diet plan generation, medication, exercise, messaging, food preference capt
 2. The patient completes the assessment before first value (04's mandatory gate). Aggressive; the reference product gates a free plan behind 27 steps, but our patients have a professional relationship as motivation.
 3. BMI plus the profile fields below constitute a clinically useful initial picture for the nutritionist.
 
-## Owner inputs needed before spec is final
+## Owner inputs (answered 2026-07-09)
 
-1. Field list. The reference consumer quiz (goals, demographics, anthropometrics, activity, motivation) is evidence for UX shape, not for clinical content. What does a nutritionist actually need from intake? (PRD_03 mentions medical history, objectives, documents - which are slice 1?)
-2. Assessment states. Proposed: Draft -> InProgress -> Completed, append-only answers, editable until Completed. Confirm or correct.
-3. Who can re-open or repeat an assessment, and does a repeat version the old one? (PRD_03 Rule: measurements append-only - does the same apply here?)
-4. Target confirmation for the two metrics above.
+1. Field list: core clinical intake only - demographics, anthropometrics, activity level, goals, medical essentials (conditions, allergies/intolerances, current medication). Lifestyle detail, nutrition history, and document upload excluded from slice 1.
+2. Assessment states: InProgress -> Completed; editable until Completed, then frozen.
+3. Repeats: new version per repeat; completed assessments immutable, history preserved.
+4. Targets confirmed: >= 80 percent completion, <= 15 minutes median.
 
 ## Next artifacts
 

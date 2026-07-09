@@ -9,9 +9,10 @@
 - [x] ADR-0001 Spanish UI + i18n day one; ADR-0002 food preferences ownership
 - [x] Fix misnamed file: progreso-corporal.tsx.md -> 04_Product_Operating_Model.md
 - [x] docs/discovery/assessment-slice.md
-- [ ] Owner inputs: assessment field list, states, re-open policy, metric targets
-- [ ] Domain delta: Assessment aggregate in 09_Domain_Model + aggregate-root reconciliation
-- [ ] Build plan against stack-2026, then implement slice end to end
+- [x] Owner inputs answered 2026-07-09: core clinical intake; InProgress->Completed; new version per repeat; 80% / 15 min
+- [x] Domain delta: Assessment aggregate specified in 09_Domain_Model (aggregate-root reconciliation flagged, deferred to first Medication/DietPlan/Exercise slice)
+- [ ] Build plan against stack-2026 (scaffold, architecture, i18n layer per ADR-0001)
+- [ ] Implement slice end to end; gates per LPEF EN2/EN3 before done
 
 ## Review
 
