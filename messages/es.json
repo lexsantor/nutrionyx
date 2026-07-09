@@ -56,7 +56,7 @@
     "submit": "Aceptar invitación",
     "submitting": "Aceptando...",
     "unavailable": "Esta invitación ya no está disponible (usada, cancelada o caducada). Pide a tu nutricionista que te envíe una nueva.",
-    "wrongAccount": "Esta invitación es para {invitedEmail}, pero tu sesión actual es {sessionEmail}. Cambia de cuenta para aceptarla.",
+    "wrongSession": "Esta invitación no corresponde a tu sesión actual ({sessionEmail}). Cambia de cuenta para aceptarla.",
     "switchAccount": "Cerrar sesión y continuar",
     "switchingAccount": "Cambiando de cuenta...",
     "errors": {

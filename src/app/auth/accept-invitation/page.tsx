@@ -27,10 +27,28 @@ export default async function AcceptInvitationPage({
     redirect(`/auth/sign-up?redirectTo=${returnTo}`);
   }
 
-  // Wrong-account guard: the invitation is bound to the invited email.
-  const { data: invitation } = await auth.organization.getInvitation({
+  // getInvitation is recipient-only (Neon Auth Beta): a 403 means the
+  // current session is not the invited account.
+  const { data: invitation, error } = await auth.organization.getInvitation({
     query: { id: invitationId },
   });
+
+  const wrongSession =
+    !invitation && (error as { status?: number } | null)?.status === 403;
+
+  if (wrongSession) {
+    return (
+      <main className="flex min-h-screen items-center justify-center px-4">
+        <div className="flex w-full max-w-sm flex-col gap-5 text-center">
+          <h1 className="text-2xl font-bold">{t("title")}</h1>
+          <p role="alert" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+            {t("wrongSession", { sessionEmail: session.user.email })}
+          </p>
+          <SignOutAndContinue invitationId={invitationId} />
+        </div>
+      </main>
+    );
+  }
 
   // Consumed, cancelled, expired, or unreadable: dead end, say so.
   if (!invitation || invitation.status !== "pending") {
@@ -46,30 +64,12 @@ export default async function AcceptInvitationPage({
     );
   }
 
-  const mismatch =
-    invitation.email.toLowerCase() !== session.user.email.toLowerCase();
-
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="flex w-full max-w-sm flex-col gap-5 text-center">
         <h1 className="text-2xl font-bold">{t("title")}</h1>
-
-        {mismatch ? (
-          <>
-            <p role="alert" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
-              {t("wrongAccount", {
-                sessionEmail: session.user.email,
-                invitedEmail: invitation.email,
-              })}
-            </p>
-            <SignOutAndContinue invitationId={invitationId} />
-          </>
-        ) : (
-          <>
-            <p className="text-sm text-zinc-600">{t("subtitle")}</p>
-            <AcceptForm invitationId={invitationId} />
-          </>
-        )}
+        <p className="text-sm text-zinc-600">{t("subtitle")}</p>
+        <AcceptForm invitationId={invitationId} />
       </div>
     </main>
   );

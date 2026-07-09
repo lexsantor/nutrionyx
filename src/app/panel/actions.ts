@@ -70,19 +70,34 @@ export async function cancelInvitation(
   const invitationId = formData.get("invitationId") as string;
   if (!invitationId) return { errorKey: "generic" };
 
-  const { data: activeOrg } = await auth.organization.getFullOrganization();
-  if (!activeOrg) return { errorKey: "noOrganization" };
+  const { data: activeOrg, error: orgError } =
+    await auth.organization.getFullOrganization();
+  if (!activeOrg) {
+    console.error("[cancelInvitation] no active organization", orgError);
+    return { errorKey: "noOrganization" };
+  }
 
-  // Read the invitation first: we need the email to clean up the
-  // domain row, and cancelling must stay scoped to the active org.
-  const { data: invitation, error: getError } =
-    await auth.organization.getInvitation({ query: { id: invitationId } });
+  // getInvitation is recipient-only in Neon Auth (403 for admins), so
+  // resolve the invitation through the admin-scoped list instead. This
+  // also pins the operation to the active org by construction.
+  const { data: pending, error: listError } =
+    await auth.organization.listInvitations({
+      query: { organizationId: activeOrg.id },
+    });
 
-  if (getError || !invitation) {
-    console.error("[cancelInvitation] getInvitation failed", getError);
+  if (listError || !pending) {
+    console.error("[cancelInvitation] listInvitations failed", listError);
     return { errorKey: "generic" };
   }
-  if (invitation.organizationId !== activeOrg.id) {
+
+  const invitation = pending.find(
+    (i) => i.id === invitationId && i.status === "pending",
+  );
+  if (!invitation) {
+    console.error("[cancelInvitation] invitation not pending in active org", {
+      invitationId,
+      activeOrg: activeOrg.id,
+    });
     return { errorKey: "generic" };
   }
 
