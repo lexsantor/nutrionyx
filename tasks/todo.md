@@ -11,8 +11,16 @@
 - [x] docs/discovery/assessment-slice.md
 - [x] Owner inputs answered 2026-07-09: core clinical intake; InProgress->Completed; new version per repeat; 80% / 15 min
 - [x] Domain delta: Assessment aggregate specified in 09_Domain_Model (aggregate-root reconciliation flagged, deferred to first Medication/DietPlan/Exercise slice)
-- [ ] Build plan against stack-2026 (scaffold, architecture, i18n layer per ADR-0001)
-- [ ] Implement slice end to end; gates per LPEF EN2/EN3 before done
+- [x] Build plan against stack-2026 (docs/build/slice-1-plan.md, approved 2026-07-09)
+- [x] Step 1: scaffold (Next 16.2.10, React 19.2.4, Tailwind 4, Prisma 7.8 client engine, Clerk, next-intl, Vitest), assessment computed module with 10 passing tests, Prisma schema (Organization, Patient, Assessment, DomainEvent), CI workflow. Verified: lint clean, tsc clean, 10/10 tests, build green.
+- [ ] Confirm provisional guardrail thresholds with owner (info <5%, healthy 5-15%, aggressive >15% - src/modules/assessment/computed.ts)
+- [ ] Step 2: identity spine (Clerk auth + Organizations) - needs owner's Clerk keys
+- [ ] Step 3: patient invitation -> activation
+- [ ] Step 4: assessment wizard (es strings via next-intl)
+- [ ] Step 5: capture-time guardrail UI
+- [ ] Step 6: completion, events, dashboard unlock
+- [ ] Step 7: metrics instrumentation
+- [ ] Write project README (repo has none)
 
 ## Review
 

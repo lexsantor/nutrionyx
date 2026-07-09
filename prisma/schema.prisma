@@ -1,0 +1,109 @@
+// Nutrionyx slice 1 - Assessment aggregate and identity spine.
+// Domain source: docs/09_Domain_Model.md. Every model is org-scoped.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Organization {
+  id         String    @id @default(cuid())
+  clerkOrgId String    @unique
+  name       String
+  createdAt  DateTime  @default(now())
+  patients   Patient[]
+
+  @@map("organizations")
+}
+
+enum PatientStatus {
+  INVITED
+  ACTIVE
+}
+
+model Patient {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  clerkUserId    String?       @unique
+  email          String
+  fullName       String?
+  status         PatientStatus @default(INVITED)
+  createdAt      DateTime      @default(now())
+  assessments    Assessment[]
+
+  // Invariant (docs/09): every patient belongs to exactly one organization.
+  @@unique([organizationId, email])
+  @@index([organizationId])
+  @@map("patients")
+}
+
+enum AssessmentStatus {
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum ActivityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum Sex {
+  FEMALE
+  MALE
+}
+
+model Assessment {
+  id             String           @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient          @relation(fields: [patientId], references: [id])
+  status         AssessmentStatus @default(IN_PROGRESS)
+  version        Int              @default(1)
+  predecessorId  String?          @unique
+  predecessor    Assessment?      @relation("AssessmentVersions", fields: [predecessorId], references: [id])
+  successor      Assessment?      @relation("AssessmentVersions")
+
+  // Core clinical intake (editable while IN_PROGRESS, frozen at COMPLETED;
+  // required-at-completion is enforced in the domain layer, not the schema)
+  sex               Sex?
+  birthDate         DateTime?
+  heightCm          Decimal?  @db.Decimal(5, 1)
+  weightKg          Decimal?  @db.Decimal(5, 1)
+  targetWeightKg    Decimal?  @db.Decimal(5, 1)
+  activityLevel     ActivityLevel?
+  goals             String[]
+  conditions        String?
+  allergies         String?
+  currentMedication String?
+
+  // Computed at completion (docs/09: BMI, target delta ratio)
+  bmi              Decimal? @db.Decimal(4, 1)
+  targetDeltaRatio Decimal? @db.Decimal(5, 4)
+
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  @@unique([patientId, version])
+  @@index([organizationId])
+  @@map("assessments")
+}
+
+// Append-only domain events (docs/09: AssessmentStarted, AssessmentCompleted)
+model DomainEvent {
+  id             String   @id @default(cuid())
+  organizationId String
+  aggregate      String
+  aggregateId    String
+  type           String
+  payload        Json
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, aggregate, aggregateId])
+  @@map("domain_events")
+}
