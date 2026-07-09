@@ -23,9 +23,10 @@
 - [ ] Owner smoke: invite a second email, open the invitation link in an incognito window, accept, verify patient shows ACTIVE in /panel
 - [ ] Optional (owner, Neon console): Auth -> Configuration -> enable "Verify email at signup", then Plugins -> Organizations -> enable "Send Invitation Email" for automatic emails
 - [ ] Step 3: patient invitation -> activation
-- [ ] Step 4: assessment wizard (es strings via next-intl)
-- [ ] Step 5: capture-time guardrail UI
-- [ ] Step 6: completion, events, dashboard unlock
+- [x] Step 4: assessment wizard - domain (definition/validation/versioning, 11 tests) + UI (10 steps, progress, resume, back nav)
+- [x] Step 5: capture-time guardrail - live tiered banner on target weight, clinical-neutral copy
+- [x] Step 6: completion (freeze + AssessmentCompleted event), patient summary with BMI/WHO category, panel assessment column
+- [ ] Owner smoke: full patient journey (invite -> activate -> wizard -> complete -> both dashboards)
 - [ ] Step 7: metrics instrumentation
 - [ ] Write project README (repo has none)
 
