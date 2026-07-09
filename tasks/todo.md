@@ -15,7 +15,8 @@
 - [x] Step 1: scaffold (Next 16.2.10, React 19.2.4, Tailwind 4, Prisma 7.8 client engine, Clerk, next-intl, Vitest), assessment computed module with 10 passing tests, Prisma schema (Organization, Patient, Assessment, DomainEvent), CI workflow. Verified: lint clean, tsc clean, 10/10 tests, build green.
 - [ ] Confirm provisional guardrail thresholds with owner (info <5%, healthy 5-15%, aggressive >15% - src/modules/assessment/computed.ts)
 - [x] Deviation 0001: Neon Auth replaces Clerk (owner decision 2026-07-09; first real deviation of the LPEF loop)
-- [ ] Step 2: identity spine (Neon Auth + Organizations) - needs owner's Neon project + env vars
+- [x] Step 2a: Neon Auth wired (@neondatabase/auth 0.4.2-beta): server/client instances, /api/auth handler, proxy.ts protection, sign-in/sign-up pages in es via next-intl. Verified: tsc, lint, 10/10 tests, build green.
+- [ ] Step 2b: smoke test sign-up/sign-in against owner's Neon project (.env.local), then Organizations plugin (org bootstrap, nutritionist role)
 - [ ] Step 3: patient invitation -> activation
 - [ ] Step 4: assessment wizard (es strings via next-intl)
 - [ ] Step 5: capture-time guardrail UI

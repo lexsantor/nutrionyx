@@ -23,3 +23,7 @@ jobs:
       - run: npx tsc --noEmit
       - run: npx vitest run
       - run: npm run build
+        env:
+          # Build-time placeholders only - real values live in Vercel.
+          NEON_AUTH_BASE_URL: https://example.invalid/neondb/auth
+          NEON_AUTH_COOKIE_SECRET: ci-build-placeholder-secret-32-chars

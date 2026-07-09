@@ -1,0 +1,36 @@
+{
+  "common": {
+    "appName": "Nutrionyx"
+  },
+  "home": {
+    "notSignedIn": "Sesión no iniciada",
+    "signIn": "Iniciar sesión",
+    "signUp": "Crear cuenta",
+    "signedInAs": "Sesión iniciada como {name}"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Inicia sesión en tu cuenta",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Iniciar sesión",
+      "submitting": "Iniciando sesión...",
+      "errors": {
+        "invalidCredentials": "Correo o contraseña incorrectos.",
+        "generic": "No se pudo iniciar sesión. Inténtalo de nuevo."
+      }
+    },
+    "signUp": {
+      "title": "Crea tu cuenta",
+      "name": "Nombre completo",
+      "email": "Correo electrónico",
+      "password": "Contraseña",
+      "submit": "Crear cuenta",
+      "submitting": "Creando cuenta...",
+      "errors": {
+        "emailRequired": "El correo electrónico es obligatorio.",
+        "generic": "No se pudo crear la cuenta. Inténtalo de nuevo."
+      }
+    }
+  }
+}
