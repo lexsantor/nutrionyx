@@ -5,7 +5,7 @@ Created: 2026-07-09. Inputs: [discovery](../discovery/assessment-slice.md) (clos
 
 ## Scaffold
 
-Next.js (App Router) + TypeScript strict + Tailwind + shadcn/ui + Prisma + PostgreSQL + Clerk + Vercel, latest stable at creation, pinned by lockfile (stack-2026 R2). Package manager: pnpm.
+Next.js (App Router) + TypeScript strict + Tailwind + shadcn/ui + Prisma + PostgreSQL (Neon) + Neon Auth + Vercel, latest stable at creation, pinned by lockfile (stack-2026 R2). Auth deviates from the profile's Clerk: see [deviations/0001](../../deviations/0001-neon-auth-instead-of-clerk.md).
 
 One dependency beyond the profile: `next-intl` for the i18n layer. Justification (LPEF AR5): ADR-0001 mandates i18n from the first component; Next.js App Router has no built-in message/translation system; hand-rolling one is owning a solved problem. Cost accepted: one well-maintained dependency at the presentation boundary only.
 
@@ -16,7 +16,7 @@ Modules by domain, not by technical layer (LPEF AR1):
 ```text
 src/
   modules/
-    organization/     Clerk org mapping, membership, settings
+    organization/     auth org mapping, membership, settings
     patient/          patient profile, invitation lifecycle
     assessment/       aggregate: model, state machine, computed values, events
   app/                routes only - thin, calls modules
@@ -27,15 +27,15 @@ messages/es.json      all UI strings (ADR-0001; domain stays English)
 prisma/schema.prisma
 ```
 
-Multi-tenancy: Clerk Organizations as the identity spine. One Clerk org = one Nutrionyx Organization. Every Prisma model carries `organizationId`; every query is org-scoped through a single repository layer - no raw client access from routes (guards the PRD invariant: one organization per patient).
+Multi-tenancy: Neon Auth (Better Auth) Organizations as the identity spine - users and orgs live in the same PostgreSQL database, no sync layer. One auth org = one Nutrionyx Organization. Every Prisma model carries `organizationId`; every query is org-scoped through a single repository layer - no raw client access from routes (guards the PRD invariant: one organization per patient).
 
 Assessment data model (from the aggregate spec): `Assessment` rows with `status` (IN_PROGRESS | COMPLETED), `version`, `predecessorId` for repeats, answer fields per the core clinical intake sections, computed `bmi` and `targetDeltaRatio` persisted at completion. `AssessmentCompleted` is a domain event recorded in an `events` table (append-only), and the dashboard unlock derives from the first COMPLETED row - no boolean flag to drift.
 
 ## Vertical slice, in build order
 
 1. Scaffold + CI (lint, typecheck, test, build) - the gates exist before the first feature (LPEF C7).
-2. Identity spine: Clerk auth, organization bootstrap, nutritionist role.
-3. Patient invitation -> activation (Clerk invitation flow, patient record created on acceptance).
+2. Identity spine: Neon Auth setup, organization bootstrap, nutritionist role.
+3. Patient invitation -> activation (Neon Auth invitation flow, patient record created on acceptance).
 4. Assessment wizard: one question per screen, progress indicator, resume on return (InProgress state), es-only strings via next-intl.
 5. Capture-time guardrail: tiered feedback on target weight ratio (blue/green/orange), BMI computed live.
 6. Completion: freeze, persist computed values, emit AssessmentCompleted, unlock both dashboards (patient summary view, nutritionist patient view).
@@ -55,11 +55,10 @@ Diet plans, medication, exercise, messaging, food preferences (ADR-0002 optional
 
 ## Owner actions needed during the build
 
-1. Clerk account: create the application, provide publishable + secret keys as environment variables (I never handle them in chat or code - you place them in `.env.local` and in Vercel).
-2. PostgreSQL: a hosted dev database (Neon or Vercel Postgres) or approve local-only development first. Connection string handled the same way as Clerk keys.
-3. Vercel: connect the GitHub repo when we deploy.
+1. Neon: create the project, enable Neon Auth, place `DATABASE_URL` and the Neon Auth variables in `.env.local` and later in Vercel (I never handle secrets in chat or code).
+2. Vercel: connect the GitHub repo when we deploy.
 
 ## Risks
 
-- Clerk Organizations semantics may not map 1:1 to the Organization aggregate (invitation of patients as org members vs external users). If the mapping fights us, that becomes the project's first deviation candidate against stack-2026 - which is exactly the feedback M2 exists to produce.
+- Neon Auth's Organization plugin is Beta (deviations/0001 records the accepted risk and its expiry). If it blocks, fallback is the profile's Clerk default.
 - The 15-minute completion budget constrains the wizard's field count; the core clinical intake list must survive a timing pass in step 4.

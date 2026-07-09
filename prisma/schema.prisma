@@ -11,11 +11,12 @@ datasource db {
 }
 
 model Organization {
-  id         String    @id @default(cuid())
-  clerkOrgId String    @unique
-  name       String
-  createdAt  DateTime  @default(now())
-  patients   Patient[]
+  id        String    @id @default(cuid())
+  // Better Auth organization id (Neon Auth); see deviations/0001.
+  authOrgId String    @unique
+  name      String
+  createdAt DateTime  @default(now())
+  patients  Patient[]
 
   @@map("organizations")
 }
@@ -29,7 +30,8 @@ model Patient {
   id             String        @id @default(cuid())
   organizationId String
   organization   Organization  @relation(fields: [organizationId], references: [id])
-  clerkUserId    String?       @unique
+  // Better Auth user id (Neon Auth); set when the invited patient activates.
+  authUserId     String?       @unique
   email          String
   fullName       String?
   status         PatientStatus @default(INVITED)
