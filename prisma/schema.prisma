@@ -109,3 +109,17 @@ model DomainEvent {
   @@index([organizationId, aggregate, aggregateId])
   @@map("domain_events")
 }
+
+// Single-use codes issued by the Nutrionyx owner to gate specialist
+// (nutritionist) onboarding: creating a consulta requires redeeming one
+// (docs/adr/0003). Redemption is atomic via an updateMany guard.
+model SpecialistAccessCode {
+  id        String    @id @default(cuid())
+  code      String    @unique
+  note      String?
+  usedAt    DateTime?
+  usedBy    String?
+  createdAt DateTime  @default(now())
+
+  @@map("specialist_access_codes")
+}

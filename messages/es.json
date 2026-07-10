@@ -157,10 +157,14 @@
       "title": "Crea tu organización",
       "subtitle": "El espacio de trabajo de tu consulta. Podrás invitar pacientes a ella.",
       "name": "Nombre de la consulta",
+      "code": "Código de acceso",
+      "codeHint": "Necesitas un código de especialista emitido por Nutrionyx. Solicítalo al equipo si no tienes uno.",
       "submit": "Crear organización",
       "submitting": "Creando...",
       "errors": {
         "nameRequired": "El nombre es obligatorio.",
+        "codeRequired": "Introduce tu código de acceso.",
+        "invalidCode": "Código no válido o ya utilizado. Pide uno nuevo a Nutrionyx.",
         "generic": "No se pudo crear la organización. Inténtalo de nuevo."
       }
     }
