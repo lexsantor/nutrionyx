@@ -7,7 +7,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "test:integration": "vitest run src/modules/isolation.integration.test.ts"
   },
   "dependencies": {
     "@neondatabase/auth": "^0.4.2-beta",
