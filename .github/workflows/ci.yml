@@ -11,6 +11,24 @@ permissions:
 jobs:
   quality:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: nutrionyx_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      # Ephemeral Postgres for the tenant-isolation integration test
+      # (LPEF Prisma Standard R5). Not a real secret.
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/nutrionyx_test
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -19,8 +37,12 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx prisma generate
+      # Apply migrations to the service DB so the integration test has schema.
+      - run: npx prisma migrate deploy
       - run: npm run lint
       - run: npx tsc --noEmit
+      # Runs the 33 unit tests plus the 3 tenant-isolation tests, which
+      # activate because DATABASE_URL is set (describe.skipIf).
       - run: npx vitest run
       - run: npm run build
         env:
