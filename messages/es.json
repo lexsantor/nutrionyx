@@ -1,6 +1,7 @@
 {
   "common": {
-    "appName": "Nutrionyx"
+    "appName": "Nutrionyx",
+    "signOut": "Cerrar sesión"
   },
   "home": {
     "notSignedIn": "Sesión no iniciada",

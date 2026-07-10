@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/server";
+import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import {
   createInvitedPatient,
@@ -28,6 +29,20 @@ export async function invitePatient(
   }
   if (!fullName) {
     return { errorKey: "nameRequired" };
+  }
+
+  // Only nutritionists invite. A patient is a member of the org, so without
+  // this guard the org APIs would still resolve for them (defense in depth
+  // behind the /panel role gate).
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    return { errorKey: "generic" };
+  }
+  if ((await resolveUserRole(session.user.id)) === "patient") {
+    console.error("[invitePatient] patient attempted to invite", {
+      userId: session.user.id,
+    });
+    return { errorKey: "generic" };
   }
 
   const { data: activeOrg } = await auth.organization.getFullOrganization();

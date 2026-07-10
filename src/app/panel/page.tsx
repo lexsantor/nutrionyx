@@ -1,9 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { computeSliceMetrics } from "@/modules/assessment/metrics";
+import { LogoutButton } from "../logout-button";
 import { InviteForm } from "./invite-form";
 import { CancelInvitationButton } from "./cancel-button";
 
@@ -15,6 +17,13 @@ export default async function PanelPage() {
 
   if (!session?.user) {
     redirect("/auth/sign-in");
+  }
+
+  // A patient is a member of the nutritionist's org, so organization.list()
+  // would still return that org here. Gate by domain role, not membership:
+  // patients belong in /mi-espacio and never see the console.
+  if ((await resolveUserRole(session.user.id)) === "patient") {
+    redirect("/mi-espacio");
   }
 
   const { data: organizations } = await auth.organization.list();
@@ -40,7 +49,10 @@ export default async function PanelPage() {
     <main className="mx-auto w-full max-w-4xl px-6 py-10">
       <header className="flex items-baseline justify-between border-b border-zinc-200 pb-4">
         <h1 className="text-xl font-bold">{active.name}</h1>
-        <span className="text-sm text-zinc-600">{session.user.name}</span>
+        <div className="flex items-baseline gap-4">
+          <span className="text-sm text-zinc-600">{session.user.name}</span>
+          <LogoutButton />
+        </div>
       </header>
 
       <section className="grid grid-cols-2 gap-4 py-6">

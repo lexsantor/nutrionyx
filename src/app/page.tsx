@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
+import { resolveUserRole } from "@/lib/auth/role";
 
 // Session-dependent server component: always render dynamically.
 export const dynamic = "force-dynamic";
@@ -10,13 +12,8 @@ export default async function Home() {
   const { data: session } = await auth.getSession();
 
   if (session?.user) {
-    return (
-      <main className="flex min-h-screen items-center justify-center">
-        <h1 className="text-2xl">
-          {t("signedInAs", { name: session.user.name })}
-        </h1>
-      </main>
-    );
+    const role = await resolveUserRole(session.user.id);
+    redirect(role === "patient" ? "/mi-espacio" : "/panel");
   }
 
   return (

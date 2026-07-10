@@ -9,6 +9,7 @@ import {
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { LogoutButton } from "../logout-button";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,9 @@ export default async function PatientHomePage() {
 
     return (
       <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
+        <div className="flex justify-end">
+          <LogoutButton />
+        </div>
         <h1 className="text-2xl font-bold">
           {t("welcome", { name: session.user.name })}
         </h1>
@@ -79,10 +83,14 @@ export default async function PatientHomePage() {
     : 0;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 text-center">
-      <h1 className="text-2xl font-bold">
-        {t("welcome", { name: session.user.name })}
-      </h1>
+    <main className="flex min-h-screen flex-col">
+      <div className="flex justify-end px-4 py-3">
+        <LogoutButton />
+      </div>
+      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
+        <h1 className="text-2xl font-bold">
+          {t("welcome", { name: session.user.name })}
+        </h1>
       <p className="max-w-md text-sm text-zinc-600">
         {inProgress
           ? t("continueHint", {
@@ -96,7 +104,8 @@ export default async function PatientHomePage() {
         className="rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-700"
       >
         {inProgress ? t("continue") : t("start")}
-      </Link>
+        </Link>
+      </div>
     </main>
   );
 }

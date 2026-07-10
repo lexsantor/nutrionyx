@@ -29,6 +29,7 @@
 - [ ] Owner smoke: full patient journey (invite -> activate -> wizard -> complete -> both dashboards)
 - [ ] Step 7: metrics instrumentation
 - [ ] Write project README (repo has none)
+- [x] Auth role fix: resolveUserRole (Patient row vs nutritionist); home redirects by role, /panel rejects patients, invitePatient guarded, logout added (signOut + LogoutButton). Fixes patient-sees-panel authz bug + no-redirect home + missing logout. tsc/lint green (owner); smoke pending.
 - [~] LPEF Prisma Standard R5: tenant-isolation test added (src/modules/isolation.integration.test.ts) + `test`/`test:integration` scripts. Auto-skips without DATABASE_URL. Pending: owner runs tsc/lint/`npm test` and, against a Neon branch, `DATABASE_URL=... npm run test:integration`; commit only after green. Closes the R5 non-compliance flagged in LPEF.
 
 ## Review
