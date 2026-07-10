@@ -1,26 +1,206 @@
 @import "tailwindcss";
 
+/*
+ * NORTE - Arctic Prestige design tokens (design.md 1.2/1.3), applied to
+ * Nutrionyx. Light is default; dark activates via [data-theme="dark"] on
+ * <html>. Components must use var(--color-*) tokens, never raw hex
+ * (design.md 18.9). Raw palette lives on --c-*; @theme inline maps it to
+ * Tailwind utilities so both themes stay live at runtime.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: light;
+  --c-primary: #1e2a39;
+  --c-on-primary: #f5f8fa;
+  --c-primary-hover: #2c3d52;
+  --c-primary-pressed: #0b0f14;
+  --c-primary-subtle: #dee7ef;
+  --c-on-primary-subtle: #2c3d52;
+  --c-ink: #0b0f14;
+  --c-ink-muted: #303e4e;
+  --c-ink-subtle: #5c7386;
+  --c-ink-tertiary: #9db4c6;
+  --c-canvas: #f5f8fa;
+  --c-surface-1: #ffffff;
+  --c-surface-2: #fafcfe;
+  --c-surface-3: #edf2f7;
+  --c-surface-4: #d6dee6;
+  --c-hairline: #dde4ec;
+  --c-hairline-strong: #c3cfdb;
+  --c-inverse-surface-1: #1e2a39;
+  --c-inverse-ink: #f5f8fa;
+  --c-neutral: #5c7386;
+  --c-neutral-soft: #cbd5df;
+  --c-success: #1f7a3d;
+  --c-success-soft: #e3f1e8;
+  --c-warning: #8a5800;
+  --c-warning-soft: #fbeecf;
+  --c-error: #b03200;
+  --c-error-soft: #fde3d8;
+  --c-on-destructive: #f5f8fa;
+  --c-info: #303e4e;
+  --c-focus-ring: #5c7386;
+  --c-selection-bg: #1e2a39;
+  --c-selection-fg: #f5f8fa;
+  --c-accent-text: #3a5068;
+  --el-sm: 0 1px 2px rgba(11, 15, 20, 0.06);
+  --el-md: 0 4px 14px rgba(11, 15, 20, 0.08);
+  --el-lg: 0 18px 40px rgba(11, 15, 20, 0.12);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --c-primary: #9db4c6;
+  --c-on-primary: #0b0f14;
+  --c-primary-hover: #b9cbda;
+  --c-primary-pressed: #7c97ac;
+  --c-primary-subtle: #1c2c40;
+  --c-on-primary-subtle: #b9cbda;
+  --c-ink: #f5f8fa;
+  --c-ink-muted: #d6dee6;
+  --c-ink-subtle: #9db4c6;
+  --c-ink-tertiary: #5c7386;
+  --c-canvas: #0b0f14;
+  --c-surface-1: #121a24;
+  --c-surface-2: #161f2b;
+  --c-surface-3: #1e2a39;
+  --c-surface-4: #273649;
+  --c-hairline: #1d2836;
+  --c-hairline-strong: #2e3f54;
+  --c-inverse-surface-1: #e8edf3;
+  --c-inverse-ink: #0b0f14;
+  --c-neutral: #5c7386;
+  --c-neutral-soft: #26313f;
+  --c-success: #3ba55c;
+  --c-success-soft: #152a1d;
+  --c-warning: #f5a623;
+  --c-warning-soft: #2b2008;
+  --c-error: #ff5236;
+  --c-error-soft: #2e150f;
+  --c-on-destructive: #0b0f14;
+  --c-info: #d6dee6;
+  --c-focus-ring: #9db4c6;
+  --c-selection-bg: #9db4c6;
+  --c-selection-fg: #0b0f14;
+  --c-accent-text: #9db4c6;
+  --el-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --el-md: 0 4px 12px rgba(0, 0, 0, 0.45);
+  --el-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-primary: var(--c-primary);
+  --color-on-primary: var(--c-on-primary);
+  --color-primary-hover: var(--c-primary-hover);
+  --color-primary-pressed: var(--c-primary-pressed);
+  --color-primary-subtle: var(--c-primary-subtle);
+  --color-on-primary-subtle: var(--c-on-primary-subtle);
+  --color-ink: var(--c-ink);
+  --color-ink-muted: var(--c-ink-muted);
+  --color-ink-subtle: var(--c-ink-subtle);
+  --color-ink-tertiary: var(--c-ink-tertiary);
+  --color-canvas: var(--c-canvas);
+  --color-surface-1: var(--c-surface-1);
+  --color-surface-2: var(--c-surface-2);
+  --color-surface-3: var(--c-surface-3);
+  --color-surface-4: var(--c-surface-4);
+  --color-hairline: var(--c-hairline);
+  --color-hairline-strong: var(--c-hairline-strong);
+  --color-inverse-surface-1: var(--c-inverse-surface-1);
+  --color-inverse-ink: var(--c-inverse-ink);
+  --color-neutral: var(--c-neutral);
+  --color-neutral-soft: var(--c-neutral-soft);
+  --color-success: var(--c-success);
+  --color-success-soft: var(--c-success-soft);
+  --color-warning: var(--c-warning);
+  --color-warning-soft: var(--c-warning-soft);
+  --color-error: var(--c-error);
+  --color-error-soft: var(--c-error-soft);
+  --color-on-destructive: var(--c-on-destructive);
+  --color-info: var(--c-info);
+  --color-focus-ring: var(--c-focus-ring);
+  --color-accent-text: var(--c-accent-text);
+
+  --font-display: "Syne Variable", "DM Sans Variable", system-ui, sans-serif;
+  --font-sans: "DM Sans Variable", system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+
+  --radius-pill: 9999px;
+  --shadow-el-sm: var(--el-sm);
+  --shadow-el-md: var(--el-md);
+  --shadow-el-lg: var(--el-lg);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Base - design.md 18.1 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font: 400 16px/1.5 var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.4px;
+}
+
+h1 {
+  font-size: clamp(2.1rem, 1.2rem + 4vw, 4rem);
+  line-height: 1.04;
+  letter-spacing: -1.6px;
+}
+
+h2 {
+  font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem);
+  line-height: 1.05;
+  letter-spacing: -1px;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.25rem);
+  line-height: 1.07;
+  letter-spacing: -0.6px;
+}
+
+h4 {
+  font-size: clamp(1.4rem, 1rem + 1.6vw, 1.75rem);
+}
+
+a {
+  color: var(--color-accent-text);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+::selection {
+  background: var(--c-selection-bg);
+  color: var(--c-selection-fg);
+}
+
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

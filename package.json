@@ -12,6 +12,8 @@
     "test:integration": "vitest run src/modules/isolation.integration.test.ts"
   },
   "dependencies": {
+    "@fontsource-variable/dm-sans": "^5.0.0",
+    "@fontsource-variable/syne": "^5.0.0",
     "@neondatabase/auth": "^0.4.2-beta",
     "@prisma/adapter-pg": "^7.8.0",
     "@prisma/client": "^7.8.0",
