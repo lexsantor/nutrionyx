@@ -9,6 +9,7 @@ import {
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { Topbar } from "@/components/topbar";
 import { LogoutButton } from "../logout-button";
 
 export const dynamic = "force-dynamic";
@@ -33,15 +34,14 @@ export default async function PatientHomePage() {
     const bmiValue = Number(assessment.bmi);
 
     return (
-      <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
-        <div className="flex justify-end">
-          <LogoutButton />
-        </div>
-        <h1 className="text-2xl font-bold">
-          {t("welcome", { name: session.user.name })}
-        </h1>
+      <>
+        <Topbar right={<LogoutButton />} />
+        <main className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-10">
+          <h1 className="text-2xl font-semibold">
+            {t("welcome", { name: session.user.name })}
+          </h1>
 
-        <section className="flex flex-col gap-3 rounded-lg border border-zinc-200 p-5">
+          <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
           <h2 className="text-lg font-semibold">{t("summary.title")}</h2>
           <dl className="flex flex-col gap-2 text-sm">
             <div className="flex justify-between">
@@ -64,8 +64,9 @@ export default async function PatientHomePage() {
               }),
             })}
           </p>
-        </section>
-      </main>
+          </section>
+        </main>
+      </>
     );
   }
 
@@ -83,29 +84,27 @@ export default async function PatientHomePage() {
     : 0;
 
   return (
-    <main className="flex min-h-screen flex-col">
-      <div className="flex justify-end px-4 py-3">
-        <LogoutButton />
-      </div>
-      <div className="flex flex-1 flex-col items-center justify-center gap-4 px-4 text-center">
-        <h1 className="text-2xl font-bold">
+    <>
+      <Topbar right={<LogoutButton />} />
+      <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-10 text-center">
+        <h1 className="text-2xl font-semibold">
           {t("welcome", { name: session.user.name })}
         </h1>
-      <p className="max-w-md text-sm text-zinc-600">
-        {inProgress
-          ? t("continueHint", {
-              step: Math.min(step + 1, ASSESSMENT_STEPS.length),
-              total: ASSESSMENT_STEPS.length,
-            })
-          : t("startHint")}
-      </p>
-      <Link
-        href="/mi-espacio/evaluacion"
-        className="rounded-md bg-zinc-900 px-5 py-2.5 text-sm font-semibold text-white hover:bg-zinc-700"
-      >
-        {inProgress ? t("continue") : t("start")}
+        <p className="max-w-md text-sm text-ink-subtle">
+          {inProgress
+            ? t("continueHint", {
+                step: Math.min(step + 1, ASSESSMENT_STEPS.length),
+                total: ASSESSMENT_STEPS.length,
+              })
+            : t("startHint")}
+        </p>
+        <Link
+          href="/mi-espacio/evaluacion"
+          className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+        >
+          {inProgress ? t("continue") : t("start")}
         </Link>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }

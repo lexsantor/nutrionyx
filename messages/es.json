@@ -1,7 +1,9 @@
 {
   "common": {
     "appName": "Nutrionyx",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "themeDark": "Cambiar a tema oscuro",
+    "themeLight": "Cambiar a tema claro"
   },
   "home": {
     "notSignedIn": "Sesión no iniciada",
