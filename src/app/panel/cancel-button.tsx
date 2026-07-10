@@ -21,12 +21,12 @@ export function CancelInvitationButton({
       <button
         type="submit"
         disabled={isPending}
-        className="rounded-md border border-red-200 px-2 py-0.5 text-xs font-medium text-red-700 hover:bg-red-50 disabled:opacity-60"
+        className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-colors hover:bg-error-soft disabled:opacity-60"
       >
         {isPending ? t("cancelling") : t("cancel")}
       </button>
       {state?.errorKey ? (
-        <span role="alert" className="text-xs text-red-700">
+        <span role="alert" className="text-xs text-error">
           {t("cancelError")}
         </span>
       ) : null}

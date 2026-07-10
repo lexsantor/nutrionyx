@@ -93,11 +93,11 @@ export default async function PanelPage() {
         <h2 className="text-lg font-semibold">{t("patients.title")}</h2>
 
         {patients.length === 0 ? (
-          <p className="text-sm text-zinc-600">{t("patients.empty")}</p>
+          <p className="text-sm text-ink-subtle">{t("patients.empty")}</p>
         ) : (
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b border-zinc-200 text-zinc-600">
+              <tr className="border-b border-hairline text-ink-subtle">
                 <th scope="col" className="py-2 pr-4 font-medium">
                   {t("patients.name")}
                 </th>
@@ -116,15 +116,15 @@ export default async function PanelPage() {
               {patients.map((patient) => {
                 const assessment = patient.assessments[0] ?? null;
                 return (
-                  <tr key={patient.id} className="border-b border-zinc-100">
+                  <tr key={patient.id} className="border-b border-hairline">
                     <td className="py-2 pr-4">{patient.fullName}</td>
                     <td className="py-2 pr-4">{patient.email}</td>
                     <td className="py-2 pr-4">
                       <span
                         className={
                           patient.status === "ACTIVE"
-                            ? "rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800"
-                            : "rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800"
+                            ? "rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success"
+                            : "rounded-full bg-warning-soft px-2 py-0.5 text-xs font-medium text-warning"
                         }
                       >
                         {t(`patients.statuses.${patient.status}`)}
@@ -149,12 +149,12 @@ export default async function PanelPage() {
         {pendingInvitations.length > 0 ? (
           <div className="flex flex-col gap-2">
             <h3 className="font-semibold">{t("invitations.title")}</h3>
-            <p className="text-xs text-zinc-500">{t("invitations.hint")}</p>
+            <p className="text-xs text-ink-subtle">{t("invitations.hint")}</p>
             <ul className="flex flex-col gap-1 text-sm">
               {pendingInvitations.map((invitation) => (
                 <li key={invitation.id} className="flex flex-wrap items-center gap-2">
                   <span>{invitation.email}</span>
-                  <code className="rounded bg-zinc-100 px-2 py-0.5 text-xs">
+                  <code className="rounded bg-surface-3 px-2 py-0.5 text-xs">
                     /auth/accept-invitation?invitationId={invitation.id}
                   </code>
                   <CancelInvitationButton invitationId={invitation.id} />

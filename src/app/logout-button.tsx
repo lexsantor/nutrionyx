@@ -11,7 +11,7 @@ export async function LogoutButton() {
     <form action={signOut}>
       <button
         type="submit"
-        className="text-sm text-zinc-600 underline underline-offset-2 hover:text-zinc-900"
+        className="text-sm text-ink-subtle underline underline-offset-2 hover:text-ink"
       >
         {t("signOut")}
       </button>

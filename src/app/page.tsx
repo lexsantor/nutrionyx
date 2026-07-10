@@ -18,8 +18,10 @@ export default async function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4">
-      <h1 className="font-mono text-2xl tracking-tight">Nutrionyx</h1>
-      <p className="text-zinc-600">{t("notSignedIn")}</p>
+      <h1 className="font-display text-2xl font-semibold tracking-tight">
+        Nutrionyx
+      </h1>
+      <p className="text-ink-subtle">{t("notSignedIn")}</p>
       <div className="flex gap-4">
         <Link href="/auth/sign-in" className="font-medium underline">
           {t("signIn")}
