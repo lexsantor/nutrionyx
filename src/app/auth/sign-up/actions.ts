@@ -22,6 +22,7 @@ export async function signUpWithEmail(
   });
 
   if (error) {
+    console.error("[signUpWithEmail] auth.signUp.email failed", error);
     return { errorKey: "generic" };
   }
 

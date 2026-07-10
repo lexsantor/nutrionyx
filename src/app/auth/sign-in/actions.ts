@@ -16,8 +16,7 @@ export async function signInWithEmail(
   });
 
   if (error) {
-    // Error details are logged server-side by the SDK; the user gets a
-    // translated, non-leaking message (key resolved in the client form).
+    console.error("[signInWithEmail] auth.signIn.email failed", error);
     return { errorKey: "invalidCredentials" };
   }
 
