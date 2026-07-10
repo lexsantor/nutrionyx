@@ -8,6 +8,7 @@ import {
   GOAL_IDS,
   SEXES,
 } from "@/modules/assessment/definition";
+import { Button } from "@/components/ui/button";
 import { submitAnswer, type WizardFormState } from "./actions";
 import { GuardrailBanner } from "./guardrail-banner";
 
@@ -23,10 +24,10 @@ type StepProps = {
 };
 
 const inputClass =
-  "block w-full rounded-md border border-zinc-300 px-3 py-2 outline-none focus:border-zinc-900 focus:ring-1 focus:ring-zinc-900";
+  "block w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary";
 
 const optionClass =
-  "flex cursor-pointer items-center gap-3 rounded-md border border-zinc-300 px-4 py-3 text-sm has-[:checked]:border-zinc-900 has-[:checked]:bg-zinc-50";
+  "flex cursor-pointer items-center gap-3 rounded-[10px] border border-hairline px-4 py-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary-subtle";
 
 export function WizardStep(props: StepProps) {
   const t = useTranslations("wizard");
@@ -48,7 +49,7 @@ export function WizardStep(props: StepProps) {
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-ink-subtle">
           {t("progress", { step: props.stepIndex + 1, total: props.totalSteps })}
         </p>
         <div
@@ -56,10 +57,10 @@ export function WizardStep(props: StepProps) {
           aria-valuenow={props.stepIndex + 1}
           aria-valuemin={1}
           aria-valuemax={props.totalSteps}
-          className="h-1.5 w-full overflow-hidden rounded-full bg-zinc-200"
+          className="h-1.5 w-full overflow-hidden rounded-full bg-surface-4"
         >
           <div
-            className="h-full rounded-full bg-zinc-900 transition-all"
+            className="h-full rounded-full bg-primary transition-all"
             style={{
               width: `${((props.stepIndex + 1) / props.totalSteps) * 100}%`,
             }}
@@ -70,7 +71,9 @@ export function WizardStep(props: StepProps) {
       <form action={formAction} className="flex flex-col gap-5">
         <input type="hidden" name="field" value={props.field} />
 
-        <h1 className="text-xl font-bold">{t(`fields.${props.field}.title`)}</h1>
+        <h1 className="text-xl font-semibold">
+          {t(`fields.${props.field}.title`)}
+        </h1>
 
         {props.kind === "single" ? (
           <fieldset className="flex flex-col gap-2">
@@ -93,7 +96,7 @@ export function WizardStep(props: StepProps) {
         {props.kind === "multi" ? (
           <fieldset className="flex flex-col gap-2">
             <legend className="sr-only">{t(`fields.${props.field}.title`)}</legend>
-            <p className="text-sm text-zinc-500">{t("fields.goals.hint")}</p>
+            <p className="text-sm text-ink-subtle">{t("fields.goals.hint")}</p>
             {GOAL_IDS.map((goal) => (
               <label key={goal} className={optionClass}>
                 <input
@@ -113,7 +116,7 @@ export function WizardStep(props: StepProps) {
 
         {props.kind === "number" ? (
           <div className="flex flex-col gap-2">
-            <label htmlFor="value" className="text-sm text-zinc-500">
+            <label htmlFor="value" className="text-sm text-ink-subtle">
               {t(`fields.${props.field}.hint`)}
             </label>
             <input
@@ -150,7 +153,7 @@ export function WizardStep(props: StepProps) {
 
         {props.kind === "text" ? (
           <div className="flex flex-col gap-2">
-            <p className="text-sm text-zinc-500">{t("optionalHint")}</p>
+            <p className="text-sm text-ink-subtle">{t("optionalHint")}</p>
             <textarea
               name="value"
               rows={4}
@@ -164,7 +167,10 @@ export function WizardStep(props: StepProps) {
         ) : null}
 
         {state?.errorKey ? (
-          <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+          <p
+            role="alert"
+            className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
+          >
             {t(`errors.${state.errorKey}`)}
           </p>
         ) : null}
@@ -173,20 +179,16 @@ export function WizardStep(props: StepProps) {
           {props.stepIndex > 0 ? (
             <Link
               href={`/mi-espacio/evaluacion?paso=${props.stepIndex - 1}`}
-              className="text-sm font-medium text-zinc-600 underline"
+              className="text-sm font-medium text-ink-subtle underline underline-offset-2 hover:text-ink"
             >
               {t("back")}
             </Link>
           ) : (
             <span />
           )}
-          <button
-            type="submit"
-            disabled={isPending}
-            className="rounded-md bg-zinc-900 px-5 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60"
-          >
+          <Button type="submit" disabled={isPending}>
             {t("next")}
-          </button>
+          </Button>
         </div>
       </form>
     </main>

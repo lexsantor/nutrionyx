@@ -4,9 +4,9 @@ import { useTranslations } from "next-intl";
 import { lossTier, targetDeltaRatio } from "@/modules/assessment/computed";
 
 const TIER_STYLES = {
-  info: "bg-blue-50 text-blue-800",
-  healthy: "bg-green-50 text-green-800",
-  aggressive: "bg-amber-50 text-amber-900",
+  info: "bg-surface-2 text-info",
+  healthy: "bg-success-soft text-success",
+  aggressive: "bg-warning-soft text-warning",
 } as const;
 
 /**
@@ -33,7 +33,10 @@ export function GuardrailBanner({
   const percent = Math.round(Math.abs(ratio) * 100);
 
   return (
-    <p role="status" className={`rounded-md px-3 py-2 text-sm ${TIER_STYLES[tier]}`}>
+    <p
+      role="status"
+      className={`rounded-[10px] px-3 py-2 text-sm ${TIER_STYLES[tier]}`}
+    >
       {t(tier, { percent })}
     </p>
   );

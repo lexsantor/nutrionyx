@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { acceptInvitation, type AcceptFormState } from "./actions";
 
 export function AcceptForm({ invitationId }: { invitationId: string }) {
@@ -16,18 +17,17 @@ export function AcceptForm({ invitationId }: { invitationId: string }) {
       <input type="hidden" name="invitationId" value={invitationId} />
 
       {state?.errorKey ? (
-        <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
+        <p
+          role="alert"
+          className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
+        >
           {t(`errors.${state.errorKey}`)}
         </p>
       ) : null}
 
-      <button
-        type="submit"
-        disabled={isPending}
-        className="flex w-full justify-center rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60"
-      >
+      <Button type="submit" disabled={isPending} className="w-full">
         {isPending ? t("submitting") : t("submit")}
-      </button>
+      </Button>
     </form>
   );
 }

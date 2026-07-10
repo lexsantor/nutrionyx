@@ -40,8 +40,8 @@ export default async function AcceptInvitationPage({
     return (
       <main className="flex min-h-screen items-center justify-center px-4">
         <div className="flex w-full max-w-sm flex-col gap-5 text-center">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p role="alert" className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
+          <p role="alert" className="rounded-[10px] bg-warning-soft px-3 py-2 text-sm text-warning">
             {t("wrongSession", { sessionEmail: session.user.email })}
           </p>
           <SignOutAndContinue invitationId={invitationId} />
@@ -55,8 +55,8 @@ export default async function AcceptInvitationPage({
     return (
       <main className="flex min-h-screen items-center justify-center px-4">
         <div className="flex w-full max-w-sm flex-col gap-5 text-center">
-          <h1 className="text-2xl font-bold">{t("title")}</h1>
-          <p role="alert" className="rounded-md bg-zinc-100 px-3 py-2 text-sm text-zinc-700">
+          <h1 className="text-2xl font-semibold">{t("title")}</h1>
+          <p role="alert" className="rounded-[10px] bg-surface-3 px-3 py-2 text-sm text-ink-muted">
             {t("unavailable")}
           </p>
         </div>
@@ -67,8 +67,8 @@ export default async function AcceptInvitationPage({
   return (
     <main className="flex min-h-screen items-center justify-center px-4">
       <div className="flex w-full max-w-sm flex-col gap-5 text-center">
-        <h1 className="text-2xl font-bold">{t("title")}</h1>
-        <p className="text-sm text-zinc-600">{t("subtitle")}</p>
+        <h1 className="text-2xl font-semibold">{t("title")}</h1>
+        <p className="text-sm text-ink-subtle">{t("subtitle")}</p>
         <AcceptForm invitationId={invitationId} />
       </div>
     </main>

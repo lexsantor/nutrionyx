@@ -2,6 +2,7 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { signOutAndContinue } from "./sign-out-action";
 
 export function SignOutAndContinue({ invitationId }: { invitationId: string }) {
@@ -11,13 +12,9 @@ export function SignOutAndContinue({ invitationId }: { invitationId: string }) {
   return (
     <form action={formAction}>
       <input type="hidden" name="invitationId" value={invitationId} />
-      <button
-        type="submit"
-        disabled={isPending}
-        className="flex w-full justify-center rounded-md bg-zinc-900 px-3 py-2 text-sm font-semibold text-white hover:bg-zinc-700 disabled:opacity-60"
-      >
+      <Button type="submit" disabled={isPending} variant="secondary" className="w-full">
         {isPending ? t("switchingAccount") : t("switchAccount")}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -45,19 +45,19 @@ export default async function PatientHomePage() {
           <h2 className="text-lg font-semibold">{t("summary.title")}</h2>
           <dl className="flex flex-col gap-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-zinc-500">{t("summary.bmi")}</dt>
+              <dt className="text-ink-subtle">{t("summary.bmi")}</dt>
               <dd className="font-semibold">
                 {bmiValue} · {t(`bmiCategories.${bmiCategory(bmiValue)}`)}
               </dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-zinc-500">{t("summary.goal")}</dt>
+              <dt className="text-ink-subtle">{t("summary.goal")}</dt>
               <dd className="font-semibold">
                 {Number(assessment.targetWeightKg)} kg
               </dd>
             </div>
           </dl>
-          <p className="text-xs text-zinc-500">
+          <p className="text-xs text-ink-subtle">
             {t("summary.completedAt", {
               date: format.dateTime(assessment.completedAt!, {
                 dateStyle: "long",
