@@ -6,8 +6,17 @@ import {
   redeemAccessCode,
   releaseAccessCode,
 } from "@/modules/organization/access-code";
-import { ensureOrganization } from "@/modules/organization/repository";
+import {
+  ensureOrganization,
+  updateSpecialtyType,
+} from "@/modules/organization/repository";
+import {
+  CURRENT_DPA_VERSION,
+  recordConsent,
+} from "@/modules/organization/consent";
+import { SPECIALTY_TYPES } from "@/modules/specialty/config";
 import { orgSlug } from "@/modules/organization/slug";
+import type { SpecialtyType } from "@/generated/prisma/client";
 import { redirect } from "next/navigation";
 
 export type OrgFormState = { errorKey: string } | null;
@@ -18,12 +27,24 @@ export async function createOrganization(
 ): Promise<OrgFormState> {
   const name = (formData.get("name") as string)?.trim();
   const code = (formData.get("accessCode") as string)?.trim();
+  const specialtyRaw = (formData.get("specialtyType") as string)?.trim();
+  const consent = formData.get("consent") === "on";
 
   if (!name) {
     return { errorKey: "nameRequired" };
   }
   if (!code) {
     return { errorKey: "codeRequired" };
+  }
+  // Sub-role must be one of the two known values (adr/0006).
+  if (!SPECIALTY_TYPES.includes(specialtyRaw as SpecialtyType)) {
+    return { errorKey: "specialtyRequired" };
+  }
+  const specialtyType = specialtyRaw as SpecialtyType;
+  // DPA/GDPR consent is the required activation gate (adr/0006): no consulta
+  // is created without it.
+  if (!consent) {
+    return { errorKey: "consentRequired" };
   }
 
   const { data: session } = await auth.getSession();
@@ -57,7 +78,16 @@ export async function createOrganization(
   }
 
   // Mirror into the domain database (org-scoped models hang off this row).
-  await ensureOrganization(data.id, name);
+  const org = await ensureOrganization(data.id, name);
+
+  // Persist the sub-role and record the DPA consent for this consulta
+  // (adr/0006). Both are org-scoped to the row we just created.
+  await updateSpecialtyType(org.id, specialtyType);
+  await recordConsent({
+    organizationId: org.id,
+    termsVersion: CURRENT_DPA_VERSION,
+    acceptedByAuthUserId: session.user.id,
+  });
 
   await auth.organization.setActive({ organizationId: data.id });
 

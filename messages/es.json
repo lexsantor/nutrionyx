@@ -71,6 +71,19 @@
     "save": "Guardar",
     "saving": "Guardando...",
     "saved": "Ajustes guardados.",
+    "specialty": {
+      "title": "Especialidad",
+      "hint": "Tu especialidad adapta el panel, la terminología y las plantillas. Puedes cambiarla cuando quieras.",
+      "save": "Guardar especialidad",
+      "saving": "Guardando...",
+      "saved": "Especialidad actualizada."
+    },
+    "consent": {
+      "title": "Consentimiento de tratamiento de datos",
+      "hint": "Aún no has aceptado el acuerdo de tratamiento de datos (DPA). Es necesario para tratar datos de tus pacientes conforme al RGPD. (Texto provisional; la versión legal definitiva se publicará antes del lanzamiento.)",
+      "accept": "Aceptar el DPA",
+      "accepted": "Acuerdo de tratamiento de datos (DPA) aceptado."
+    },
     "errors": {
       "generic": "No se pudo guardar. Inténtalo de nuevo.",
       "noOrganization": "No hay consulta activa.",
@@ -255,19 +268,45 @@
   },
   "org": {
     "create": {
-      "title": "Crea tu organización",
+      "title": "Crea tu consulta",
       "subtitle": "El espacio de trabajo de tu consulta. Podrás invitar pacientes a ella.",
       "name": "Nombre de la consulta",
+      "specialty": {
+        "legend": "¿Cuál es tu especialidad?",
+        "dietitian": {
+          "label": "Dietista-nutricionista",
+          "hint": "Foco en nutrición y hábitos: planes de comidas, adherencia, evolución de peso."
+        },
+        "sports": {
+          "label": "Nutricionista deportivo",
+          "hint": "Foco en rendimiento: nutrición ligada al entreno, carga y timing."
+        }
+      },
       "code": "Código de acceso",
       "codeHint": "Necesitas un código de especialista emitido por Nutrionyx. Solicítalo al equipo si no tienes uno.",
-      "submit": "Crear organización",
+      "consent": {
+        "label": "Acepto el acuerdo de tratamiento de datos (DPA) y trataré los datos de mis pacientes conforme al RGPD. (Texto provisional; la versión legal definitiva se publicará antes del lanzamiento.)"
+      },
+      "submit": "Crear consulta",
       "submitting": "Creando...",
       "errors": {
         "nameRequired": "El nombre es obligatorio.",
+        "specialtyRequired": "Elige tu especialidad.",
+        "consentRequired": "Debes aceptar el acuerdo de tratamiento de datos para continuar.",
         "codeRequired": "Introduce tu código de acceso.",
         "invalidCode": "Código no válido o ya utilizado. Pide uno nuevo a Nutrionyx.",
-        "generic": "No se pudo crear la organización. Inténtalo de nuevo."
+        "generic": "No se pudo crear la consulta. Inténtalo de nuevo."
       }
+    }
+  },
+  "specialty": {
+    "labels": {
+      "dietitian": "Dietista-nutricionista",
+      "sports": "Nutricionista deportivo"
+    },
+    "planTerm": {
+      "dietitian": "Plan de comidas",
+      "sports": "Nutrición y timing de entreno"
     }
   },
   "auth": {

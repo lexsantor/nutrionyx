@@ -5,6 +5,7 @@ import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { computeSliceMetrics } from "@/modules/assessment/metrics";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
+import { specialtyConfig } from "@/modules/specialty/config";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 
@@ -14,6 +15,7 @@ export const dynamic = "force-dynamic";
 // flow now live in /panel/pacientes (Slice 5, adr/0005).
 export default async function PanelPage() {
   const t = await getTranslations("panel");
+  const tRoot = await getTranslations();
   const { data: session } = await auth.getSession();
 
   if (!session?.user) {
@@ -43,7 +45,14 @@ export default async function PanelPage() {
 
   return (
     <ConsoleShell>
-      <h1 className="text-2xl font-semibold">{org.name}</h1>
+      <div className="flex flex-wrap items-center gap-3">
+        <h1 className="text-2xl font-semibold">{org.name}</h1>
+        {org.specialtyType ? (
+          <span className="rounded-full bg-surface-3 px-2.5 py-0.5 text-xs font-medium text-ink-subtle">
+            {tRoot(specialtyConfig(org.specialtyType).labelKey)}
+          </span>
+        ) : null}
+      </div>
 
       <section className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
           <Card>

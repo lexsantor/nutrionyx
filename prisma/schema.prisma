@@ -10,11 +10,22 @@ datasource db {
   provider = "postgresql"
 }
 
+// Specialist sub-role (adr/0006). Configuration only - drives dashboard,
+// terminology and templates - never RBAC. Lives on the consulta, not the
+// permission model, so operator-blindness is unaffected.
+enum SpecialtyType {
+  DIETITIAN
+  SPORTS_NUTRITIONIST
+}
+
 model Organization {
   id        String    @id @default(cuid())
   // Better Auth organization id (Neon Auth); see deviations/0001.
   authOrgId String    @unique
   name      String
+  // Sub-role (adr/0006): nullable until chosen at activation; freely editable
+  // in Ajustes. Configuration, not access.
+  specialtyType SpecialtyType?
   // Consulta profile (docs/build/slice-4-plan.md). All optional; fiscal
   // fields feed Billing invoices later. Editable by the owning specialist.
   legalName   String?
@@ -168,4 +179,24 @@ model PlatformAdmin {
   createdAt  DateTime @default(now())
 
   @@map("platform_admins")
+}
+
+// Append-only consent log (adr/0006). A specialist accepts the DPA/GDPR terms
+// at activation, before inviting patients. Never updated or deleted - a new
+// acceptance is a new row. Org-scoped business metadata (operator-blindness
+// safe). Versioned so a future terms version can require re-acceptance.
+enum ConsentKind {
+  DPA
+}
+
+model ConsentRecord {
+  id                   String      @id @default(cuid())
+  organizationId       String
+  kind                 ConsentKind @default(DPA)
+  termsVersion         String
+  acceptedByAuthUserId String
+  acceptedAt           DateTime    @default(now())
+
+  @@index([organizationId, kind])
+  @@map("consent_records")
 }

@@ -23,9 +23,15 @@ import {
 } from "@/modules/platform-admin/repository";
 import {
   getOrgProfile,
+  getSpecialtyType,
   isSlugTaken,
   updateOrgProfile,
+  updateSpecialtyType,
 } from "@/modules/organization/repository";
+import {
+  hasAcceptedConsent,
+  recordConsent,
+} from "@/modules/organization/consent";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
 
 /**
@@ -88,6 +94,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     for (const org of [orgA, orgB]) {
       if (!org) continue;
+      await prisma.consentRecord.deleteMany({ where: { organizationId: org } });
       await prisma.domainEvent.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
@@ -224,5 +231,22 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // B counts its own seeded patient.
     expect(dashB.withCompletedAssessment).toBeGreaterThanOrEqual(1);
     expect(dashB.pendingFollowUp).toBeGreaterThanOrEqual(1);
+  });
+
+  it("sub-role and consent are org-scoped (adr/0006)", async () => {
+    await updateSpecialtyType(orgA, "SPORTS_NUTRITIONIST");
+    await recordConsent({
+      organizationId: orgA,
+      termsVersion: "test-v1",
+      acceptedByAuthUserId: adminUserId,
+    });
+
+    // A's sub-role is set; B is untouched (still null).
+    expect(await getSpecialtyType(orgA)).toBe("SPORTS_NUTRITIONIST");
+    expect(await getSpecialtyType(orgB)).toBeNull();
+
+    // A's consent never counts for B.
+    expect(await hasAcceptedConsent(orgA, "DPA", "test-v1")).toBe(true);
+    expect(await hasAcceptedConsent(orgB, "DPA", "test-v1")).toBe(false);
   });
 });

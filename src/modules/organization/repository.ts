@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import type { Organization } from "@/generated/prisma/client";
+import type { Organization, SpecialtyType } from "@/generated/prisma/client";
 
 /**
  * Mirror of the Better Auth organization inside the domain database.
@@ -30,6 +30,7 @@ export async function findByAuthOrgId(
 export type OrgProfile = {
   id: string;
   name: string;
+  specialtyType: SpecialtyType | null;
   legalName: string | null;
   taxId: string | null;
   addressLine: string | null;
@@ -49,6 +50,7 @@ export async function getOrgProfile(
     select: {
       id: true,
       name: true,
+      specialtyType: true,
       legalName: true,
       taxId: true,
       addressLine: true,
@@ -94,4 +96,29 @@ export async function updateOrgProfile(
     where: { id: organizationId },
     data: input,
   });
+}
+
+/**
+ * Specialist sub-role (adr/0006). Configuration only, never RBAC. Org-scoped
+ * (the organizationId comes from the session, never from client input) and
+ * freely editable, including after the first patient.
+ */
+export async function updateSpecialtyType(
+  organizationId: string,
+  specialtyType: SpecialtyType,
+): Promise<void> {
+  await prisma.organization.update({
+    where: { id: organizationId },
+    data: { specialtyType },
+  });
+}
+
+export async function getSpecialtyType(
+  organizationId: string,
+): Promise<SpecialtyType | null> {
+  const org = await prisma.organization.findUnique({
+    where: { id: organizationId },
+    select: { specialtyType: true },
+  });
+  return org?.specialtyType ?? null;
 }
