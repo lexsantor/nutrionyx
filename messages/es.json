@@ -31,6 +31,7 @@
         "ACTIVE": "Activo"
       },
       "assessment": "Evaluación",
+      "weight": "Peso",
       "assessments": {
         "pending": "Pendiente",
         "inProgress": "En curso",
@@ -93,6 +94,25 @@
       "normal": "Peso normal",
       "overweight": "Sobrepeso",
       "obesity": "Obesidad"
+    }
+  },
+  "progress": {
+    "title": "Progreso",
+    "empty": "Aún no has registrado tu peso. Añade el primero abajo.",
+    "weightLabel": "Peso (kg)",
+    "dateLabel": "Fecha",
+    "save": "Registrar peso",
+    "saving": "Guardando...",
+    "saved": "Peso registrado.",
+    "chartLabel": "Evolución de tu peso",
+    "atGoal": "En el objetivo",
+    "toGoal": "{delta} {direction} del objetivo",
+    "above": "por encima",
+    "below": "por debajo",
+    "errors": {
+      "invalidWeight": "Introduce un peso válido en kilogramos.",
+      "invalidDate": "La fecha no es válida.",
+      "generic": "No se pudo registrar. Inténtalo de nuevo."
     }
   },
   "wizard": {

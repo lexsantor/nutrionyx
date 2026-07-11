@@ -11,6 +11,10 @@ import {
   getOrCreateInProgressAssessment,
   saveAnswer,
 } from "@/modules/assessment/repository";
+import {
+  listWeights,
+  recordWeight,
+} from "@/modules/measurement/repository";
 
 /**
  * Tenant-isolation invariant - LPEF Prisma Standard R2 (org-scoped queries)
@@ -28,6 +32,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
   const bPatientEmail = `b-${suffix}@example.test`;
   let orgA = "";
   let orgB = "";
+  let bPatientId = "";
   let bAssessmentId = "";
 
   beforeAll(async () => {
@@ -50,6 +55,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       email: bPatientEmail,
       fullName: "B Patient",
     });
+    bPatientId = bPatient.id;
     const bAssessment = await getOrCreateInProgressAssessment({
       organizationId: orgB,
       patientId: bPatient.id,
@@ -61,6 +67,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     for (const org of [orgA, orgB]) {
       if (!org) continue;
       await prisma.domainEvent.deleteMany({ where: { organizationId: org } });
+      await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
       await prisma.organization.delete({ where: { id: org } });
@@ -98,5 +105,17 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       organizationId: orgA,
     });
     expect(res.ok).toBe(false);
+  });
+
+  it("scopes measurements: org A cannot read org B's weight log (R2)", async () => {
+    await recordWeight({
+      organizationId: orgB,
+      patientId: bPatientId,
+      valueKg: 72.4,
+    });
+    // Under A's scope, B's measurements are invisible.
+    expect(await listWeights(orgA, bPatientId)).toEqual([]);
+    // Under B's own scope they are present.
+    expect((await listWeights(orgB, bPatientId)).length).toBe(1);
   });
 });

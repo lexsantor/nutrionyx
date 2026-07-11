@@ -29,6 +29,7 @@
 - [ ] Owner smoke: full patient journey (invite -> activate -> wizard -> complete -> both dashboards)
 - [ ] Step 7: metrics instrumentation
 - [ ] Write project README (repo has none)
+- [~] Slice 2 (Progress / weight log, docs/build/slice-2-plan.md): Measurement model (append-only, org-scoped) + WeightRecorded; patient weight check-in on /mi-espacio; dependency-free SVG chart (design.md 12: goal line, no zero baseline, inverted success semantics, a11y table); nutritionist panel latest-weight + delta column; measurement org-scoping added to the CI isolation test; pure progress fns unit-tested. Pending: owner runs prisma migrate dev + generate + tsc/lint/build + test:integration; smoke; commit; CI green.
 - [x] Auth role fix: resolveUserRole (Patient row vs nutritionist); home redirects by role, /panel rejects patients, invitePatient guarded, logout added (signOut + LogoutButton). Fixes patient-sees-panel authz bug + no-redirect home + missing logout. tsc/lint green (owner); smoke passed.
 - [x] Specialist onboarding gate (adr/0003): creating a consulta requires a single-use access code (SpecialistAccessCode, atomic updateMany redemption). Closes the "anyone can create a consulta" hole. migrate + tsc/lint/build green (owner); 3 codes seeded via Neon; smoke pending.
 - [~] NORTE design system - shell slice: Topbar (18.7) + ThemeToggle (light/dark, inline SVG, no new dep) + Button/Card primitives (tokens); wired into /panel (Card metrics) and /mi-espacio (both views).

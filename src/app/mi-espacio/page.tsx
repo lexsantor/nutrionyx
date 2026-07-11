@@ -9,8 +9,11 @@ import {
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { listWeights } from "@/modules/measurement/repository";
 import { Topbar } from "@/components/topbar";
 import { LogoutButton } from "../logout-button";
+import { WeightCheckIn } from "./weight-check-in";
+import { WeightChart } from "./weight-chart";
 
 export const dynamic = "force-dynamic";
 
@@ -31,12 +34,23 @@ export default async function PatientHomePage() {
 
   if (assessment?.status === "COMPLETED") {
     const format = await getFormatter();
+    const tp = await getTranslations("progress");
     const bmiValue = Number(assessment.bmi);
+
+    const weights = await listWeights(patient.organizationId, patient.id);
+    const targetKg =
+      assessment.targetWeightKg != null
+        ? Number(assessment.targetWeightKg)
+        : null;
+    const points = weights.map((w) => ({
+      recordedAt: w.recordedAt,
+      valueKg: Number(w.value),
+    }));
 
     return (
       <>
         <Topbar right={<LogoutButton />} />
-        <main className="mx-auto flex w-full max-w-md flex-col gap-6 px-4 py-10">
+        <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
           <h1 className="text-2xl font-semibold">
             {t("welcome", { name: session.user.name })}
           </h1>
@@ -64,6 +78,16 @@ export default async function PatientHomePage() {
               }),
             })}
           </p>
+          </section>
+
+          <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+            <h2 className="text-lg font-semibold">{tp("title")}</h2>
+            {points.length > 0 ? (
+              <WeightChart points={points} targetKg={targetKg} />
+            ) : (
+              <p className="text-sm text-ink-subtle">{tp("empty")}</p>
+            )}
+            <WeightCheckIn />
           </section>
         </main>
       </>

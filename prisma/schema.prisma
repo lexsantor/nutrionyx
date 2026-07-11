@@ -37,6 +37,7 @@ model Patient {
   status         PatientStatus @default(INVITED)
   createdAt      DateTime      @default(now())
   assessments    Assessment[]
+  measurements   Measurement[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -108,6 +109,27 @@ model DomainEvent {
 
   @@index([organizationId, aggregate, aggregateId])
   @@map("domain_events")
+}
+
+// Append-only patient metrics over time (docs/09 Measurement child of
+// Patient, docs/build/slice-2-plan.md). Weight only for this slice; never
+// updated or deleted - a correction is a new row.
+enum MeasurementKind {
+  WEIGHT
+}
+
+model Measurement {
+  id             String          @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient         @relation(fields: [patientId], references: [id])
+  kind           MeasurementKind @default(WEIGHT)
+  value          Decimal         @db.Decimal(5, 1)
+  recordedAt     DateTime        @default(now())
+  createdAt      DateTime        @default(now())
+
+  @@index([organizationId, patientId, recordedAt])
+  @@map("measurements")
 }
 
 // Single-use codes issued by the Nutrionyx owner to gate specialist
