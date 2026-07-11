@@ -1,45 +1,108 @@
 # Nutrionyx Task Log
 
-## M2 - Assessment slice (LPEF first reference build)
+## Current state - RESUME HERE (updated 2026-07-11)
 
-- [x] Adopt LPEF v0.2.0 (lpef.yml, router, deviations/) - playbook DoD verified 2026-07-09
-- [x] Discovery material restored and committed; screenshots under docs/research/flows/
-- [x] Discovery review of all 11 docs (findings: PR1 evidence gap, BU2 metric gap, 7-vs-4 aggregate root inconsistency, missing food vocabulary)
-- [x] Reference flow analysis: docs/research/reference-flow-analysis.md (27 steps)
-- [x] ADR-0001 Spanish UI + i18n day one; ADR-0002 food preferences ownership
-- [x] Fix misnamed file: progreso-corporal.tsx.md -> 04_Product_Operating_Model.md
-- [x] docs/discovery/assessment-slice.md
-- [x] Owner inputs answered 2026-07-09: core clinical intake; InProgress->Completed; new version per repeat; 80% / 15 min
-- [x] Domain delta: Assessment aggregate specified in 09_Domain_Model (aggregate-root reconciliation flagged, deferred to first Medication/DietPlan/Exercise slice)
-- [x] Build plan against stack-2026 (docs/build/slice-1-plan.md, approved 2026-07-09)
-- [x] Step 1: scaffold (Next 16.2.10, React 19.2.4, Tailwind 4, Prisma 7.8 client engine, Clerk, next-intl, Vitest), assessment computed module with 10 passing tests, Prisma schema (Organization, Patient, Assessment, DomainEvent), CI workflow. Verified: lint clean, tsc clean, 10/10 tests, build green.
-- [ ] Confirm provisional guardrail thresholds with owner (info <5%, healthy 5-15%, aggressive >15% - src/modules/assessment/computed.ts)
-- [x] Deviation 0001: Neon Auth replaces Clerk (owner decision 2026-07-09; first real deviation of the LPEF loop)
-- [x] Step 2a: Neon Auth wired (@neondatabase/auth 0.4.2-beta): server/client instances, /api/auth handler, proxy.ts protection, sign-in/sign-up pages in es via next-intl. Verified: tsc, lint, 10/10 tests, build green.
-- [x] Step 2b: org bootstrap (create + Prisma mirror + setActive), protected /panel with empty patients section, slugify with tests. Verified: tsc, lint, 15/15 tests, build green (7 routes).
-- [ ] Owner: smoke test - sign-up, create organization, see /panel (requires migration below)
-- [ ] Owner: run first migration on their Mac: `npx prisma migrate dev --name init` (sandbox cannot reach binaries.prisma.sh; prisma.config.ts loads .env.local)
-- [x] Step 3: patient invitation -> activation. Invite form in /panel (Better Auth inviteMember role=member + Patient INVITED + PatientCreated event), pending-invitations list with shareable link, /auth/accept-invitation (sign-up redirect with safe returnTo, accept, authUserId link, ACTIVE), /mi-espacio patient landing. Verified: tsc, lint, 18/18 tests, build green (8 routes).
-- [ ] Owner smoke: invite a second email, open the invitation link in an incognito window, accept, verify patient shows ACTIVE in /panel
-- [ ] Optional (owner, Neon console): Auth -> Configuration -> enable "Verify email at signup", then Plugins -> Organizations -> enable "Send Invitation Email" for automatic emails
-- [ ] Step 3: patient invitation -> activation
-- [x] Step 4: assessment wizard - domain (definition/validation/versioning, 11 tests) + UI (10 steps, progress, resume, back nav)
-- [x] Step 5: capture-time guardrail - live tiered banner on target weight, clinical-neutral copy
-- [x] Step 6: completion (freeze + AssessmentCompleted event), patient summary with BMI/WHO category, panel assessment column
-- [ ] Owner smoke: full patient journey (invite -> activate -> wizard -> complete -> both dashboards)
-- [ ] Step 7: metrics instrumentation
-- [ ] Write project README (repo has none)
-- [~] Slice 4 (Consulta profile / Settings, docs/build/slice-4-plan.md, roadmap Tier C): Organization profile fields (legalName, taxId, address, hours, logoUrl-by-URL, slug unique); /panel/ajustes Settings screen (nutritionist-gated) + updateProfileAction (slug uniqueness guarded); panel link; org-scoping + slug tests. Pending: owner migrate+generate+gates+test:integration; smoke Settings; commit; CI green.
-- [~] Slice 3 (Platform Admin, docs/build/slice-3-plan.md, roadmap Tier A+B): PlatformAdmin allowlist + resolveUserRole 3-way (platform-admin > patient > nutritionist); /admin dashboard (metrics + consultas counts-only, operator-blindness) + access-code generator/revoker (retires the manual SQL from adr/0003); role routing in home/panel/proxy; 3 new integration tests (role precedence, operator-blindness, code mint/revoke guard). Pending: owner migrate+generate+gates+test:integration; sign up fresh superadmin email (I seed PlatformAdmin via Neon); smoke /admin; commit; CI green.
-- [~] Slice 2 (Progress / weight log, docs/build/slice-2-plan.md): Measurement model (append-only, org-scoped) + WeightRecorded; patient weight check-in on /mi-espacio; dependency-free SVG chart (design.md 12: goal line, no zero baseline, inverted success semantics, a11y table); nutritionist panel latest-weight + delta column; measurement org-scoping added to the CI isolation test; pure progress fns unit-tested. Pending: owner runs prisma migrate dev + generate + tsc/lint/build + test:integration; smoke; commit; CI green.
-- [x] Auth role fix: resolveUserRole (Patient row vs nutritionist); home redirects by role, /panel rejects patients, invitePatient guarded, logout added (signOut + LogoutButton). Fixes patient-sees-panel authz bug + no-redirect home + missing logout. tsc/lint green (owner); smoke passed.
-- [x] Specialist onboarding gate (adr/0003): creating a consulta requires a single-use access code (SpecialistAccessCode, atomic updateMany redemption). Closes the "anyone can create a consulta" hole. migrate + tsc/lint/build green (owner); 3 codes seeded via Neon; smoke pending.
-- [~] NORTE design system - shell slice: Topbar (18.7) + ThemeToggle (light/dark, inline SVG, no new dep) + Button/Card primitives (tokens); wired into /panel (Card metrics) and /mi-espacio (both views).
-- [~] Token migration batch 1: Input primitive; auth (sign-in/up), crear-consulta, /panel (table, badges, invite, cancel), home, logout off default palette to NORTE tokens. Build + visual green (owner). Pending batch 2: accept-invitation flow + evaluacion wizard (wizard-step, review, guardrail-banner).
-- [x] Token migration batch 2: accept-invitation (page/form/switch-account), evaluacion wizard (options, progress, guardrail info/healthy/aggressive, review), mi-espacio summary. No default palette left in src (grep clean). Build + visual green (owner). Dark mode now complete across the app. Remaining design work: adopt lucide-react for the broader icon/component set (15.x) and remaining component specs.
-- [~] NORTE design system (design.md, branded Nutrionyx per ADR-0003). Foundation done: tokens light+dark (globals.css) mapped to Tailwind 4 via @theme inline; base typography 18.1; self-hosted fonts Syne/DM Sans (fontsource) + Geist Mono, no Google CDN (C9); anti-FOUC dark script (key nutrionyx-theme). Build green (owner: install + tsc + lint + next build), fonts confirmed. Pending: theme toggle + app shell; migrate screens off default Tailwind palette to tokens (18.9); component specs (15.x).
-- [x] LPEF Prisma Standard R5: tenant-isolation test (src/modules/isolation.integration.test.ts) + scripts; validated by owner against Postgres; now enforced in CI via a postgres service + prisma migrate deploy (ci.yml), so it runs on every push (33 unit + 3 isolation). R5 is machinery, not manual.
+**Where we are:** the specialist portal is built through **Slice 7**, on `main`,
+CI green, deployed to Vercel. `origin/main` head at the time of writing:
+`dc25c4d`. This is an LPEF reference project (governed by LPEF v0.2.0, see
+[../lpef.yml](../lpef.yml) and the repo [../CLAUDE.md](../CLAUDE.md)).
+
+**Stack:** Next.js 16.2.10 (App Router, Turbopack) · React 19.2.4 · Tailwind 4
+(CSS-first `@theme inline`, NORTE tokens in `src/app/globals.css`) · TypeScript
+strict · Prisma 7.8 (`prisma-client` generator -> `src/generated/prisma`, driver
+adapter `@prisma/adapter-pg`) · PostgreSQL on Neon · Neon Auth (Better Auth) ·
+next-intl (es only, `messages/es.json`) · self-hosted fonts · Reicon icons
+(`reicon-react`). Vitest for tests.
+
+**Roles / tenancy:** `resolveUserRole` is platform-admin > patient >
+nutritionist ([src/lib/auth/role.ts](../src/lib/auth/role.ts)). Every model is
+org-scoped; the `organizationId` always comes from the session, never the client;
+cross-tenant isolation is enforced by the CI integration test
+([src/modules/isolation.integration.test.ts](../src/modules/isolation.integration.test.ts),
+11 tests). **Operator-blindness** (adr/0004): the platform admin sees business
+data only, never patient clinical data. A specialist also has a **sub-role**
+`Organization.specialtyType` (DIETITIAN | SPORTS_NUTRITIONIST) that is
+**configuration, not RBAC** (adr/0006).
+
+### How we work (the cadence)
+
+- Vision-led, **slice by slice**, evidence-gated (LPEF C2/C6; adr/0004). No
+  big-design-up-front. Each non-trivial slice gets a plan in `docs/build/`.
+- Product decisions and R9 sign-offs are the **owner's** - surface them with
+  AskUserQuestion (recommended option first). Challenge decisions that violate a
+  linked principle, citing the article/rule (C12).
+- The agent writes code; the **owner runs the gates** on their Mac
+  (`npx tsc --noEmit && npm run lint && npm test && npm run build` +
+  `DATABASE_URL=... npm run test:integration`) and **migrations**
+  (`npx prisma migrate dev --name ...`) - the sandbox cannot reach
+  `binaries.prisma.sh`. The agent commits only on green; the **owner pushes**;
+  the agent then verifies CI + the Vercel deployment (Vercel MCP).
+- Capture every correction as a checkable rule in
+  [lessons.md](lessons.md) - read it at session start.
+
+### Gotchas (see lessons.md for the full rules)
+
+- **Never run `npm ci` in the sandbox** - it wipes `node_modules`, which is the
+  operator's real folder over the mount; an interrupted run corrupts it.
+- **Lockfile is fragile**: before committing any `package-lock.json` change,
+  grep that it contains `next-intl/node_modules/@swc/helpers` and `0.5.23`
+  (a macOS `npm install` can drop it -> CI `npm ci` fails). If no dep changed,
+  prefer `git checkout <good-commit> -- package-lock.json`.
+- `dashboards/` (Pulse CRM reference templates) is gitignored and excluded from
+  both `tsconfig` and `eslint` - CI never sees it.
+
+### Built (slices)
+
+- **M2 - Assessment**: identity spine (Neon Auth), org bootstrap + Prisma mirror,
+  patient invite -> accept -> activate, assessment wizard (10 steps, versioning,
+  capture-time guardrail, completion freeze + events), patient summary, panel
+  metrics. NORTE design system + full token migration + dark mode.
+- **Slice 2 - Progress**: append-only `Measurement` (weight), patient check-in,
+  dependency-free SVG weight chart, panel latest-weight + delta.
+- **Slice 3 - Platform Admin**: `PlatformAdmin` allowlist, `/admin` dashboard
+  (counts-only, operator-blind), access-code generator/revoker.
+- **Slice 4 - Consulta profile**: `Organization` profile fields + `/panel/ajustes`
+  Settings (editable consulta name, self-service).
+- **Slice 5 - Console (Pulse-adapted, adr/0005)**: sidebar shell, split into
+  Inicio / Pacientes / Ajustes, `specialistDashboard` counts; Reicon icons;
+  controls (Ajustes + theme switch + sign-out) at the sidebar bottom; canonical
+  page layout (stable scrollbar gutter).
+- **Slice 6 - Sub-role + consent (adr/0006)**: `specialtyType` (config, not RBAC)
+  + append-only `ConsentRecord`; activation captures sub-role tiles + DPA consent
+  (guarded); Ajustes edits sub-role + backfill soft-prompt; specialty badge on
+  Inicio; org-scoped.
+- **Slice 7 - Patient detail**: `/panel/pacientes/[id]` read-only clinical view
+  (identity, latest assessment, weight chart), org-scoped `getPatientDetail`.
+
+### Migrations (applied on Neon)
+
+`20260709134258_init`, `_specialist_access_codes`, `_measurements`,
+`_platform_admin`, `_org_profile`, `20260711165233_specialty_and_consent`.
+
+### Next candidates (owner picks)
+
+- **Specialist notes** on a patient - first editable clinical datum, hangs off
+  the patient detail (Slice 7). Small, high-value.
+- **Real sub-role divergence** - per-role widgets/templates on the scaffold from
+  Slice 6 (`src/modules/specialty/config.ts`).
+- **Next PRD tier** as a slice - messaging, calendar, or plan builder (each a
+  future bounded context in [../docs/00_Vision_and_Target_Architecture.md](../docs/00_Vision_and_Target_Architecture.md)).
+- Deferred: real logo upload (Vercel Blob); patient/admin console shells (only
+  the specialist area is migrated); billing (Tier E, Stripe) when monetizing.
+
+### Where to look
+
+- North star: [../docs/00_Vision_and_Target_Architecture.md](../docs/00_Vision_and_Target_Architecture.md);
+  near-term sequence: [../docs/build/roadmap-platform-roles-billing.md](../docs/build/roadmap-platform-roles-billing.md).
+- Decisions: [../adr/](../adr) (0001 es-UI, 0002 food prefs, 0003 access-code,
+  0004 vision-led + operator-blindness, 0005 Pulse UI, 0006 sub-role + consent).
+- Slice plans: `../docs/build/slice-*-plan.md`.
+- Lessons: [lessons.md](lessons.md).
 
 ## Review
 
-Adoption playbook (LPEF playbooks/adopt-lpef.md) executed for the first time 2026-07-09: all DoD items passed. Friction to feed back to LPEF at next release: none blocking; playbook step 6 (verify refs at pinned tag) required the tag to be pushed first - ordering note worth adding to the playbook's Prerequisites.
+Adoption playbook (LPEF `playbooks/adopt-lpef.md`) executed first on 2026-07-09:
+all DoD items passed. M2 closed; the platform vision (adr/0004) is being built
+slice by slice. The reference build has stress-tested LPEF and is expected to
+yield extractable standards (Next.js and Prisma standards already landed in LPEF
+M3; entitlements + multi-tenant RBAC + EU health-data playbook are candidates).
