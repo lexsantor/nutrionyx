@@ -12,7 +12,7 @@ import { bmiCategory } from "@/modules/assessment/computed";
 import { listWeights } from "@/modules/measurement/repository";
 import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
-import { WeightChart } from "./weight-chart";
+import { WeightChart } from "@/components/weight-chart";
 
 export const dynamic = "force-dynamic";
 

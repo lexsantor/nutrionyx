@@ -101,6 +101,24 @@ export async function listPatientsWithLatestAssessment(organizationId: string) {
   });
 }
 
+/**
+ * Patient detail (read-only clinical view, docs/build/slice-7-plan.md), with
+ * the latest assessment. Org-scoped: the patient id is matched together with
+ * the organizationId from the session, so a specialist can never open another
+ * consulta's patient by guessing the id. Returns null when out of scope.
+ */
+export async function getPatientDetail(
+  organizationId: string,
+  patientId: string,
+) {
+  return prisma.patient.findFirst({
+    where: { id: patientId, organizationId },
+    include: {
+      assessments: { orderBy: { version: "desc" }, take: 1 },
+    },
+  });
+}
+
 export async function findPatientByAuthUserId(
   authUserId: string,
 ): Promise<Patient | null> {

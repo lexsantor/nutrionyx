@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
@@ -90,7 +91,14 @@ export default async function PatientsPage() {
                   });
                 return (
                   <tr key={patient.id} className="border-b border-hairline">
-                    <td className="py-2 pr-4">{patient.fullName}</td>
+                    <td className="py-2 pr-4">
+                      <Link
+                        href={`/panel/pacientes/${patient.id}`}
+                        className="font-medium text-ink no-underline hover:text-primary hover:underline"
+                      >
+                        {patient.fullName}
+                      </Link>
+                    </td>
                     <td className="py-2 pr-4">{patient.email}</td>
                     <td className="py-2 pr-4">
                       <span

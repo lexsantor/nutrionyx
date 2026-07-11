@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import {
   createInvitedPatient,
   findPatientByEmail,
+  getPatientDetail,
   listPatients,
 } from "@/modules/patient/repository";
 import {
@@ -146,6 +147,14 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect(await listWeights(orgA, bPatientId)).toEqual([]);
     // Under B's own scope they are present.
     expect((await listWeights(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes patient detail: org A cannot open org B's patient (R2)", async () => {
+    // Guessing B's patient id under A's scope resolves to nothing.
+    expect(await getPatientDetail(orgA, bPatientId)).toBeNull();
+    // Under B's own scope the patient loads.
+    const detail = await getPatientDetail(orgB, bPatientId);
+    expect(detail?.id).toBe(bPatientId);
   });
 
   it("resolves the platform-admin role with precedence (adr/0004)", async () => {

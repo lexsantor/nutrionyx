@@ -309,6 +309,34 @@
       "sports": "Nutrición y timing de entreno"
     }
   },
+  "patientDetail": {
+    "back": "← Pacientes",
+    "clinical": {
+      "title": "Ficha clínica",
+      "none": "El paciente aún no ha completado su evaluación.",
+      "bmi": "IMC",
+      "bmiCategories": {
+        "underweight": "Bajo peso",
+        "normal": "Peso normal",
+        "overweight": "Sobrepeso",
+        "obesity": "Obesidad"
+      },
+      "targetWeight": "Peso objetivo",
+      "sex": "Sexo",
+      "age": "Edad",
+      "ageYears": "{years} años",
+      "height": "Altura",
+      "activity": "Nivel de actividad",
+      "goals": "Objetivos",
+      "conditions": "Condiciones",
+      "allergies": "Alergias",
+      "medication": "Medicación"
+    },
+    "weight": {
+      "title": "Evolución de peso",
+      "empty": "Aún no hay pesadas registradas."
+    }
+  },
   "auth": {
     "signIn": {
       "title": "Inicia sesión en tu cuenta",
