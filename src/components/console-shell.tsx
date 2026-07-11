@@ -35,34 +35,45 @@ const navBase =
 const navActive = `${navBase} bg-surface-3 font-semibold text-ink`;
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
+// Declared at module scope (react-hooks/static-components): a component nested
+// in render would remount on every parent render.
+function NavItem({
+  href,
+  label,
+  icon: Icon,
+  active,
+}: {
+  href: string;
+  label: string;
+  icon: IconType;
+  active: boolean;
+}) {
+  return (
+    <Link
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={active ? navActive : navIdle}
+    >
+      <Icon size={ICON_SIZE} aria-hidden="true" />
+      {label}
+    </Link>
+  );
+}
+
 export function ConsoleShell({ children }: { children: ReactNode }) {
   const t = useTranslations("common");
   const pathname = usePathname();
   const isActive = (href: string) =>
     href === "/panel" ? pathname === "/panel" : pathname.startsWith(href);
 
-  const NavItem = ({
-    item,
-  }: {
-    item: { key: string; href: string; icon: IconType };
-  }) => {
-    const Icon = item.icon;
-    const active = isActive(item.href);
-    return (
-      <Link
-        href={item.href}
-        aria-current={active ? "page" : undefined}
-        className={active ? navActive : navIdle}
-      >
-        <Icon size={ICON_SIZE} aria-hidden="true" />
-        {t(`nav.${item.key}`)}
-      </Link>
-    );
-  };
-
   const bottomControls = (
     <>
-      <NavItem item={SETTINGS_NAV} />
+      <NavItem
+        href={SETTINGS_NAV.href}
+        label={t(`nav.${SETTINGS_NAV.key}`)}
+        icon={SETTINGS_NAV.icon}
+        active={isActive(SETTINGS_NAV.href)}
+      />
       <div className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ink-subtle">
         <span>{t("theme")}</span>
         <ThemeToggle />
@@ -88,7 +99,12 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
           <ul className="flex flex-col gap-1">
             {PRIMARY_NAV.map((item) => (
               <li key={item.key}>
-                <NavItem item={item} />
+                <NavItem
+                  href={item.href}
+                  label={t(`nav.${item.key}`)}
+                  icon={item.icon}
+                  active={isActive(item.href)}
+                />
               </li>
             ))}
           </ul>
