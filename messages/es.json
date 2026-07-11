@@ -5,7 +5,12 @@
     "themeDark": "Cambiar a tema oscuro",
     "themeLight": "Cambiar a tema claro",
     "navDashboard": "Panel",
-    "navSettings": "Ajustes"
+    "navSettings": "Ajustes",
+    "nav": {
+      "inicio": "Inicio",
+      "pacientes": "Pacientes",
+      "ajustes": "Ajustes"
+    }
   },
   "admin": {
     "title": "Administración de Nutrionyx",
@@ -79,6 +84,12 @@
   },
   "panel": {
     "settingsLink": "Ajustes",
+    "dashboard": {
+      "activePatients": "Pacientes activos",
+      "newIn30Days": "Nuevos (30 días)",
+      "withCompletedAssessment": "Con evaluación completada",
+      "pendingFollowUp": "Pendientes de seguimiento"
+    },
     "metrics": {
       "completionRate": "Tasa de finalización de evaluaciones",
       "completionTarget": "Objetivo ≥ 80%",

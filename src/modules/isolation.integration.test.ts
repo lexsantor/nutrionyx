@@ -26,6 +26,7 @@ import {
   isSlugTaken,
   updateOrgProfile,
 } from "@/modules/organization/repository";
+import { specialistDashboard } from "@/modules/dashboard/specialist";
 
 /**
  * Tenant-isolation invariant - LPEF Prisma Standard R2 (org-scoped queries)
@@ -191,5 +192,37 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // The slug A took is unavailable to B; an unused one is free.
     expect(await isSlugTaken(`slug-a-${suffix}`, orgB)).toBe(true);
     expect(await isSlugTaken(`free-${suffix}`, orgB)).toBe(false);
+  });
+
+  it("dashboard counts are org-scoped: A never counts B's patients (R2)", async () => {
+    // Seed B with an ACTIVE patient who completed an assessment and never
+    // logged weight - a pending-follow-up case.
+    const p = await createInvitedPatient({
+      organizationId: orgB,
+      email: `fu-${suffix}@example.test`,
+      fullName: "Follow Up",
+    });
+    await prisma.patient.update({
+      where: { id: p.id },
+      data: { status: "ACTIVE" },
+    });
+    const asmt = await getOrCreateInProgressAssessment({
+      organizationId: orgB,
+      patientId: p.id,
+    });
+    await prisma.assessment.update({
+      where: { id: asmt.id },
+      data: { status: "COMPLETED", completedAt: new Date() },
+    });
+
+    const dashA = await specialistDashboard(orgA);
+    const dashB = await specialistDashboard(orgB);
+
+    // A's org has none of B's active/completed/pending patients.
+    expect(dashA.withCompletedAssessment).toBe(0);
+    expect(dashA.pendingFollowUp).toBe(0);
+    // B counts its own seeded patient.
+    expect(dashB.withCompletedAssessment).toBeGreaterThanOrEqual(1);
+    expect(dashB.pendingFollowUp).toBeGreaterThanOrEqual(1);
   });
 });
