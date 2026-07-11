@@ -1,6 +1,6 @@
 # Build Plan: Specialist sub-role (specialtyType) + activation consent (Slice 6)
 
-Status: pending owner R9 sign-off - no schema or code until [adr/0006](../../adr/0006-specialist-subrole-and-activation-consent.md) is accepted.
+Status: approved (owner R9 sign-off 2026-07-11; [adr/0006](../../adr/0006-specialist-subrole-and-activation-consent.md) accepted). Building in the order below.
 Created: 2026-07-11. Inputs: [adr/0006](../../adr/0006-specialist-subrole-and-activation-consent.md), [Vision](../00_Vision_and_Target_Architecture.md) §2/§4, [roadmap](roadmap-platform-roles-billing.md), [adr/0003](../../adr/0003-specialist-onboarding-access-code.md) (activation via access code), [adr/0004](../../adr/0004-vision-led-slice-built.md) (operator-blindness).
 
 ## Problem (C1)
@@ -83,11 +83,12 @@ change. All deferred (adr/0006).
 ## Risks
 
 - **Consent copy is legal text.** v1 ships a **versioned placeholder** clearly
-  marked as such; the real DPA text (owner/counsel) must land before go-live. The
-  mechanism (versioned append-only record + gate) is what this slice builds.
-- **Backfill.** Existing consultas have `specialtyType = null` and no consent
-  record. Recommendation: keep nullable, do **not** force re-selection/re-consent
-  mid-session; surface a soft prompt in Ajustes/activation. Owner confirms whether
-  already-active consultas must accept the DPA retroactively (privacy call).
+  marked as such (owner sign-off); the real DPA text (owner/counsel) lands before
+  go-live. The mechanism (versioned append-only record + gate) is what this slice
+  builds.
+- **Backfill (decided).** Existing consultas keep `specialtyType = null` and no
+  consent record; we do **not** force re-selection/re-consent mid-session - a
+  **soft prompt in Ajustes/activation** surfaces it. `specialtyType` is freely
+  editable, including after the first patient.
 - Big-ish slice; built in the 6 steps above so each is verifiable; if a step
   balloons it splits into its own commit.

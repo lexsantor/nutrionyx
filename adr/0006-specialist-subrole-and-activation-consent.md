@@ -1,7 +1,7 @@
 ---
 type: adr
 title: Specialist sub-role (specialtyType) drives configuration, not access; GDPR/DPA consent at activation
-status: proposed
+status: accepted
 created: 2026-07-11
 ---
 
@@ -86,10 +86,14 @@ account in v1").
 - **The PRD's questionnaire + guided tour** - unconsumed data and friction;
   deferred to progressive disclosure and empty states.
 
-## Open decisions (owner)
+## Decisions (owner sign-off, 2026-07-11)
 
-- Final consent copy and terms version, and whether the DPA text is reviewed by
-  counsel before go-live.
-- Whether `specialtyType` stays freely editable after the first patient is
-  onboarded (recommended: yes in v1 - it only reconfigures UI, touches no
-  clinical data).
+- **Consent copy**: v1 ships a **versioned placeholder** DPA, clearly marked; the
+  real legal text lands before go-live. The mechanism (append-only, versioned,
+  activation gate) is built now.
+- **Sub-role editability**: `specialtyType` is **freely editable in Ajustes**,
+  including after the first patient - it only reconfigures UI, touches no clinical
+  data.
+- **Existing consultas (backfill)**: **soft prompt in Ajustes/activation**, not
+  forced mid-session; already-active consultas are not blocked to re-consent
+  retroactively. `specialtyType` stays nullable until chosen.
