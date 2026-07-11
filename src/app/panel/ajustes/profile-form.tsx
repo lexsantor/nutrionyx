@@ -16,19 +16,28 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
   >(updateProfileAction, null);
 
   return (
-    <form action={formAction} className="flex flex-col gap-6">
-      <div className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium">{t("name")}</span>
-        <p className="text-base">{profile.name}</p>
-        <p className="text-xs text-ink-subtle">{t("nameHint")}</p>
-      </div>
+    <form action={formAction} className="flex w-full max-w-3xl flex-col gap-6">
+      <Field
+        id="name"
+        label={t("name")}
+        defaultValue={profile.name}
+        required
+        hint={t("nameHint")}
+      />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field id="legalName" label={t("legalName")} defaultValue={profile.legalName} />
         <Field id="taxId" label={t("taxId")} defaultValue={profile.taxId} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field id="slug" label={t("slug")} defaultValue={profile.slug} hint={t("slugHint")} />
         <Field id="hours" label={t("hours")} defaultValue={profile.hours} placeholder="L-V 9:00-14:00" />
-        <Field id="addressLine" label={t("addressLine")} defaultValue={profile.addressLine} />
+      </div>
+
+      <Field id="addressLine" label={t("addressLine")} defaultValue={profile.addressLine} />
+
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Field id="locality" label={t("locality")} defaultValue={profile.locality} />
         <Field id="postalCode" label={t("postalCode")} defaultValue={profile.postalCode} />
         <Field id="country" label={t("country")} defaultValue={profile.country ?? "ES"} />
@@ -47,7 +56,7 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
             placeholder="https://..."
             maxLength={500}
           />
-          <p className="text-xs text-ink-subtle">{t("logoHint")}</p>
+          <p className="text-sm text-ink-subtle">{t("logoHint")}</p>
         </div>
         {profile.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -83,12 +92,14 @@ function Field({
   defaultValue,
   hint,
   placeholder,
+  required,
 }: {
   id: string;
   label: string;
   defaultValue: string | null;
   hint?: string;
   placeholder?: string;
+  required?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -101,9 +112,10 @@ function Field({
         type="text"
         defaultValue={defaultValue ?? ""}
         placeholder={placeholder}
+        required={required}
         maxLength={200}
       />
-      {hint ? <p className="text-xs text-ink-subtle">{hint}</p> : null}
+      {hint ? <p className="text-sm text-ink-subtle">{hint}</p> : null}
     </div>
   );
 }

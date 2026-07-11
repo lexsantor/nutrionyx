@@ -173,6 +173,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
 
   it("consulta profile: updating org A leaves org B untouched; slug is unique", async () => {
     await updateOrgProfile(orgA, {
+      name: "Org A renamed",
       legalName: "A SL",
       taxId: null,
       addressLine: null,
@@ -184,6 +185,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       slug: `slug-a-${suffix}`,
     });
     const bProfile = await getOrgProfile(orgB);
+    expect(bProfile?.name).toBe("Org B"); // B's name untouched
     expect(bProfile?.legalName).toBeNull();
     expect(bProfile?.slug).toBeNull();
     // The slug A took is unavailable to B; an unused one is free.

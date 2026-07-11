@@ -40,15 +40,21 @@ export async function updateProfileAction(
   }
   const org = await ensureOrganization(activeOrg.id, activeOrg.name);
 
-  // Slug: normalize; default from name; reject a taken one.
+  const name = field(formData, "name");
+  if (!name) {
+    return { errorKey: "nameRequired" };
+  }
+
+  // Slug: normalize; default from the new name; reject a taken one.
   const rawSlug = field(formData, "slug");
-  const slug = orgSlug(rawSlug ?? org.name);
+  const slug = orgSlug(rawSlug ?? name);
   if (slug && (await isSlugTaken(slug, org.id))) {
     return { errorKey: "slugTaken" };
   }
 
   try {
     await updateOrgProfile(org.id, {
+      name,
       legalName: field(formData, "legalName"),
       taxId: field(formData, "taxId"),
       addressLine: field(formData, "addressLine"),

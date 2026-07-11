@@ -9,10 +9,13 @@ export async function ensureOrganization(
   authOrgId: string,
   name: string,
 ): Promise<Organization> {
+  // Idempotent existence check. On update we do NOT touch name: the mirror is
+  // the source of truth for the consulta's display name, editable in Settings
+  // (the specialist renames it there), so we must not clobber it on every load.
   return prisma.organization.upsert({
     where: { authOrgId },
     create: { authOrgId, name },
-    update: { name },
+    update: {},
   });
 }
 
@@ -71,6 +74,7 @@ export async function isSlugTaken(
 }
 
 export type OrgProfileInput = {
+  name: string;
   legalName: string | null;
   taxId: string | null;
   addressLine: string | null;

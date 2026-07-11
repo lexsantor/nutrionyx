@@ -54,11 +54,11 @@ export default async function PanelPage() {
     <>
       <Topbar nav={<SpecialistNav />} />
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
-        <h1 className="text-3xl font-semibold">{active.name}</h1>
+        <h1 className="text-3xl font-semibold">{org.name}</h1>
 
         <section className="grid grid-cols-2 gap-4 py-6">
           <Card>
-            <p className="text-sm text-ink-subtle">
+            <p className="text-base text-ink-subtle">
               {t("metrics.completionRate")}
             </p>
             <p className="mt-1 text-2xl font-semibold">
@@ -75,7 +75,7 @@ export default async function PanelPage() {
             </p>
           </Card>
           <Card>
-            <p className="text-sm text-ink-subtle">{t("metrics.medianTime")}</p>
+            <p className="text-base text-ink-subtle">{t("metrics.medianTime")}</p>
             <p className="mt-1 text-2xl font-semibold">
               {metrics.medianCompletionMinutes !== null
                 ? t("metrics.minutes", { min: metrics.medianCompletionMinutes })
@@ -89,7 +89,7 @@ export default async function PanelPage() {
         <h2 className="text-lg font-semibold">{t("patients.title")}</h2>
 
         {patients.length === 0 ? (
-          <p className="text-sm text-ink-subtle">{t("patients.empty")}</p>
+          <p className="text-base text-ink-subtle">{t("patients.empty")}</p>
         ) : (
           <table className="w-full text-left text-sm">
             <thead>

@@ -45,7 +45,7 @@ export default async function SettingsPage() {
             {t("back")}
           </Link>
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-ink-subtle">{t("subtitle")}</p>
+          <p className="text-base text-ink-subtle">{t("subtitle")}</p>
         </div>
         {profile ? <ProfileForm profile={profile} /> : null}
       </main>
