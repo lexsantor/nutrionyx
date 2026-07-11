@@ -42,6 +42,31 @@
       }
     }
   },
+  "settings": {
+    "title": "Ajustes de la consulta",
+    "subtitle": "Datos de tu consulta. Los fiscales se usarán en las facturas.",
+    "back": "← Volver al panel",
+    "name": "Nombre de la consulta",
+    "nameHint": "Se define al crear la consulta.",
+    "legalName": "Razón social",
+    "taxId": "CIF/NIF",
+    "slug": "Identificador (slug)",
+    "slugHint": "Solo minúsculas, números y guiones. Debe ser único.",
+    "hours": "Horario",
+    "addressLine": "Dirección",
+    "locality": "Localidad",
+    "postalCode": "Código postal",
+    "country": "País",
+    "logoUrl": "URL del logo",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "saved": "Ajustes guardados.",
+    "errors": {
+      "generic": "No se pudo guardar. Inténtalo de nuevo.",
+      "noOrganization": "No hay consulta activa.",
+      "slugTaken": "Ese identificador ya está en uso. Elige otro."
+    }
+  },
   "home": {
     "notSignedIn": "Sesión no iniciada",
     "signIn": "Iniciar sesión",
@@ -49,6 +74,7 @@
     "signedInAs": "Sesión iniciada como {name}"
   },
   "panel": {
+    "settingsLink": "Ajustes",
     "metrics": {
       "completionRate": "Tasa de finalización de evaluaciones",
       "completionTarget": "Objetivo ≥ 80%",

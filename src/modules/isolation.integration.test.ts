@@ -21,6 +21,11 @@ import {
   listConsultas,
   revokeAccessCode,
 } from "@/modules/platform-admin/repository";
+import {
+  getOrgProfile,
+  isSlugTaken,
+  updateOrgProfile,
+} from "@/modules/organization/repository";
 
 /**
  * Tenant-isolation invariant - LPEF Prisma Standard R2 (org-scoped queries)
@@ -164,5 +169,25 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       data: { usedAt: new Date(), usedBy: "someone" },
     });
     expect(await revokeAccessCode(used)).toBe(false); // a used code is never revoked
+  });
+
+  it("consulta profile: updating org A leaves org B untouched; slug is unique", async () => {
+    await updateOrgProfile(orgA, {
+      legalName: "A SL",
+      taxId: null,
+      addressLine: null,
+      locality: null,
+      postalCode: null,
+      country: "ES",
+      hours: null,
+      logoUrl: null,
+      slug: `slug-a-${suffix}`,
+    });
+    const bProfile = await getOrgProfile(orgB);
+    expect(bProfile?.legalName).toBeNull();
+    expect(bProfile?.slug).toBeNull();
+    // The slug A took is unavailable to B; an unused one is free.
+    expect(await isSlugTaken(`slug-a-${suffix}`, orgB)).toBe(true);
+    expect(await isSlugTaken(`free-${suffix}`, orgB)).toBe(false);
   });
 });

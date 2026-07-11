@@ -15,6 +15,17 @@ model Organization {
   // Better Auth organization id (Neon Auth); see deviations/0001.
   authOrgId String    @unique
   name      String
+  // Consulta profile (docs/build/slice-4-plan.md). All optional; fiscal
+  // fields feed Billing invoices later. Editable by the owning specialist.
+  legalName   String?
+  taxId       String?
+  addressLine String?
+  locality    String?
+  postalCode  String?
+  country     String?  @default("ES")
+  hours       String?
+  logoUrl     String?
+  slug        String?  @unique
   createdAt DateTime  @default(now())
   patients  Patient[]
 

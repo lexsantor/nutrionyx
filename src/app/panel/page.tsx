@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
@@ -55,6 +56,12 @@ export default async function PanelPage() {
       <Topbar
         right={
           <>
+            <Link
+              href="/panel/ajustes"
+              className="text-sm text-ink-subtle underline underline-offset-2 hover:text-ink"
+            >
+              {t("settingsLink")}
+            </Link>
             <span className="text-sm text-ink-subtle">{session.user.name}</span>
             <LogoutButton />
           </>
