@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
@@ -9,8 +8,8 @@ import { computeSliceMetrics } from "@/modules/assessment/metrics";
 import { latestWeightByPatient } from "@/modules/measurement/repository";
 import { weightDelta } from "@/modules/measurement/progress";
 import { Topbar } from "@/components/topbar";
+import { SpecialistNav } from "@/components/specialist-nav";
 import { Card } from "@/components/ui/card";
-import { LogoutButton } from "../logout-button";
 import { InviteForm } from "./invite-form";
 import { CancelInvitationButton } from "./cancel-button";
 
@@ -53,22 +52,9 @@ export default async function PanelPage() {
 
   return (
     <>
-      <Topbar
-        right={
-          <>
-            <Link
-              href="/panel/ajustes"
-              className="text-sm text-ink-subtle underline underline-offset-2 hover:text-ink"
-            >
-              {t("settingsLink")}
-            </Link>
-            <span className="text-sm text-ink-subtle">{session.user.name}</span>
-            <LogoutButton />
-          </>
-        }
-      />
+      <Topbar nav={<SpecialistNav />} />
       <main className="mx-auto w-full max-w-5xl px-6 py-10">
-        <h1 className="text-2xl font-semibold">{active.name}</h1>
+        <h1 className="text-3xl font-semibold">{active.name}</h1>
 
         <section className="grid grid-cols-2 gap-4 py-6">
           <Card>

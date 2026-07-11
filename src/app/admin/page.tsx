@@ -9,7 +9,6 @@ import {
 } from "@/modules/platform-admin/repository";
 import { Topbar } from "@/components/topbar";
 import { Card } from "@/components/ui/card";
-import { LogoutButton } from "../logout-button";
 import { CodeGenerator } from "./code-generator";
 
 export const dynamic = "force-dynamic";
@@ -35,14 +34,7 @@ export default async function AdminPage() {
 
   return (
     <>
-      <Topbar
-        right={
-          <>
-            <span className="text-sm text-ink-subtle">{session.user.name}</span>
-            <LogoutButton />
-          </>
-        }
-      />
+      <Topbar />
       <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
 

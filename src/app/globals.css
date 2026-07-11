@@ -131,69 +131,71 @@
   --shadow-el-lg: var(--el-lg);
 }
 
-/* Base - design.md 18.1 */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/*
+ * Base. Wrapped in @layer base so Tailwind utilities (text-2xl, etc.) always
+ * win over the element defaults. Body is 16px; headings use a restrained UI
+ * scale proportional to the body (not design.md's poster scale) - screens
+ * pick a heading size with a utility; these are the fallbacks.
+ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
 
-body {
-  margin: 0;
-  background: var(--color-canvas);
-  color: var(--color-ink);
-  font: 400 16px/1.5 var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-}
+  body {
+    margin: 0;
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font: 400 16px/1.5 var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 
-h1,
-h2,
-h3,
-h4 {
-  font-family: var(--font-display);
-  font-weight: 600;
-  margin: 0;
-  line-height: 1.1;
-  letter-spacing: -0.4px;
-}
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin: 0;
+    line-height: 1.2;
+    letter-spacing: -0.2px;
+  }
 
-h1 {
-  font-size: clamp(2.1rem, 1.2rem + 4vw, 4rem);
-  line-height: 1.04;
-  letter-spacing: -1.6px;
-}
+  h1 {
+    font-size: 1.5rem;
+    letter-spacing: -0.4px;
+  }
 
-h2 {
-  font-size: clamp(1.8rem, 1.2rem + 2.6vw, 3rem);
-  line-height: 1.05;
-  letter-spacing: -1px;
-}
+  h2 {
+    font-size: 1.25rem;
+  }
 
-h3 {
-  font-size: clamp(1.5rem, 1.1rem + 1.7vw, 2.25rem);
-  line-height: 1.07;
-  letter-spacing: -0.6px;
-}
+  h3 {
+    font-size: 1.125rem;
+  }
 
-h4 {
-  font-size: clamp(1.4rem, 1rem + 1.6vw, 1.75rem);
-}
+  h4 {
+    font-size: 1rem;
+  }
 
-a {
-  color: var(--color-accent-text);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
+  a {
+    color: var(--color-accent-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
 
-::selection {
-  background: var(--c-selection-bg);
-  color: var(--c-selection-fg);
-}
+  ::selection {
+    background: var(--c-selection-bg);
+    color: var(--c-selection-fg);
+  }
 
-:where(a, button, input, select, textarea, [tabindex]):focus-visible {
-  outline: 2px solid var(--color-focus-ring);
-  outline-offset: 2px;
-  border-radius: 4px;
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -2,8 +2,8 @@ import { getTranslations } from "next-intl/server";
 import { signOut } from "@/lib/auth/sign-out";
 
 /**
- * Server-rendered sign-out control. Uses a form bound to the signOut server
- * action so it works without client JavaScript.
+ * Outlined sign-out control. A form bound to the signOut server action, so it
+ * works without client JavaScript.
  */
 export async function LogoutButton() {
   const t = await getTranslations("common");
@@ -11,7 +11,7 @@ export async function LogoutButton() {
     <form action={signOut}>
       <button
         type="submit"
-        className="text-sm text-ink-subtle underline underline-offset-2 hover:text-ink"
+        className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-medium text-ink transition-colors hover:border-hairline-strong"
       >
         {t("signOut")}
       </button>

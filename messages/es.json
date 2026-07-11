@@ -3,7 +3,9 @@
     "appName": "Nutrionyx",
     "signOut": "Cerrar sesión",
     "themeDark": "Cambiar a tema oscuro",
-    "themeLight": "Cambiar a tema claro"
+    "themeLight": "Cambiar a tema claro",
+    "navDashboard": "Panel",
+    "navSettings": "Ajustes"
   },
   "admin": {
     "title": "Administración de Nutrionyx",
@@ -58,6 +60,8 @@
     "postalCode": "Código postal",
     "country": "País",
     "logoUrl": "URL del logo",
+    "logoHint": "Pega el enlace de tu logo. Si no lo tienes alojado, súbelo antes a un servicio de imágenes (por ejemplo Cloudinary o Imgur) y pega aquí la URL. La subida directa desde tu equipo llegará pronto.",
+    "logoPreview": "Logo de la consulta",
     "save": "Guardar",
     "saving": "Guardando...",
     "saved": "Ajustes guardados.",

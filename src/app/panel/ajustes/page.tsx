@@ -8,7 +8,7 @@ import {
   getOrgProfile,
 } from "@/modules/organization/repository";
 import { Topbar } from "@/components/topbar";
-import { LogoutButton } from "../../logout-button";
+import { SpecialistNav } from "@/components/specialist-nav";
 import { ProfileForm } from "./profile-form";
 
 export const dynamic = "force-dynamic";
@@ -35,15 +35,8 @@ export default async function SettingsPage() {
 
   return (
     <>
-      <Topbar
-        right={
-          <>
-            <span className="text-sm text-ink-subtle">{session.user.name}</span>
-            <LogoutButton />
-          </>
-        }
-      />
-      <main className="mx-auto flex w-full max-w-2xl flex-col gap-6 px-6 py-10">
+      <Topbar nav={<SpecialistNav />} />
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
         <div className="flex flex-col gap-1">
           <Link
             href="/panel"
