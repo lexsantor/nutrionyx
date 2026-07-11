@@ -2,6 +2,7 @@
   "common": {
     "appName": "Nutrionyx",
     "signOut": "Cerrar sesión",
+    "theme": "Tema",
     "themeDark": "Cambiar a tema oscuro",
     "themeLight": "Cambiar a tema claro",
     "navDashboard": "Panel",

@@ -33,13 +33,13 @@ export default async function SettingsPage() {
 
   return (
     <ConsoleShell>
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p className="text-base text-ink-subtle">{t("subtitle")}</p>
         </div>
         {profile ? <ProfileForm profile={profile} /> : null}
-      </main>
+      </div>
     </ConsoleShell>
   );
 }

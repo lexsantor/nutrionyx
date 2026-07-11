@@ -43,10 +43,9 @@ export default async function PanelPage() {
 
   return (
     <ConsoleShell>
-      <div className="mx-auto w-full max-w-5xl px-6 py-10">
-        <h1 className="text-2xl font-semibold">{org.name}</h1>
+      <h1 className="text-2xl font-semibold">{org.name}</h1>
 
-        <section className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
           <Card>
             <p className="text-sm text-ink-subtle">
               {t("dashboard.activePatients")}
@@ -109,7 +108,6 @@ export default async function PanelPage() {
             <p className="text-xs text-ink-subtle">{t("metrics.timeTarget")}</p>
           </Card>
         </section>
-      </div>
     </ConsoleShell>
   );
 }

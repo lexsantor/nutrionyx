@@ -44,7 +44,7 @@ export default async function PatientsPage() {
 
   return (
     <ConsoleShell>
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">{t("patients.title")}</h1>
 
         {patients.length === 0 ? (
@@ -152,7 +152,7 @@ export default async function PatientsPage() {
             </ul>
           </div>
         ) : null}
-      </main>
+      </div>
     </ConsoleShell>
   );
 }
