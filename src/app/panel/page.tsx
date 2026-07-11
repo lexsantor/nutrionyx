@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
-import { resolveUserRole } from "@/lib/auth/role";
+import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { computeSliceMetrics } from "@/modules/assessment/metrics";
@@ -23,11 +23,11 @@ export default async function PanelPage() {
     redirect("/auth/sign-in");
   }
 
-  // A patient is a member of the nutritionist's org, so organization.list()
-  // would still return that org here. Gate by domain role, not membership:
-  // patients belong in /mi-espacio and never see the console.
-  if ((await resolveUserRole(session.user.id)) === "patient") {
-    redirect("/mi-espacio");
+  // Gate by domain role, not membership. Only nutritionists (Organization
+  // Owners) see the console; patients and platform admins go to their area.
+  const role = await resolveUserRole(session.user.id);
+  if (role !== "nutritionist") {
+    redirect(roleHome(role));
   }
 
   const { data: organizations } = await auth.organization.list();

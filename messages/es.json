@@ -5,6 +5,43 @@
     "themeDark": "Cambiar a tema oscuro",
     "themeLight": "Cambiar a tema claro"
   },
+  "admin": {
+    "title": "Administración de Nutrionyx",
+    "metrics": {
+      "consultas": "Consultas",
+      "patients": "Pacientes",
+      "codesUsed": "Códigos usados",
+      "codesPending": "Códigos pendientes"
+    },
+    "consultas": {
+      "title": "Especialistas y consultas",
+      "empty": "Aún no hay consultas.",
+      "name": "Consulta",
+      "created": "Creada",
+      "patients": "Pacientes"
+    },
+    "codes": {
+      "title": "Códigos de acceso",
+      "hint": "Genera un código de un solo uso para invitar a un especialista.",
+      "note": "Nota (opcional)",
+      "notePlaceholder": "Para quién es este código",
+      "generate": "Generar código",
+      "generating": "Generando...",
+      "generated": "Código generado:",
+      "code": "Código",
+      "noteCol": "Nota",
+      "status": "Estado",
+      "actions": "Acciones",
+      "revoke": "Revocar",
+      "statuses": {
+        "used": "Usado",
+        "pending": "Pendiente"
+      },
+      "errors": {
+        "generic": "No se pudo generar. Inténtalo de nuevo."
+      }
+    }
+  },
   "home": {
     "notSignedIn": "Sesión no iniciada",
     "signIn": "Iniciar sesión",

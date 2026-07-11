@@ -141,7 +141,20 @@ model SpecialistAccessCode {
   note      String?
   usedAt    DateTime?
   usedBy    String?
+  createdBy String?
   createdAt DateTime  @default(now())
 
   @@map("specialist_access_codes")
+}
+
+// Platform-owner allowlist (docs/build/slice-3-plan.md, adr/0004). A user in
+// this table is the platform Super Admin - business/platform operations only,
+// never patient clinical data (operator-blindness).
+model PlatformAdmin {
+  id         String   @id @default(cuid())
+  authUserId String   @unique
+  note       String?
+  createdAt  DateTime @default(now())
+
+  @@map("platform_admins")
 }

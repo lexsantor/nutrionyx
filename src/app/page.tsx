@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
-import { resolveUserRole } from "@/lib/auth/role";
+import { resolveUserRole, roleHome } from "@/lib/auth/role";
 
 // Session-dependent server component: always render dynamically.
 export const dynamic = "force-dynamic";
@@ -13,7 +13,7 @@ export default async function Home() {
 
   if (session?.user) {
     const role = await resolveUserRole(session.user.id);
-    redirect(role === "patient" ? "/mi-espacio" : "/panel");
+    redirect(roleHome(role));
   }
 
   return (

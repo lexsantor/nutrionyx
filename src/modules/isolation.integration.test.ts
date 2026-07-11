@@ -15,6 +15,12 @@ import {
   listWeights,
   recordWeight,
 } from "@/modules/measurement/repository";
+import { resolveUserRole } from "@/lib/auth/role";
+import {
+  createAccessCode,
+  listConsultas,
+  revokeAccessCode,
+} from "@/modules/platform-admin/repository";
 
 /**
  * Tenant-isolation invariant - LPEF Prisma Standard R2 (org-scoped queries)
@@ -34,6 +40,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
   let orgB = "";
   let bPatientId = "";
   let bAssessmentId = "";
+  let adminUserId = "";
 
   beforeAll(async () => {
     const a = await prisma.organization.create({
@@ -61,9 +68,18 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       patientId: bPatient.id,
     });
     bAssessmentId = bAssessment.id;
+
+    adminUserId = `admin-${suffix}`;
+    await prisma.platformAdmin.create({ data: { authUserId: adminUserId } });
   });
 
   afterAll(async () => {
+    await prisma.platformAdmin.deleteMany({
+      where: { authUserId: adminUserId },
+    });
+    await prisma.specialistAccessCode.deleteMany({
+      where: { createdBy: adminUserId },
+    });
     for (const org of [orgA, orgB]) {
       if (!org) continue;
       await prisma.domainEvent.deleteMany({ where: { organizationId: org } });
@@ -117,5 +133,36 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect(await listWeights(orgA, bPatientId)).toEqual([]);
     // Under B's own scope they are present.
     expect((await listWeights(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("resolves the platform-admin role with precedence (adr/0004)", async () => {
+    expect(await resolveUserRole(adminUserId)).toBe("platform-admin");
+  });
+
+  it("operator-blindness: listConsultas exposes only business fields", async () => {
+    const consultas = await listConsultas();
+    expect(consultas.length).toBeGreaterThan(0);
+    for (const c of consultas) {
+      // No clinical columns ever reach the platform admin surface.
+      expect(Object.keys(c).sort()).toEqual([
+        "createdAt",
+        "id",
+        "name",
+        "patientCount",
+      ]);
+    }
+  });
+
+  it("code generator: mint, revoke-unused, and refuse revoke-used", async () => {
+    const code = await createAccessCode({ createdBy: adminUserId, note: "t" });
+    expect(await revokeAccessCode(code)).toBe(true);
+    expect(await revokeAccessCode(code)).toBe(false); // already removed
+
+    const used = await createAccessCode({ createdBy: adminUserId });
+    await prisma.specialistAccessCode.update({
+      where: { code: used },
+      data: { usedAt: new Date(), usedBy: "someone" },
+    });
+    expect(await revokeAccessCode(used)).toBe(false); // a used code is never revoked
   });
 });
