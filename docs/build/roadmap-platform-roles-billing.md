@@ -11,6 +11,38 @@ Grounds: [05_Identity_Access_Model](../05_Identity_Access_Model.md), [PRD_01](..
 - Billing is a **Non-Goal for now, named future** (PRD_01 Non-Goals; PRD_02 §2.5 "enable future subscription plans"; 04 §4.2 "Subscription lifecycle (future)"). Zero payment entities.
 - Monetization shape (your note + PRD_02 KPIs "active nutritionists / clinic retention"): **specialists pay Nutrionyx a recurring subscription (B2B SaaS)**. Patients do not pay through the platform.
 
+## Status reconciliation (2026-07-11, post Slices 2-5)
+
+This roadmap was written before any of it shipped. Current reality:
+
+- **Tier A - Platform role backbone: done.** `resolveUserRole` is
+  platform-admin > patient > nutritionist; the `PlatformAdmin` allowlist and
+  operator-blindness rule shipped under [adr/0004](../../adr/0004-vision-led-slice-built.md)
+  (Slice 3). Note: this doc's Tier A/E text says "ADR-0004: Platform Admin role"
+  and "ADR-0005" for billing, but those numbers were taken by **0004 (vision-led,
+  operator-blindness)** and **0005 (adopt Pulse CRM UI)**. The Billing ADR takes
+  the next free number when Tier E is built.
+- **Tier B - Superadmin dashboard + code generator: done** (Slice 3): `/admin`
+  with counts-only consultas, platform metrics, mint/revoke access codes.
+- **Tier C - Consulta customization: done** (Slice 4): `Organization` profile
+  (legal name, tax id, address, hours, logo, slug) + a Settings screen; editable
+  consulta name is self-service.
+- Also shipped, not originally in this roadmap: measurement/weight tracking
+  (Slice 2) and a Pulse-adapted specialist console - Inicio/Pacientes/Ajustes
+  with role-driven layout ([adr/0005](../../adr/0005-adopt-pulse-crm-ui.md), Slice 5).
+
+**Next declared addition (net-new): specialist sub-role + activation consent**
+([adr/0006](../../adr/0006-specialist-subrole-and-activation-consent.md),
+[slice-6-plan](slice-6-plan.md)). `Organization.specialtyType`
+(Dietista-nutricionista | Nutricionista deportivo) as a **configuration** flag
+(dashboard/terminology/templates), never RBAC; plus a **GDPR/DPA consent gate at
+activation** before a specialist may invite patients. Metabolizes the external
+weight-loss PRD vision-led (C2/C6/C8): its invite/role/patient/weight epics are
+already built above; its remaining epics (messaging, calendar, plan builder,
+reports) already live as **future** bounded contexts in the
+[Vision](../00_Vision_and_Target_Architecture.md) §3 and are **not** re-scoped
+here.
+
 ## Three additions to declare (net-new, no conflicts with the docs)
 
 1. A third role: **Platform Admin** (superadmin), above specialists, for platform operations. Extends the 05 permission matrix with a superadmin column.

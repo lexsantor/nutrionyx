@@ -9,7 +9,7 @@ An enterprise multi-tenant clinical SaaS for nutrition & coaching professionals 
 ## 2. Roles & access (RBAC, not three fixed roles)
 
 - **Super Admin (Platform Owner)** - platform operations: SaaS metrics (MRR/ARR/LTV/CAC/churn/NPS...), specialist lifecycle (activate/suspend/transfer/limits/branding/entitlements), billing, global config, marketplace, AI ops. Sees **all business/platform data**. **Operator-blindness (hard rule, C9/C13): never patient clinical/private data** - only the managing specialist can.
-- **Specialist (Organization Owner) + Team** - full control of **their own consulta only**, never another professional's. Specialists invite staff with **scoped roles/permissions** → this is RBAC (roles + permissions + members), not a single owner.
+- **Specialist (Organization Owner) + Team** - full control of **their own consulta only**, never another professional's. Specialists invite staff with **scoped roles/permissions** → this is RBAC (roles + permissions + members), not a single owner. A specialist also carries a **sub-role** (`specialtyType`: Dietista-nutricionista | Nutricionista deportivo, [adr/0006](../adr/0006-specialist-subrole-and-activation-consent.md)) - this is **configuration** (dashboard, terminology, templates), **not access**, so it lives on the Organization and never touches the permission matrix or operator-blindness.
 - **Patient** - only **their own** information, documents, appointments, payments and messages, and only with the professional they belong to.
 
 Identity principles inherited from [05](05_Identity_Access_Model.md): one identity ↔ one Organization, authorization server-side only, **deny by default**. Every resource is org-scoped; cross-tenant access is never allowed (built and CI-enforced).
@@ -18,7 +18,7 @@ Identity principles inherited from [05](05_Identity_Access_Model.md): one identi
 
 Each context is org-scoped and ships as evidence-gated slices. Status: [built] / [next] / [future].
 
-- **Identity & Access** - auth, organizations, invitation [built]; RBAC + team members, Platform Admin role [next].
+- **Identity & Access** - auth, organizations, invitation [built]; RBAC + team members, Platform Admin role [next]; specialist sub-role (`specialtyType`) + activation DPA/consent gate [next, adr/0006].
 - **Patient Management** - patient, assessment, progress/measurement [built]; richer profile + lifecycle [future].
 - **Clinical Treatment - Nutrition** - diet plans, recipes, meals, macros/micros, exchanges, shopping list, supplementation, restrictions [future].
 - **Clinical Treatment - Training** - routines, exercises, videos, sets/reps/load/rest, progression [future].
