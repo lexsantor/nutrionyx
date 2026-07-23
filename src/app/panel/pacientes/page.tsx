@@ -51,94 +51,113 @@ export default async function PatientsPage() {
         {patients.length === 0 ? (
           <p className="text-base text-ink-subtle">{t("patients.empty")}</p>
         ) : (
-          <table className="w-full text-left text-sm">
-            <thead>
-              <tr className="border-b border-hairline text-ink-subtle">
-                <th scope="col" className="py-2 pr-4 font-medium">
-                  {t("patients.name")}
-                </th>
-                <th scope="col" className="py-2 pr-4 font-medium">
-                  {t("patients.email")}
-                </th>
-                <th scope="col" className="py-2 pr-4 font-medium">
-                  {t("patients.status")}
-                </th>
-                <th scope="col" className="py-2 pr-4 font-medium">
-                  {t("patients.assessment")}
-                </th>
-                <th scope="col" className="py-2 font-medium">
-                  {t("patients.weight")}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient) => {
-                const assessment = patient.assessments[0] ?? null;
-                const latest = latestWeights.get(patient.id);
-                const latestKg = latest ? Number(latest.value) : null;
-                const targetKg =
-                  assessment?.targetWeightKg != null
-                    ? Number(assessment.targetWeightKg)
-                    : null;
-                const wDelta =
-                  latestKg != null && targetKg != null
-                    ? weightDelta(latestKg, targetKg)
-                    : null;
-                const fmtKg = (v: number) =>
-                  v.toLocaleString("es-ES", {
-                    minimumFractionDigits: 1,
-                    maximumFractionDigits: 1,
-                  });
-                return (
-                  <tr key={patient.id} className="border-b border-hairline">
-                    <td className="py-2 pr-4">
-                      <Link
-                        href={`/panel/pacientes/${patient.id}`}
-                        className="font-medium text-ink no-underline hover:text-primary hover:underline"
-                      >
-                        {patient.fullName}
-                      </Link>
-                    </td>
-                    <td className="py-2 pr-4">{patient.email}</td>
-                    <td className="py-2 pr-4">
-                      <span
-                        className={
-                          patient.status === "ACTIVE"
-                            ? "rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success"
-                            : "rounded-full bg-warning-soft px-2 py-0.5 text-xs font-medium text-warning"
-                        }
-                      >
-                        {t(`patients.statuses.${patient.status}`)}
-                      </span>
-                    </td>
-                    <td className="py-2 pr-4 text-sm">
-                      {assessment?.status === "COMPLETED"
-                        ? `${t("patients.assessments.completed")} · ${t("patients.assessments.bmi")} ${Number(assessment.bmi)}`
-                        : assessment?.status === "IN_PROGRESS"
-                          ? t("patients.assessments.inProgress")
-                          : t("patients.assessments.pending")}
-                    </td>
-                    <td className="py-2 text-sm">
-                      {latestKg != null ? (
-                        <span>
-                          {fmtKg(latestKg)} kg
-                          {wDelta != null && wDelta !== 0 ? (
-                            <span className="text-ink-subtle">
-                              {" "}
-                              ({wDelta > 0 ? "+" : "−"}
-                              {fmtKg(Math.abs(wDelta))})
-                            </span>
-                          ) : null}
+          <div className="w-full overflow-x-auto rounded-xl border border-hairline bg-surface-1">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-hairline bg-surface-2 text-ink-subtle">
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("patients.name")}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("patients.email")}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("patients.status")}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("patients.assessment")}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("patients.weight")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {patients.map((patient, idx) => {
+                  const assessment = patient.assessments[0] ?? null;
+                  const latest = latestWeights.get(patient.id);
+                  const latestKg = latest ? Number(latest.value) : null;
+                  const targetKg =
+                    assessment?.targetWeightKg != null
+                      ? Number(assessment.targetWeightKg)
+                      : null;
+                  const wDelta =
+                    latestKg != null && targetKg != null
+                      ? weightDelta(latestKg, targetKg)
+                      : null;
+                  const fmtKg = (v: number) =>
+                    v.toLocaleString("es-ES", {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    });
+                  return (
+                    <tr
+                      key={patient.id}
+                      className="border-b border-hairline transition-colors last:border-0 hover:bg-surface-2"
+                    >
+                      <td className="px-4 py-3">
+                        <Link
+                          href={`/panel/pacientes/${patient.id}`}
+                          className="font-medium text-ink no-underline transition-colors hover:text-primary"
+                        >
+                          {patient.fullName}
+                        </Link>
+                      </td>
+                      <td className="px-4 py-3 text-ink-subtle">{patient.email}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={
+                            patient.status === "ACTIVE"
+                              ? "inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success"
+                              : "inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-0.5 text-xs font-medium text-warning"
+                          }
+                        >
+                          <span
+                            className={`size-1.5 rounded-full ${
+                              patient.status === "ACTIVE"
+                                ? "bg-success"
+                                : "bg-warning"
+                            }`}
+                          />
+                          {t(`patients.statuses.${patient.status}`)}
                         </span>
-                      ) : (
-                        <span className="text-ink-tertiary">—</span>
-                      )}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      </td>
+                      <td className="px-4 py-3 text-sm">
+                        {assessment?.status === "COMPLETED" ? (
+                          <span className="text-ink">{t("patients.assessments.completed")}</span>
+                        ) : assessment?.status === "IN_PROGRESS" ? (
+                          <span className="text-ink-subtle">{t("patients.assessments.inProgress")}</span>
+                        ) : (
+                          <span className="text-ink-tertiary">{t("patients.assessments.pending")}</span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-sm tabular-nums">
+                        {latestKg != null ? (
+                          <span>
+                            <span className="font-medium">{fmtKg(latestKg)}</span> kg
+                            {wDelta != null && wDelta !== 0 ? (
+                              <span
+                                className={
+                                  wDelta > 0
+                                    ? "ml-1 text-success"
+                                    : "ml-1 text-error"
+                                }
+                              >
+                                {wDelta > 0 ? "↑" : "↓"}
+                                {fmtKg(Math.abs(wDelta))}
+                              </span>
+                            ) : null}
+                          </span>
+                        ) : (
+                          <span className="text-ink-tertiary">—</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         )}
 
         <InviteForm />

@@ -17,9 +17,9 @@ export const dynamic = "force-dynamic";
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-hairline py-2 last:border-0">
-      <dt className="text-ink-subtle">{label}</dt>
-      <dd className="text-right font-medium">{value}</dd>
+    <div className="flex justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
+      <dt className="text-sm text-ink-subtle">{label}</dt>
+      <dd className="text-right text-sm font-medium">{value}</dd>
     </div>
   );
 }
@@ -82,8 +82,9 @@ export default async function PatientDetailPage({
         <div className="flex flex-col gap-2">
           <Link
             href="/panel/pacientes"
-            className="text-sm text-ink-subtle no-underline hover:text-ink"
+            className="inline-flex w-fit items-center gap-1.5 text-sm text-ink-subtle no-underline transition-colors hover:text-ink"
           >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
             {t("back")}
           </Link>
           <div className="flex flex-wrap items-center gap-3">
@@ -91,10 +92,14 @@ export default async function PatientDetailPage({
             <span
               className={
                 patient.status === "ACTIVE"
-                  ? "rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success"
-                  : "rounded-full bg-warning-soft px-2 py-0.5 text-xs font-medium text-warning"
+                  ? "inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success"
+                  : "inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-0.5 text-xs font-medium text-warning"
               }
             >
+              <span
+                className={`size-1.5 rounded-full ${
+                  patient.status === "ACTIVE" ? "bg-success" : "bg-warning"}`}
+              />
               {tp(`statuses.${patient.status}`)}
             </span>
           </div>

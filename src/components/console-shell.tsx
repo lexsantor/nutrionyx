@@ -31,8 +31,8 @@ const SETTINGS_NAV = { key: "ajustes", href: "/panel/ajustes", icon: Settings };
 const ICON_SIZE = 18;
 
 const navBase =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-colors";
-const navActive = `${navBase} bg-surface-3 font-semibold text-ink`;
+  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-all duration-200";
+const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el-sm`;
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
 // Declared at module scope (react-hooks/static-components): a component nested

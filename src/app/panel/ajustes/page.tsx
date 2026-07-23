@@ -67,7 +67,7 @@ export default async function SettingsPage() {
               <form action={acceptConsentAction}>
                 <button
                   type="submit"
-                  className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-on-primary transition-colors hover:bg-primary-hover"
+                  className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-on-primary transition-all duration-200 hover:bg-primary-hover active:scale-[0.97]"
                 >
                   {t("consent.accept")}
                 </button>
@@ -75,7 +75,10 @@ export default async function SettingsPage() {
             </div>
           </Card>
         ) : (
-          <p className="text-xs text-ink-subtle">{t("consent.accepted")}</p>
+          <p className="inline-flex items-center gap-1.5 text-sm text-success">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            {t("consent.accepted")}
+          </p>
         )}
 
         {profile ? <ProfileForm profile={profile} /> : null}

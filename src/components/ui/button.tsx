@@ -6,11 +6,11 @@ type Variant = "primary" | "secondary" | "ghost" | "destructive";
 // in globals.css (:focus-visible). One accent fill per view is the caller's
 // responsibility.
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-primary text-on-primary hover:bg-primary-hover",
+  primary: "bg-primary text-on-primary hover:bg-primary-hover active:scale-[0.97]",
   secondary:
-    "border border-hairline bg-surface-1 text-ink hover:border-hairline-strong",
-  ghost: "text-ink hover:bg-surface-3",
-  destructive: "bg-error text-on-destructive",
+    "border border-hairline bg-surface-1 text-ink hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.97]",
+  ghost: "text-ink hover:bg-surface-3 active:scale-[0.97]",
+  destructive: "bg-error text-on-destructive hover:opacity-90 active:scale-[0.97]",
 };
 
 export function Button({

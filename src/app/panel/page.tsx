@@ -48,7 +48,7 @@ export default async function PanelPage() {
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">{org.name}</h1>
         {org.specialtyType ? (
-          <span className="rounded-full bg-surface-3 px-2.5 py-0.5 text-xs font-medium text-ink-subtle">
+          <span className="rounded-full bg-primary-subtle px-2.5 py-0.5 text-xs font-medium text-on-primary-subtle">
             {tRoot(specialtyConfig(org.specialtyType).labelKey)}
           </span>
         ) : null}
@@ -89,18 +89,29 @@ export default async function PanelPage() {
           </Card>
         </section>
 
+        <h2 className="text-lg font-semibold">{t("metrics.title")}</h2>
+
         <section className="grid grid-cols-2 gap-4 pb-6">
           <Card>
-            <p className="text-base text-ink-subtle">
-              {t("metrics.completionRate")}
-            </p>
-            <p className="mt-1 text-2xl font-semibold">
-              {metrics.completionRate !== null
-                ? `${metrics.completionRate}%`
-                : "—"}
-            </p>
-            <p className="text-xs text-ink-subtle">
-              {t("metrics.completionTarget")} ·{" "}
+            <div className="flex items-center justify-between">
+              <p className="text-sm text-ink-subtle">
+                {t("metrics.completionRate")}
+              </p>
+              <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success">
+                {metrics.completionRate !== null
+                  ? `${metrics.completionRate}%`
+                  : "—"}
+              </span>
+            </div>
+            <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-3">
+              <div
+                className="h-full rounded-full bg-success transition-all duration-500"
+                style={{
+                  width: `${metrics.completionRate ?? 0}%`,
+                }}
+              />
+            </div>
+            <p className="mt-2 text-xs text-ink-subtle">
               {t("metrics.completedOf", {
                 completed: metrics.patientsCompleted,
                 active: metrics.activePatients,
@@ -108,13 +119,13 @@ export default async function PanelPage() {
             </p>
           </Card>
           <Card>
-            <p className="text-base text-ink-subtle">{t("metrics.medianTime")}</p>
+            <p className="text-sm text-ink-subtle">{t("metrics.medianTime")}</p>
             <p className="mt-1 text-2xl font-semibold">
               {metrics.medianCompletionMinutes !== null
                 ? t("metrics.minutes", { min: metrics.medianCompletionMinutes })
                 : "—"}
             </p>
-            <p className="text-xs text-ink-subtle">{t("metrics.timeTarget")}</p>
+            <p className="mt-2 text-xs text-ink-subtle">{t("metrics.timeTarget")}</p>
           </Card>
         </section>
     </ConsoleShell>

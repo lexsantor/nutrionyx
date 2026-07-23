@@ -62,32 +62,34 @@ export default async function AdminPage() {
           {consultas.length === 0 ? (
             <p className="text-sm text-ink-subtle">{t("consultas.empty")}</p>
           ) : (
-            <table className="w-full text-left text-sm">
-              <thead>
-                <tr className="border-b border-hairline text-ink-subtle">
-                  <th scope="col" className="py-2 pr-4 font-medium">
-                    {t("consultas.name")}
-                  </th>
-                  <th scope="col" className="py-2 pr-4 font-medium">
-                    {t("consultas.created")}
-                  </th>
-                  <th scope="col" className="py-2 font-medium">
-                    {t("consultas.patients")}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {consultas.map((c) => (
-                  <tr key={c.id} className="border-b border-hairline">
-                    <td className="py-2 pr-4">{c.name}</td>
-                    <td className="py-2 pr-4 text-ink-subtle">
-                      {format.dateTime(c.createdAt, { dateStyle: "medium" })}
-                    </td>
-                    <td className="py-2">{c.patientCount}</td>
+            <div className="w-full overflow-x-auto rounded-xl border border-hairline bg-surface-1">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-hairline bg-surface-2 text-ink-subtle">
+                    <th scope="col" className="px-4 py-3 font-medium">
+                      {t("consultas.name")}
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-medium">
+                      {t("consultas.created")}
+                    </th>
+                    <th scope="col" className="px-4 py-3 font-medium">
+                      {t("consultas.patients")}
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {consultas.map((c) => (
+                    <tr key={c.id} className="border-b border-hairline transition-colors last:border-0 hover:bg-surface-2">
+                      <td className="px-4 py-3 font-medium">{c.name}</td>
+                      <td className="px-4 py-3 text-ink-subtle">
+                        {format.dateTime(c.createdAt, { dateStyle: "medium" })}
+                      </td>
+                      <td className="px-4 py-3 tabular-nums">{c.patientCount}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </section>
 
