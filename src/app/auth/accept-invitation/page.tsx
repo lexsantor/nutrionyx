@@ -21,10 +21,9 @@ export default async function AcceptInvitationPage({
   const { data: session } = await auth.getSession();
 
   if (!session?.user) {
-    const returnTo = encodeURIComponent(
-      `/auth/accept-invitation?invitationId=${invitationId}`,
+    redirect(
+      `/auth/sign-up?redirectTo=/auth/accept-invitation?invitationId=${invitationId}`,
     );
-    redirect(`/auth/sign-up?redirectTo=${returnTo}`);
   }
 
   // getInvitation is recipient-only (Neon Auth Beta): a 403 means the
