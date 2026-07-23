@@ -94,7 +94,21 @@
     "notSignedIn": "Sesión no iniciada",
     "signIn": "Iniciar sesión",
     "signUp": "Crear cuenta",
-    "signedInAs": "Sesión iniciada como {name}"
+    "signedInAs": "Sesión iniciada como {name}",
+    "hero": {
+      "title": "Tu consulta de nutrición,",
+      "highlight": "en un solo lugar",
+      "description": "Gestiona pacientes, haz seguimiento de progreso y ofrece planes personalizados. Todo desde una plataforma diseñada para dietistas y nutricionistas.",
+      "cta": {
+        "signIn": "Iniciar sesión",
+        "signUp": "Crear cuenta gratuita"
+      },
+      "features": [
+        { "icon": "users", "title": "Gestión de pacientes", "text": "Invita, organiza y haz seguimiento de todos tus pacientes desde un panel centralizado." },
+        { "icon": "chart", "title": "Evaluaciones digitales", "text": "Los pacientes completan su evaluación online. Tú ves los resultados al instante." },
+        { "icon": "trending", "title": "Evolución visual", "text": "Gráficos de progreso claros que tú y tus pacientes podéis consultar en tiempo real." }
+      ]
+    }
   },
   "panel": {
     "settingsLink": "Ajustes",
@@ -141,7 +155,7 @@
       "errors": {
         "invalidEmail": "El correo no es válido.",
         "nameRequired": "El nombre es obligatorio.",
-        "noOrganization": "No hay organización activa.",
+        "noOrganization": "No hay consulta activa.",
         "alreadyInvited": "Ya existe un paciente con ese correo.",
         "generic": "No se pudo crear la invitación. Inténtalo de nuevo."
       }
@@ -339,7 +353,7 @@
   },
   "auth": {
     "signIn": {
-      "title": "Inicia sesión en tu cuenta",
+      "title": "Accede a tu consulta",
       "email": "Correo electrónico",
       "password": "Contraseña",
       "submit": "Iniciar sesión",
@@ -350,7 +364,7 @@
       }
     },
     "signUp": {
-      "title": "Crea tu cuenta",
+      "title": "Regístrate como profesional",
       "name": "Nombre completo",
       "email": "Correo electrónico",
       "password": "Contraseña",

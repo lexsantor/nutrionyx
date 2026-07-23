@@ -45,7 +45,8 @@ export async function invitePatient(
     return { errorKey: "generic" };
   }
 
-  const { data: activeOrg } = await auth.organization.getFullOrganization();
+  const { data: orgList } = await auth.organization.list();
+  const activeOrg = orgList?.[0];
   if (!activeOrg) {
     return { errorKey: "noOrganization" };
   }
@@ -57,9 +58,6 @@ export async function invitePatient(
     return { errorKey: "alreadyInvited" };
   }
 
-  // Better Auth invitation: patient joins the org with the read-only
-  // "member" role. Plugin RBAC governs plugin APIs only; domain access
-  // is enforced by our org-scoped repositories.
   const { error } = await auth.organization.inviteMember({
     email,
     role: "member",
@@ -85,10 +83,10 @@ export async function cancelInvitation(
   const invitationId = formData.get("invitationId") as string;
   if (!invitationId) return { errorKey: "generic" };
 
-  const { data: activeOrg, error: orgError } =
-    await auth.organization.getFullOrganization();
+  const { data: orgList } = await auth.organization.list();
+  const activeOrg = orgList?.[0];
   if (!activeOrg) {
-    console.error("[cancelInvitation] no active organization", orgError);
+    console.error("[cancelInvitation] no active organization");
     return { errorKey: "noOrganization" };
   }
 
