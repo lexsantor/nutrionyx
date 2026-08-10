@@ -75,8 +75,14 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   `MedicationPlan` + append-only `MedicationDose` (injection-site rotation);
   `/mi-espacio/medicacion` (setup, dose log with body-map site picker, history)
   + next-dose card on the patient home; read-only medication card on the panel
-  patient detail. Guardrail: Nutrionyx never suggests doses. **Migration
-  `glp1_medication` pending on Neon** (owner: `npx prisma migrate dev`).
+  patient detail. Guardrail: Nutrionyx never suggests doses. Migration
+  `glp1_medication` applied 2026-08-10; deployed and verified (CI + Vercel).
+- **Slice 9 - Targets & daily check-in** (docs/build/slice-9-plan.md):
+  `PatientTarget` (kcal/protein/sessions, specialist-prescribed, panel form on
+  patient detail) + `Measurement` kind `PROTEIN`; patient "Hoy" card (plan
+  line, weight-today status, protein progress + quick add). Feature roadmap in
+  docs/build/roadmap-feature-tiers.md. **Migration `targets_and_protein`
+  pending on Neon** (owner: `npx prisma migrate dev`).
 
 ### Migrations (applied on Neon)
 

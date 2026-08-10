@@ -9,11 +9,13 @@ import {
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
-import { listWeights } from "@/modules/measurement/repository";
+import { listWeights, proteinOnDay } from "@/modules/measurement/repository";
+import { getTargets } from "@/modules/targets/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
 import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
+import { ProteinLog } from "./protein-log";
 import { WeightChart } from "@/components/weight-chart";
 
 export const dynamic = "force-dynamic";
@@ -57,6 +59,12 @@ export default async function PatientHomePage() {
             });
     }
 
+    const tt = await getTranslations("targets.today");
+    const targets = await getTargets(patient.organizationId, patient.id);
+    const proteinToday = targets?.proteinTargetG
+      ? await proteinOnDay(patient.organizationId, patient.id, new Date())
+      : 0;
+
     const weights = await listWeights(patient.organizationId, patient.id);
     const targetKg =
       assessment.targetWeightKg != null
@@ -66,6 +74,29 @@ export default async function PatientHomePage() {
       recordedAt: w.recordedAt,
       valueKg: Number(w.value),
     }));
+
+    const lastWeight = weights[weights.length - 1] ?? null;
+    const weightToday =
+      lastWeight != null &&
+      lastWeight.recordedAt.toDateString() === new Date().toDateString();
+    const planParts = targets
+      ? [
+          targets.kcalTarget != null
+            ? tt("plan.kcal", { kcal: targets.kcalTarget })
+            : null,
+          targets.proteinTargetG != null
+            ? tt("plan.protein", { grams: targets.proteinTargetG })
+            : null,
+          targets.sessionsPerWeek != null
+            ? tt("plan.sessions", { sessions: targets.sessionsPerWeek })
+            : null,
+        ].filter(Boolean)
+      : [];
+    const proteinTarget = targets?.proteinTargetG ?? null;
+    const proteinRatio =
+      proteinTarget != null && proteinTarget > 0
+        ? Math.min(1, proteinToday / proteinTarget)
+        : 0;
 
     return (
       <>
@@ -122,6 +153,68 @@ export default async function PatientHomePage() {
               <p className="text-sm text-ink-subtle">{tm("next.none")}</p>
             )}
           </section>
+
+          {targets ? (
+            <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-lg font-semibold">{tt("title")}</h2>
+                {planParts.length > 0 ? (
+                  <p className="text-sm text-ink-subtle">
+                    {planParts.join(" · ")}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="flex items-center justify-between gap-4">
+                <span className="text-sm font-medium">{tt("weight")}</span>
+                {weightToday ? (
+                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-success">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                    {tt("weightDone", {
+                      kg: Number(lastWeight!.value).toLocaleString("es"),
+                    })}
+                  </span>
+                ) : (
+                  <span className="text-sm text-ink-subtle">
+                    {tt("weightPending")}
+                  </span>
+                )}
+              </div>
+
+              {proteinTarget != null ? (
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center justify-between gap-4">
+                    <span className="text-sm font-medium">
+                      {tt("protein")}
+                    </span>
+                    <span
+                      className={`text-sm font-medium tabular-nums ${
+                        proteinRatio >= 1 ? "text-success" : "text-ink-subtle"
+                      }`}
+                    >
+                      {proteinToday.toLocaleString("es")} g / {proteinTarget} g
+                    </span>
+                  </div>
+                  <div
+                    role="progressbar"
+                    aria-valuenow={Math.round(proteinRatio * 100)}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label={tt("protein")}
+                    className="h-1.5 overflow-hidden rounded-full bg-surface-3"
+                  >
+                    <div
+                      className={`h-full rounded-full transition-[width] duration-300 ${
+                        proteinRatio >= 1 ? "bg-success" : "bg-primary"
+                      }`}
+                      style={{ width: `${proteinRatio * 100}%` }}
+                    />
+                  </div>
+                  <ProteinLog />
+                </div>
+              ) : null}
+            </section>
+          ) : null}
 
           <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
             <h2 className="text-lg font-semibold">{tp("title")}</h2>

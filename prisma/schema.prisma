@@ -62,6 +62,7 @@ model Patient {
   measurements   Measurement[]
   medicationPlan  MedicationPlan?
   medicationDoses MedicationDose[]
+  target          PatientTarget?
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -140,6 +141,7 @@ model DomainEvent {
 // updated or deleted - a correction is a new row.
 enum MeasurementKind {
   WEIGHT
+  PROTEIN
 }
 
 model Measurement {
@@ -154,6 +156,24 @@ model Measurement {
 
   @@index([organizationId, patientId, recordedAt])
   @@map("measurements")
+}
+
+// Clinical targets prescribed by the specialist (docs/build/slice-9-plan.md):
+// kcal reference, daily protein grams, training sessions per week. One per
+// patient, org-scoped, editable - unlike Measurement facts this is config.
+model PatientTarget {
+  id              String   @id @default(cuid())
+  organizationId  String
+  patientId       String   @unique
+  patient         Patient  @relation(fields: [patientId], references: [id])
+  kcalTarget      Int?
+  proteinTargetG  Int?
+  sessionsPerWeek Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("patient_targets")
 }
 
 // GLP-1 medication tracking (docs/build/slice-8-plan.md). The patient records

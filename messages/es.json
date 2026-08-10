@@ -398,6 +398,10 @@
       "recent": "Últimas dosis",
       "noDoses": "Sin dosis registradas todavía.",
       "empty": "El paciente no ha registrado pauta de medicación."
+    },
+    "targets": {
+      "title": "Objetivos",
+      "subtitle": "Plan que el paciente ve en su espacio: referencia de kcal, proteína diaria a registrar y entrenos semanales."
     }
   },
   "auth": {
@@ -494,6 +498,42 @@
       "invalidDate": "La fecha no es válida.",
       "noPlan": "Configura primero tu pauta.",
       "generic": "No se ha podido guardar. Inténtalo de nuevo."
+    }
+  },
+  "targets": {
+    "panel": {
+      "fields": {
+        "kcalTarget": "Kcal diarias",
+        "proteinTargetG": "Proteína diaria (g)",
+        "sessionsPerWeek": "Entrenos / semana"
+      },
+      "hint": "Deja un campo vacío para no fijar ese objetivo. El paciente ve su plan y registra la proteína en su espacio.",
+      "save": "Guardar objetivos",
+      "saving": "Guardando…",
+      "saved": "Objetivos guardados",
+      "errors": {
+        "invalidValue": "Revisa los valores: kcal 500-6000, proteína 20-400 g, entrenos 0-14.",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
+    },
+    "today": {
+      "title": "Hoy",
+      "plan": {
+        "kcal": "{kcal} kcal",
+        "protein": "{grams} g proteína",
+        "sessions": "{sessions}×/semana"
+      },
+      "weight": "Peso",
+      "weightDone": "Registrado · {kg} kg",
+      "weightPending": "Pendiente",
+      "protein": "Proteína",
+      "proteinAddLabel": "Añadir proteína (g)",
+      "add": "Añadir",
+      "adding": "Añadiendo…",
+      "errors": {
+        "invalidProtein": "Introduce una cantidad válida (1-300 g).",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
     }
   }
 }

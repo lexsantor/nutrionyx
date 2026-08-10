@@ -39,6 +39,11 @@ import {
   logDose,
   upsertPlan,
 } from "@/modules/medication/repository";
+import { getTargets, upsertTargets } from "@/modules/targets/repository";
+import {
+  proteinOnDay,
+  recordProtein,
+} from "@/modules/measurement/repository";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
 
 /**
@@ -105,6 +110,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.domainEvent.deleteMany({ where: { organizationId: org } });
       await prisma.medicationDose.deleteMany({ where: { organizationId: org } });
       await prisma.medicationPlan.deleteMany({ where: { organizationId: org } });
+      await prisma.patientTarget.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -274,6 +280,28 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // Under B's own scope they are present.
     expect((await getPlan(orgB, bPatientId))?.drugName).toBe("Wegovy");
     expect((await listDoses(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes targets and protein: invisible cross-org (R2)", async () => {
+    await upsertTargets({
+      organizationId: orgB,
+      patientId: bPatientId,
+      kcalTarget: 2000,
+      proteinTargetG: 150,
+      sessionsPerWeek: 3,
+    });
+    await recordProtein({
+      organizationId: orgB,
+      patientId: bPatientId,
+      grams: 42,
+    });
+
+    // Under A's scope, B's targets and protein sum are invisible.
+    expect(await getTargets(orgA, bPatientId)).toBeNull();
+    expect(await proteinOnDay(orgA, bPatientId, new Date())).toBe(0);
+    // Under B's own scope they are present.
+    expect((await getTargets(orgB, bPatientId))?.proteinTargetG).toBe(150);
+    expect(await proteinOnDay(orgB, bPatientId, new Date())).toBe(42);
   });
 
   it("sub-role and consent are org-scoped (adr/0006)", async () => {

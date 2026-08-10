@@ -9,7 +9,9 @@ import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
 import { listWeights } from "@/modules/measurement/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
+import { getTargets } from "@/modules/targets/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { TargetsForm } from "./targets-form";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 import { WeightChart } from "@/components/weight-chart";
@@ -59,6 +61,7 @@ export default async function PatientDetailPage({
   }
 
   const assessment = patient.assessments[0] ?? null;
+  const targets = await getTargets(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const recentDoses = medicationPlan
     ? await listDoses(org.id, patient.id, 5)
@@ -188,6 +191,29 @@ export default async function PatientDetailPage({
             ) : (
               <p className="text-sm text-ink-subtle">{t("clinical.none")}</p>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">{t("targets.title")}</h2>
+              <p className="text-sm text-ink-subtle">
+                {t("targets.subtitle")}
+              </p>
+            </div>
+            <TargetsForm
+              patientId={patient.id}
+              initial={
+                targets
+                  ? {
+                      kcalTarget: targets.kcalTarget,
+                      proteinTargetG: targets.proteinTargetG,
+                      sessionsPerWeek: targets.sessionsPerWeek,
+                    }
+                  : null
+              }
+            />
           </div>
         </Card>
 
