@@ -314,7 +314,7 @@ export default async function PatientHomePage({
             </p>
           </section>
 
-          <section className={`${TILE} lg:col-span-12`}>
+          <section className={`${TILE} lg:col-span-6`}>
             <div className="flex flex-col gap-0.5">
               <h2 className="text-lg font-semibold">{tb("title")}</h2>
               {body.updatedAt ? (
@@ -426,7 +426,7 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <div className="lg:col-span-12">
+          <div className="lg:col-span-6">
             <PhotosCard
               photos={(
                 await listPhotos(patient.organizationId, patient.id)

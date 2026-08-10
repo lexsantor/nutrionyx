@@ -7,6 +7,7 @@ import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { WeightChart } from "@/components/weight-chart";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "./reveal";
+import { BodySilhouette } from "@/components/body-silhouette";
 
 export const dynamic = "force-dynamic";
 
@@ -232,36 +233,92 @@ export default async function Home() {
       </nav>
 
       {/* Blocks 1-5: question H1, byline, subheadline, answer, CTA */}
-      <header className="relative px-6 pb-16 pt-36 sm:pt-44">
+      <header className="relative overflow-hidden px-6 pb-20 pt-36 sm:pt-44">
         <div className="pointer-events-none absolute -inset-x-40 -top-64 h-[42rem] bg-[radial-gradient(ellipse_at_top,var(--color-primary-subtle)_0%,transparent_65%)]" />
-        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-7">
-          <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
-            <span className="size-1.5 rounded-full bg-success" />
-            {t("badge")}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_60%_60%_at_50%_20%,black,transparent)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(var(--c-hairline) 1px, transparent 1px), linear-gradient(90deg, var(--c-hairline) 1px, transparent 1px)",
+            backgroundSize: "28px 28px",
+          }}
+        />
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
+          <div className="flex flex-col items-start gap-7">
+            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
+              <span className="size-1.5 rounded-full bg-success" />
+              {t("badge")}
+            </div>
+            <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
+              {t("hero.title")}{" "}
+              <span className="text-primary">{t("hero.highlight")}</span>
+            </h1>
+            <p className="text-lg font-medium">{t("hero.subtitle")}</p>
+            <p className="max-w-[62ch] text-pretty leading-relaxed text-ink-subtle">
+              {t("hero.answer")}
+            </p>
+            <div className="flex flex-wrap items-center gap-4">
+              <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
+              <ButtonLink
+                href="/auth/sign-in"
+                variant="secondary"
+                className="h-[52px] px-7"
+              >
+                {t("hero.cta.signIn")}
+              </ButtonLink>
+            </div>
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-tertiary">
+              <span>{t("hero.byline")}</span>
+              <span aria-hidden="true">·</span>
+              <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
+            </p>
           </div>
-          <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
-            {t("hero.title")}{" "}
-            <span className="text-primary">{t("hero.highlight")}</span>
-          </h1>
-          <p className="text-lg font-medium">{t("hero.subtitle")}</p>
-          <p className="max-w-[68ch] text-pretty leading-relaxed text-ink-subtle">
-            {t("hero.answer")}
-          </p>
-          <div className="flex flex-wrap items-center gap-4">
-            <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
-            <ButtonLink
-              href="/auth/sign-in"
-              variant="secondary"
-              className="h-[52px] px-7"
+
+          {/* Floating record teaser stack */}
+          <div className="relative mx-auto hidden h-[26rem] w-full max-w-sm lg:block" aria-hidden="true">
+            <div
+              className="absolute left-1/2 top-0 w-56 -translate-x-[85%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_32px_70px_-30px_rgba(15,23,42,0.35)] [--tilt:-5deg]"
+              style={{ animation: "float 8s ease-in-out infinite" }}
             >
-              {t("hero.cta.signIn")}
-            </ButtonLink>
+              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
+                <p className="text-xs font-medium text-ink-subtle">
+                  {r("today.title")}
+                </p>
+                <p className="mt-1 text-sm font-semibold">{r("today.plan")}</p>
+                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-3">
+                  <div className="h-full w-3/4 rounded-full bg-primary" />
+                </div>
+              </div>
+            </div>
+            <div
+              className="absolute left-1/2 top-16 z-10 w-60 -translate-x-[15%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_40px_90px_-32px_rgba(15,23,42,0.4)] [--tilt:3deg]"
+              style={{ animation: "float 9s ease-in-out 0.8s infinite" }}
+            >
+              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4 text-ink">
+                <p className="text-xs font-medium text-ink-subtle">
+                  {r("weightChart.title")}
+                </p>
+                <svg viewBox="0 0 200 300" className="mx-auto mt-2 h-48 w-auto">
+                  <BodySilhouette view="front" gradientId="hero-grad" />
+                  <line x1="58" y1="152" x2="142" y2="152" strokeWidth="2" className="stroke-primary" />
+                  <circle cx="142" cy="152" r="3.5" className="fill-primary" />
+                  <line x1="51" y1="196" x2="149" y2="196" strokeWidth="2" className="stroke-ink/40" />
+                </svg>
+              </div>
+            </div>
+            <div
+              className="absolute bottom-0 left-1/2 w-52 -translate-x-[60%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_28px_60px_-28px_rgba(15,23,42,0.35)] [--tilt:5deg]"
+              style={{ animation: "float 7s ease-in-out 1.6s infinite" }}
+            >
+              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
+                <p className="text-xs font-medium text-ink-subtle">
+                  {r("glp1.title")}
+                </p>
+                <p className="mt-1 text-sm font-semibold">{r("glp1.next")}</p>
+              </div>
+            </div>
           </div>
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-tertiary">
-            <span>{t("hero.byline")}</span>
-            <span aria-hidden="true">·</span>
-            <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
-          </p>
         </div>
       </header>
 
@@ -272,11 +329,20 @@ export default async function Home() {
             {t("problem.heading")}
           </h2>
           <div className="grid gap-4 md:grid-cols-3">
-            {(["whatsapp", "excel", "pdf"] as const).map((key, i) => (
-              <Reveal key={key} delay={i * 60}>
-                <div className="flex h-full flex-col rounded-xl border border-hairline bg-surface-1 p-5 shadow-el-sm">
+            {(
+              [
+                { key: "whatsapp", icon: "M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 20l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8Z" },
+                { key: "excel", icon: "M3 3h18v18H3zM3 9h18M3 15h18M9 3v18M15 3v18" },
+                { key: "pdf", icon: "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M9 13h6M9 17h6" },
+              ] as const
+            ).map((item, i) => (
+              <Reveal key={item.key} delay={i * 60}>
+                <div className="flex h-full flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-5 shadow-el-sm">
+                  <span className="flex size-9 items-center justify-center rounded-lg bg-surface-3 text-ink-subtle">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={item.icon} /></svg>
+                  </span>
                   <p className="text-sm leading-relaxed">
-                    {t(`problem.items.${key}`)}
+                    {t(`problem.items.${item.key}`)}
                   </p>
                 </div>
               </Reveal>
@@ -312,7 +378,8 @@ export default async function Home() {
         <p className="max-w-[68ch] text-ink-subtle">{t("proofSub")}</p>
       </div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-12 lg:gap-24">
+      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-12 lg:gap-24">
+        <div className="pointer-events-none absolute -right-64 top-1/3 -z-10 h-[36rem] w-[36rem] rounded-full bg-[radial-gradient(circle,var(--color-primary-subtle)_0%,transparent_70%)]" />
         <RecordSection
           tilt="lg:-rotate-1"
           annotation={

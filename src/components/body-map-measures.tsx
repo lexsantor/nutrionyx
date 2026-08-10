@@ -7,6 +7,7 @@ import {
   type BodyZoneKey,
   type ZoneStat,
 } from "@/modules/measurement/body";
+import { BodySilhouette } from "@/components/body-silhouette";
 
 /**
  * Interactive body map (patterned after the owner's progreso-corporal
@@ -63,26 +64,6 @@ function Delta({ delta }: { delta: number | null }) {
   );
 }
 
-function Silhouette({ view }: { view: "front" | "back" }) {
-  return (
-    <g className="fill-ink/15" aria-hidden="true">
-      <circle cx="100" cy="34" r="21" />
-      <path d="M92 54 h16 v10 h-16 Z" />
-      <path d="M64 66 C 78 60 122 60 136 66 C 145 70 150 78 152 92 C 150 112 146 132 143 150 C 141 162 141 172 143 184 C 147 196 150 206 150 216 C 150 240 144 262 139 286 C 136 312 134 336 133 358 C 132 380 131 396 129 408 L 108 408 C 107 390 106 372 106 354 C 105 330 104 306 103 288 C 102 272 101 264 100 258 C 99 264 98 272 97 288 C 96 306 95 330 94 354 C 94 372 93 390 92 408 L 71 408 C 69 396 68 380 67 358 C 66 336 64 312 61 286 C 56 262 50 240 50 216 C 50 206 53 196 57 184 C 59 172 59 162 57 150 C 54 132 50 112 48 92 C 50 78 55 70 64 66 Z" />
-      <path d="M46 94 C 42 104 40 118 38 136 C 36 154 34 170 33 186 L 31 206 C 30 214 39 216 41 208 L 45 188 C 47 172 49 156 51 140 C 53 124 53 108 52 98 C 51 92 48 90 46 94 Z" />
-      <path d="M154 94 C 158 104 160 118 162 136 C 164 154 166 170 167 186 L 169 206 C 170 214 161 216 159 208 L 155 188 C 153 172 151 156 149 140 C 147 124 147 108 148 98 C 149 92 152 90 154 94 Z" />
-      {view === "back" ? (
-        <path
-          d="M100 66 v96"
-          className="stroke-ink/20"
-          strokeWidth="2"
-          fill="none"
-        />
-      ) : null}
-    </g>
-  );
-}
-
 export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
   const t = useTranslations("body");
   const [view, setView] = useState<"front" | "back">("front");
@@ -128,9 +109,9 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
           viewBox="0 0 200 420"
           role="group"
           aria-label={t("map.figureLabel")}
-          className="mx-auto h-80 w-auto sm:h-96"
+          className="mx-auto h-80 w-auto text-ink sm:h-96"
         >
-          <Silhouette view={view} />
+          <BodySilhouette view={view} gradientId="bm-grad" />
           {zonesInView.map((zone, i) => {
             const [x1, x2] = BAND_X[zone.key];
             const data = zones[zone.key];
