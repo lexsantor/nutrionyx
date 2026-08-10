@@ -104,9 +104,21 @@
         "signUp": "Crear cuenta gratuita"
       },
       "features": [
-        { "icon": "users", "title": "Gestión de pacientes", "text": "Invita, organiza y haz seguimiento de todos tus pacientes desde un panel centralizado." },
-        { "icon": "chart", "title": "Evaluaciones digitales", "text": "Los pacientes completan su evaluación online. Tú ves los resultados al instante." },
-        { "icon": "trending", "title": "Evolución visual", "text": "Gráficos de progreso claros que tú y tus pacientes podéis consultar en tiempo real." }
+        {
+          "icon": "users",
+          "title": "Gestión de pacientes",
+          "text": "Invita, organiza y haz seguimiento de todos tus pacientes desde un panel centralizado."
+        },
+        {
+          "icon": "chart",
+          "title": "Evaluaciones digitales",
+          "text": "Los pacientes completan su evaluación online. Tú ves los resultados al instante."
+        },
+        {
+          "icon": "trending",
+          "title": "Evolución visual",
+          "text": "Gráficos de progreso claros que tú y tus pacientes podéis consultar en tiempo real."
+        }
       ]
     }
   },
@@ -227,19 +239,46 @@
     "back": "Anterior",
     "optionalHint": "Opcional: déjalo vacío si no aplica.",
     "fields": {
-      "sex": { "title": "¿Cuál es tu sexo biológico?" },
-      "birthDate": { "title": "¿Cuál es tu fecha de nacimiento?" },
-      "heightCm": { "title": "¿Cuánto mides?", "hint": "En centímetros" },
-      "weightKg": { "title": "¿Cuánto pesas actualmente?", "hint": "En kilogramos" },
-      "targetWeightKg": { "title": "¿Cuál es tu peso objetivo?", "hint": "En kilogramos" },
-      "activityLevel": { "title": "¿Cuál es tu nivel de actividad física?" },
-      "goals": { "title": "¿Cuáles son tus objetivos?", "hint": "Puedes elegir varios" },
-      "conditions": { "title": "¿Tienes alguna condición médica relevante?" },
-      "allergies": { "title": "¿Alergias o intolerancias alimentarias?" },
-      "currentMedication": { "title": "¿Tomas alguna medicación actualmente?" }
+      "sex": {
+        "title": "¿Cuál es tu sexo biológico?"
+      },
+      "birthDate": {
+        "title": "¿Cuál es tu fecha de nacimiento?"
+      },
+      "heightCm": {
+        "title": "¿Cuánto mides?",
+        "hint": "En centímetros"
+      },
+      "weightKg": {
+        "title": "¿Cuánto pesas actualmente?",
+        "hint": "En kilogramos"
+      },
+      "targetWeightKg": {
+        "title": "¿Cuál es tu peso objetivo?",
+        "hint": "En kilogramos"
+      },
+      "activityLevel": {
+        "title": "¿Cuál es tu nivel de actividad física?"
+      },
+      "goals": {
+        "title": "¿Cuáles son tus objetivos?",
+        "hint": "Puedes elegir varios"
+      },
+      "conditions": {
+        "title": "¿Tienes alguna condición médica relevante?"
+      },
+      "allergies": {
+        "title": "¿Alergias o intolerancias alimentarias?"
+      },
+      "currentMedication": {
+        "title": "¿Tomas alguna medicación actualmente?"
+      }
     },
     "options": {
-      "sex": { "FEMALE": "Mujer", "MALE": "Hombre" },
+      "sex": {
+        "FEMALE": "Mujer",
+        "MALE": "Hombre"
+      },
       "activityLevel": {
         "LOW": "Bajo (sedentario)",
         "MEDIUM": "Medio (ejercicio ocasional)",
@@ -349,6 +388,16 @@
     "weight": {
       "title": "Evolución de peso",
       "empty": "Aún no hay pesadas registradas."
+    },
+    "medication": {
+      "title": "Medicación (GLP-1)",
+      "drug": "Medicamento",
+      "dose": "Dosis actual",
+      "frequency": "Frecuencia",
+      "lastDose": "Última dosis",
+      "recent": "Últimas dosis",
+      "noDoses": "Sin dosis registradas todavía.",
+      "empty": "El paciente no ha registrado pauta de medicación."
     }
   },
   "auth": {
@@ -374,6 +423,77 @@
         "emailRequired": "El correo electrónico es obligatorio.",
         "generic": "No se pudo crear la cuenta. Inténtalo de nuevo."
       }
+    }
+  },
+  "medication": {
+    "back": "Volver a mi espacio",
+    "title": "Medicación GLP-1",
+    "guardrail": "Registra la pauta que te indicó tu médico prescriptor. Nutrionyx nunca sugiere ni ajusta dosis.",
+    "setup": {
+      "title": "Configura tu pauta",
+      "drugLabel": "Medicamento",
+      "custom": "Otra medicación",
+      "customDrugLabel": "Nombre del medicamento",
+      "frequencyLabel": "Frecuencia",
+      "frequencies": {
+        "WEEKLY": "Semanal",
+        "DAILY": "Diaria"
+      },
+      "doseLabel": "Dosis (mg)",
+      "shotDayLabel": "Día de inyección",
+      "weekDays": {
+        "0": "dom",
+        "1": "lun",
+        "2": "mar",
+        "3": "mié",
+        "4": "jue",
+        "5": "vie",
+        "6": "sáb"
+      },
+      "save": "Guardar pauta",
+      "saving": "Guardando…",
+      "saved": "Pauta guardada",
+      "edit": "Editar pauta"
+    },
+    "log": {
+      "title": "Registrar dosis",
+      "doseLabel": "Dosis (mg)",
+      "siteLabel": "Punto de inyección",
+      "suggested": "Sugerido por rotación: {site}",
+      "suggestedThis": "Punto sugerido según la rotación",
+      "dateLabel": "Fecha",
+      "save": "Registrar dosis",
+      "saving": "Registrando…",
+      "saved": "Dosis registrada"
+    },
+    "history": {
+      "title": "Historial de dosis",
+      "empty": "Aún no has registrado ninguna dosis."
+    },
+    "next": {
+      "label": "Medicación",
+      "due": "Te toca hoy",
+      "in": "{days, plural, =1 {Mañana} other {En # días}} · {weekday}",
+      "none": "Registra la pauta que te indicó tu médico para llevar el control de tus dosis.",
+      "setupCta": "Configurar",
+      "logCta": "Registrar dosis"
+    },
+    "sites": {
+      "LEFT_ARM": "Brazo izquierdo",
+      "RIGHT_ARM": "Brazo derecho",
+      "LEFT_BELLY": "Abdomen izquierdo",
+      "RIGHT_BELLY": "Abdomen derecho",
+      "LEFT_THIGH": "Muslo izquierdo",
+      "RIGHT_THIGH": "Muslo derecho"
+    },
+    "errors": {
+      "invalidDose": "Introduce una dosis válida en mg.",
+      "invalidDrug": "Indica el medicamento.",
+      "invalidShotDay": "Elige el día de inyección.",
+      "invalidSite": "Elige el punto de inyección.",
+      "invalidDate": "La fecha no es válida.",
+      "noPlan": "Configura primero tu pauta.",
+      "generic": "No se ha podido guardar. Inténtalo de nuevo."
     }
   }
 }

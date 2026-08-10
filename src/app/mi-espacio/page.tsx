@@ -10,6 +10,8 @@ import {
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { listWeights } from "@/modules/measurement/repository";
+import { getPlan, listDoses } from "@/modules/medication/repository";
+import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
 import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
 import { WeightChart } from "@/components/weight-chart";
@@ -35,6 +37,25 @@ export default async function PatientHomePage() {
     const format = await getFormatter();
     const tp = await getTranslations("progress");
     const bmiValue = Number(assessment.bmi);
+
+    const tm = await getTranslations("medication");
+    const plan = await getPlan(patient.organizationId, patient.id);
+    const lastDoses = plan
+      ? await listDoses(patient.organizationId, patient.id, 1)
+      : [];
+    let medicationLine: string | null = null;
+    if (plan) {
+      const now = new Date();
+      const next = nextDoseDate(plan, lastDoses[0]?.takenAt ?? null, now);
+      const days = daysUntil(next, now);
+      medicationLine =
+        days <= 0
+          ? tm("next.due")
+          : tm("next.in", {
+              days,
+              weekday: format.dateTime(next, { weekday: "long" }),
+            });
+    }
 
     const weights = await listWeights(patient.organizationId, patient.id);
     const targetKg =
@@ -77,6 +98,29 @@ export default async function PatientHomePage() {
               }),
             })}
           </p>
+          </section>
+
+          <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold">{tm("next.label")}</h2>
+              <Link
+                href="/mi-espacio/medicacion"
+                className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
+              >
+                {plan ? tm("next.logCta") : tm("next.setupCta")}
+              </Link>
+            </div>
+            {plan ? (
+              <div className="flex flex-col gap-0.5">
+                <p className="text-xl font-semibold">{medicationLine}</p>
+                <p className="text-sm text-ink-subtle">
+                  {plan.drugName} · {Number(plan.doseMg).toLocaleString("es")}{" "}
+                  mg
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-ink-subtle">{tm("next.none")}</p>
+            )}
           </section>
 
           <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">

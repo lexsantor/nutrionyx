@@ -60,6 +60,8 @@ model Patient {
   createdAt      DateTime      @default(now())
   assessments    Assessment[]
   measurements   Measurement[]
+  medicationPlan  MedicationPlan?
+  medicationDoses MedicationDose[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -152,6 +154,63 @@ model Measurement {
 
   @@index([organizationId, patientId, recordedAt])
   @@map("measurements")
+}
+
+// GLP-1 medication tracking (docs/build/slice-8-plan.md). The patient records
+// the plan their prescriber gave them - Nutrionyx never suggests doses or
+// schedules. The specialist reads plan + adherence, never edits (they do not
+// prescribe). Monitoring context (docs/00 §3).
+enum MedicationFrequency {
+  WEEKLY
+  DAILY
+}
+
+// Injection sites for subcutaneous GLP-1 pens (rotation guidance).
+enum InjectionSite {
+  LEFT_ARM
+  RIGHT_ARM
+  LEFT_BELLY
+  RIGHT_BELLY
+  LEFT_THIGH
+  RIGHT_THIGH
+}
+
+// One plan per patient; configuration, editable by the patient. Dose history
+// stays truthful because each MedicationDose snapshots drug + dose.
+model MedicationPlan {
+  id             String              @id @default(cuid())
+  organizationId String
+  patientId      String              @unique
+  patient        Patient             @relation(fields: [patientId], references: [id])
+  drugName       String
+  genericName    String?
+  frequency      MedicationFrequency @default(WEEKLY)
+  doseMg         Decimal             @db.Decimal(6, 2)
+  // 0 (Sunday) - 6 (Saturday); null for DAILY plans.
+  shotDay        Int?
+  active         Boolean             @default(true)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  @@index([organizationId])
+  @@map("medication_plans")
+}
+
+// Append-only dose log (PRD_03 rules 5-6): never updated or deleted, a
+// correction is a new row. Same pattern as Measurement.
+model MedicationDose {
+  id             String        @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient       @relation(fields: [patientId], references: [id])
+  drugName       String
+  doseMg         Decimal       @db.Decimal(6, 2)
+  site           InjectionSite
+  takenAt        DateTime      @default(now())
+  createdAt      DateTime      @default(now())
+
+  @@index([organizationId, patientId, takenAt])
+  @@map("medication_doses")
 }
 
 // Single-use codes issued by the Nutrionyx owner to gate specialist

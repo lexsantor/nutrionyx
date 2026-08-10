@@ -48,8 +48,6 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   grep that it contains `next-intl/node_modules/@swc/helpers` and `0.5.23`
   (a macOS `npm install` can drop it -> CI `npm ci` fails). If no dep changed,
   prefer `git checkout <good-commit> -- package-lock.json`.
-- `dashboards/` (Pulse CRM reference templates) is gitignored and excluded from
-  both `tsconfig` and `eslint` - CI never sees it.
 
 ### Built (slices)
 
@@ -73,6 +71,12 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Inicio; org-scoped.
 - **Slice 7 - Patient detail**: `/panel/pacientes/[id]` read-only clinical view
   (identity, latest assessment, weight chart), org-scoped `getPatientDetail`.
+- **Slice 8 - GLP-1 medication** (docs/build/slice-8-plan.md): patient-owned
+  `MedicationPlan` + append-only `MedicationDose` (injection-site rotation);
+  `/mi-espacio/medicacion` (setup, dose log with body-map site picker, history)
+  + next-dose card on the patient home; read-only medication card on the panel
+  patient detail. Guardrail: Nutrionyx never suggests doses. **Migration
+  `glp1_medication` pending on Neon** (owner: `npx prisma migrate dev`).
 
 ### Migrations (applied on Neon)
 

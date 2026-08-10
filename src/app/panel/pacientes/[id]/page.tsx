@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getFormatter } from "next-intl/server";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole, roleHome } from "@/lib/auth/role";
@@ -8,6 +8,7 @@ import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
 import { listWeights } from "@/modules/measurement/repository";
+import { getPlan, listDoses } from "@/modules/medication/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
@@ -33,6 +34,7 @@ export default async function PatientDetailPage({
   const t = await getTranslations("patientDetail");
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
+  const tm = await getTranslations("medication");
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
@@ -57,6 +59,11 @@ export default async function PatientDetailPage({
   }
 
   const assessment = patient.assessments[0] ?? null;
+  const medicationPlan = await getPlan(org.id, patient.id);
+  const recentDoses = medicationPlan
+    ? await listDoses(org.id, patient.id, 5)
+    : [];
+  const format = await getFormatter();
   const weights = await listWeights(org.id, patient.id);
   const points = weights.map((w) => ({
     recordedAt: w.recordedAt,
@@ -180,6 +187,73 @@ export default async function PatientDetailPage({
               </dl>
             ) : (
               <p className="text-sm text-ink-subtle">{t("clinical.none")}</p>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <h2 className="text-lg font-semibold">
+              {t("medication.title")}
+            </h2>
+            {medicationPlan ? (
+              <>
+                <dl className="flex flex-col text-sm">
+                  <Row
+                    label={t("medication.drug")}
+                    value={
+                      medicationPlan.genericName
+                        ? `${medicationPlan.drugName} (${medicationPlan.genericName})`
+                        : medicationPlan.drugName
+                    }
+                  />
+                  <Row
+                    label={t("medication.dose")}
+                    value={`${Number(medicationPlan.doseMg).toLocaleString("es")} mg`}
+                  />
+                  <Row
+                    label={t("medication.frequency")}
+                    value={tm(`setup.frequencies.${medicationPlan.frequency}`)}
+                  />
+                  {recentDoses[0] ? (
+                    <Row
+                      label={t("medication.lastDose")}
+                      value={`${format.dateTime(recentDoses[0].takenAt, { dateStyle: "medium" })} · ${tm(`sites.${recentDoses[0].site}`)}`}
+                    />
+                  ) : null}
+                </dl>
+                {recentDoses.length > 0 ? (
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="text-sm font-medium text-ink-subtle">
+                      {t("medication.recent")}
+                    </h3>
+                    <ul className="flex flex-col">
+                      {recentDoses.map((dose) => (
+                        <li
+                          key={dose.id}
+                          className="flex items-baseline justify-between gap-4 border-b border-hairline py-2 last:border-0"
+                        >
+                          <span className="text-sm">
+                            {format.dateTime(dose.takenAt, {
+                              dateStyle: "medium",
+                            })}
+                          </span>
+                          <span className="text-sm text-ink-subtle">
+                            {Number(dose.doseMg).toLocaleString("es")} mg ·{" "}
+                            {tm(`sites.${dose.site}`)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : (
+                  <p className="text-sm text-ink-subtle">
+                    {t("medication.noDoses")}
+                  </p>
+                )}
+              </>
+            ) : (
+              <p className="text-sm text-ink-subtle">{t("medication.empty")}</p>
             )}
           </div>
         </Card>

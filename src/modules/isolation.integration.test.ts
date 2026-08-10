@@ -33,6 +33,12 @@ import {
   hasAcceptedConsent,
   recordConsent,
 } from "@/modules/organization/consent";
+import {
+  getPlan,
+  listDoses,
+  logDose,
+  upsertPlan,
+} from "@/modules/medication/repository";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
 
 /**
@@ -97,6 +103,8 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       if (!org) continue;
       await prisma.consentRecord.deleteMany({ where: { organizationId: org } });
       await prisma.domainEvent.deleteMany({ where: { organizationId: org } });
+      await prisma.medicationDose.deleteMany({ where: { organizationId: org } });
+      await prisma.medicationPlan.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -240,6 +248,32 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // B counts its own seeded patient.
     expect(dashB.withCompletedAssessment).toBeGreaterThanOrEqual(1);
     expect(dashB.pendingFollowUp).toBeGreaterThanOrEqual(1);
+  });
+
+  it("scopes medication: org A never sees org B's plan or doses (R2)", async () => {
+    await upsertPlan({
+      organizationId: orgB,
+      patientId: bPatientId,
+      drugName: "Wegovy",
+      genericName: "semaglutida",
+      frequency: "WEEKLY",
+      doseMg: 0.25,
+      shotDay: 3,
+    });
+    await logDose({
+      organizationId: orgB,
+      patientId: bPatientId,
+      drugName: "Wegovy",
+      doseMg: 0.25,
+      site: "LEFT_BELLY",
+    });
+
+    // Under A's scope, B's plan and dose log are invisible.
+    expect(await getPlan(orgA, bPatientId)).toBeNull();
+    expect(await listDoses(orgA, bPatientId)).toEqual([]);
+    // Under B's own scope they are present.
+    expect((await getPlan(orgB, bPatientId))?.drugName).toBe("Wegovy");
+    expect((await listDoses(orgB, bPatientId)).length).toBe(1);
   });
 
   it("sub-role and consent are org-scoped (adr/0006)", async () => {
