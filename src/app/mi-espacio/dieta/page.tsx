@@ -50,7 +50,7 @@ export default async function PatientDietPage() {
   return (
     <>
       <Topbar nav={<PatientNav />} />
-      <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">
             {plan?.title || t("patient.heading")}
@@ -72,7 +72,7 @@ export default async function PatientDietPage() {
         ) : null}
 
         {hasPlan ? (
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
             {content.days.map((day, dayIndex) => {
               const meals = MEAL_SLOTS.filter((slot) => day[slot]);
               if (meals.length === 0) return null;
@@ -82,7 +82,7 @@ export default async function PatientDietPage() {
                   key={dayIndex}
                   className={`flex flex-col gap-3 rounded-xl border p-5 ${
                     isToday
-                      ? "border-primary bg-surface-1 shadow-el-sm"
+                      ? "border-primary bg-surface-1 shadow-el-sm md:col-span-2 xl:col-span-3"
                       : "border-hairline bg-surface-1"
                   }`}
                 >

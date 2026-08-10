@@ -184,10 +184,11 @@
     font-size: 1rem;
   }
 
+  /* Site rule: links never underline; emphasis comes from color/weight
+     (secondary actions are outlined pills, ButtonLink). */
   a {
     color: var(--color-accent-text);
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    text-decoration: none;
   }
 
   ::selection {

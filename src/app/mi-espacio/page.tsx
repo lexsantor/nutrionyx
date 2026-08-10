@@ -32,6 +32,7 @@ import { listDocuments } from "@/modules/documents/repository";
 import { listUpcomingByPatient } from "@/modules/scheduling/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
+import { BodyFigure } from "@/components/body-figure";
 import { ButtonLink } from "@/components/ui/button-link";
 
 export const dynamic = "force-dynamic";
@@ -154,6 +155,13 @@ export default async function PatientHomePage({
         ? Math.min(1, proteinToday / proteinTarget)
         : 0;
 
+    // Bento pairs: when a row partner is absent, the survivor takes the row.
+    const medicationSpan = targets ? "lg:col-span-4" : "lg:col-span-12";
+    const medidasSpan =
+      upcomingAppointments.length > 0 ? "lg:col-span-7" : "lg:col-span-12";
+    const fotosSpan =
+      patientDocuments.length > 0 ? "lg:col-span-7" : "lg:col-span-12";
+
     return (
       <>
         <Topbar nav={<PatientNav />} />
@@ -225,7 +233,7 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <section className={`${TILE} lg:col-span-4`}>
+          <section className={`${TILE} ${medicationSpan}`}>
             <div className="flex items-start justify-between gap-4">
               <h2 className="text-lg font-semibold">{tm("next.label")}</h2>
               <ButtonLink href="/mi-espacio/medicacion" size="sm">
@@ -282,7 +290,7 @@ export default async function PatientHomePage({
             </p>
           </section>
 
-          <section className={`${TILE} lg:col-span-7`}>
+          <section className={`${TILE} ${medidasSpan}`}>
             <div className="flex flex-col gap-0.5">
               <h2 className="text-lg font-semibold">{tb("title")}</h2>
               {body.updatedAt ? (
@@ -297,17 +305,32 @@ export default async function PatientHomePage({
                 <p className="text-sm text-ink-subtle">{tb("empty")}</p>
               )}
             </div>
-            {bodyRows.length > 0 ? (
-              <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
-                {bodyRows.map((row) => (
-                  <div key={row.key} className="flex flex-col">
-                    <dt className="text-ink-subtle">{tb(`metrics.${row.key}`)}</dt>
-                    <dd className="font-semibold tabular-nums">{row.value}</dd>
-                  </div>
-                ))}
-              </dl>
-            ) : null}
-            <BodyMetricsForm />
+            <div className="flex flex-col gap-5 sm:flex-row sm:items-stretch">
+              <div className="mx-auto h-44 shrink-0 sm:mx-0 sm:h-52">
+                <BodyFigure
+                  waistCm={body.waistCm}
+                  hipCm={body.hipCm}
+                  bodyFatPct={body.bodyFatPct}
+                />
+              </div>
+              <div className="flex min-w-0 flex-1 flex-col gap-4">
+                {bodyRows.length > 0 ? (
+                  <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+                    {bodyRows.map((row) => (
+                      <div key={row.key} className="flex flex-col">
+                        <dt className="text-ink-subtle">
+                          {tb(`metrics.${row.key}`)}
+                        </dt>
+                        <dd className="font-semibold tabular-nums">
+                          {row.value}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                ) : null}
+                <BodyMetricsForm />
+              </div>
+            </div>
           </section>
 
           {upcomingAppointments.length > 0 ? (
@@ -349,7 +372,7 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <div className="lg:col-span-7">
+          <div className={fotosSpan}>
             <PhotosCard
               photos={(
                 await listPhotos(patient.organizationId, patient.id)
@@ -395,7 +418,7 @@ export default async function PatientHomePage({
             <a
               href="/api/me/export"
               download
-              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
+              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
             >
               {tb("exportLink")}
             </a>
