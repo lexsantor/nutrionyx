@@ -28,6 +28,8 @@ import { getPlan, listDoses } from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
+import { listDocuments } from "@/modules/documents/repository";
+import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
@@ -49,10 +51,13 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
 
 export default async function PatientDetailPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ docError?: string }>;
 }) {
   const { id } = await params;
+  const { docError } = await searchParams;
   const t = await getTranslations("patientDetail");
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
@@ -84,6 +89,7 @@ export default async function PatientDetailPage({
   const targets = await getTargets(org.id, patient.id);
   const notes = await listNotes(org.id, patient.id);
   const photos = await listPhotos(org.id, patient.id);
+  const documents = await listDocuments(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
   const recentDoses = allDoses.slice(0, 5);
@@ -533,6 +539,28 @@ export default async function PatientDetailPage({
             ) : (
               <p className="text-sm text-ink-subtle">{t("photos.empty")}</p>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">{t("documents.title")}</h2>
+              <p className="text-sm text-ink-subtle">
+                {t("documents.subtitle")}
+              </p>
+            </div>
+            <DocumentsCard
+              patientId={patient.id}
+              documents={documents.map((d) => ({
+                id: d.id,
+                fileName: d.fileName,
+                createdAt: format.dateTime(d.createdAt, {
+                  dateStyle: "medium",
+                }),
+              }))}
+              uploadError={docError === "1"}
+            />
           </div>
         </Card>
 

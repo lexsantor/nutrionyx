@@ -442,6 +442,10 @@
       "medicationValue": "{logged} de {expected} dosis registradas",
       "activity": "Actividad",
       "activityValue": "{days} de {total} días con registro"
+    },
+    "documents": {
+      "title": "Documentos",
+      "subtitle": "PDFs e informes que compartes con el paciente. Los ve y descarga desde su espacio."
     }
   },
   "auth": {
@@ -639,5 +643,12 @@
     "uploadError": "Foto no válida: JPG, PNG o WebP de hasta 8 MB.",
     "delete": "Eliminar foto",
     "photoAlt": "Foto de progreso del {date}"
+  },
+  "documents": {
+    "title": "Documentos",
+    "empty": "Sin documentos todavía.",
+    "upload": "Subir documento",
+    "uploadError": "Documento no válido: PDF, JPG, PNG o WebP de hasta 10 MB.",
+    "delete": "Eliminar documento"
   }
 }

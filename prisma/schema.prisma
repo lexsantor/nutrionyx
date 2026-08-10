@@ -65,6 +65,7 @@ model Patient {
   target          PatientTarget?
   notes           PatientNote[]
   photos          PatientPhoto[]
+  documents       PatientDocument[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -177,6 +178,23 @@ model PatientPhoto {
 
   @@index([organizationId, patientId, createdAt])
   @@map("patient_photos")
+}
+
+// Patient documents (docs/build/slice-16-plan.md): PDFs/reports the
+// specialist shares with a patient. Private Blob store, auth-gated route.
+model PatientDocument {
+  id                 String   @id @default(cuid())
+  organizationId     String
+  patientId          String
+  patient            Patient  @relation(fields: [patientId], references: [id])
+  pathname           String
+  contentType        String
+  fileName           String
+  uploadedByAuthUserId String
+  createdAt          DateTime @default(now())
+
+  @@index([organizationId, patientId, createdAt])
+  @@map("patient_documents")
 }
 
 // Specialist-private clinical notes (docs/build/slice-10-plan.md).

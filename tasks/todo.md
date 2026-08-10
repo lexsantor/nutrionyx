@@ -123,9 +123,15 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   in modules/reporting/adherence.ts (tested); new org-scoped
   `listMeasurementsSince` covered by isolation. No migration.
 
+- **Slice 16 - Documents** (docs/build/slice-16-plan.md): `PatientDocument`
+  on the private-Blob rail; specialist uploads/deletes on patient detail
+  (PDF/JPG/PNG/WebP <= 10 MB), patient downloads read-only in /mi-espacio;
+  auth-gated `GET /api/documents/[id]` (admin 403); erasure covers
+  documents. Migration `patient_documents` applied.
+
 ### Tier 2 remaining
 
-RBAC team members (when a multi-staff consulta exists) · Documents.
+RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
 Then Tier 3: diet plan builder (domain design first) or training log.
 
 ### Migrations (applied on Neon)

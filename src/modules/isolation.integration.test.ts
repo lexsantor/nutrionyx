@@ -44,6 +44,10 @@ import { getTargets, upsertTargets } from "@/modules/targets/repository";
 import { addNote, listNotes } from "@/modules/notes/repository";
 import { addPhoto, listPhotos } from "@/modules/photos/repository";
 import {
+  addDocument,
+  listDocuments,
+} from "@/modules/documents/repository";
+import {
   listMeasurementsSince,
   proteinOnDay,
   recordProtein,
@@ -117,6 +121,9 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.patientTarget.deleteMany({ where: { organizationId: org } });
       await prisma.patientNote.deleteMany({ where: { organizationId: org } });
       await prisma.patientPhoto.deleteMany({ where: { organizationId: org } });
+      await prisma.patientDocument.deleteMany({
+        where: { organizationId: org },
+      });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -335,6 +342,19 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await listPhotos(orgA, bPatientId)).toEqual([]);
     expect((await listPhotos(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes documents: invisible cross-org (R2)", async () => {
+    await addDocument({
+      organizationId: orgB,
+      patientId: bPatientId,
+      pathname: `documents/${orgB}/${bPatientId}/informe.pdf`,
+      contentType: "application/pdf",
+      fileName: "informe.pdf",
+      uploadedByAuthUserId: `spec-${suffix}`,
+    });
+    expect(await listDocuments(orgA, bPatientId)).toEqual([]);
+    expect((await listDocuments(orgB, bPatientId)).length).toBe(1);
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {

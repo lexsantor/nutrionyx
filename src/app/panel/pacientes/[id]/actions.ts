@@ -154,6 +154,40 @@ export async function erasePatientAction(
   redirect("/panel/pacientes");
 }
 
+export type DocumentDeleteState = { errorKey: string } | null;
+
+export async function deleteDocumentAction(
+  _prevState: DocumentDeleteState,
+  formData: FormData,
+): Promise<DocumentDeleteState> {
+  const documentId = (formData.get("documentId") as string) ?? "";
+  if (!documentId) return { errorKey: "generic" };
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) return { errorKey: "generic" };
+  if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
+    return { errorKey: "generic" };
+  }
+  const { data: organizations } = await auth.organization.list();
+  const active = organizations?.[0];
+  if (!active) return { errorKey: "generic" };
+  const org = await ensureOrganization(active.id, active.name);
+
+  const { deleteDocument } = await import("@/modules/documents/repository");
+  const document = await deleteDocument(org.id, documentId);
+  if (!document) return { errorKey: "generic" };
+
+  try {
+    const { delPrivate } = await import("@/lib/blob-private");
+    await delPrivate(document.pathname);
+  } catch (error) {
+    console.error("[deleteDocumentAction] blob delete failed", error);
+  }
+
+  revalidatePath(`/panel/pacientes/${document.patientId}`);
+  return null;
+}
+
 export type NoteFormState = { errorKey: string } | { ok: true } | null;
 
 export async function addNoteAction(

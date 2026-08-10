@@ -28,6 +28,7 @@ import { ProteinLog } from "./protein-log";
 import { BodyMetricsForm } from "./body-metrics-form";
 import { PhotosCard } from "./photos-card";
 import { listPhotos } from "@/modules/photos/repository";
+import { listDocuments } from "@/modules/documents/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
 
@@ -79,6 +80,11 @@ export default async function PatientHomePage({
 
     const tt = await getTranslations("targets.today");
     const tb = await getTranslations("body");
+    const td = await getTranslations("documents");
+    const patientDocuments = await listDocuments(
+      patient.organizationId,
+      patient.id,
+    );
     const body = await bodyComposition(patient.organizationId, patient.id);
     const ratio =
       body.waistCm != null && body.hipCm != null
@@ -303,6 +309,32 @@ export default async function PatientHomePage({
             }))}
             uploadError={photoError === "1"}
           />
+
+          {patientDocuments.length > 0 ? (
+            <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
+              <h2 className="text-lg font-semibold">{td("title")}</h2>
+              <ul className="flex flex-col">
+                {patientDocuments.map((doc) => (
+                  <li
+                    key={doc.id}
+                    className="flex items-center justify-between gap-3 border-b border-hairline py-2 last:border-0"
+                  >
+                    <a
+                      href={`/api/documents/${doc.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="min-w-0 flex-1 truncate text-sm font-medium text-ink no-underline transition-colors hover:text-accent-text"
+                    >
+                      {doc.fileName}
+                    </a>
+                    <span className="shrink-0 text-xs text-ink-subtle">
+                      {format.dateTime(doc.createdAt, { dateStyle: "medium" })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           <a
             href="/api/me/export"

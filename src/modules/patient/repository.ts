@@ -157,7 +157,12 @@ export async function erasePatient(
     where: scope,
     select: { pathname: true },
   });
+  const documentRows = await prisma.patientDocument.findMany({
+    where: scope,
+    select: { pathname: true },
+  });
   const counts = await prisma.$transaction(async (tx) => {
+    const documents = await tx.patientDocument.deleteMany({ where: scope });
     const photos = await tx.patientPhoto.deleteMany({ where: scope });
     const doses = await tx.medicationDose.deleteMany({ where: scope });
     const plans = await tx.medicationPlan.deleteMany({ where: scope });
@@ -189,6 +194,7 @@ export async function erasePatient(
       measurements: measurements.count,
       assessments: assessments.count,
       photos: photos.count,
+      documents: documents.count,
     };
   });
 
@@ -200,5 +206,11 @@ export async function erasePatient(
     payload: counts,
   });
 
-  return { ok: true, photoPathnames: photoRows.map((p) => p.pathname) };
+  return {
+    ok: true,
+    photoPathnames: [
+      ...photoRows.map((p) => p.pathname),
+      ...documentRows.map((d) => d.pathname),
+    ],
+  };
 }
