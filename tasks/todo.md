@@ -109,6 +109,15 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   patient - see plan for the escalation risk), best-effort auth
   removeMember, `PatientErased` event, destructive card with confirmation on
   patient detail. Isolation covers cross-org erase. No schema change.
+- **Slice 14 - Progress photos** (docs/build/slice-14-plan.md): private Blob
+  store `nutrionyx-private` (store_d5EPcKBZ36Q4hyw6); `PatientPhoto` rows +
+  auth-gated `GET /api/photos/[id]` (patient owner or org nutritionist,
+  admin 403); multipart upload route; patient card + panel grid; erasure
+  covers photos. Migration `patient_photos` applied.
+  **Pending owner (blocks photo upload in every env): connect the store to
+  the project in the dashboard with env prefix `PRIVATE`** →
+  vercel.com/lexsantor/~/stores/blob/store_d5EPcKBZ36Q4hyw6 → Connect
+  Project → nutrionyx → prefix PRIVATE → then `vercel env pull`.
 
 ### Migrations (applied on Neon)
 
