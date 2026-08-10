@@ -1,0 +1,23 @@
+{
+  "id": "02-local-restaurant",
+  "title": "Restaurant site with local identity",
+  "prompt": "Create a website for Ca l'Estrella, a third-generation family restaurant in Barcelona's Gracia neighborhood serving traditional Catalan cuisine with natural wines. They gave us photos of the dining room and dishes. Static site, plain HTML/CSS is fine.",
+  "context": { "stack": "static html/css", "existing_design": false, "content_provided": "name, story, cuisine, photos exist; no menu prices provided" },
+  "expected": {
+    "activate": true,
+    "surface_type": "brand",
+    "must": [
+      "Direction derived from the place's actual culture, not the generic 'restaurant template'",
+      "Passes the model-priors checkpoint if a warm/cream direction is chosen (alternative explored first)",
+      "Menu prices NOT invented: labeled slots or omission",
+      "Photography treated as the primary material since it exists",
+      "Works without JavaScript; semantic HTML"
+    ],
+    "must_not": [
+      "Fake reviews or invented awards",
+      "Stock-photo replacements when real photos were provided",
+      "Reservation widget pretending to work without a backend"
+    ],
+    "forbidden_detector_rules": ["content/fabricated-metrics", "content/fake-testimonial", "content/lorem-ipsum"]
+  }
+}

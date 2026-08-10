@@ -27,36 +27,59 @@ export function Review({
   >(completeAction, null);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col justify-center gap-6 px-4 py-10">
+    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center gap-6 px-4 py-12">
       <div>
-        <h1 className="text-xl font-semibold">{t("review.title")}</h1>
+        <p className="text-sm text-ink-subtle">
+          {t("progress", { step: totalSteps, total: totalSteps })}
+        </p>
+        <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight">
+          {t("review.title")}
+        </h1>
         <p className="mt-1 text-sm text-ink-subtle">{t("review.subtitle")}</p>
       </div>
 
-      <dl className="flex flex-col divide-y divide-hairline rounded-xl border border-hairline">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         {entries.map((entry, index) => (
-          <div
+          <Link
             key={entry.field}
-            className="flex items-center justify-between gap-4 px-4 py-2.5 text-sm"
+            href={`/mi-espacio/evaluacion?paso=${index}`}
+            aria-label={`${t("back")}: ${t(`fields.${entry.field}.title`)}`}
+            className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99]"
           >
-            <dt className="text-ink-subtle">{t(`fields.${entry.field}.title`)}</dt>
-            <dd className="flex items-center gap-3 text-right font-medium">
-              {entry.display ?? t("review.empty")}
-              <Link
-                href={`/mi-espacio/evaluacion?paso=${index}`}
-                className="text-xs font-normal text-ink-subtle underline underline-offset-2"
-                aria-label={`${t("back")}: ${t(`fields.${entry.field}.title`)}`}
+            <span className="flex items-center justify-between gap-2 text-xs font-medium text-ink-subtle">
+              {t(`fields.${entry.field}.title`)}
+              <svg
+                width="13"
+                height="13"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+                className="shrink-0 opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:opacity-100"
               >
-                {t("progress", { step: index + 1, total: totalSteps })}
-              </Link>
-            </dd>
-          </div>
+                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+              </svg>
+            </span>
+            <span
+              className={`text-base font-semibold ${
+                entry.display ? "" : "font-normal text-ink-tertiary"
+              }`}
+            >
+              {entry.display ?? t("review.empty")}
+            </span>
+          </Link>
         ))}
-        <div className="flex items-center justify-between gap-4 rounded-b-xl bg-surface-2 px-4 py-2.5 text-sm">
-          <dt className="font-medium">{t("review.bmiPreview")}</dt>
-          <dd className="font-semibold">{bmiPreview}</dd>
+
+        <div className="flex items-center justify-between gap-4 rounded-xl border border-primary bg-primary-subtle p-4 sm:col-span-2">
+          <span className="text-sm font-medium">{t("review.bmiPreview")}</span>
+          <span className="font-display text-3xl font-semibold tabular-nums">
+            {bmiPreview}
+          </span>
         </div>
-      </dl>
+      </div>
 
       {state?.errorKey ? (
         <p
@@ -72,6 +95,9 @@ export function Review({
           {isPending ? t("review.completing") : t("review.complete")}
         </Button>
       </form>
+      <p className="text-center text-xs text-ink-tertiary">
+        {t("review.editHint")}
+      </p>
     </main>
   );
 }

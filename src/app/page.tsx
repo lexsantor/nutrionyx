@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { WeightChart } from "@/components/weight-chart";
+import { ButtonLink } from "@/components/ui/button-link";
 import { Reveal } from "./reveal";
 
 export const dynamic = "force-dynamic";
@@ -57,7 +58,7 @@ function CtaButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary shadow-el-md transition-all duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98]`}
+      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98]`}
     >
       {children}
       <span
@@ -155,15 +156,17 @@ export default async function Home() {
           <span className="font-display text-sm font-semibold tracking-tight">
             Nutrionyx
           </span>
-          <Link
+          <ButtonLink
             href="/auth/sign-in"
-            className="hidden text-sm text-ink-subtle transition-colors hover:text-ink sm:block"
+            variant="ghost"
+            size="sm"
+            className="hidden sm:inline-flex"
           >
             {t("hero.cta.signIn")}
-          </Link>
+          </ButtonLink>
           <Link
             href="/auth/sign-up"
-            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-all duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98]`}
+            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98]`}
           >
             {t("hero.cta.signUp")}
           </Link>
@@ -186,14 +189,11 @@ export default async function Home() {
             <p className="max-w-[52ch] text-pretty text-lg leading-relaxed text-ink-subtle">
               {t("hero.description")}
             </p>
-            <div className="flex flex-wrap items-center gap-5">
+            <div className="flex flex-wrap items-center gap-4">
               <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
-              <Link
-                href="/auth/sign-in"
-                className="text-sm font-medium text-ink-subtle underline-offset-4 transition-colors hover:text-ink hover:underline"
-              >
+              <ButtonLink href="/auth/sign-in" variant="secondary" className="h-[52px] px-7">
                 {t("hero.cta.signIn")}
-              </Link>
+              </ButtonLink>
             </div>
           </div>
 
@@ -242,7 +242,7 @@ export default async function Home() {
       </div>
 
       {/* The record */}
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-24 px-6 pb-32 lg:gap-32">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-32 lg:gap-32">
         <RecordSection
           tilt="lg:-rotate-1"
           annotation={
@@ -502,21 +502,18 @@ export default async function Home() {
 
       {/* Closing */}
       <div className="border-t border-hairline bg-surface-1 px-6 py-32">
-        <Reveal className="mx-auto flex w-full max-w-2xl flex-col items-center gap-6 text-center">
+        <Reveal className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 text-center">
           <h2 className="text-balance font-display text-4xl font-semibold tracking-tight sm:text-5xl">
             {t("closing.title")}
           </h2>
           <p className="max-w-[48ch] text-balance leading-relaxed text-ink-subtle">
             {t("closing.text")}
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-5">
+          <div className="flex flex-wrap items-center justify-center gap-4">
             <CtaButton href="/auth/sign-up">{t("closing.cta")}</CtaButton>
-            <Link
-              href="/auth/sign-in"
-              className="text-sm font-medium text-ink-subtle underline-offset-4 transition-colors hover:text-ink hover:underline"
-            >
+            <ButtonLink href="/auth/sign-in" variant="secondary" className="h-[52px] px-7">
               {t("closing.secondary")}
-            </Link>
+            </ButtonLink>
           </div>
         </Reveal>
       </div>

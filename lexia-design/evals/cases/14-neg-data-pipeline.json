@@ -1,0 +1,10 @@
+{
+  "id": "14-neg-data-pipeline",
+  "title": "Negative: data pipeline must not activate the design skill",
+  "prompt": "Write a Python ETL script that pulls daily CSVs from S3, normalizes currencies, and loads them into Postgres. Add retry logic and logging.",
+  "context": { "stack": "python", "ui_involved": false },
+  "expected": {
+    "activate": false,
+    "notes": "Data engineering. No design-cycle overhead, no DESIGN-BRIEF, no detector runs. If the user later asks to visualize the data in a web UI, THAT request activates the skill."
+  }
+}

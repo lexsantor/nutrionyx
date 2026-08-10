@@ -1,0 +1,20 @@
+/* Eval fixture: motion anti-patterns for the detector. */
+.reveal {
+  transform: scale(0);
+  transition: all 1.2s ease-in;
+}
+.drawer {
+  transition: height 0.5s ease, margin 0.5s ease;
+}
+.hero-loop {
+  animation: drift 4s linear infinite;
+  will-change: transform, opacity, filter;
+  height: 100vh;
+}
+@keyframes drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(40px); }
+}
+.a1 { color: #111827; } .a2 { color: #1f2937; } .a3 { color: #374151; }
+.a4 { color: #4b5563; } .a5 { color: #6b7280; } .a6 { color: #9ca3af; }
+.a7 { color: #d1d5db; } .a8 { color: #e5e7eb; } .a9 { color: #f3f4f6; }

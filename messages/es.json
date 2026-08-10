@@ -408,7 +408,27 @@
       "bmiPreview": "Tu IMC será",
       "empty": "Sin indicar",
       "complete": "Completar evaluación",
-      "completing": "Completando..."
+      "completing": "Completando...",
+      "editHint": "Toca cualquier tarjeta para corregir esa respuesta."
+    },
+    "dob": {
+      "day": "Día",
+      "month": "Mes",
+      "year": "Año",
+      "months": {
+        "1": "enero",
+        "2": "febrero",
+        "3": "marzo",
+        "4": "abril",
+        "5": "mayo",
+        "6": "junio",
+        "7": "julio",
+        "8": "agosto",
+        "9": "septiembre",
+        "10": "octubre",
+        "11": "noviembre",
+        "12": "diciembre"
+      }
     }
   },
   "org": {

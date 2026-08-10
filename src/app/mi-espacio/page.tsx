@@ -32,8 +32,13 @@ import { listDocuments } from "@/modules/documents/repository";
 import { listUpcomingByPatient } from "@/modules/scheduling/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export const dynamic = "force-dynamic";
+
+// Bento tile: shared card surface with premium hover physics.
+const TILE =
+  "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-el-md";
 
 export default async function PatientHomePage({
   searchParams,
@@ -152,61 +157,14 @@ export default async function PatientHomePage({
     return (
       <>
         <Topbar nav={<PatientNav />} />
-        <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
-          <h1 className="text-2xl font-semibold">
+        <main className="mx-auto w-full max-w-6xl px-6 py-10">
+          <h1 className="mb-6 font-display text-2xl font-semibold tracking-tight">
             {t("welcome", { name: session.user.name })}
           </h1>
 
-          <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
-          <h2 className="text-lg font-semibold">{t("summary.title")}</h2>
-          <dl className="flex flex-col gap-2 text-sm">
-            <div className="flex justify-between">
-              <dt className="text-ink-subtle">{t("summary.bmi")}</dt>
-              <dd className="font-semibold">
-                {bmiValue} · {t(`bmiCategories.${bmiCategory(bmiValue)}`)}
-              </dd>
-            </div>
-            <div className="flex justify-between">
-              <dt className="text-ink-subtle">{t("summary.goal")}</dt>
-              <dd className="font-semibold">
-                {Number(assessment.targetWeightKg)} kg
-              </dd>
-            </div>
-          </dl>
-          <p className="text-xs text-ink-subtle">
-            {t("summary.completedAt", {
-              date: format.dateTime(assessment.completedAt!, {
-                dateStyle: "long",
-              }),
-            })}
-          </p>
-          </section>
-
-          <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold">{tm("next.label")}</h2>
-              <Link
-                href="/mi-espacio/medicacion"
-                className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
-              >
-                {plan ? tm("next.logCta") : tm("next.setupCta")}
-              </Link>
-            </div>
-            {plan ? (
-              <div className="flex flex-col gap-0.5">
-                <p className="text-xl font-semibold">{medicationLine}</p>
-                <p className="text-sm text-ink-subtle">
-                  {plan.drugName} · {Number(plan.doseMg).toLocaleString("es")}{" "}
-                  mg
-                </p>
-              </div>
-            ) : (
-              <p className="text-sm text-ink-subtle">{tm("next.none")}</p>
-            )}
-          </section>
-
+          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
           {targets ? (
-            <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+            <section className={`${TILE} lg:col-span-8`}>
               <div className="flex flex-col gap-0.5">
                 <h2 className="text-lg font-semibold">{tt("title")}</h2>
                 {planParts.length > 0 ? (
@@ -267,7 +225,29 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+          <section className={`${TILE} lg:col-span-4`}>
+            <div className="flex items-start justify-between gap-4">
+              <h2 className="text-lg font-semibold">{tm("next.label")}</h2>
+              <ButtonLink href="/mi-espacio/medicacion" size="sm">
+                {plan ? tm("next.logCta") : tm("next.setupCta")}
+              </ButtonLink>
+            </div>
+            {plan ? (
+              <div className="flex flex-col gap-0.5">
+                <p className="font-display text-xl font-semibold">
+                  {medicationLine}
+                </p>
+                <p className="text-sm text-ink-subtle">
+                  {plan.drugName} · {Number(plan.doseMg).toLocaleString("es")}{" "}
+                  mg
+                </p>
+              </div>
+            ) : (
+              <p className="text-sm text-ink-subtle">{tm("next.none")}</p>
+            )}
+          </section>
+
+          <section className={`${TILE} lg:col-span-8`}>
             <h2 className="text-lg font-semibold">{tp("title")}</h2>
             {points.length > 0 ? (
               <WeightChart points={points} targetKg={targetKg} />
@@ -277,7 +257,32 @@ export default async function PatientHomePage({
             <WeightCheckIn />
           </section>
 
-          <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+          <section className={`${TILE} lg:col-span-4`}>
+            <h2 className="text-lg font-semibold">{t("summary.title")}</h2>
+            <dl className="flex flex-col gap-2 text-sm">
+              <div className="flex justify-between">
+                <dt className="text-ink-subtle">{t("summary.bmi")}</dt>
+                <dd className="font-semibold tabular-nums">
+                  {bmiValue} · {t(`bmiCategories.${bmiCategory(bmiValue)}`)}
+                </dd>
+              </div>
+              <div className="flex justify-between">
+                <dt className="text-ink-subtle">{t("summary.goal")}</dt>
+                <dd className="font-semibold tabular-nums">
+                  {Number(assessment.targetWeightKg)} kg
+                </dd>
+              </div>
+            </dl>
+            <p className="mt-auto text-xs text-ink-subtle">
+              {t("summary.completedAt", {
+                date: format.dateTime(assessment.completedAt!, {
+                  dateStyle: "long",
+                }),
+              })}
+            </p>
+          </section>
+
+          <section className={`${TILE} lg:col-span-7`}>
             <div className="flex flex-col gap-0.5">
               <h2 className="text-lg font-semibold">{tb("title")}</h2>
               {body.updatedAt ? (
@@ -305,18 +310,8 @@ export default async function PatientHomePage({
             <BodyMetricsForm />
           </section>
 
-          <PhotosCard
-            photos={(
-              await listPhotos(patient.organizationId, patient.id)
-            ).map((p) => ({
-              id: p.id,
-              createdAt: format.dateTime(p.createdAt, { dateStyle: "medium" }),
-            }))}
-            uploadError={photoError === "1"}
-          />
-
           {upcomingAppointments.length > 0 ? (
-            <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
+            <section className={`${TILE} lg:col-span-5`}>
               <h2 className="text-lg font-semibold">
                 {ta("patientCardTitle")}
               </h2>
@@ -341,7 +336,7 @@ export default async function PatientHomePage({
                             href={cita.videoUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-accent-text underline-offset-2 hover:underline"
+                            className="font-medium text-accent-text transition-colors hover:text-primary"
                           >
                             {ta("joinVideo")}
                           </a>
@@ -354,8 +349,22 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
+          <div className="lg:col-span-7">
+            <PhotosCard
+              photos={(
+                await listPhotos(patient.organizationId, patient.id)
+              ).map((p) => ({
+                id: p.id,
+                createdAt: format.dateTime(p.createdAt, {
+                  dateStyle: "medium",
+                }),
+              }))}
+              uploadError={photoError === "1"}
+            />
+          </div>
+
           {patientDocuments.length > 0 ? (
-            <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
+            <section className={`${TILE} lg:col-span-5`}>
               <h2 className="text-lg font-semibold">{td("title")}</h2>
               <ul className="flex flex-col">
                 {patientDocuments.map((doc) => (
@@ -380,13 +389,17 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <a
-            href="/api/me/export"
-            download
-            className="self-center text-xs text-ink-subtle underline-offset-2 transition-colors hover:text-ink hover:underline"
-          >
-            {tb("exportLink")}
-          </a>
+          </div>
+
+          <div className="mt-8 flex justify-center">
+            <a
+              href="/api/me/export"
+              download
+              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98]"
+            >
+              {tb("exportLink")}
+            </a>
+          </div>
         </main>
       </>
     );

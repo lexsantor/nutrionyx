@@ -70,7 +70,7 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
 
         <p className="mt-6 text-center text-sm text-ink-subtle">
           ¿No tienes cuenta?{" "}
-          <Link href="/auth/sign-up" className="font-medium text-ink underline-offset-2 hover:text-primary">
+          <Link href="/auth/sign-up" className="font-medium text-ink transition-colors hover:text-primary">
             Regístrate
           </Link>
         </p>

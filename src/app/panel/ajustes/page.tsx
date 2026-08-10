@@ -67,7 +67,7 @@ export default async function SettingsPage() {
               <form action={acceptConsentAction}>
                 <button
                   type="submit"
-                  className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-on-primary transition-all duration-200 hover:bg-primary-hover active:scale-[0.97]"
+                  className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-medium text-on-primary transition-[transform,box-shadow,border-color,background-color,color] duration-200 hover:bg-primary-hover active:scale-[0.97]"
                 >
                   {t("consent.accept")}
                 </button>

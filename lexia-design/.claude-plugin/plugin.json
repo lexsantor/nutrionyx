@@ -1,0 +1,23 @@
+{
+  "name": "lexia-design",
+  "displayName": "Lexia Design",
+  "version": "0.1.1",
+  "description": "Design OS for coding agents: distinctive, accessible, production-ready web interfaces. Orchestrates visual direction, design systems, UX heuristics, anti-AI-slop auditing and functional motion through /lexia-design.",
+  "author": {
+    "name": "Taller24"
+  },
+  "license": "MIT",
+  "keywords": [
+    "design",
+    "ux",
+    "ui",
+    "accessibility",
+    "design-system",
+    "motion",
+    "gsap",
+    "audit",
+    "anti-slop",
+    "frontend"
+  ],
+  "hooks": "./hooks/hooks.json"
+}

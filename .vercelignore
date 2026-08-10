@@ -1,0 +1,10 @@
+node_modules
+.next
+.git
+coverage
+tasks
+docs
+*.test.ts
+*.test.tsx
+*.spec.ts
+*.spec.tsx

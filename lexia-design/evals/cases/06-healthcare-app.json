@@ -1,0 +1,23 @@
+{
+  "id": "06-healthcare-app",
+  "title": "Healthcare appointment app",
+  "prompt": "Build the patient-facing screens for a clinic app: book an appointment, view upcoming visits, medication reminders. Many users are elderly. Vue 3. Accessibility is non-negotiable.",
+  "context": { "stack": "vue3", "existing_design": false, "audience": "elderly patients included" },
+  "expected": {
+    "activate": true,
+    "surface_type": "product",
+    "must": [
+      "Accessibility beyond AA where audience demands it: larger targets and text, high contrast, plain language",
+      "Calm, precise register; no cutesy microcopy on medical content",
+      "Cognitive load capped: few choices per screen, progressive disclosure, redundant entry avoided",
+      "Error prevention on booking (confirmations, undo window); consistent help placement",
+      "No medical claims or fake doctor/clinic data invented"
+    ],
+    "must_not": [
+      "Dark patterns (pre-checked options, urgency timers)",
+      "Color-only status for medication states",
+      "Animation-dependent comprehension"
+    ],
+    "forbidden_detector_rules": ["a11y/user-scalable-no", "a11y/div-click", "content/fabricated-metrics", "slop/emoji-icon"]
+  }
+}

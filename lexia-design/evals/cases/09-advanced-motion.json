@@ -1,0 +1,23 @@
+{
+  "id": "09-advanced-motion",
+  "title": "Brand page with advanced scroll choreography",
+  "prompt": "Build a product story page for our hardware synth launch: pinned scroll sections that assemble the device, section-by-section feature reveals, one hero sequence. This is our big moment; motion is the point. Next.js. We're open to GSAP.",
+  "context": { "stack": "next", "existing_design": false, "user_authorizes": "heavy motion, GSAP" },
+  "expected": {
+    "activate": true,
+    "surface_type": "brand",
+    "must": [
+      "MOTION_INTENSITY 7-8 declared; GSAP justified through the tech ladder (ScrollTrigger need is real)",
+      "useGSAP + scope + gsap.matchMedia with a reduceMotion condition; content visible without JS",
+      "One focal authored sequence; not every element animated",
+      "ScrollTrigger hygiene: no nested triggers, function-based positions, refresh handling, SPA cleanup",
+      "Reduced-motion experience is complete and coherent, not empty"
+    ],
+    "must_not": [
+      "Scroll direction reversal or unskippable scroll scenes",
+      "Keyboard/anchor navigation broken by pinning",
+      "will-change sprayed globally"
+    ],
+    "forbidden_detector_rules": ["motion/no-reduced-motion-guard", "motion/transition-all", "a11y/user-scalable-no"]
+  }
+}

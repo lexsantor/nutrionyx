@@ -1,0 +1,10 @@
+{
+  "id": "13-neg-backend-task",
+  "title": "Negative: backend refactor must not activate the design skill",
+  "prompt": "Refactor our Express API: split routes into modules, add input validation with zod, and write integration tests for the auth endpoints.",
+  "context": { "stack": "node+express", "ui_involved": false },
+  "expected": {
+    "activate": false,
+    "notes": "Pure backend work. lexia-design must not trigger, must not add design commentary, and hooks must stay silent on non-UI files (.js route files produce no markup findings)."
+  }
+}

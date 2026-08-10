@@ -1,0 +1,56 @@
+{
+  "description": "Detector self-test: each fixture maps to rules that MUST fire (subset assertion) or severities that MUST NOT appear.",
+  "fixtures": [
+    {
+      "file": "slop-landing.html",
+      "expectRules": [
+        "a11y/user-scalable-no",
+        "a11y/paste-blocked",
+        "a11y/tabindex-positive",
+        "a11y/div-click",
+        "a11y/outline-none-no-focus-visible",
+        "a11y/img-missing-dimensions",
+        "a11y/icon-button-no-name",
+        "a11y/placeholder-as-label",
+        "a11y/autofocus",
+        "motion/transition-all",
+        "motion/layout-prop-transition",
+        "motion/scale-zero-entrance",
+        "motion/no-reduced-motion-guard",
+        "motion/long-duration",
+        "slop/purple-gradient",
+        "slop/emoji-icon",
+        "slop/unicode-pseudo-icon",
+        "slop/eyebrow-density",
+        "slop/em-dash-density",
+        "content/buzzword-copy",
+        "content/fabricated-metrics",
+        "content/fake-testimonial",
+        "content/todo-marker",
+        "content/lorem-ipsum",
+        "content/fake-status-dot",
+        "system/hardcoded-hex-density",
+        "system/h-screen-vs-dvh",
+        "perf/will-change-broad"
+      ]
+    },
+    {
+      "file": "clean-component.tsx",
+      "expectRules": [],
+      "forbidSeverities": ["critical", "serious"]
+    },
+    {
+      "file": "motion-heavy.css",
+      "expectRules": [
+        "motion/transition-all",
+        "motion/layout-prop-transition",
+        "motion/scale-zero-entrance",
+        "motion/no-reduced-motion-guard",
+        "motion/long-duration",
+        "system/hardcoded-hex-density",
+        "system/h-screen-vs-dvh",
+        "perf/will-change-broad"
+      ]
+    }
+  ]
+}

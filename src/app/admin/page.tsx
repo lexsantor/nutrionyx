@@ -35,25 +35,25 @@ export default async function AdminPage() {
   return (
     <>
       <Topbar />
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-6 py-10">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-10">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
 
         <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           <Card>
             <p className="text-sm text-ink-subtle">{t("metrics.consultas")}</p>
-            <p className="mt-1 text-2xl font-semibold">{metrics.consultas}</p>
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">{metrics.consultas}</p>
           </Card>
           <Card>
             <p className="text-sm text-ink-subtle">{t("metrics.patients")}</p>
-            <p className="mt-1 text-2xl font-semibold">{metrics.patients}</p>
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">{metrics.patients}</p>
           </Card>
           <Card>
             <p className="text-sm text-ink-subtle">{t("metrics.codesUsed")}</p>
-            <p className="mt-1 text-2xl font-semibold">{metrics.codesUsed}</p>
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">{metrics.codesUsed}</p>
           </Card>
           <Card>
             <p className="text-sm text-ink-subtle">{t("metrics.codesPending")}</p>
-            <p className="mt-1 text-2xl font-semibold">{metrics.codesPending}</p>
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">{metrics.codesPending}</p>
           </Card>
         </section>
 

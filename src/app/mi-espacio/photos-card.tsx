@@ -35,7 +35,7 @@ export function PhotosCard({
   const t = useTranslations("photos");
 
   return (
-    <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+    <section className="flex h-full flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-el-md">
       <div className="flex flex-col gap-0.5">
         <h2 className="text-lg font-semibold">{t("title")}</h2>
         <p className="text-sm text-ink-subtle">{t("privacy")}</p>
@@ -51,6 +51,8 @@ export function PhotosCard({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`/api/photos/${photo.id}`}
+                width={600}
+                height={800}
                 alt={t("photoAlt", { date: photo.createdAt })}
                 className="h-full w-full object-cover"
                 loading="lazy"

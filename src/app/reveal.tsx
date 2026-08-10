@@ -45,7 +45,7 @@ export function Reveal({
       ref={ref}
       data-state={state}
       style={{ transitionDelay: `${delay}ms` }}
-      className={`transition-all duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] data-[state=hidden]:translate-y-12 data-[state=hidden]:opacity-0 data-[state=hidden]:blur-md ${className}`}
+      className={`transition-[transform,opacity,filter] duration-700 ease-[cubic-bezier(0.32,0.72,0,1)] data-[state=hidden]:translate-y-12 data-[state=hidden]:opacity-0 data-[state=hidden]:blur-md ${className}`}
     >
       {children}
     </div>

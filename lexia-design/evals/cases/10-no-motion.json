@@ -1,0 +1,22 @@
+{
+  "id": "10-no-motion",
+  "title": "Interface that must not animate",
+  "prompt": "Add the new billing settings screen to our app. Our users complained about animations in the last release, so: no animations at all. React + Tailwind.",
+  "context": { "stack": "react+tailwind", "existing_design": true, "user_pinned": "zero animation" },
+  "expected": {
+    "activate": true,
+    "surface_type": "product",
+    "must": [
+      "MOTION_INTENSITY 1 honored as a first-class register: instant states specified in tokens",
+      "The absence of motion documented in DESIGN-SYSTEM.md so it isn't 'fixed' later",
+      "Quality delivered through typography, spacing, speed and states instead",
+      "Focus/hover states via color/weight/outline (no transitions)",
+      "No GSAP, Motion, or animation dependency added"
+    ],
+    "must_not": [
+      "Sneaking in 'just one' transition against the explicit brief",
+      "Interpreting no-animation as no-feedback (states still change instantly and visibly)"
+    ],
+    "forbidden_detector_rules": ["motion/transition-all", "motion/long-duration", "motion/scroll-hijack-lib"]
+  }
+}

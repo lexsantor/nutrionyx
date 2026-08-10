@@ -1,0 +1,23 @@
+{
+  "id": "03-finance-dashboard",
+  "title": "Financial dashboard",
+  "prompt": "Design and build the main dashboard for our fintech app: portfolio overview, recent transactions, spending by category chart, and alerts. React + TypeScript + Tailwind. Users check it daily.",
+  "context": { "stack": "react+ts+tailwind", "existing_design": false, "frequency": "daily use" },
+  "expected": {
+    "activate": true,
+    "surface_type": "product",
+    "must": [
+      "Product-surface register: clarity, density, states; DESIGN_VARIANCE <= 6",
+      "Tabular numerals for money; semantic colors reserved for meaning; never color-only signals",
+      "Loading/empty/error states for every data region; skeletons mirror layout",
+      "Motion minimal (frequency gate: daily use); no decorative dashboard animations",
+      "Neutral, precise register in copy; no playful microcopy on money"
+    ],
+    "must_not": [
+      "Demo data presented as real without an example label",
+      "Chart palette failing contrast or relying on hue alone",
+      "Card-inside-card composition for every widget"
+    ],
+    "forbidden_detector_rules": ["content/fabricated-metrics", "slop/emoji-icon", "motion/transition-all"]
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "lockVersion": 1,
+  "generated": "2026-07-31",
+  "note": "Pinned versions of every source analyzed while building lexia-design. The update skill (/lexia-design:update) compares these against upstream and never applies changes silently.",
+  "sources": [
+    {
+      "id": "ilm-alan-frontend-design",
+      "type": "git",
+      "url": "https://github.com/Ilm-Alan/frontend-design",
+      "ref": "main",
+      "commit": "1641823c70438a5ca36e2a5ea43f6154e3e70b81",
+      "commitDate": "2026-05-01",
+      "license": "MIT",
+      "checked": "2026-07-31",
+      "role": "Token-locked visual direction anchors, falsifiable style contracts, content discipline"
+    },
+    {
+      "id": "leonxlnx-taste-skill",
+      "type": "git",
+      "url": "https://github.com/Leonxlnx/taste-skill",
+      "ref": "main",
+      "commit": "e988add20dab0fa97d7a76781c48961c8184288e",
+      "commitDate": "2026-07-23",
+      "license": "MIT",
+      "checked": "2026-07-31",
+      "role": "Design dials, mechanically checkable rules, AI-tell catalog, redesign protocol"
+    },
+    {
+      "id": "pbakaus-impeccable",
+      "type": "git",
+      "url": "https://github.com/pbakaus/impeccable",
+      "ref": "main",
+      "commit": "32930818a109fafa87199babe92fa8e530cff5d3",
+      "commitDate": "2026-07-30",
+      "license": "Apache-2.0",
+      "checked": "2026-07-31",
+      "role": "Deterministic detector + LLM critique split, visitor modes, brief-wins precedence, bounded review, scoring trends"
+    },
+    {
+      "id": "emilkowalski-skills",
+      "type": "git",
+      "url": "https://github.com/emilkowalski/skills",
+      "ref": "main",
+      "commit": "70744e3816f1d93eafb697161a8b880a7384c5ff",
+      "commitDate": "2026-07-27",
+      "license": "MIT",
+      "checked": "2026-07-31",
+      "role": "Motion taste: frequency gate, duration/easing values, springs, interruptibility, restraint bias"
+    },
+    {
+      "id": "vercel-web-interface-guidelines",
+      "type": "git",
+      "url": "https://github.com/vercel-labs/web-interface-guidelines",
+      "ref": "main",
+      "commit": "4e799d45c17aec1498c269287a83b9dba22b966b",
+      "commitDate": "2026-04-06",
+      "license": "MIT",
+      "checked": "2026-07-31",
+      "role": "Interaction, forms, focus, keyboard, states and performance audit surface"
+    },
+    {
+      "id": "ui-ux-pro-max-skill",
+      "type": "git",
+      "url": "https://github.com/nextlevelbuilder/ui-ux-pro-max-skill",
+      "ref": "main",
+      "commit": "ec1f2a9027e270c9a4e8e3dbc243136fa9d32505",
+      "commitDate": "2026-07-31",
+      "license": "MIT",
+      "checked": "2026-07-31",
+      "role": "Product-type to style/palette mapping concept, data/engine/prose separation, persistence protocol"
+    },
+    {
+      "id": "gsap",
+      "type": "npm",
+      "package": "gsap",
+      "version": "3.15.0",
+      "license": "Standard 'no charge' GSAP License (Webflow)",
+      "licenseUrl": "https://gsap.com/community/standard-license/",
+      "checked": "2026-07-31",
+      "role": "Motion implementation engine; all plugins free since 3.13.0 (2025-04-30)"
+    },
+    {
+      "id": "gsap-react",
+      "type": "npm",
+      "package": "@gsap/react",
+      "version": "2.1.2",
+      "license": "Standard 'no charge' GSAP License (Webflow)",
+      "checked": "2026-07-31",
+      "role": "useGSAP hook, React cleanup pattern"
+    },
+    {
+      "id": "vengeance-ui",
+      "type": "web",
+      "url": "https://www.vengenceui.com/",
+      "repo": "https://github.com/Ashutoshx7/VengenceUI",
+      "license": "NONE PUBLISHED (all rights reserved by default)",
+      "checked": "2026-07-31",
+      "status": "inspiration-only",
+      "role": "React + Tailwind + Framer Motion landing components; not safe to copy until a license is published"
+    },
+    {
+      "id": "skiper-ui",
+      "type": "web",
+      "url": "https://skiper-ui.com/",
+      "license": "Free tier: commercial use with required attribution. Premium $129 / Exclusive $549 one-time, no attribution.",
+      "checked": "2026-07-31",
+      "role": "Next.js + shadcn/ui + Motion/GSAP decorative components via shadcn registry (@skiper-ui)"
+    },
+    {
+      "id": "wcag-2.2",
+      "type": "spec",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "revision": "2024-12-12",
+      "status": "W3C Recommendation (current)",
+      "checked": "2026-07-31",
+      "role": "Accessibility conformance floor (AA)"
+    },
+    {
+      "id": "wai-aria-apg",
+      "type": "spec",
+      "url": "https://www.w3.org/WAI/ARIA/apg/",
+      "patterns": 30,
+      "checked": "2026-07-31",
+      "role": "Component interaction patterns and keyboard semantics"
+    },
+    {
+      "id": "claude-code-plugin-spec",
+      "type": "docs",
+      "url": "https://code.claude.com/docs/en/plugins-reference",
+      "cliVersion": "2.1.220",
+      "checked": "2026-07-31",
+      "role": "Plugin, skill, agent, hook and marketplace schemas"
+    }
+  ]
+}

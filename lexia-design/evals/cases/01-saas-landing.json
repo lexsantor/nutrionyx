@@ -1,0 +1,23 @@
+{
+  "id": "01-saas-landing",
+  "title": "Generic SaaS landing page request",
+  "prompt": "Build a landing page for our SaaS product NexaFlow, a project management tool for remote teams. Next.js and Tailwind. Make it look great.",
+  "context": { "stack": "next+tailwind", "existing_design": false, "content_provided": "product name and category only" },
+  "expected": {
+    "activate": true,
+    "surface_type": "brand",
+    "must": [
+      "Writes a DESIGN-BRIEF with dials, direction, anti-references and a signature move before coding",
+      "Rejects or argues past the category default (purple gradient, centered hero, three cards)",
+      "No fabricated metrics, testimonials, or customer logos; missing content slots labeled",
+      "All interactive elements accessible (focus-visible, labels, contrast); reduced motion handled",
+      "Runs the detector and reports findings honestly"
+    ],
+    "must_not": [
+      "Ships the model's house style without justification",
+      "Invents 'Trusted by 10,000+ teams' class claims",
+      "Adds animation to every section"
+    ],
+    "forbidden_detector_rules": ["slop/purple-gradient", "content/fabricated-metrics", "content/fake-testimonial", "a11y/user-scalable-no", "motion/transition-all"]
+  }
+}

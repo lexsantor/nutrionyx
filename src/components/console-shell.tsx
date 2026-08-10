@@ -33,7 +33,7 @@ const SETTINGS_NAV = { key: "ajustes", href: "/panel/ajustes", icon: Settings };
 const ICON_SIZE = 18;
 
 const navBase =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-all duration-200";
+  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-200";
 const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el-sm`;
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
@@ -90,7 +90,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
+    <div className="flex h-dvh overflow-hidden bg-canvas">
       <aside className="hidden w-60 shrink-0 flex-col border-r border-hairline bg-surface-1 lg:flex">
         <div className="flex h-16 items-center px-6">
           <span className="font-display text-lg font-semibold tracking-tight text-ink">
@@ -156,7 +156,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
         </nav>
 
         <main className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
-          <div className="mx-auto w-full max-w-5xl px-8 py-10">{children}</div>
+          <div className="mx-auto w-full max-w-6xl px-8 py-10">{children}</div>
         </main>
       </div>
     </div>

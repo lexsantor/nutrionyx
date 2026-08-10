@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Generated Prisma client (gitignored).
     "src/generated/**",
+    // Vendored lexia-design plugin (tooling, not app code).
+    "lexia-design/**",
   ]),
 ]);
 

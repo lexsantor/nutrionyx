@@ -105,7 +105,7 @@ export default async function PanelPage() {
             </div>
             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-3">
               <div
-                className="h-full rounded-full bg-success transition-all duration-500"
+                className="h-full rounded-full bg-success transition-[width] duration-500"
                 style={{
                   width: `${metrics.completionRate ?? 0}%`,
                 }}
