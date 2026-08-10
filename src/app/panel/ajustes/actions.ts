@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { put } from "@vercel/blob";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole } from "@/lib/auth/role";
 import {
@@ -59,6 +60,28 @@ export async function updateProfileAction(
     return { errorKey: "slugTaken" };
   }
 
+  // Logo upload (docs/build/slice-10-plan.md): branding asset, public Blob.
+  // A chosen file wins over the URL field; without one the URL field rules.
+  let logoUrl = field(formData, "logoUrl");
+  const logo = formData.get("logo");
+  if (logo instanceof File && logo.size > 0) {
+    const ALLOWED = ["image/png", "image/jpeg", "image/webp"];
+    if (!ALLOWED.includes(logo.type) || logo.size > 2 * 1024 * 1024) {
+      return { errorKey: "invalidLogo" };
+    }
+    try {
+      const ext = logo.type.split("/")[1];
+      const blob = await put(`logos/${org.id}.${ext}`, logo, {
+        access: "public",
+        addRandomSuffix: true,
+      });
+      logoUrl = blob.url;
+    } catch (err) {
+      console.error("[updateProfileAction] blob upload failed", err);
+      return { errorKey: "logoUploadFailed" };
+    }
+  }
+
   try {
     await updateOrgProfile(org.id, {
       name,
@@ -69,7 +92,7 @@ export async function updateProfileAction(
       postalCode: field(formData, "postalCode"),
       country: field(formData, "country") ?? "ES",
       hours: field(formData, "hours"),
-      logoUrl: field(formData, "logoUrl"),
+      logoUrl,
       slug: slug || null,
     });
   } catch (err) {

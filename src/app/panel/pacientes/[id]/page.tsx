@@ -10,8 +10,10 @@ import { ageInYears } from "@/modules/patient/age";
 import { listWeights } from "@/modules/measurement/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
+import { listNotes } from "@/modules/notes/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
+import { NoteForm } from "./note-form";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 import { WeightChart } from "@/components/weight-chart";
@@ -62,6 +64,7 @@ export default async function PatientDetailPage({
 
   const assessment = patient.assessments[0] ?? null;
   const targets = await getTargets(org.id, patient.id);
+  const notes = await listNotes(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const recentDoses = medicationPlan
     ? await listDoses(org.id, patient.id, 5)
@@ -280,6 +283,36 @@ export default async function PatientDetailPage({
               </>
             ) : (
               <p className="text-sm text-ink-subtle">{t("medication.empty")}</p>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">{t("notes.title")}</h2>
+              <p className="text-sm text-ink-subtle">{t("notes.subtitle")}</p>
+            </div>
+            <NoteForm patientId={patient.id} />
+            {notes.length > 0 ? (
+              <ul className="flex flex-col gap-3">
+                {notes.map((note) => (
+                  <li
+                    key={note.id}
+                    className="flex flex-col gap-1 rounded-[10px] bg-surface-2 px-4 py-3"
+                  >
+                    <span className="text-xs text-ink-subtle">
+                      {format.dateTime(note.createdAt, {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                    <p className="whitespace-pre-wrap text-sm">{note.body}</p>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-ink-subtle">{t("notes.empty")}</p>
             )}
           </div>
         </Card>

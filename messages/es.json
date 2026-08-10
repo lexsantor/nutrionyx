@@ -87,8 +87,12 @@
     "errors": {
       "generic": "No se pudo guardar. Inténtalo de nuevo.",
       "noOrganization": "No hay consulta activa.",
-      "slugTaken": "Ese identificador ya está en uso. Elige otro."
-    }
+      "slugTaken": "Ese identificador ya está en uso. Elige otro.",
+      "invalidLogo": "Logo no válido: PNG, JPG o WebP de hasta 2 MB.",
+      "logoUploadFailed": "No se ha podido subir el logo. Inténtalo de nuevo."
+    },
+    "logoFile": "Subir logo",
+    "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL."
   },
   "home": {
     "notSignedIn": "Sesión no iniciada",
@@ -402,6 +406,11 @@
     "targets": {
       "title": "Objetivos",
       "subtitle": "Plan que el paciente ve en su espacio: referencia de kcal, proteína diaria a registrar y entrenos semanales."
+    },
+    "notes": {
+      "title": "Notas",
+      "subtitle": "Privadas de la consulta: el paciente nunca las ve. Historial inmutable; una corrección es una nota nueva.",
+      "empty": "Sin notas todavía."
     }
   },
   "auth": {
@@ -535,5 +544,19 @@
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
       }
     }
+  },
+  "notes": {
+    "bodyLabel": "Nueva nota",
+    "placeholder": "Escribe una nota clínica sobre este paciente…",
+    "save": "Añadir nota",
+    "saving": "Guardando…",
+    "errors": {
+      "invalidBody": "La nota no puede estar vacía ni superar 4000 caracteres.",
+      "generic": "No se ha podido guardar. Inténtalo de nuevo."
+    }
+  },
+  "patientNav": {
+    "home": "Inicio",
+    "medication": "Medicación"
   }
 }

@@ -40,6 +40,7 @@ import {
   upsertPlan,
 } from "@/modules/medication/repository";
 import { getTargets, upsertTargets } from "@/modules/targets/repository";
+import { addNote, listNotes } from "@/modules/notes/repository";
 import {
   proteinOnDay,
   recordProtein,
@@ -111,6 +112,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.medicationDose.deleteMany({ where: { organizationId: org } });
       await prisma.medicationPlan.deleteMany({ where: { organizationId: org } });
       await prisma.patientTarget.deleteMany({ where: { organizationId: org } });
+      await prisma.patientNote.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -302,6 +304,17 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // Under B's own scope they are present.
     expect((await getTargets(orgB, bPatientId))?.proteinTargetG).toBe(150);
     expect(await proteinOnDay(orgB, bPatientId, new Date())).toBe(42);
+  });
+
+  it("scopes notes: invisible cross-org (R2)", async () => {
+    await addNote({
+      organizationId: orgB,
+      patientId: bPatientId,
+      authorAuthUserId: `spec-${suffix}`,
+      body: "nota privada",
+    });
+    expect(await listNotes(orgA, bPatientId)).toEqual([]);
+    expect((await listNotes(orgB, bPatientId)).length).toBe(1);
   });
 
   it("sub-role and consent are org-scoped (adr/0006)", async () => {

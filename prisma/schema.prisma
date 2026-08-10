@@ -63,6 +63,7 @@ model Patient {
   medicationPlan  MedicationPlan?
   medicationDoses MedicationDose[]
   target          PatientTarget?
+  notes           PatientNote[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -156,6 +157,22 @@ model Measurement {
 
   @@index([organizationId, patientId, recordedAt])
   @@map("measurements")
+}
+
+// Specialist-private clinical notes (docs/build/slice-10-plan.md).
+// Append-only (PRD_03 rules 5-6): a correction is a new note. Never shown
+// to the patient; never visible to the platform admin (operator-blindness).
+model PatientNote {
+  id               String   @id @default(cuid())
+  organizationId   String
+  patientId        String
+  patient          Patient  @relation(fields: [patientId], references: [id])
+  authorAuthUserId String
+  body             String
+  createdAt        DateTime @default(now())
+
+  @@index([organizationId, patientId, createdAt])
+  @@map("patient_notes")
 }
 
 // Clinical targets prescribed by the specialist (docs/build/slice-9-plan.md):

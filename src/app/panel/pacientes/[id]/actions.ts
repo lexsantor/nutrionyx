@@ -6,6 +6,7 @@ import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { upsertTargets } from "@/modules/targets/repository";
+import { addNote } from "@/modules/notes/repository";
 
 export type TargetsFormState = { errorKey: string } | { ok: true } | null;
 
@@ -73,6 +74,57 @@ export async function saveTargetsAction(
     });
   } catch (error) {
     console.error("[saveTargetsAction] upsertTargets failed", error);
+    return { errorKey: "generic" };
+  }
+
+  revalidatePath(`/panel/pacientes/${patient.id}`);
+  return { ok: true };
+}
+
+export type NoteFormState = { errorKey: string } | { ok: true } | null;
+
+export async function addNoteAction(
+  _prevState: NoteFormState,
+  formData: FormData,
+): Promise<NoteFormState> {
+  const body = ((formData.get("body") as string) ?? "").trim();
+  if (!body || body.length > 4000) {
+    return { errorKey: "invalidBody" };
+  }
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    return { errorKey: "generic" };
+  }
+  if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
+    console.error("[addNoteAction] non-nutritionist attempted", {
+      userId: session.user.id,
+    });
+    return { errorKey: "generic" };
+  }
+
+  const { data: organizations } = await auth.organization.list();
+  if (!organizations || organizations.length === 0) {
+    return { errorKey: "generic" };
+  }
+  const active = organizations[0];
+  const org = await ensureOrganization(active.id, active.name);
+
+  const patientId = (formData.get("patientId") as string) ?? "";
+  const patient = await getPatientDetail(org.id, patientId);
+  if (!patient) {
+    return { errorKey: "generic" };
+  }
+
+  try {
+    await addNote({
+      organizationId: org.id,
+      patientId: patient.id,
+      authorAuthUserId: session.user.id,
+      body,
+    });
+  } catch (error) {
+    console.error("[addNoteAction] addNote failed", error);
     return { errorKey: "generic" };
   }
 

@@ -10,6 +10,7 @@ import {
   suggestNextSite,
 } from "@/modules/medication/glp1";
 import { Topbar } from "@/components/topbar";
+import { PatientNav } from "../patient-nav";
 import { Card } from "@/components/ui/card";
 import { PlanForm } from "./plan-form";
 import { DoseForm } from "./dose-form";
@@ -53,7 +54,7 @@ export default async function MedicationPage() {
 
   return (
     <>
-      <Topbar />
+      <Topbar nav={<PatientNav />} />
       <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
         <div className="flex flex-col gap-2">
           <Link

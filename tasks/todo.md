@@ -81,8 +81,16 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   `PatientTarget` (kcal/protein/sessions, specialist-prescribed, panel form on
   patient detail) + `Measurement` kind `PROTEIN`; patient "Hoy" card (plan
   line, weight-today status, protein progress + quick add). Feature roadmap in
-  docs/build/roadmap-feature-tiers.md. **Migration `targets_and_protein`
-  pending on Neon** (owner: `npx prisma migrate dev`).
+  docs/build/roadmap-feature-tiers.md. Migration `targets_and_protein`
+  applied 2026-08-10.
+- **Slice 10 - Tier 1 batch** (docs/build/slice-10-plan.md): specialist-private
+  append-only `PatientNote` + "Notas" card on patient detail; patient nav
+  (Inicio · Medicación) in the Topbar (NavLink restored); consulta logo upload
+  to Vercel Blob (store `nutrionyx-assets`, public, linked; `@vercel/blob`
+  dep). Email: Resend discovered via marketplace - **owner must accept terms**
+  (vercel.com/lexsantor/~/integrations/accept-terms/resend), then
+  `vercel integration add resend` and the email slice can start. **Migration
+  `patient_notes` pending on Neon** (owner: `npx prisma migrate dev`).
 
 ### Migrations (applied on Neon)
 
