@@ -102,6 +102,13 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   protein now thin wrappers); pure derivations in measurement/body.ts (ratio,
   fat/lean mass, tested); patient "Medidas" card + panel "Composición
   corporal" card. **Migration `body_metrics` pending on Neon.**
+  Body map: `BodyMapMeasures` draws 7 zone bands over clay mannequin
+  renders (`public/mannequin-{male,female}-{front,back}.png`, Pletor
+  nano-banana-2 + background removal). `sex` prop picks the figure from
+  `Assessment.sex` (default male); per-sex band tables in the component,
+  calibrated by measuring each render's alpha channel (scratchpad
+  measure.py pattern - female hip/glute apex sits ~12 viewBox units
+  lower).
 - **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
   `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
   subjetivas) + "Descargar mis datos" link; `erasePatient` = children
