@@ -32,6 +32,10 @@ export async function GET() {
       prisma.patientTarget.findFirst({ where }),
       prisma.dietPlan.findFirst({ where }),
     ]);
+  const [trainingRoutine, trainingSessions] = await Promise.all([
+    prisma.trainingRoutine.findFirst({ where }),
+    prisma.trainingSession.findMany({ where, orderBy: { sessionAt: "asc" } }),
+  ]);
 
   const data = {
     exportedAt: new Date().toISOString(),
@@ -56,6 +60,8 @@ export async function GET() {
     })),
     targets,
     dietPlan,
+    trainingRoutine,
+    trainingSessions,
   };
 
   return new Response(JSON.stringify(data, null, 2), {

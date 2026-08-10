@@ -50,6 +50,13 @@ import {
 import { getDietPlan, upsertDietPlan } from "@/modules/diet/repository";
 import { emptyContent } from "@/modules/diet/plan";
 import {
+  getRoutine,
+  listSessions,
+  logSession,
+  upsertRoutine,
+} from "@/modules/training/repository";
+import { emptyRoutine } from "@/modules/training/routine";
+import {
   listMeasurementsSince,
   proteinOnDay,
   recordProtein,
@@ -127,6 +134,12 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
         where: { organizationId: org },
       });
       await prisma.dietPlan.deleteMany({ where: { organizationId: org } });
+      await prisma.trainingSession.deleteMany({
+        where: { organizationId: org },
+      });
+      await prisma.trainingRoutine.deleteMany({
+        where: { organizationId: org },
+      });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -373,6 +386,38 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await getDietPlan(orgA, bPatientId)).toBeNull();
     expect((await getDietPlan(orgB, bPatientId))?.title).toBe("Plan B");
+  });
+
+  it("scopes training: routine and sessions invisible cross-org (R2)", async () => {
+    const content = emptyRoutine();
+    content.days[0] = "Sentadilla 4x8";
+    await upsertRoutine({
+      organizationId: orgB,
+      patientId: bPatientId,
+      title: "Fuerza",
+      notes: null,
+      content,
+      updatedByAuthUserId: `spec-${suffix}`,
+    });
+    const logged = await logSession({
+      organizationId: orgB,
+      patientId: bPatientId,
+      note: null,
+    });
+    expect(logged).not.toBeNull();
+    // A double tap the same day is rejected.
+    expect(
+      await logSession({
+        organizationId: orgB,
+        patientId: bPatientId,
+        note: null,
+      }),
+    ).toBeNull();
+
+    expect(await getRoutine(orgA, bPatientId)).toBeNull();
+    expect(await listSessions(orgA, bPatientId)).toEqual([]);
+    expect((await getRoutine(orgB, bPatientId))?.title).toBe("Fuerza");
+    expect((await listSessions(orgB, bPatientId)).length).toBe(1);
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {

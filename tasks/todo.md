@@ -139,11 +139,22 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Migration `diet_plans` applied. Owner decisions: no food DB, no recipes,
   no per-meal macros in v1.
 
+- **Slice 18 - Training v1** (docs/build/slice-18-plan.md):
+  `TrainingRoutine` (Exercise Program root, PRD_03 §3.5; 7 day-texts,
+  empty = rest day) + append-only `TrainingSession` (one per day, double
+  tap rejected). Panel editor `/panel/pacientes/[id]/entreno` + card;
+  patient `/mi-espacio/entreno` (today first + marcar sesión + history),
+  nav gains Entreno; 28-day report gains sessions vs sessionsPerWeek x 4
+  and sessions count as active days. Export + erasure + isolation (19/19).
+  Migration `training` applied. Available to every specialist (adr/0006:
+  sub-role is emphasis, not access).
+
 ### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
-Tier 3 next candidates: diet plan iteration (meal library, macros,
-preferences per adr/0002) or training log (SPORTS_NUTRITIONIST divergence).
+Next candidates: diet/training iteration (meal library, per-set logging,
+preferences per adr/0002) · messaging · scheduling · billing (Tier E).
+Non-code: own domain + Resend verification (patient emails still sandbox).
 
 ### Migrations (applied on Neon)
 

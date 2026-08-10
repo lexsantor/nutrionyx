@@ -67,6 +67,8 @@ model Patient {
   photos          PatientPhoto[]
   documents       PatientDocument[]
   dietPlan        DietPlan?
+  trainingRoutine  TrainingRoutine?
+  trainingSessions TrainingSession[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -199,6 +201,38 @@ model DietPlan {
 
   @@index([organizationId])
   @@map("diet_plans")
+}
+
+// Exercise Program aggregate root (PRD_03 §3.5; docs/build/slice-18-plan.md).
+// Same document pattern as DietPlan: 7 day-texts, empty = rest day.
+model TrainingRoutine {
+  id                  String   @id @default(cuid())
+  organizationId      String
+  patientId           String   @unique
+  patient             Patient  @relation(fields: [patientId], references: [id])
+  title               String?
+  notes               String?
+  content             Json
+  updatedByAuthUserId String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("training_routines")
+}
+
+// Append-only training sessions the patient marks done (one per day).
+model TrainingSession {
+  id             String   @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  note           String?
+  sessionAt      DateTime @default(now())
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, patientId, sessionAt])
+  @@map("training_sessions")
 }
 
 // Patient documents (docs/build/slice-16-plan.md): PDFs/reports the

@@ -441,7 +441,9 @@
       "medication": "Medicación",
       "medicationValue": "{logged} de {expected} dosis registradas",
       "activity": "Actividad",
-      "activityValue": "{days} de {total} días con registro"
+      "activityValue": "{days} de {total} días con registro",
+      "training": "Entrenamiento",
+      "trainingValue": "{logged} de {expected} sesiones"
     },
     "documents": {
       "title": "Documentos",
@@ -453,6 +455,14 @@
       "empty": "Sin plan de dieta todavía.",
       "edit": "Editar plan",
       "create": "Crear plan"
+    },
+    "training": {
+      "title": "Entrenamiento",
+      "updatedAt": "Rutina actualizada el {date}",
+      "empty": "Sin rutina todavía.",
+      "lastSession": "última sesión el {date}",
+      "edit": "Editar rutina",
+      "create": "Crear rutina"
     }
   },
   "auth": {
@@ -600,7 +610,8 @@
   "patientNav": {
     "home": "Inicio",
     "medication": "Medicación",
-    "diet": "Dieta"
+    "diet": "Dieta",
+    "training": "Entreno"
   },
   "body": {
     "title": "Medidas",
@@ -696,6 +707,50 @@
       "updatedAt": "Actualizado el {date}",
       "today": "Hoy",
       "empty": "Tu nutricionista aún no ha publicado tu plan de dieta."
+    }
+  },
+  "training": {
+    "days": {
+      "0": "lunes",
+      "1": "martes",
+      "2": "miércoles",
+      "3": "jueves",
+      "4": "viernes",
+      "5": "sábado",
+      "6": "domingo"
+    },
+    "editor": {
+      "heading": "Rutina de entrenamiento",
+      "hint": "Escribe la rutina de cada día (ejercicios, series, descansos). Un día vacío es día de descanso.",
+      "titleLabel": "Título de la rutina",
+      "titlePlaceholder": "Fuerza 3 días · agosto",
+      "notesLabel": "Indicaciones generales",
+      "notesPlaceholder": "Calienta 10 min antes de cada sesión…",
+      "dayPlaceholder": "Sentadilla 4x8\nPress banca 3x10\nRemo 3x12",
+      "save": "Guardar rutina",
+      "saving": "Guardando…",
+      "saved": "Rutina guardada",
+      "errors": {
+        "invalidContent": "Revisa el contenido: algún día supera los 2000 caracteres.",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
+    },
+    "patient": {
+      "heading": "Mi entrenamiento",
+      "updatedAt": "Rutina actualizada el {date}",
+      "todayTitle": "Hoy",
+      "restDay": "Hoy es día de descanso.",
+      "empty": "Tu especialista aún no ha publicado tu rutina.",
+      "sessionsTitle": "Sesiones registradas",
+      "noteLabel": "Nota (opcional)",
+      "notePlaceholder": "Subí 2,5 kg en sentadilla",
+      "logSession": "Marcar sesión hecha",
+      "logging": "Registrando…",
+      "doneToday": "Sesión de hoy registrada",
+      "errors": {
+        "alreadyToday": "Ya has registrado la sesión de hoy.",
+        "generic": "No se ha podido registrar. Inténtalo de nuevo."
+      }
     }
   }
 }

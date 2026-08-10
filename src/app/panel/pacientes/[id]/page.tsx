@@ -30,6 +30,10 @@ import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
 import { getDietPlan } from "@/modules/diet/repository";
+import {
+  getRoutine,
+  listSessions,
+} from "@/modules/training/repository";
 import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
@@ -92,6 +96,8 @@ export default async function PatientDetailPage({
   const photos = await listPhotos(org.id, patient.id);
   const documents = await listDocuments(org.id, patient.id);
   const dietPlan = await getDietPlan(org.id, patient.id);
+  const routine = await getRoutine(org.id, patient.id);
+  const allSessions = await listSessions(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
   const recentDoses = allDoses.slice(0, 5);
@@ -128,9 +134,15 @@ export default async function PatientDetailPage({
         expected: expectedDoses(medicationPlan.frequency),
       }
     : null;
+  const windowSessions = allSessions.filter((s) => s.sessionAt >= since);
+  const sessionReport =
+    targets?.sessionsPerWeek != null
+      ? { logged: windowSessions.length, expected: targets.sessionsPerWeek * 4 }
+      : null;
   const activityDays = activeDays([
     ...windowMeasurements.map((m) => m.recordedAt),
     ...windowDoses.map((d) => d.takenAt),
+    ...windowSessions.map((s) => s.sessionAt),
   ]);
   const format = await getFormatter();
   const body = await bodyComposition(org.id, patient.id);
@@ -322,6 +334,36 @@ export default async function PatientDetailPage({
         </Card>
 
         <Card>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">{t("training.title")}</h2>
+              <p className="text-sm text-ink-subtle">
+                {routine
+                  ? t("training.updatedAt", {
+                      date: format.dateTime(routine.updatedAt, {
+                        dateStyle: "medium",
+                      }),
+                    })
+                  : t("training.empty")}
+                {allSessions[0]
+                  ? ` · ${t("training.lastSession", {
+                      date: format.dateTime(allSessions[0].sessionAt, {
+                        dateStyle: "medium",
+                      }),
+                    })}`
+                  : ""}
+              </p>
+            </div>
+            <Link
+              href={`/panel/pacientes/${patient.id}/entreno`}
+              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
+            >
+              {routine ? t("training.edit") : t("training.create")}
+            </Link>
+          </div>
+        </Card>
+
+        <Card>
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold">{t("report.title")}</h2>
@@ -357,6 +399,15 @@ export default async function PatientDetailPage({
                   value={t("report.medicationValue", {
                     logged: doseReport.logged,
                     expected: doseReport.expected,
+                  })}
+                />
+              ) : null}
+              {sessionReport ? (
+                <Row
+                  label={t("report.training")}
+                  value={t("report.trainingValue", {
+                    logged: sessionReport.logged,
+                    expected: sessionReport.expected,
                   })}
                 />
               ) : null}
