@@ -156,12 +156,21 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   (groupBy) and detail card; specialist→patient send fires a no-content
   email nudge. Export + erasure + isolation (20/20). Migration `messaging`.
 
+- **Slice 20 - Agenda v1** (docs/build/slice-20-plan.md): specialist-managed
+  `Appointment` (presencial/video + link, cancel keeps the row); `/panel/
+  agenda` (console nav gains Agenda, upcoming grouped by day + nueva cita);
+  patient "Próximas citas" card. **Timezone decision**: next-intl renders
+  Europe/Madrid everywhere; inputs parsed via modules/scheduling/time.ts
+  (CET/CEST tested). Daily cron also emails tomorrow's cita reminders.
+  Export + erasure + isolation (21/21). Migration `appointments`.
+
 ### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
 Next candidates: diet/training iteration (meal library, per-set logging,
-preferences per adr/0002) · scheduling · billing (Tier E).
-Non-code: own domain + Resend verification (patient emails still sandbox).
+preferences per adr/0002) · patient self-booking on the agenda · billing
+(Tier E). Non-code: own domain + Resend verification (patient emails still
+sandbox).
 
 ### Migrations (applied on Neon)
 

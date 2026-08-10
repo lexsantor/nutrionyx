@@ -10,7 +10,8 @@
     "nav": {
       "inicio": "Inicio",
       "pacientes": "Pacientes",
-      "ajustes": "Ajustes"
+      "ajustes": "Ajustes",
+      "agenda": "Agenda"
     }
   },
   "admin": {
@@ -772,6 +773,45 @@
     "errors": {
       "invalidBody": "El mensaje no puede estar vacío ni superar 4000 caracteres.",
       "generic": "No se ha podido enviar. Inténtalo de nuevo."
+    }
+  },
+  "agenda": {
+    "heading": "Agenda",
+    "newTitle": "Nueva cita",
+    "empty": "Sin citas próximas.",
+    "cancel": "Cancelar",
+    "durationMin": "{min} min",
+    "modes": {
+      "IN_PERSON": "Presencial",
+      "VIDEO": "Videollamada"
+    },
+    "patientCardTitle": "Próximas citas",
+    "joinVideo": "Unirse a la videollamada",
+    "form": {
+      "patient": "Paciente",
+      "patientPlaceholder": "Elige paciente…",
+      "date": "Fecha",
+      "time": "Hora",
+      "duration": "Duración",
+      "durationMin": "{min} min",
+      "mode": "Modalidad",
+      "modes": {
+        "IN_PERSON": "Presencial",
+        "VIDEO": "Videollamada"
+      },
+      "videoUrl": "Enlace de videollamada (opcional)",
+      "note": "Nota (opcional)",
+      "notePlaceholder": "Revisión mensual",
+      "save": "Crear cita",
+      "saving": "Creando…",
+      "saved": "Cita creada",
+      "errors": {
+        "invalidDateTime": "Fecha u hora no válidas.",
+        "inPast": "La cita no puede estar en el pasado.",
+        "invalidDuration": "Duración no válida.",
+        "invalidVideoUrl": "El enlace debe empezar por https://",
+        "generic": "No se ha podido crear la cita. Inténtalo de nuevo."
+      }
     }
   }
 }

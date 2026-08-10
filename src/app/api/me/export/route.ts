@@ -32,11 +32,13 @@ export async function GET() {
       prisma.patientTarget.findFirst({ where }),
       prisma.dietPlan.findFirst({ where }),
     ]);
-  const [trainingRoutine, trainingSessions, messages] = await Promise.all([
-    prisma.trainingRoutine.findFirst({ where }),
-    prisma.trainingSession.findMany({ where, orderBy: { sessionAt: "asc" } }),
-    prisma.message.findMany({ where, orderBy: { createdAt: "asc" } }),
-  ]);
+  const [trainingRoutine, trainingSessions, messages, appointments] =
+    await Promise.all([
+      prisma.trainingRoutine.findFirst({ where }),
+      prisma.trainingSession.findMany({ where, orderBy: { sessionAt: "asc" } }),
+      prisma.message.findMany({ where, orderBy: { createdAt: "asc" } }),
+      prisma.appointment.findMany({ where, orderBy: { startsAt: "asc" } }),
+    ]);
 
   const data = {
     exportedAt: new Date().toISOString(),
@@ -67,6 +69,13 @@ export async function GET() {
       sender: m.sender,
       body: m.body,
       createdAt: m.createdAt,
+    })),
+    appointments: appointments.map((a) => ({
+      startsAt: a.startsAt,
+      durationMin: a.durationMin,
+      mode: a.mode,
+      status: a.status,
+      note: a.note,
     })),
   };
 

@@ -29,6 +29,7 @@ import { BodyMetricsForm } from "./body-metrics-form";
 import { PhotosCard } from "./photos-card";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
+import { listUpcomingByPatient } from "@/modules/scheduling/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
 
@@ -81,10 +82,14 @@ export default async function PatientHomePage({
     const tt = await getTranslations("targets.today");
     const tb = await getTranslations("body");
     const td = await getTranslations("documents");
+    const ta = await getTranslations("agenda");
     const patientDocuments = await listDocuments(
       patient.organizationId,
       patient.id,
     );
+    const upcomingAppointments = (
+      await listUpcomingByPatient(patient.organizationId, patient.id, new Date())
+    ).slice(0, 3);
     const body = await bodyComposition(patient.organizationId, patient.id);
     const ratio =
       body.waistCm != null && body.hipCm != null
@@ -309,6 +314,45 @@ export default async function PatientHomePage({
             }))}
             uploadError={photoError === "1"}
           />
+
+          {upcomingAppointments.length > 0 ? (
+            <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
+              <h2 className="text-lg font-semibold">
+                {ta("patientCardTitle")}
+              </h2>
+              <ul className="flex flex-col">
+                {upcomingAppointments.map((cita) => (
+                  <li
+                    key={cita.id}
+                    className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-hairline py-2.5 last:border-0"
+                  >
+                    <span className="text-sm font-semibold first-letter:uppercase">
+                      {format.dateTime(cita.startsAt, {
+                        dateStyle: "full",
+                        timeStyle: "short",
+                      })}
+                    </span>
+                    <span className="text-xs text-ink-subtle">
+                      {ta(`modes.${cita.mode}`)}
+                      {cita.videoUrl ? (
+                        <>
+                          {" · "}
+                          <a
+                            href={cita.videoUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-accent-text underline-offset-2 hover:underline"
+                          >
+                            {ta("joinVideo")}
+                          </a>
+                        </>
+                      ) : null}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           {patientDocuments.length > 0 ? (
             <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">

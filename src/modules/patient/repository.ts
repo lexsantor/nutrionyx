@@ -162,6 +162,7 @@ export async function erasePatient(
     select: { pathname: true },
   });
   const counts = await prisma.$transaction(async (tx) => {
+    const appointments = await tx.appointment.deleteMany({ where: scope });
     const messages = await tx.message.deleteMany({ where: scope });
     const sessions = await tx.trainingSession.deleteMany({ where: scope });
     const routines = await tx.trainingRoutine.deleteMany({ where: scope });
@@ -203,6 +204,7 @@ export async function erasePatient(
       routines: routines.count,
       sessions: sessions.count,
       messages: messages.count,
+      appointments: appointments.count,
     };
   });
 

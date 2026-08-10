@@ -70,6 +70,7 @@ model Patient {
   trainingRoutine  TrainingRoutine?
   trainingSessions TrainingSession[]
   messages         Message[]
+  appointments     Appointment[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -234,6 +235,39 @@ model TrainingSession {
 
   @@index([organizationId, patientId, sessionAt])
   @@map("training_sessions")
+}
+
+// Scheduling (docs/build/slice-20-plan.md): specialist-managed citas.
+// Cancelled rows are kept (history); startsAt is a UTC instant parsed and
+// rendered as Europe/Madrid wall-clock (single-market decision).
+enum AppointmentStatus {
+  SCHEDULED
+  CANCELLED
+}
+
+enum AppointmentMode {
+  IN_PERSON
+  VIDEO
+}
+
+model Appointment {
+  id                  String            @id @default(cuid())
+  organizationId      String
+  patientId           String
+  patient             Patient           @relation(fields: [patientId], references: [id])
+  startsAt            DateTime
+  durationMin         Int               @default(60)
+  mode                AppointmentMode   @default(IN_PERSON)
+  videoUrl            String?
+  note                String?
+  status              AppointmentStatus @default(SCHEDULED)
+  createdByAuthUserId String
+  cancelledAt         DateTime?
+  createdAt           DateTime          @default(now())
+
+  @@index([organizationId, startsAt])
+  @@index([organizationId, patientId, startsAt])
+  @@map("appointments")
 }
 
 // Messaging (docs/build/slice-19-plan.md): one async thread per patient,

@@ -63,6 +63,11 @@ import {
   unreadFromPatients,
 } from "@/modules/messaging/repository";
 import {
+  cancelAppointment,
+  createAppointment,
+  listUpcomingByPatient,
+} from "@/modules/scheduling/repository";
+import {
   listMeasurementsSince,
   proteinOnDay,
   recordProtein,
@@ -147,6 +152,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
         where: { organizationId: org },
       });
       await prisma.message.deleteMany({ where: { organizationId: org } });
+      await prisma.appointment.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -446,6 +452,34 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect((await unreadFromPatients(orgB)).get(bPatientId)).toBe(1);
     await markThreadRead(orgB, bPatientId, "SPECIALIST");
     expect((await unreadFromPatients(orgB)).size).toBe(0);
+  });
+
+  it("scopes appointments: list and cancel stay in-org (R2)", async () => {
+    const future = new Date(Date.now() + 7 * 86_400_000);
+    const cita = await createAppointment({
+      organizationId: orgB,
+      patientId: bPatientId,
+      startsAt: future,
+      durationMin: 60,
+      mode: "IN_PERSON",
+      videoUrl: null,
+      note: null,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+
+    expect(await listUpcomingByPatient(orgA, bPatientId, new Date())).toEqual(
+      [],
+    );
+    expect(
+      (await listUpcomingByPatient(orgB, bPatientId, new Date())).length,
+    ).toBe(1);
+
+    // A cannot cancel B's cita; B can.
+    expect(await cancelAppointment(orgA, cita.id)).toBe(false);
+    expect(await cancelAppointment(orgB, cita.id)).toBe(true);
+    expect(await listUpcomingByPatient(orgB, bPatientId, new Date())).toEqual(
+      [],
+    );
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {
