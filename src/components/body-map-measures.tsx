@@ -148,7 +148,7 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
                 aria-label={`${t(`zones.${zone.key}`)}: ${
                   data ? `${fmt(data.current)} cm` : t("map.noData")
                 }`}
-                className="cursor-pointer outline-none"
+                className="cursor-pointer"
                 onClick={() => setSelected(isSel ? null : zone.key)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
