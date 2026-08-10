@@ -87,10 +87,17 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   append-only `PatientNote` + "Notas" card on patient detail; patient nav
   (Inicio · Medicación) in the Topbar (NavLink restored); consulta logo upload
   to Vercel Blob (store `nutrionyx-assets`, public, linked; `@vercel/blob`
-  dep). Email: Resend discovered via marketplace - **owner must accept terms**
-  (vercel.com/lexsantor/~/integrations/accept-terms/resend), then
-  `vercel integration add resend` and the email slice can start. **Migration
-  `patient_notes` pending on Neon** (owner: `npx prisma migrate dev`).
+  dep). Migration `patient_notes` applied 2026-08-10.
+- **Slice 11 - Transactional email** (docs/build/slice-11-plan.md): Resend via
+  direct account (marketplace Free checkout was broken), no SDK - one fetch in
+  `src/lib/email.ts`. Invite email on `invitePatient` (best-effort); dose
+  reminder cron 08:00 UTC (`vercel.json` → `/api/cron/reminders`, Bearer
+  `CRON_SECRET`, event `MedicationReminderSent`). Guardrail: never clinical
+  data in email bodies. `CRON_SECRET` set in all envs.
+  **Pending: owner adds `RESEND_API_KEY`** (vercel env add + .env.local);
+  until then sends skip gracefully with a warning. Sender is the
+  `onboarding@resend.dev` sandbox until a real domain is verified
+  (`EMAIL_FROM` overrides).
 
 ### Migrations (applied on Neon)
 

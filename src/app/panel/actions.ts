@@ -9,6 +9,7 @@ import {
   findPatientByEmail,
   removeInvitedPatient,
 } from "@/modules/patient/repository";
+import { inviteEmail, sendEmail } from "@/lib/email";
 
 export type InviteFormState =
   | { errorKey: string }
@@ -58,7 +59,7 @@ export async function invitePatient(
     return { errorKey: "alreadyInvited" };
   }
 
-  const { error } = await auth.organization.inviteMember({
+  const { data: invitation, error } = await auth.organization.inviteMember({
     email,
     role: "member",
     organizationId: activeOrg.id,
@@ -69,6 +70,15 @@ export async function invitePatient(
   }
 
   await createInvitedPatient({ organizationId: org.id, email, fullName });
+
+  // Email is best-effort: a failed send never fails the invite (the accept
+  // link stays visible on the panel for manual sharing).
+  if (invitation?.id) {
+    await sendEmail({
+      to: email,
+      ...inviteEmail({ consultaName: org.name, invitationId: invitation.id }),
+    });
+  }
 
   revalidatePath("/panel");
   return { ok: true };

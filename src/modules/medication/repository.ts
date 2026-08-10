@@ -90,6 +90,52 @@ export async function logDose(params: {
   return dose;
 }
 
+/**
+ * Weekly plans whose shot day is `dayOfWeek` and whose ACTIVE patient has
+ * not logged a dose on `now`'s calendar day. Cross-org by design: consumed
+ * only by the reminder cron (system automation, one email per patient) -
+ * never by a user-facing surface.
+ */
+export async function plansDueOn(
+  dayOfWeek: number,
+  now: Date,
+): Promise<
+  { organizationId: string; patientId: string; email: string; fullName: string | null }[]
+> {
+  const plans = await prisma.medicationPlan.findMany({
+    where: {
+      active: true,
+      frequency: "WEEKLY",
+      shotDay: dayOfWeek,
+      patient: { status: "ACTIVE" },
+    },
+    include: { patient: { select: { email: true, fullName: true } } },
+  });
+  if (plans.length === 0) return [];
+
+  const start = new Date(now);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(start);
+  end.setDate(end.getDate() + 1);
+  const dosedToday = await prisma.medicationDose.findMany({
+    where: {
+      patientId: { in: plans.map((p) => p.patientId) },
+      takenAt: { gte: start, lt: end },
+    },
+    select: { patientId: true },
+  });
+  const dosed = new Set(dosedToday.map((d) => d.patientId));
+
+  return plans
+    .filter((p) => !dosed.has(p.patientId))
+    .map((p) => ({
+      organizationId: p.organizationId,
+      patientId: p.patientId,
+      email: p.patient.email,
+      fullName: p.patient.fullName,
+    }));
+}
+
 /** Newest first. */
 export async function listDoses(
   organizationId: string,
