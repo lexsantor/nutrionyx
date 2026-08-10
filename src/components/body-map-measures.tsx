@@ -7,7 +7,6 @@ import {
   type BodyZoneKey,
   type ZoneStat,
 } from "@/modules/measurement/body";
-import { BodySilhouette } from "@/components/body-silhouette";
 
 /**
  * Interactive body map (patterned after the owner's progreso-corporal
@@ -28,14 +27,15 @@ type PlainZoneStat = Omit<
 
 export type PlainZones = Partial<Record<BodyZoneKey, PlainZoneStat>>;
 
-const BAND_X: Record<BodyZoneKey, [number, number]> = {
-  CHEST_CM: [50, 150],
-  WAIST_CM: [58, 142],
-  HIP_CM: [51, 149],
-  THIGH_CM: [62, 100],
-  GLUTE_CM: [52, 148],
-  CALF_CM: [66, 96],
-  ARM_CM: [33, 52],
+// Calibrated to the mannequin renders (viewBox 200 x 358 over 1536x2752).
+const BAND: Record<BodyZoneKey, { y: number; x1: number; x2: number }> = {
+  CHEST_CM: { y: 107, x1: 61, x2: 139 },
+  ARM_CM: { y: 122, x1: 36, x2: 55 },
+  WAIST_CM: { y: 153, x1: 71, x2: 129 },
+  HIP_CM: { y: 177, x1: 68, x2: 132 },
+  THIGH_CM: { y: 228, x1: 70, x2: 99 },
+  GLUTE_CM: { y: 173, x1: 66, x2: 134 },
+  CALF_CM: { y: 297, x1: 73, x2: 98 },
 };
 
 function fmt(v: number) {
@@ -105,21 +105,29 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
       </div>
 
       <div className="grid gap-6 sm:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
-        <svg
-          viewBox="0 0 200 420"
-          role="group"
-          aria-label={t("map.figureLabel")}
-          className="mx-auto h-80 w-auto text-ink sm:h-96"
-        >
-          <BodySilhouette view={view} gradientId="bm-grad" />
+        <div className="relative mx-auto h-80 w-auto sm:h-96" style={{ aspectRatio: "200/358" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={view === "front" ? "/mannequin-front.png" : "/mannequin-back.png"}
+            alt=""
+            width={614}
+            height={1100}
+            className="h-full w-full object-contain [filter:drop-shadow(0_12px_20px_rgba(11,15,20,0.18))]"
+          />
+          <svg
+            viewBox="0 0 200 358"
+            role="group"
+            aria-label={t("map.figureLabel")}
+            className="absolute inset-0 h-full w-full"
+          >
           {zonesInView.map((zone, i) => {
-            const [x1, x2] = BAND_X[zone.key];
+            const { y, x1, x2 } = BAND[zone.key];
             const data = zones[zone.key];
             const isSel = selected === zone.key;
             const labelRight = i % 2 === 0;
-            const lx = labelRight ? 196 : 4;
+            const lx = labelRight ? 198 : 2;
             const anchor = labelRight ? "end" : "start";
-            const lineEnd = labelRight ? 172 : 28;
+            const lineEnd = labelRight ? 176 : 24;
             return (
               <g
                 key={zone.key}
@@ -140,47 +148,47 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
               >
                 <rect
                   x={Math.min(x1, lineEnd) - 6}
-                  y={zone.y - 14}
+                  y={y - 12}
                   width={Math.abs(Math.max(x2, lineEnd) - Math.min(x1, lineEnd)) + 12}
-                  height={28}
+                  height={24}
                   fill="transparent"
                 />
                 <line
                   x1={x1}
-                  y1={zone.y}
+                  y1={y}
                   x2={x2}
-                  y2={zone.y}
-                  strokeWidth={isSel ? 3 : 2}
-                  className={isSel ? "stroke-primary" : "stroke-ink/40"}
+                  y2={y}
+                  strokeWidth={isSel ? 2.5 : 1.75}
+                  className={isSel ? "stroke-primary" : "stroke-ink/50"}
                 />
                 <line
                   x1={labelRight ? x2 : x1}
-                  y1={zone.y}
+                  y1={y}
                   x2={lineEnd}
-                  y2={zone.y}
-                  strokeWidth="1"
-                  className="stroke-ink/25"
+                  y2={y}
+                  strokeWidth="0.75"
+                  className="stroke-ink/30"
                   strokeDasharray="2 3"
                 />
                 <circle
                   cx={labelRight ? x2 : x1}
-                  cy={zone.y}
-                  r="3.5"
-                  className={isSel ? "fill-primary" : "fill-ink/40"}
+                  cy={y}
+                  r="3"
+                  className={isSel ? "fill-primary" : "fill-ink/50"}
                 />
                 <text
                   x={lx}
-                  y={zone.y - 4}
+                  y={y - 3.5}
                   textAnchor={anchor}
-                  className="fill-ink-subtle text-[11px] font-medium"
+                  className="fill-ink-subtle text-[9px] font-medium"
                 >
                   {t(`zones.${zone.key}`)}
                 </text>
                 <text
                   x={lx}
-                  y={zone.y + 11}
+                  y={y + 9}
                   textAnchor={anchor}
-                  className={`text-[12px] font-semibold tabular-nums ${
+                  className={`text-[10px] font-semibold tabular-nums ${
                     isSel ? "fill-primary" : "fill-ink"
                   }`}
                 >
@@ -189,7 +197,8 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
               </g>
             );
           })}
-        </svg>
+          </svg>
+        </div>
 
         {selected && selData ? (
           <div

@@ -7,13 +7,13 @@ import type { Measurement, MeasurementKind } from "@/generated/prisma/client";
 
 /** Measurement zones drawn on the body map, in display order. */
 export const BODY_ZONES = [
-  { key: "CHEST_CM", view: "front", y: 104 },
-  { key: "ARM_CM", view: "front", y: 122 },
-  { key: "WAIST_CM", view: "front", y: 152 },
-  { key: "HIP_CM", view: "front", y: 196 },
-  { key: "THIGH_CM", view: "front", y: 258 },
-  { key: "GLUTE_CM", view: "back", y: 208 },
-  { key: "CALF_CM", view: "back", y: 344 },
+  { key: "CHEST_CM", view: "front" },
+  { key: "ARM_CM", view: "front" },
+  { key: "WAIST_CM", view: "front" },
+  { key: "HIP_CM", view: "front" },
+  { key: "THIGH_CM", view: "front" },
+  { key: "GLUTE_CM", view: "back" },
+  { key: "CALF_CM", view: "back" },
 ] as const;
 
 export type BodyZoneKey = (typeof BODY_ZONES)[number]["key"];
