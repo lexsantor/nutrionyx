@@ -6,12 +6,20 @@ import { deletePhotoAction, type PhotoDeleteState } from "./actions";
 
 function DeleteButton({ photoId }: { photoId: string }) {
   const t = useTranslations("photos");
-  const [, formAction, isPending] = useActionState<PhotoDeleteState, FormData>(
-    deletePhotoAction,
-    null,
-  );
+  const [state, formAction, isPending] = useActionState<
+    PhotoDeleteState,
+    FormData
+  >(deletePhotoAction, null);
   return (
     <form action={formAction} className="absolute right-1.5 top-1.5">
+      {state?.errorKey ? (
+        <p
+          role="alert"
+          className="absolute right-0 top-9 w-40 rounded-[10px] bg-error-soft px-2 py-1 text-xs text-error shadow-el-sm"
+        >
+          {t("deleteError")}
+        </p>
+      ) : null}
       <input type="hidden" name="photoId" value={photoId} />
       <button
         type="submit"
@@ -46,7 +54,7 @@ export function PhotosCard({
           {photos.map((photo) => (
             <li
               key={photo.id}
-              className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-hairline bg-surface-2"
+              className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-field-border bg-surface-2"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
@@ -76,7 +84,7 @@ export function PhotosCard({
           name="photo"
           required
           accept="image/jpeg,image/png,image/webp"
-          className="block w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
+          className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
         />
         <button
           type="submit"

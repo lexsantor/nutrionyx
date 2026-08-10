@@ -51,6 +51,10 @@ export default async function PatientMessagesPage() {
             }))}
             ownSide="PATIENT"
             emptyText={t("emptyPatient")}
+            senderNames={{
+              own: t("senders.you"),
+              other: t("senders.consulta"),
+            }}
           />
           <Composer />
         </div>

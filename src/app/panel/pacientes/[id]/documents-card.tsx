@@ -9,12 +9,20 @@ import {
 
 function DeleteDocButton({ documentId }: { documentId: string }) {
   const t = useTranslations("documents");
-  const [, formAction, isPending] = useActionState<
+  const [state, formAction, isPending] = useActionState<
     DocumentDeleteState,
     FormData
   >(deleteDocumentAction, null);
   return (
-    <form action={formAction}>
+    <form action={formAction} className="relative">
+      {state?.errorKey ? (
+        <p
+          role="alert"
+          className="absolute right-0 top-9 z-10 w-44 rounded-[10px] bg-error-soft px-2 py-1 text-xs text-error shadow-el-sm"
+        >
+          {t("deleteError")}
+        </p>
+      ) : null}
       <input type="hidden" name="documentId" value={documentId} />
       <button
         type="submit"
@@ -79,7 +87,7 @@ export function DocumentsCard({
           name="document"
           required
           accept="application/pdf,image/jpeg,image/png,image/webp"
-          className="block w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
+          className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
         />
         <button
           type="submit"

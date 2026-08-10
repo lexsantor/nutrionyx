@@ -44,7 +44,7 @@ function Bezel({
 }) {
   return (
     <div
-      className={`rounded-[2rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.25)] transition-transform duration-700 ${EASE} ${tilt} ${className}`}
+      className={`rounded-[2rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.25)] transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} ${className}`}
     >
       <div className="rounded-[calc(2rem-0.375rem)] bg-surface-1 p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]">
         {children}
@@ -58,7 +58,7 @@ function CtaButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98]`}
+      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98] active:duration-150`}
     >
       {children}
       <span
@@ -110,7 +110,7 @@ function RecordSection({
       <Reveal className={flip ? "lg:order-2" : ""}>
         <Bezel tilt={`${tilt} hover:rotate-0`}>{children}</Bezel>
       </Reveal>
-      <Reveal delay={120} className={flip ? "lg:order-1" : ""}>
+      <Reveal delay={80} className={flip ? "lg:order-1" : ""}>
         {annotation}
       </Reveal>
     </section>
@@ -166,7 +166,7 @@ export default async function Home() {
           </ButtonLink>
           <Link
             href="/auth/sign-up"
-            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98]`}
+            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98] active:duration-150`}
           >
             {t("hero.cta.signUp")}
           </Link>
@@ -178,7 +178,7 @@ export default async function Home() {
         <div className="pointer-events-none absolute -inset-x-40 -top-64 h-[42rem] bg-[radial-gradient(ellipse_at_top,var(--color-primary-subtle)_0%,transparent_65%)]" />
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
           <div className="flex flex-col items-start gap-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-[10px] font-medium uppercase tracking-[0.2em] text-ink-subtle shadow-el-sm">
+            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
               <span className="size-1.5 rounded-full bg-success" />
               {t("badge")}
             </div>
@@ -199,7 +199,7 @@ export default async function Home() {
 
           {/* Tilted record teaser stack (z-axis cascade) */}
           <div className="relative mx-auto hidden w-full max-w-md lg:block" aria-hidden="true">
-            <div className={`absolute -left-6 top-10 w-64 -rotate-6 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_32px_70px_-30px_rgba(15,23,42,0.35)] transition-transform duration-700 ${EASE} hover:-rotate-3`}>
+            <div className={`absolute -left-6 top-10 w-64 -rotate-6 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_32px_70px_-30px_rgba(15,23,42,0.35)] transition-transform duration-500 hover:duration-700 ${EASE} hover:-rotate-3`}>
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
                 <p className="text-xs font-medium text-ink-subtle">
                   {r("today.title")}
@@ -210,7 +210,7 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <div className={`relative z-10 ml-16 w-72 rotate-2 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_40px_90px_-32px_rgba(15,23,42,0.4)] transition-transform duration-700 ${EASE} hover:rotate-0`}>
+            <div className={`relative z-10 ml-16 w-72 rotate-2 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_40px_90px_-32px_rgba(15,23,42,0.4)] transition-transform duration-500 hover:duration-700 ${EASE} hover:rotate-0`}>
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-sm font-semibold">{r("patientName")}</p>
@@ -226,7 +226,7 @@ export default async function Home() {
                 </div>
               </div>
             </div>
-            <div className={`absolute -bottom-8 right-0 w-56 rotate-[5deg] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_28px_60px_-28px_rgba(15,23,42,0.35)] transition-transform duration-700 ${EASE} hover:rotate-2`}>
+            <div className={`absolute -bottom-8 right-0 w-56 rotate-[5deg] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_28px_60px_-28px_rgba(15,23,42,0.35)] transition-transform duration-500 hover:duration-700 ${EASE} hover:rotate-2`}>
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
                 <p className="text-xs font-medium text-ink-subtle">
                   {r("glp1.title")}
@@ -237,7 +237,10 @@ export default async function Home() {
           </div>
         </div>
         <p className="relative mt-20 text-center text-xs uppercase tracking-[0.2em] text-ink-tertiary">
-          {t("hero.scrollHint")} ↓
+          <span className="inline-flex items-center gap-1.5">
+            {t("hero.scrollHint")}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+          </span>
         </p>
       </div>
 
@@ -310,7 +313,9 @@ export default async function Home() {
         >
           <div className="mb-2 flex items-center justify-between gap-4">
             <h2 className="text-lg font-semibold">{r("report.title")}</h2>
-            <span className="text-sm text-ink-subtle">{r("report.window")}</span>
+            <span className="flex items-center gap-2 text-sm text-ink-subtle">
+              {r("report.window")} <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
+            </span>
           </div>
           <dl className="flex flex-col">
             <Row label={r("report.weight")} value={r("report.weightValue")} />
@@ -378,9 +383,10 @@ export default async function Home() {
             />
           }
         >
-          <h2 className="mb-4 text-lg font-semibold">
-            {r("weightChart.title")}
-          </h2>
+          <div className="mb-4 flex items-center justify-between gap-4">
+            <h2 className="text-lg font-semibold">{r("weightChart.title")}</h2>
+            <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
+          </div>
           <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
         </RecordSection>
 
@@ -459,7 +465,10 @@ export default async function Home() {
             />
           }
         >
-          <h2 className="mb-3 text-lg font-semibold">{r("comms.title")}</h2>
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <h2 className="text-lg font-semibold">{r("comms.title")}</h2>
+            <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
+          </div>
           <div className="flex flex-col gap-2.5">
             <div className="max-w-[85%] self-start rounded-2xl rounded-bl-md bg-surface-2 px-3.5 py-2 text-sm leading-relaxed">
               {r("comms.messagePatient")}

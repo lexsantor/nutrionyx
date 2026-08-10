@@ -48,7 +48,7 @@ export const dynamic = "force-dynamic";
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
+    <div className="flex max-w-2xl justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
       <dt className="text-sm text-ink-subtle">{label}</dt>
       <dd className="text-right text-sm font-medium">{value}</dd>
     </div>
@@ -210,6 +210,76 @@ export default async function PatientDetailPage({
           </div>
           <p className="text-sm text-ink-subtle">{patient.email}</p>
         </div>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold">{t("report.title")}</h2>
+              <span className="text-sm text-ink-subtle">
+                {t("report.window", { days: REPORT_WINDOW_DAYS })}
+              </span>
+            </div>
+            <dl className="flex flex-col text-sm">
+              <Row
+                label={t("report.weight")}
+                value={
+                  weightWindowDelta != null
+                    ? t("report.weightValue", {
+                        delta: `${weightWindowDelta > 0 ? "+" : ""}${weightWindowDelta.toLocaleString("es")}`,
+                        count: windowWeights.length,
+                      })
+                    : t("report.insufficient")
+                }
+              />
+              {proteinReport ? (
+                <Row
+                  label={t("report.protein")}
+                  value={t("report.proteinValue", {
+                    met: proteinReport.daysMet,
+                    logged: proteinReport.daysLogged,
+                    avg: proteinReport.avgPerLoggedDay,
+                  })}
+                />
+              ) : null}
+              {doseReport ? (
+                <Row
+                  label={t("report.medication")}
+                  value={t("report.medicationValue", {
+                    logged: doseReport.logged,
+                    expected: doseReport.expected,
+                  })}
+                />
+              ) : null}
+              {sessionReport ? (
+                <Row
+                  label={t("report.training")}
+                  value={t("report.trainingValue", {
+                    logged: sessionReport.logged,
+                    expected: sessionReport.expected,
+                  })}
+                />
+              ) : null}
+              <Row
+                label={t("report.activity")}
+                value={t("report.activityValue", {
+                  days: activityDays,
+                  total: REPORT_WINDOW_DAYS,
+                })}
+              />
+            </dl>
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-4">
+            <h2 className="text-lg font-semibold">{t("weight.title")}</h2>
+            {points.length > 0 ? (
+              <WeightChart points={points} targetKg={targetKg} />
+            ) : (
+              <p className="text-sm text-ink-subtle">{t("weight.empty")}</p>
+            )}
+          </div>
+        </Card>
 
         <Card>
           <div className="flex flex-col gap-3">
@@ -386,64 +456,6 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold">{t("report.title")}</h2>
-              <span className="text-sm text-ink-subtle">
-                {t("report.window", { days: REPORT_WINDOW_DAYS })}
-              </span>
-            </div>
-            <dl className="flex flex-col text-sm">
-              <Row
-                label={t("report.weight")}
-                value={
-                  weightWindowDelta != null
-                    ? t("report.weightValue", {
-                        delta: `${weightWindowDelta > 0 ? "+" : ""}${weightWindowDelta.toLocaleString("es")}`,
-                        count: windowWeights.length,
-                      })
-                    : t("report.insufficient")
-                }
-              />
-              {proteinReport ? (
-                <Row
-                  label={t("report.protein")}
-                  value={t("report.proteinValue", {
-                    met: proteinReport.daysMet,
-                    logged: proteinReport.daysLogged,
-                    avg: proteinReport.avgPerLoggedDay,
-                  })}
-                />
-              ) : null}
-              {doseReport ? (
-                <Row
-                  label={t("report.medication")}
-                  value={t("report.medicationValue", {
-                    logged: doseReport.logged,
-                    expected: doseReport.expected,
-                  })}
-                />
-              ) : null}
-              {sessionReport ? (
-                <Row
-                  label={t("report.training")}
-                  value={t("report.trainingValue", {
-                    logged: sessionReport.logged,
-                    expected: sessionReport.expected,
-                  })}
-                />
-              ) : null}
-              <Row
-                label={t("report.activity")}
-                value={t("report.activityValue", {
-                  days: activityDays,
-                  total: REPORT_WINDOW_DAYS,
-                })}
-              />
-            </dl>
-          </div>
-        </Card>
 
         <Card>
           <div className="flex flex-col gap-3">
@@ -542,16 +554,6 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
-          <div className="flex flex-col gap-4">
-            <h2 className="text-lg font-semibold">{t("weight.title")}</h2>
-            {points.length > 0 ? (
-              <WeightChart points={points} targetKg={targetKg} />
-            ) : (
-              <p className="text-sm text-ink-subtle">{t("weight.empty")}</p>
-            )}
-          </div>
-        </Card>
 
         <Card>
           <div className="flex flex-col gap-3">
@@ -616,7 +618,7 @@ export default async function PatientDetailPage({
                 {photos.map((photo) => (
                   <li
                     key={photo.id}
-                    className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-hairline bg-surface-2"
+                    className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-field-border bg-surface-2"
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img

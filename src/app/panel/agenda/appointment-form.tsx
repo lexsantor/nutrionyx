@@ -26,7 +26,7 @@ export function AppointmentForm({
   >(createAppointmentAction, null);
 
   const selectClass =
-    "block h-11 w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 text-base text-ink";
+    "block h-11 w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 text-base text-ink";
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
@@ -144,17 +144,22 @@ export function AppointmentForm({
 
 export function CancelButton({ appointmentId }: { appointmentId: string }) {
   const t = useTranslations("agenda");
-  const [, formAction, isPending] = useActionState<
+  const [state, formAction, isPending] = useActionState<
     CancelAppointmentState,
     FormData
   >(cancelAppointmentAction, null);
   return (
-    <form action={formAction}>
+    <form action={formAction} className="flex items-center gap-2">
       <input type="hidden" name="appointmentId" value={appointmentId} />
+      {state?.errorKey ? (
+        <span role="alert" className="text-xs text-error">
+          {t("cancelError")}
+        </span>
+      ) : null}
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-colors duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-error-soft hover:text-error active:scale-[0.98]"
+        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-colors duration-150 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-error-soft hover:text-error active:scale-[0.98]"
       >
         {t("cancel")}
       </button>

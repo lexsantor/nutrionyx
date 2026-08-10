@@ -28,7 +28,7 @@ export function ButtonLink({
 }: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
   return (
     <Link
-      className={`inline-flex items-center justify-center gap-2 rounded-full font-semibold no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] ${SIZES[size]} ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full font-semibold no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] active:duration-150 ${SIZES[size]} ${VARIANTS[variant]} ${className}`}
       {...props}
     />
   );

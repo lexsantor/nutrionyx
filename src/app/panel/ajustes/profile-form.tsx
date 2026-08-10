@@ -35,12 +35,12 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
         <Field id="hours" label={t("hours")} defaultValue={profile.hours} placeholder="L-V 9:00-14:00" />
       </div>
 
-      <Field id="addressLine" label={t("addressLine")} defaultValue={profile.addressLine} />
+      <Field id="addressLine" label={t("addressLine")} defaultValue={profile.addressLine} autoComplete="street-address" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <Field id="locality" label={t("locality")} defaultValue={profile.locality} />
-        <Field id="postalCode" label={t("postalCode")} defaultValue={profile.postalCode} />
-        <Field id="country" label={t("country")} defaultValue={profile.country ?? "ES"} />
+        <Field id="locality" label={t("locality")} defaultValue={profile.locality} autoComplete="address-level2" />
+        <Field id="postalCode" label={t("postalCode")} defaultValue={profile.postalCode} autoComplete="postal-code" />
+        <Field id="country" label={t("country")} defaultValue={profile.country ?? "ES"} autoComplete="country-name" />
       </div>
 
       <Card className="flex flex-col gap-3">
@@ -53,7 +53,7 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
             name="logo"
             type="file"
             accept="image/png,image/jpeg,image/webp"
-            className="block w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
+            className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
           />
           <p className="text-sm text-ink-subtle">{t("logoFileHint")}</p>
         </div>
@@ -76,6 +76,8 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
           <img
             src={profile.logoUrl}
             alt={t("logoPreview")}
+            width={96}
+            height={48}
             className="h-12 w-auto self-start rounded-md border border-hairline bg-surface-1 object-contain p-1"
           />
         ) : null}
@@ -106,6 +108,7 @@ function Field({
   hint,
   placeholder,
   required,
+  autoComplete,
 }: {
   id: string;
   label: string;
@@ -113,6 +116,7 @@ function Field({
   hint?: string;
   placeholder?: string;
   required?: boolean;
+  autoComplete?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -126,6 +130,7 @@ function Field({
         defaultValue={defaultValue ?? ""}
         placeholder={placeholder}
         required={required}
+        autoComplete={autoComplete}
         maxLength={200}
       />
       {hint ? <p className="text-sm text-ink-subtle">{hint}</p> : null}

@@ -8,7 +8,7 @@ import { LogoutButton } from "@/app/logout-button";
 export function Topbar({ nav }: { nav?: ReactNode }) {
   return (
     <header className="sticky top-0 z-10 border-b border-hairline bg-canvas">
-      <div className="mx-auto flex h-16 max-w-5xl items-center justify-between gap-4 px-6">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-6">
         <span className="font-display text-lg font-semibold tracking-tight text-ink">
           Nutrionyx
         </span>
@@ -20,6 +20,11 @@ export function Topbar({ nav }: { nav?: ReactNode }) {
           <LogoutButton />
         </div>
       </div>
+      {nav ? (
+        <nav className="mx-auto flex w-full max-w-6xl items-center gap-1 overflow-x-auto px-4 pb-2 sm:hidden">
+          {nav}
+        </nav>
+      ) : null}
     </header>
   );
 }

@@ -24,7 +24,7 @@ type StepProps = {
 };
 
 const inputClass =
-  "block w-full rounded-[10px] border border-hairline bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary";
+  "block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary";
 
 const optionClass =
   "flex cursor-pointer items-center gap-3 rounded-[10px] border border-hairline px-4 py-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary-subtle";
@@ -55,7 +55,7 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
       : "";
 
   const selectClass =
-    "h-12 w-full appearance-none rounded-[10px] border border-hairline bg-surface-2 px-3.5 text-base text-ink transition-colors focus:border-primary";
+    "h-12 w-full appearance-none rounded-[10px] border border-field-border bg-surface-2 py-0 pl-3.5 pr-9 text-base text-ink transition-colors focus:border-primary bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%235c7386%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] bg-no-repeat bg-[position:right_0.65rem_center]";
 
   return (
     <fieldset className="flex flex-col gap-2">
@@ -139,22 +139,31 @@ export function WizardStep(props: StepProps) {
         : [];
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center gap-6 px-4 py-10">
+    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-6 px-4 py-10">
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-ink-subtle">
-          {t("progress", { step: props.stepIndex + 1, total: props.totalSteps })}
-        </p>
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-sm text-ink-subtle">
+            {t("progress", { step: props.stepIndex + 1, total: props.totalSteps })}
+          </p>
+          <Link
+            href="/mi-espacio"
+            className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-colors hover:bg-surface-3 hover:text-ink"
+          >
+            {t("exit")}
+          </Link>
+        </div>
         <div
           role="progressbar"
+          aria-label={t("progress", { step: props.stepIndex + 1, total: props.totalSteps })}
           aria-valuenow={props.stepIndex + 1}
           aria-valuemin={1}
           aria-valuemax={props.totalSteps}
           className="h-1.5 w-full overflow-hidden rounded-full bg-surface-4"
         >
           <div
-            className="h-full rounded-full bg-primary transition-[width] duration-300"
+            className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
             style={{
-              width: `${((props.stepIndex + 1) / props.totalSteps) * 100}%`,
+              transform: `scaleX(${(props.stepIndex + 1) / props.totalSteps})`,
             }}
           />
         </div>
@@ -266,7 +275,7 @@ export function WizardStep(props: StepProps) {
           {props.stepIndex > 0 ? (
             <Link
               href={`/mi-espacio/evaluacion?paso=${props.stepIndex - 1}`}
-              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98]"
+              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
             >
               {t("back")}
             </Link>

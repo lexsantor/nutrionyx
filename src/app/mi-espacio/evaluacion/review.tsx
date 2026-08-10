@@ -27,7 +27,7 @@ export function Review({
   >(completeAction, null);
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-xl flex-col justify-center gap-6 px-4 py-12">
+    <main className="mx-auto flex min-h-dvh w-full max-w-xl flex-col justify-center gap-6 px-4 py-12">
       <div>
         <p className="text-sm text-ink-subtle">
           {t("progress", { step: totalSteps, total: totalSteps })}
@@ -44,7 +44,7 @@ export function Review({
             key={entry.field}
             href={`/mi-espacio/evaluacion?paso=${index}`}
             aria-label={`${t("back")}: ${t(`fields.${entry.field}.title`)}`}
-            className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99]"
+            className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99] active:duration-150"
           >
             <span className="flex items-center justify-between gap-2 text-xs font-medium text-ink-subtle">
               {t(`fields.${entry.field}.title`)}

@@ -33,7 +33,7 @@ const SETTINGS_NAV = { key: "ajustes", href: "/panel/ajustes", icon: Settings };
 const ICON_SIZE = 18;
 
 const navBase =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-200";
+  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[background-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]";
 const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el-sm`;
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
@@ -91,6 +91,12 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex h-dvh overflow-hidden bg-canvas">
+      <a
+        href="#contenido"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-on-primary"
+      >
+        {t("skipToContent")}
+      </a>
       <aside className="hidden w-60 shrink-0 flex-col border-r border-hairline bg-surface-1 lg:flex">
         <div className="flex h-16 items-center px-6">
           <span className="font-display text-lg font-semibold tracking-tight text-ink">
@@ -155,8 +161,8 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
           })}
         </nav>
 
-        <main className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
-          <div className="mx-auto w-full max-w-6xl px-8 py-10">{children}</div>
+        <main id="contenido" className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+          <div className="mx-auto w-full max-w-6xl px-6 py-10">{children}</div>
         </main>
       </div>
     </div>

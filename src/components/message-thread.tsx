@@ -6,10 +6,13 @@ export function MessageThread({
   messages,
   ownSide,
   emptyText,
+  senderNames,
 }: {
   messages: { id: string; sender: string; body: string; sentAt: string }[];
   ownSide: "SPECIALIST" | "PATIENT";
   emptyText: string;
+  /** Accessible author names: alignment/color alone is not information. */
+  senderNames: { own: string; other: string };
 }) {
   if (messages.length === 0) {
     return <p className="text-sm text-ink-subtle">{emptyText}</p>;
@@ -30,6 +33,9 @@ export function MessageThread({
                   : "rounded-bl-md bg-surface-2 text-ink"
               }`}
             >
+              <span className="sr-only">
+                {own ? senderNames.own : senderNames.other}:{" "}
+              </span>
               {message.body}
             </div>
             <span className="px-1 text-xs text-ink-tertiary">

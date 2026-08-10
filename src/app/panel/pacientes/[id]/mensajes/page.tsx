@@ -74,6 +74,10 @@ export default async function SpecialistMessagesPage({
             }))}
             ownSide="SPECIALIST"
             emptyText={t("emptyPanel")}
+            senderNames={{
+              own: t("senders.you"),
+              other: t("senders.patient"),
+            }}
           />
           <Composer patientId={patient.id} />
         </div>

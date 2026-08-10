@@ -23,7 +23,7 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
 
         <div className="rounded-xl border border-hairline bg-surface-1 p-8 shadow-el-sm">
           <h1 className="mb-1 text-center font-display text-xl font-semibold">{t("title")}</h1>
-          <p className="mb-8 text-center text-sm text-ink-subtle">Accede a tu panel de profesional</p>
+          <p className="mb-8 text-center text-sm text-ink-subtle">{t("subtitle")}</p>
 
           <form action={formAction} className="flex flex-col gap-5">
             <input type="hidden" name="redirectTo" value={redirectTo ?? ""} />

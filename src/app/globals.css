@@ -9,6 +9,7 @@
  */
 
 :root {
+  accent-color: var(--c-primary);
   color-scheme: light;
   --c-primary: #1e2a39;
   --c-on-primary: #f5f8fa;
@@ -19,7 +20,7 @@
   --c-ink: #0b0f14;
   --c-ink-muted: #303e4e;
   --c-ink-subtle: #5c7386;
-  --c-ink-tertiary: #9db4c6;
+  --c-ink-tertiary: #5b7080;
   --c-canvas: #f5f8fa;
   --c-surface-1: #ffffff;
   --c-surface-2: #fafcfe;
@@ -27,6 +28,7 @@
   --c-surface-4: #d6dee6;
   --c-hairline: #dde4ec;
   --c-hairline-strong: #c3cfdb;
+  --c-field-border: #64798c;
   --c-inverse-surface-1: #1e2a39;
   --c-inverse-ink: #f5f8fa;
   --c-neutral: #5c7386;
@@ -59,7 +61,7 @@
   --c-ink: #f5f8fa;
   --c-ink-muted: #d6dee6;
   --c-ink-subtle: #9db4c6;
-  --c-ink-tertiary: #5c7386;
+  --c-ink-tertiary: #93a8bc;
   --c-canvas: #0b0f14;
   --c-surface-1: #121a24;
   --c-surface-2: #161f2b;
@@ -67,6 +69,7 @@
   --c-surface-4: #273649;
   --c-hairline: #1d2836;
   --c-hairline-strong: #2e3f54;
+  --c-field-border: #5d7893;
   --c-inverse-surface-1: #e8edf3;
   --c-inverse-ink: #0b0f14;
   --c-neutral: #5c7386;
@@ -106,6 +109,7 @@
   --color-surface-4: var(--c-surface-4);
   --color-hairline: var(--c-hairline);
   --color-hairline-strong: var(--c-hairline-strong);
+  --color-field-border: var(--c-field-border);
   --color-inverse-surface-1: var(--c-inverse-surface-1);
   --color-inverse-ink: var(--c-inverse-ink);
   --color-neutral: var(--c-neutral);
@@ -222,5 +226,6 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
   }
 }

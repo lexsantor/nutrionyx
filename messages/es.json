@@ -12,7 +12,8 @@
       "pacientes": "Pacientes",
       "ajustes": "Ajustes",
       "agenda": "Agenda"
-    }
+    },
+    "skipToContent": "Saltar al contenido"
   },
   "admin": {
     "title": "Administración de Nutrionyx",
@@ -265,7 +266,7 @@
     },
     "invitations": {
       "title": "Invitaciones pendientes",
-      "hint": "Comparte este enlace con el paciente (o activa el email de invitación en Neon para que le llegue automáticamente).",
+      "hint": "Comparte este enlace con el paciente para que active su cuenta. También le llega por email al invitarle.",
       "cancel": "Cancelar",
       "cancelling": "Cancelando...",
       "cancelError": "No se pudo cancelar. Revisa la terminal del servidor para el detalle."
@@ -429,7 +430,8 @@
         "11": "noviembre",
         "12": "diciembre"
       }
-    }
+    },
+    "exit": "Salir"
   },
   "org": {
     "create": {
@@ -587,7 +589,8 @@
       "errors": {
         "invalidCredentials": "Correo o contraseña incorrectos.",
         "generic": "No se pudo iniciar sesión. Inténtalo de nuevo."
-      }
+      },
+      "subtitle": "Entra en tu espacio"
     },
     "signUp": {
       "title": "Regístrate como profesional",
@@ -774,14 +777,16 @@
     "upload": "Subir foto",
     "uploadError": "Foto no válida: JPG, PNG o WebP de hasta 8 MB.",
     "delete": "Eliminar foto",
-    "photoAlt": "Foto de progreso del {date}"
+    "photoAlt": "Foto de progreso del {date}",
+    "deleteError": "No se ha podido eliminar la foto."
   },
   "documents": {
     "title": "Documentos",
     "empty": "Sin documentos todavía.",
     "upload": "Subir documento",
     "uploadError": "Documento no válido: PDF, JPG, PNG o WebP de hasta 10 MB.",
-    "delete": "Eliminar documento"
+    "delete": "Eliminar documento",
+    "deleteError": "No se ha podido eliminar."
   },
   "diet": {
     "days": {
@@ -879,6 +884,11 @@
     "errors": {
       "invalidBody": "El mensaje no puede estar vacío ni superar 4000 caracteres.",
       "generic": "No se ha podido enviar. Inténtalo de nuevo."
+    },
+    "senders": {
+      "you": "Tú",
+      "consulta": "Tu consulta",
+      "patient": "Paciente"
     }
   },
   "agenda": {
@@ -918,6 +928,15 @@
         "invalidVideoUrl": "El enlace debe empezar por https://",
         "generic": "No se ha podido crear la cita. Inténtalo de nuevo."
       }
-    }
+    },
+    "cancelError": "No se ha podido cancelar."
+  },
+  "boundary": {
+    "notFoundTitle": "Página no encontrada",
+    "notFoundText": "La página que buscas no existe o ya no está disponible.",
+    "back": "Volver al inicio",
+    "errorTitle": "Algo ha fallado",
+    "errorText": "No se ha podido cargar esta página. Puedes reintentarlo.",
+    "retry": "Reintentar"
   }
 }

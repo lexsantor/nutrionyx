@@ -8,6 +8,7 @@ import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { latestWeightByPatient } from "@/modules/measurement/repository";
 import { unreadFromPatients } from "@/modules/messaging/repository";
 import { weightDelta } from "@/modules/measurement/progress";
+import { appUrl } from "@/lib/email";
 import { ConsoleShell } from "@/components/console-shell";
 import { InviteForm } from "../invite-form";
 import { CancelInvitationButton } from "../cancel-button";
@@ -148,13 +149,7 @@ export default async function PatientsPage() {
                           <span>
                             <span className="font-medium">{fmtKg(latestKg)}</span> kg
                             {wDelta != null && wDelta !== 0 ? (
-                              <span
-                                className={
-                                  wDelta > 0
-                                    ? "ml-1 text-success"
-                                    : "ml-1 text-error"
-                                }
-                              >
+                              <span className="ml-1 text-ink-subtle">
                                 {wDelta > 0 ? "↑" : "↓"}
                                 {fmtKg(Math.abs(wDelta))}
                               </span>
@@ -183,7 +178,7 @@ export default async function PatientsPage() {
                 <li key={invitation.id} className="flex flex-wrap items-center gap-2">
                   <span>{invitation.email}</span>
                   <code className="rounded bg-surface-3 px-2 py-0.5 text-xs">
-                    /auth/accept-invitation?invitationId={invitation.id}
+                    {appUrl()}/auth/accept-invitation?invitationId={invitation.id}
                   </code>
                   <CancelInvitationButton invitationId={invitation.id} />
                 </li>
