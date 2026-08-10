@@ -411,6 +411,20 @@
       "title": "Notas",
       "subtitle": "Privadas de la consulta: el paciente nunca las ve. Historial inmutable; una corrección es una nota nueva.",
       "empty": "Sin notas todavía."
+    },
+    "body": {
+      "title": "Composición corporal",
+      "waist": "Cintura",
+      "hip": "Cadera",
+      "ratio": "Índice cintura/cadera",
+      "fatPct": "Grasa corporal",
+      "fatKg": "Masa grasa (est.)",
+      "leanKg": "Masa magra (est.)",
+      "empty": "El paciente aún no ha registrado medidas."
+    },
+    "erase": {
+      "title": "Eliminar paciente",
+      "subtitle": "Derecho de supresión (RGPD): borra evaluaciones, medidas, medicación, objetivos y notas, y anonimiza la ficha. Irreversible."
     }
   },
   "auth": {
@@ -558,5 +572,46 @@
   "patientNav": {
     "home": "Inicio",
     "medication": "Medicación"
+  },
+  "body": {
+    "title": "Medidas",
+    "updatedAt": "Última actualización: {date}",
+    "empty": "Registra tus medidas para ver tu composición corporal.",
+    "fields": {
+      "waistCm": "Cintura (cm)",
+      "hipCm": "Cadera (cm)",
+      "bodyFatPct": "Grasa (%)"
+    },
+    "placeholders": {
+      "waistCm": "81",
+      "hipCm": "90",
+      "bodyFatPct": "23,4"
+    },
+    "metrics": {
+      "waist": "Cintura",
+      "hip": "Cadera",
+      "ratio": "Cintura/cadera",
+      "fatPct": "Grasa corporal",
+      "fatKg": "Masa grasa",
+      "leanKg": "Masa magra"
+    },
+    "save": "Guardar medidas",
+    "saving": "Guardando…",
+    "saved": "Medidas guardadas",
+    "errors": {
+      "invalidBodyMetric": "Revisa los valores: cintura/cadera 30-300 cm, grasa 1-75 %.",
+      "emptyBodyMetrics": "Introduce al menos una medida.",
+      "generic": "No se ha podido guardar. Inténtalo de nuevo."
+    },
+    "exportLink": "Descargar mis datos (JSON)"
+  },
+  "erase": {
+    "confirmLabel": "Entiendo que esta acción es irreversible y elimina todos los datos clínicos de este paciente.",
+    "erase": "Eliminar definitivamente",
+    "erasing": "Eliminando…",
+    "errors": {
+      "confirmRequired": "Marca la casilla de confirmación.",
+      "generic": "No se ha podido eliminar. Inténtalo de nuevo."
+    }
   }
 }

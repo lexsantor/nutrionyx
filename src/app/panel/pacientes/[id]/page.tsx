@@ -7,13 +7,22 @@ import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
-import { listWeights } from "@/modules/measurement/repository";
+import {
+  bodyComposition,
+  listWeights,
+} from "@/modules/measurement/repository";
+import {
+  fatMassKg,
+  leanMassKg,
+  waistHipRatio,
+} from "@/modules/measurement/body";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
+import { EraseForm } from "./erase-form";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 import { WeightChart } from "@/components/weight-chart";
@@ -70,6 +79,21 @@ export default async function PatientDetailPage({
     ? await listDoses(org.id, patient.id, 5)
     : [];
   const format = await getFormatter();
+  const body = await bodyComposition(org.id, patient.id);
+  const whRatio =
+    body.waistCm != null && body.hipCm != null
+      ? waistHipRatio(body.waistCm, body.hipCm)
+      : null;
+  const bodyFatKg =
+    body.weightKg != null && body.bodyFatPct != null
+      ? fatMassKg(body.weightKg, body.bodyFatPct)
+      : null;
+  const bodyLeanKg =
+    body.weightKg != null && body.bodyFatPct != null
+      ? leanMassKg(body.weightKg, body.bodyFatPct)
+      : null;
+  const hasBody =
+    body.waistCm != null || body.hipCm != null || body.bodyFatPct != null;
   const weights = await listWeights(org.id, patient.id);
   const points = weights.map((w) => ({
     recordedAt: w.recordedAt,
@@ -325,6 +349,73 @@ export default async function PatientDetailPage({
             ) : (
               <p className="text-sm text-ink-subtle">{t("weight.empty")}</p>
             )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold">{t("body.title")}</h2>
+              {body.updatedAt ? (
+                <span className="text-sm text-ink-subtle">
+                  {format.dateTime(body.updatedAt, { dateStyle: "medium" })}
+                </span>
+              ) : null}
+            </div>
+            {hasBody ? (
+              <dl className="flex flex-col text-sm">
+                {body.waistCm != null ? (
+                  <Row
+                    label={t("body.waist")}
+                    value={`${body.waistCm.toLocaleString("es")} cm`}
+                  />
+                ) : null}
+                {body.hipCm != null ? (
+                  <Row
+                    label={t("body.hip")}
+                    value={`${body.hipCm.toLocaleString("es")} cm`}
+                  />
+                ) : null}
+                {whRatio != null ? (
+                  <Row
+                    label={t("body.ratio")}
+                    value={whRatio.toLocaleString("es")}
+                  />
+                ) : null}
+                {body.bodyFatPct != null ? (
+                  <Row
+                    label={t("body.fatPct")}
+                    value={`${body.bodyFatPct.toLocaleString("es")} %`}
+                  />
+                ) : null}
+                {bodyFatKg != null ? (
+                  <Row
+                    label={t("body.fatKg")}
+                    value={`${bodyFatKg.toLocaleString("es")} kg`}
+                  />
+                ) : null}
+                {bodyLeanKg != null ? (
+                  <Row
+                    label={t("body.leanKg")}
+                    value={`${bodyLeanKg.toLocaleString("es")} kg`}
+                  />
+                ) : null}
+              </dl>
+            ) : (
+              <p className="text-sm text-ink-subtle">{t("body.empty")}</p>
+            )}
+          </div>
+        </Card>
+
+        <Card className="border-error/40">
+          <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold text-error">
+                {t("erase.title")}
+              </h2>
+              <p className="text-sm text-ink-subtle">{t("erase.subtitle")}</p>
+            </div>
+            <EraseForm patientId={patient.id} />
           </div>
         </Card>
       </div>

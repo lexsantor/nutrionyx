@@ -1,10 +1,11 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
-import { getPatientDetail } from "@/modules/patient/repository";
+import { erasePatient, getPatientDetail } from "@/modules/patient/repository";
 import { upsertTargets } from "@/modules/targets/repository";
 import { addNote } from "@/modules/notes/repository";
 
@@ -79,6 +80,67 @@ export async function saveTargetsAction(
 
   revalidatePath(`/panel/pacientes/${patient.id}`);
   return { ok: true };
+}
+
+export type EraseFormState = { errorKey: string } | null;
+
+/**
+ * GDPR erasure (docs/build/slice-13-plan.md). Destructive and irreversible:
+ * children hard-deleted, patient row anonymized. Requires the explicit
+ * confirmation checkbox; redirects to the patient list on success.
+ */
+export async function erasePatientAction(
+  _prevState: EraseFormState,
+  formData: FormData,
+): Promise<EraseFormState> {
+  if (formData.get("confirm") !== "on") {
+    return { errorKey: "confirmRequired" };
+  }
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    return { errorKey: "generic" };
+  }
+  if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
+    console.error("[erasePatientAction] non-nutritionist attempted", {
+      userId: session.user.id,
+    });
+    return { errorKey: "generic" };
+  }
+
+  const { data: organizations } = await auth.organization.list();
+  if (!organizations || organizations.length === 0) {
+    return { errorKey: "generic" };
+  }
+  const active = organizations[0];
+  const org = await ensureOrganization(active.id, active.name);
+
+  const patientId = (formData.get("patientId") as string) ?? "";
+  const patient = await getPatientDetail(org.id, patientId);
+  if (!patient) {
+    return { errorKey: "generic" };
+  }
+  const preScrubEmail = patient.email;
+
+  const { ok } = await erasePatient(org.id, patient.id);
+  if (!ok) {
+    return { errorKey: "generic" };
+  }
+
+  // Best-effort: drop the auth-side org membership so the erased login no
+  // longer belongs to the consulta. The tombstone already guarantees safe
+  // role resolution even if this fails.
+  try {
+    await auth.organization.removeMember({
+      memberIdOrEmail: preScrubEmail,
+      organizationId: active.id,
+    });
+  } catch (error) {
+    console.error("[erasePatientAction] removeMember failed", error);
+  }
+
+  revalidatePath("/panel/pacientes");
+  redirect("/panel/pacientes");
 }
 
 export type NoteFormState = { errorKey: string } | { ok: true } | null;

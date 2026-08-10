@@ -135,3 +135,64 @@ export async function findPatientByEmail(
     },
   });
 }
+
+/**
+ * GDPR erasure via anonymization (docs/build/slice-13-plan.md). Children are
+ * hard-deleted (erasure trumps append-only); the Patient row becomes a
+ * PII-free tombstone. The row is kept - and keeps authUserId - because
+ * resolveUserRole treats "no Patient row" as nutritionist, so a full delete
+ * would resolve an erased patient's login into the consulta's panel.
+ */
+export async function erasePatient(
+  organizationId: string,
+  patientId: string,
+): Promise<{ ok: boolean }> {
+  const patient = await prisma.patient.findFirst({
+    where: { id: patientId, organizationId },
+  });
+  if (!patient) return { ok: false };
+
+  const scope = { organizationId, patientId };
+  const counts = await prisma.$transaction(async (tx) => {
+    const doses = await tx.medicationDose.deleteMany({ where: scope });
+    const plans = await tx.medicationPlan.deleteMany({ where: scope });
+    const targets = await tx.patientTarget.deleteMany({ where: scope });
+    const notes = await tx.patientNote.deleteMany({ where: scope });
+    const measurements = await tx.measurement.deleteMany({ where: scope });
+    // Null the version links first: the self-FK would reject an arbitrary
+    // deletion order inside deleteMany.
+    await tx.assessment.updateMany({
+      where: scope,
+      data: { predecessorId: null },
+    });
+    const assessments = await tx.assessment.deleteMany({ where: scope });
+    await tx.domainEvent.deleteMany({
+      where: { organizationId, aggregate: "Patient", aggregateId: patientId },
+    });
+    await tx.patient.update({
+      where: { id: patientId },
+      data: {
+        email: `erased-${patientId}@anonimizado.invalid`,
+        fullName: null,
+      },
+    });
+    return {
+      doses: doses.count,
+      plans: plans.count,
+      targets: targets.count,
+      notes: notes.count,
+      measurements: measurements.count,
+      assessments: assessments.count,
+    };
+  });
+
+  await appendEvent({
+    organizationId,
+    aggregate: "Organization",
+    aggregateId: organizationId,
+    type: "PatientErased",
+    payload: counts,
+  });
+
+  return { ok: true };
+}

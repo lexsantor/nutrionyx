@@ -3,6 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { prisma } from "@/lib/prisma";
 import {
   createInvitedPatient,
+  erasePatient,
   findPatientByEmail,
   getPatientDetail,
   listPatients,
@@ -315,6 +316,26 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await listNotes(orgA, bPatientId)).toEqual([]);
     expect((await listNotes(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {
+    const p = await createInvitedPatient({
+      organizationId: orgB,
+      email: `erase-${suffix}@example.test`,
+      fullName: "Erase Me",
+    });
+    await recordWeight({ organizationId: orgB, patientId: p.id, valueKg: 80 });
+
+    // Under A's scope the erase resolves to nothing and B's data survives.
+    expect((await erasePatient(orgA, p.id)).ok).toBe(false);
+    expect((await listWeights(orgB, p.id)).length).toBe(1);
+
+    // Under B's own scope: children gone, row anonymized, no PII left.
+    expect((await erasePatient(orgB, p.id)).ok).toBe(true);
+    expect(await listWeights(orgB, p.id)).toEqual([]);
+    const row = await prisma.patient.findUniqueOrThrow({ where: { id: p.id } });
+    expect(row.email).toContain("anonimizado.invalid");
+    expect(row.fullName).toBeNull();
   });
 
   it("sub-role and consent are org-scoped (adr/0006)", async () => {

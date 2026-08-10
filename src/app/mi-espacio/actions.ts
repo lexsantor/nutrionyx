@@ -3,7 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
-import { recordProtein, recordWeight } from "@/modules/measurement/repository";
+import {
+  recordMetric,
+  recordProtein,
+  recordWeight,
+} from "@/modules/measurement/repository";
 
 export type WeightFormState = { errorKey: string } | { ok: true } | null;
 
@@ -51,6 +55,62 @@ export async function recordWeightAction(
     });
   } catch (error) {
     console.error("[recordWeightAction] recordWeight failed", error);
+    return { errorKey: "generic" };
+  }
+
+  revalidatePath("/mi-espacio");
+  return { ok: true };
+}
+
+export type BodyMetricsFormState = { errorKey: string } | { ok: true } | null;
+
+const BODY_FIELDS = [
+  { name: "waistCm", kind: "WAIST_CM", min: 30, max: 300 },
+  { name: "hipCm", kind: "HIP_CM", min: 30, max: 300 },
+  { name: "bodyFatPct", kind: "BODY_FAT_PCT", min: 1, max: 75 },
+] as const;
+
+export async function recordBodyMetricsAction(
+  _prevState: BodyMetricsFormState,
+  formData: FormData,
+): Promise<BodyMetricsFormState> {
+  const entries: { kind: (typeof BODY_FIELDS)[number]["kind"]; value: number }[] =
+    [];
+  for (const field of BODY_FIELDS) {
+    const raw = ((formData.get(field.name) as string) ?? "")
+      .trim()
+      .replace(",", ".");
+    if (!raw) continue;
+    const value = Number(raw);
+    if (!Number.isFinite(value) || value < field.min || value > field.max) {
+      return { errorKey: "invalidBodyMetric" };
+    }
+    entries.push({ kind: field.kind, value });
+  }
+  if (entries.length === 0) {
+    return { errorKey: "emptyBodyMetrics" };
+  }
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    return { errorKey: "generic" };
+  }
+  const patient = await findPatientByAuthUserId(session.user.id);
+  if (!patient) {
+    return { errorKey: "generic" };
+  }
+
+  try {
+    for (const entry of entries) {
+      await recordMetric({
+        organizationId: patient.organizationId,
+        patientId: patient.id,
+        kind: entry.kind,
+        value: entry.value,
+      });
+    }
+  } catch (error) {
+    console.error("[recordBodyMetricsAction] recordMetric failed", error);
     return { errorKey: "generic" };
   }
 

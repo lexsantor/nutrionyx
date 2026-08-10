@@ -143,6 +143,9 @@ model DomainEvent {
 enum MeasurementKind {
   WEIGHT
   PROTEIN
+  WAIST_CM
+  HIP_CM
+  BODY_FAT_PCT
 }
 
 model Measurement {

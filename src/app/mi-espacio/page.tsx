@@ -9,13 +9,23 @@ import {
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
 import { bmiCategory } from "@/modules/assessment/computed";
-import { listWeights, proteinOnDay } from "@/modules/measurement/repository";
+import {
+  bodyComposition,
+  listWeights,
+  proteinOnDay,
+} from "@/modules/measurement/repository";
+import {
+  fatMassKg,
+  leanMassKg,
+  waistHipRatio,
+} from "@/modules/measurement/body";
 import { getTargets } from "@/modules/targets/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
 import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
 import { ProteinLog } from "./protein-log";
+import { BodyMetricsForm } from "./body-metrics-form";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
 
@@ -61,6 +71,28 @@ export default async function PatientHomePage() {
     }
 
     const tt = await getTranslations("targets.today");
+    const tb = await getTranslations("body");
+    const body = await bodyComposition(patient.organizationId, patient.id);
+    const ratio =
+      body.waistCm != null && body.hipCm != null
+        ? waistHipRatio(body.waistCm, body.hipCm)
+        : null;
+    const fatKg =
+      body.weightKg != null && body.bodyFatPct != null
+        ? fatMassKg(body.weightKg, body.bodyFatPct)
+        : null;
+    const leanKg =
+      body.weightKg != null && body.bodyFatPct != null
+        ? leanMassKg(body.weightKg, body.bodyFatPct)
+        : null;
+    const bodyRows = [
+      body.waistCm != null ? { key: "waist", value: `${body.waistCm.toLocaleString("es")} cm` } : null,
+      body.hipCm != null ? { key: "hip", value: `${body.hipCm.toLocaleString("es")} cm` } : null,
+      ratio != null ? { key: "ratio", value: ratio.toLocaleString("es") } : null,
+      body.bodyFatPct != null ? { key: "fatPct", value: `${body.bodyFatPct.toLocaleString("es")} %` } : null,
+      fatKg != null ? { key: "fatKg", value: `${fatKg.toLocaleString("es")} kg` } : null,
+      leanKg != null ? { key: "leanKg", value: `${leanKg.toLocaleString("es")} kg` } : null,
+    ].filter((r) => r != null);
     const targets = await getTargets(patient.organizationId, patient.id);
     const proteinToday = targets?.proteinTargetG
       ? await proteinOnDay(patient.organizationId, patient.id, new Date())
@@ -226,6 +258,42 @@ export default async function PatientHomePage() {
             )}
             <WeightCheckIn />
           </section>
+
+          <section className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6">
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-lg font-semibold">{tb("title")}</h2>
+              {body.updatedAt ? (
+                <p className="text-sm text-ink-subtle">
+                  {tb("updatedAt", {
+                    date: format.dateTime(body.updatedAt, {
+                      dateStyle: "medium",
+                    }),
+                  })}
+                </p>
+              ) : (
+                <p className="text-sm text-ink-subtle">{tb("empty")}</p>
+              )}
+            </div>
+            {bodyRows.length > 0 ? (
+              <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
+                {bodyRows.map((row) => (
+                  <div key={row.key} className="flex flex-col">
+                    <dt className="text-ink-subtle">{tb(`metrics.${row.key}`)}</dt>
+                    <dd className="font-semibold tabular-nums">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : null}
+            <BodyMetricsForm />
+          </section>
+
+          <a
+            href="/api/me/export"
+            download
+            className="self-center text-xs text-ink-subtle underline-offset-2 transition-colors hover:text-ink hover:underline"
+          >
+            {tb("exportLink")}
+          </a>
         </main>
       </>
     );

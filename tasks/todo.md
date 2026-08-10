@@ -94,10 +94,21 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   reminder cron 08:00 UTC (`vercel.json` → `/api/cron/reminders`, Bearer
   `CRON_SECRET`, event `MedicationReminderSent`). Guardrail: never clinical
   data in email bodies. `CRON_SECRET` set in all envs.
-  **Pending: owner adds `RESEND_API_KEY`** (vercel env add + .env.local);
-  until then sends skip gracefully with a warning. Sender is the
-  `onboarding@resend.dev` sandbox until a real domain is verified
-  (`EMAIL_FROM` overrides).
+  `RESEND_API_KEY` set 2026-08-10; send verified in prod. Sender is the
+  `onboarding@resend.dev` sandbox (delivers only to the owner's email) until
+  a real domain is verified (`EMAIL_FROM` overrides).
+- **Slice 12 - Body composition** (docs/build/slice-12-plan.md): Measurement
+  kinds `WAIST_CM`/`HIP_CM`/`BODY_FAT_PCT`; generic `recordMetric` (weight/
+  protein now thin wrappers); pure derivations in measurement/body.ts (ratio,
+  fat/lean mass, tested); patient "Medidas" card + panel "Composición
+  corporal" card. **Migration `body_metrics` pending on Neon.**
+- **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
+  `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
+  subjetivas) + "Descargar mis datos" link; `erasePatient` = children
+  hard-deleted + tombstone anonymization (row kept so role resolution stays
+  patient - see plan for the escalation risk), best-effort auth
+  removeMember, `PatientErased` event, destructive card with confirmation on
+  patient detail. Isolation covers cross-org erase. No schema change.
 
 ### Migrations (applied on Neon)
 
