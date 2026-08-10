@@ -6,6 +6,7 @@ import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { latestWeightByPatient } from "@/modules/measurement/repository";
+import { unreadFromPatients } from "@/modules/messaging/repository";
 import { weightDelta } from "@/modules/measurement/progress";
 import { ConsoleShell } from "@/components/console-shell";
 import { InviteForm } from "../invite-form";
@@ -35,6 +36,7 @@ export default async function PatientsPage() {
   const org = await ensureOrganization(active.id, active.name);
   const patients = await listPatientsWithLatestAssessment(org.id);
   const latestWeights = await latestWeightByPatient(org.id);
+  const unreadMessages = await unreadFromPatients(org.id);
 
   const { data: pending } = await auth.organization.listInvitations({
     query: { organizationId: active.id },
@@ -96,12 +98,22 @@ export default async function PatientsPage() {
                       className="border-b border-hairline transition-colors last:border-0 hover:bg-surface-2"
                     >
                       <td className="px-4 py-3">
-                        <Link
-                          href={`/panel/pacientes/${patient.id}`}
-                          className="font-medium text-ink no-underline transition-colors hover:text-primary"
-                        >
-                          {patient.fullName}
-                        </Link>
+                        <span className="inline-flex items-center gap-2">
+                          <Link
+                            href={`/panel/pacientes/${patient.id}`}
+                            className="font-medium text-ink no-underline transition-colors hover:text-primary"
+                          >
+                            {patient.fullName}
+                          </Link>
+                          {(unreadMessages.get(patient.id) ?? 0) > 0 ? (
+                            <span
+                              title={t("unreadMessages")}
+                              className="inline-flex min-w-5 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-xs font-semibold text-on-primary"
+                            >
+                              {unreadMessages.get(patient.id)}
+                            </span>
+                          ) : null}
+                        </span>
                       </td>
                       <td className="px-4 py-3 text-ink-subtle">{patient.email}</td>
                       <td className="px-4 py-3">

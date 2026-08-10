@@ -182,7 +182,8 @@
       "cancel": "Cancelar",
       "cancelling": "Cancelando...",
       "cancelError": "No se pudo cancelar. Revisa la terminal del servidor para el detalle."
-    }
+    },
+    "unreadMessages": "Mensajes sin leer"
   },
   "acceptInvitation": {
     "title": "Invitación a Nutrionyx",
@@ -463,6 +464,10 @@
       "lastSession": "última sesión el {date}",
       "edit": "Editar rutina",
       "create": "Crear rutina"
+    },
+    "messages": {
+      "title": "Mensajes",
+      "open": "Abrir conversación"
     }
   },
   "auth": {
@@ -611,7 +616,8 @@
     "home": "Inicio",
     "medication": "Medicación",
     "diet": "Dieta",
-    "training": "Entreno"
+    "training": "Entreno",
+    "messages": "Mensajes"
   },
   "body": {
     "title": "Medidas",
@@ -751,6 +757,21 @@
         "alreadyToday": "Ya has registrado la sesión de hoy.",
         "generic": "No se ha podido registrar. Inténtalo de nuevo."
       }
+    }
+  },
+  "messages": {
+    "patientHeading": "Mensajes",
+    "patientHint": "Canal directo y privado con tu consulta. No es para urgencias.",
+    "panelHeading": "Mensajes",
+    "emptyPatient": "Aún no hay mensajes. Escribe a tu consulta cuando lo necesites.",
+    "emptyPanel": "Aún no hay mensajes con este paciente.",
+    "composerLabel": "Mensaje",
+    "composerPlaceholder": "Escribe un mensaje…",
+    "send": "Enviar",
+    "sending": "Enviando…",
+    "errors": {
+      "invalidBody": "El mensaje no puede estar vacío ni superar 4000 caracteres.",
+      "generic": "No se ha podido enviar. Inténtalo de nuevo."
     }
   }
 }

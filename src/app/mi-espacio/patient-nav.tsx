@@ -10,6 +10,7 @@ export async function PatientNav() {
       <NavLink href="/mi-espacio/dieta">{t("diet")}</NavLink>
       <NavLink href="/mi-espacio/entreno">{t("training")}</NavLink>
       <NavLink href="/mi-espacio/medicacion">{t("medication")}</NavLink>
+      <NavLink href="/mi-espacio/mensajes">{t("messages")}</NavLink>
     </>
   );
 }

@@ -69,6 +69,7 @@ model Patient {
   dietPlan        DietPlan?
   trainingRoutine  TrainingRoutine?
   trainingSessions TrainingSession[]
+  messages         Message[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -233,6 +234,29 @@ model TrainingSession {
 
   @@index([organizationId, patientId, sessionAt])
   @@map("training_sessions")
+}
+
+// Messaging (docs/build/slice-19-plan.md): one async thread per patient,
+// patient ↔ their consulta. readAt is set when the counterpart opens the
+// thread (mark-all-read). No edit/delete - a correction is a new message.
+enum MessageSender {
+  SPECIALIST
+  PATIENT
+}
+
+model Message {
+  id               String        @id @default(cuid())
+  organizationId   String
+  patientId        String
+  patient          Patient       @relation(fields: [patientId], references: [id])
+  sender           MessageSender
+  senderAuthUserId String
+  body             String
+  readAt           DateTime?
+  createdAt        DateTime      @default(now())
+
+  @@index([organizationId, patientId, createdAt])
+  @@map("messages")
 }
 
 // Patient documents (docs/build/slice-16-plan.md): PDFs/reports the

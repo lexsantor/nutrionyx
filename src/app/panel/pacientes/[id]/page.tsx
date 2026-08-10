@@ -34,6 +34,7 @@ import {
   getRoutine,
   listSessions,
 } from "@/modules/training/repository";
+import { unreadCount } from "@/modules/messaging/repository";
 import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
@@ -98,6 +99,7 @@ export default async function PatientDetailPage({
   const dietPlan = await getDietPlan(org.id, patient.id);
   const routine = await getRoutine(org.id, patient.id);
   const allSessions = await listSessions(org.id, patient.id);
+  const unreadMessages = await unreadCount(org.id, patient.id, "SPECIALIST");
   const medicationPlan = await getPlan(org.id, patient.id);
   const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
   const recentDoses = allDoses.slice(0, 5);
@@ -307,6 +309,27 @@ export default async function PatientDetailPage({
                   : null
               }
             />
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-lg font-semibold">
+                {t("messages.title")}
+              </h2>
+              {unreadMessages > 0 ? (
+                <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-xs font-semibold text-on-primary">
+                  {unreadMessages}
+                </span>
+              ) : null}
+            </div>
+            <Link
+              href={`/panel/pacientes/${patient.id}/mensajes`}
+              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
+            >
+              {t("messages.open")}
+            </Link>
           </div>
         </Card>
 

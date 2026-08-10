@@ -149,11 +149,18 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Migration `training` applied. Available to every specialist (adr/0006:
   sub-role is emphasis, not access).
 
+- **Slice 19 - Messaging v1** (docs/build/slice-19-plan.md): async thread
+  per patient (`Message`, mark-all-read via `readAt`, no edit/delete);
+  patient `/mi-espacio/mensajes` + nav; panel thread at
+  `/panel/pacientes/[id]/mensajes`, unread badges on the pacientes list
+  (groupBy) and detail card; specialist→patient send fires a no-content
+  email nudge. Export + erasure + isolation (20/20). Migration `messaging`.
+
 ### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
 Next candidates: diet/training iteration (meal library, per-set logging,
-preferences per adr/0002) · messaging · scheduling · billing (Tier E).
+preferences per adr/0002) · scheduling · billing (Tier E).
 Non-code: own domain + Resend verification (patient emails still sandbox).
 
 ### Migrations (applied on Neon)

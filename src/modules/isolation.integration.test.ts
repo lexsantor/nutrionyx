@@ -57,6 +57,12 @@ import {
 } from "@/modules/training/repository";
 import { emptyRoutine } from "@/modules/training/routine";
 import {
+  listThread,
+  markThreadRead,
+  sendMessage,
+  unreadFromPatients,
+} from "@/modules/messaging/repository";
+import {
   listMeasurementsSince,
   proteinOnDay,
   recordProtein,
@@ -140,6 +146,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.trainingRoutine.deleteMany({
         where: { organizationId: org },
       });
+      await prisma.message.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -418,6 +425,27 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect(await listSessions(orgA, bPatientId)).toEqual([]);
     expect((await getRoutine(orgB, bPatientId))?.title).toBe("Fuerza");
     expect((await listSessions(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes messaging: thread, unread and mark-read stay in-org (R2)", async () => {
+    await sendMessage({
+      organizationId: orgB,
+      patientId: bPatientId,
+      sender: "PATIENT",
+      senderAuthUserId: `pat-${suffix}`,
+      body: "hola",
+    });
+
+    // Invisible under A's scope; unread badge only for B.
+    expect(await listThread(orgA, bPatientId)).toEqual([]);
+    expect((await unreadFromPatients(orgA)).size).toBe(0);
+    expect((await unreadFromPatients(orgB)).get(bPatientId)).toBe(1);
+
+    // A marking read changes nothing; B's specialist read clears it.
+    await markThreadRead(orgA, bPatientId, "SPECIALIST");
+    expect((await unreadFromPatients(orgB)).get(bPatientId)).toBe(1);
+    await markThreadRead(orgB, bPatientId, "SPECIALIST");
+    expect((await unreadFromPatients(orgB)).size).toBe(0);
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {
