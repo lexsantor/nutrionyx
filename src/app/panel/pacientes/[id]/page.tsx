@@ -9,8 +9,16 @@ import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
 import {
   bodyComposition,
+  listMeasurementsSince,
   listWeights,
 } from "@/modules/measurement/repository";
+import {
+  REPORT_WINDOW_DAYS,
+  activeDays,
+  expectedDoses,
+  proteinAdherence,
+  windowDelta,
+} from "@/modules/reporting/adherence";
 import {
   fatMassKg,
   leanMassKg,
@@ -77,9 +85,45 @@ export default async function PatientDetailPage({
   const notes = await listNotes(org.id, patient.id);
   const photos = await listPhotos(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
-  const recentDoses = medicationPlan
-    ? await listDoses(org.id, patient.id, 5)
-    : [];
+  const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
+  const recentDoses = allDoses.slice(0, 5);
+
+  // 28-day adherence report (docs/build/slice-15-plan.md)
+  const since = new Date();
+  since.setDate(since.getDate() - REPORT_WINDOW_DAYS);
+  since.setHours(0, 0, 0, 0);
+  const windowMeasurements = await listMeasurementsSince(
+    org.id,
+    patient.id,
+    since,
+  );
+  const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
+  const windowProtein = windowMeasurements.filter((m) => m.kind === "PROTEIN");
+  const windowDoses = allDoses.filter((d) => d.takenAt >= since);
+  const weightWindowDelta = windowDelta(
+    windowWeights.map((m) => ({ recordedAt: m.recordedAt, value: Number(m.value) })),
+  );
+  const targetsForReport = targets?.proteinTargetG ?? null;
+  const proteinReport =
+    targetsForReport != null
+      ? proteinAdherence(
+          windowProtein.map((m) => ({
+            recordedAt: m.recordedAt,
+            grams: Number(m.value),
+          })),
+          targetsForReport,
+        )
+      : null;
+  const doseReport = medicationPlan
+    ? {
+        logged: windowDoses.length,
+        expected: expectedDoses(medicationPlan.frequency),
+      }
+    : null;
+  const activityDays = activeDays([
+    ...windowMeasurements.map((m) => m.recordedAt),
+    ...windowDoses.map((d) => d.takenAt),
+  ]);
   const format = await getFormatter();
   const body = await bodyComposition(org.id, patient.id);
   const whRatio =
@@ -243,6 +287,56 @@ export default async function PatientDetailPage({
                   : null
               }
             />
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-lg font-semibold">{t("report.title")}</h2>
+              <span className="text-sm text-ink-subtle">
+                {t("report.window", { days: REPORT_WINDOW_DAYS })}
+              </span>
+            </div>
+            <dl className="flex flex-col text-sm">
+              <Row
+                label={t("report.weight")}
+                value={
+                  weightWindowDelta != null
+                    ? t("report.weightValue", {
+                        delta: `${weightWindowDelta > 0 ? "+" : ""}${weightWindowDelta.toLocaleString("es")}`,
+                        count: windowWeights.length,
+                      })
+                    : t("report.insufficient")
+                }
+              />
+              {proteinReport ? (
+                <Row
+                  label={t("report.protein")}
+                  value={t("report.proteinValue", {
+                    met: proteinReport.daysMet,
+                    logged: proteinReport.daysLogged,
+                    avg: proteinReport.avgPerLoggedDay,
+                  })}
+                />
+              ) : null}
+              {doseReport ? (
+                <Row
+                  label={t("report.medication")}
+                  value={t("report.medicationValue", {
+                    logged: doseReport.logged,
+                    expected: doseReport.expected,
+                  })}
+                />
+              ) : null}
+              <Row
+                label={t("report.activity")}
+                value={t("report.activityValue", {
+                  days: activityDays,
+                  total: REPORT_WINDOW_DAYS,
+                })}
+              />
+            </dl>
           </div>
         </Card>
 

@@ -117,6 +117,16 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Store connected 2026-08-10 with env prefix `PRIVATE_BLOB` (token env
   `PRIVATE_BLOB_READ_WRITE_TOKEN`), verified end-to-end (direct URL fetch
   403), production redeployed with the new env.
+- **Slice 15 - Reporting-lite** (docs/build/slice-15-plan.md): 28-day
+  adherence card on the patient detail (weight delta + count, protein days
+  met/logged vs target, doses logged vs expected, active days). Pure logic
+  in modules/reporting/adherence.ts (tested); new org-scoped
+  `listMeasurementsSince` covered by isolation. No migration.
+
+### Tier 2 remaining
+
+RBAC team members (when a multi-staff consulta exists) · Documents.
+Then Tier 3: diet plan builder (domain design first) or training log.
 
 ### Migrations (applied on Neon)
 

@@ -44,6 +44,7 @@ import { getTargets, upsertTargets } from "@/modules/targets/repository";
 import { addNote, listNotes } from "@/modules/notes/repository";
 import { addPhoto, listPhotos } from "@/modules/photos/repository";
 import {
+  listMeasurementsSince,
   proteinOnDay,
   recordProtein,
 } from "@/modules/measurement/repository";
@@ -304,6 +305,11 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     // Under A's scope, B's targets and protein sum are invisible.
     expect(await getTargets(orgA, bPatientId)).toBeNull();
     expect(await proteinOnDay(orgA, bPatientId, new Date())).toBe(0);
+    const since = new Date(Date.now() - 86_400_000);
+    expect(await listMeasurementsSince(orgA, bPatientId, since)).toEqual([]);
+    expect(
+      (await listMeasurementsSince(orgB, bPatientId, since)).length,
+    ).toBeGreaterThan(0);
     // Under B's own scope they are present.
     expect((await getTargets(orgB, bPatientId))?.proteinTargetG).toBe(150);
     expect(await proteinOnDay(orgB, bPatientId, new Date())).toBe(42);

@@ -131,6 +131,24 @@ export async function proteinOnDay(
   return result._sum.value != null ? Number(result._sum.value) : 0;
 }
 
+/** Measurements since `since`, ascending; omit `kind` for every kind. */
+export async function listMeasurementsSince(
+  organizationId: string,
+  patientId: string,
+  since: Date,
+  kind?: MeasurementKind,
+): Promise<Measurement[]> {
+  return prisma.measurement.findMany({
+    where: {
+      organizationId,
+      patientId,
+      ...(kind ? { kind } : {}),
+      recordedAt: { gte: since },
+    },
+    orderBy: { recordedAt: "asc" },
+  });
+}
+
 export type BodyComposition = {
   waistCm: number | null;
   hipCm: number | null;

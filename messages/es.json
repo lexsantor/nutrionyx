@@ -429,6 +429,19 @@
     "photos": {
       "title": "Fotos de progreso",
       "empty": "El paciente no ha subido fotos."
+    },
+    "report": {
+      "title": "Informe",
+      "window": "Últimos {days} días",
+      "weight": "Peso",
+      "weightValue": "{delta} kg · {count} registros",
+      "insufficient": "Datos insuficientes",
+      "protein": "Proteína",
+      "proteinValue": "{met} de {logged} días al objetivo · media {avg} g",
+      "medication": "Medicación",
+      "medicationValue": "{logged} de {expected} dosis registradas",
+      "activity": "Actividad",
+      "activityValue": "{days} de {total} días con registro"
     }
   },
   "auth": {
