@@ -96,35 +96,121 @@
     "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL."
   },
   "home": {
-    "notSignedIn": "Sesión no iniciada",
-    "signIn": "Iniciar sesión",
-    "signUp": "Crear cuenta",
-    "signedInAs": "Sesión iniciada como {name}",
+    "badge": "Plataforma para profesionales de la nutrición · acceso con invitación",
     "hero": {
-      "title": "Tu consulta de nutrición,",
-      "highlight": "en un solo lugar",
-      "description": "Gestiona pacientes, haz seguimiento de progreso y ofrece planes personalizados. Todo desde una plataforma diseñada para dietistas y nutricionistas.",
+      "title": "Tu consulta entera,",
+      "highlight": "en una sola ficha",
+      "description": "Evaluación, dieta, entreno, medicación, mensajes y citas. Debajo tienes una ficha de paciente real de la plataforma — con datos de ejemplo — para que juzgues el producto, no las promesas.",
       "cta": {
-        "signIn": "Iniciar sesión",
-        "signUp": "Crear cuenta gratuita"
+        "signUp": "Crear mi consulta",
+        "signIn": "Iniciar sesión"
       },
-      "features": [
-        {
-          "icon": "users",
-          "title": "Gestión de pacientes",
-          "text": "Invita, organiza y haz seguimiento de todos tus pacientes desde un panel centralizado."
+      "scrollHint": "La ficha, sección a sección"
+    },
+    "sample": "Datos de ejemplo",
+    "record": {
+      "patientName": "Elena García",
+      "active": "Activa",
+      "email": "elena@ejemplo.es",
+      "identity": {
+        "annotTitle": "Pacientes por invitación",
+        "annotText": "Invitas por email, el paciente activa su cuenta y completa la evaluación desde el móvil. Sin altas manuales ni hojas de cálculo."
+      },
+      "clinical": {
+        "title": "Evaluación clínica",
+        "completed": "Completada",
+        "bmi": "IMC",
+        "bmiValue": "27,7 · Sobrepeso",
+        "target": "Peso objetivo",
+        "activity": "Actividad",
+        "activityValue": "Media",
+        "goals": "Objetivos",
+        "goalsValue": "Perder grasa, ganar energía",
+        "annotTitle": "Evaluación digital de 10 pasos",
+        "annotText": "El paciente la rellena a su ritmo; tú recibes el cuadro clínico completo con IMC y ratio de objetivo calculados, versionado e inmutable una vez completada."
+      },
+      "report": {
+        "title": "Informe",
+        "window": "Últimos 28 días",
+        "weight": "Peso",
+        "weightValue": "−1,8 kg · 5 registros",
+        "protein": "Proteína",
+        "proteinValue": "19 de 24 días al objetivo · media 142 g",
+        "medication": "Medicación",
+        "medicationValue": "4 de 4 dosis registradas",
+        "training": "Entrenamiento",
+        "trainingValue": "11 de 12 sesiones",
+        "activity": "Actividad",
+        "activityValue": "26 de 28 días con registro",
+        "annotTitle": "Adherencia sin perseguir a nadie",
+        "annotText": "Cada registro del paciente alimenta el informe automáticamente. Abres la ficha y sabes si el plan se cumple antes de preguntar."
+      },
+      "today": {
+        "title": "Hoy",
+        "plan": "2.000 kcal · 150 g proteína · 3×/semana",
+        "weight": "Peso",
+        "weightDone": "Registrado · 86,2 kg",
+        "protein": "Proteína",
+        "proteinValue": "112 g / 150 g",
+        "annotTitle": "Objetivos que se convierten en hábito",
+        "annotText": "Prescribes kcal, proteína y entrenos semanales; el paciente ve su checklist diario y registra en segundos. El check-in completo baja de un minuto."
+      },
+      "weightChart": {
+        "title": "Evolución de peso",
+        "annotTitle": "Progreso visible",
+        "annotText": "Peso, medidas corporales y fotos de progreso privadas, en gráficos que el paciente y tú veis igual. Historial inmutable: una corrección es un registro nuevo."
+      },
+      "diet": {
+        "title": "Plan de dieta · miércoles",
+        "meals": {
+          "BREAKFAST": "Avena con yogur griego y arándanos",
+          "LUNCH": "Pollo a la plancha, arroz integral y brócoli",
+          "SNACK": "Requesón con nueces",
+          "DINNER": "Merluza al horno con verduras"
         },
-        {
-          "icon": "chart",
-          "title": "Evaluaciones digitales",
-          "text": "Los pacientes completan su evaluación online. Tú ves los resultados al instante."
+        "annotTitle": "Plan semanal, no PDF muerto",
+        "annotText": "Editas 7 días × 5 comidas en el panel; el paciente siempre ve la versión vigente con su día destacado. Sin reenviar documentos."
+      },
+      "training": {
+        "title": "Entreno · hoy",
+        "content": "Sentadilla 4×8 · Press banca 3×10 · Remo 3×12",
+        "done": "Sesión de hoy registrada",
+        "annotTitle": "Rutina y sesiones en el mismo sitio",
+        "annotText": "Prescribes la rutina semanal; el paciente marca cada sesión hecha y el informe la cruza con su objetivo. Para consultas deportivas y clínicas."
+      },
+      "glp1": {
+        "title": "Medicación",
+        "next": "Próxima dosis: en 3 días · miércoles",
+        "drug": "Semaglutida · 0,5 mg semanal",
+        "site": "Punto sugerido: abdomen derecho",
+        "annotTitle": "Seguimiento GLP-1 de serie",
+        "annotText": "El paciente registra la pauta de su médico y cada dosis con rotación de punto de inyección; tú ves adherencia y pauta sin tocar WhatsApp. Nutrionyx nunca sugiere dosis."
+      },
+      "comms": {
+        "title": "Mensajes y agenda",
+        "messagePatient": "He tenido antojo por la tarde, ¿cambio la merienda?",
+        "messageSpecialist": "Sube el requesón a 200 g y añade una pieza de fruta. Lo vemos el jueves.",
+        "cita": "Jueves 21 · 17:30 · Videollamada",
+        "annotTitle": "Comunicación dentro de la historia clínica",
+        "annotText": "Hilo privado por paciente y citas con recordatorio automático por email el día antes. Todo queda en la ficha, no en tu móvil personal."
+      },
+      "privacy": {
+        "title": "Privacidad de serie",
+        "items": {
+          "isolation": "Aislamiento por consulta verificado con tests en cada despliegue: tus pacientes solo existen para ti.",
+          "blind": "El operador de la plataforma nunca ve datos clínicos — solo métricas de negocio.",
+          "rights": "Exportación y supresión RGPD como funciones del producto, no como promesa legal.",
+          "eu": "Datos de salud (Art. 9 RGPD) en infraestructura europea, con registro de eventos inmutable."
         },
-        {
-          "icon": "trending",
-          "title": "Evolución visual",
-          "text": "Gráficos de progreso claros que tú y tus pacientes podéis consultar en tiempo real."
-        }
-      ]
+        "annotTitle": "RGPD como arquitectura",
+        "annotText": "Trabajas con datos de salud: la privacidad no puede ser un anexo. Aquí es el diseño del sistema desde el primer commit."
+      }
+    },
+    "closing": {
+      "title": "Pruébalo con tu consulta",
+      "text": "Acceso con código de invitación durante la fase inicial. Crea tu consulta, invita a un paciente y recorre esta misma ficha con datos reales.",
+      "cta": "Crear mi consulta",
+      "secondary": "Ya tengo cuenta"
     }
   },
   "panel": {
