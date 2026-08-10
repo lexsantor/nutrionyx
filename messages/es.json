@@ -99,14 +99,18 @@
   "home": {
     "badge": "Plataforma para profesionales de la nutrición · acceso con invitación",
     "hero": {
-      "title": "Tu consulta entera,",
-      "highlight": "en una sola ficha",
+      "title": "¿Cómo llevas tu consulta sin perderte entre WhatsApp, Excel y PDFs?",
+      "highlight": "Con una sola ficha.",
       "description": "Evaluación, dieta, entreno, medicación, mensajes y citas. Debajo tienes una ficha de paciente real de la plataforma — con datos de ejemplo — para que juzgues el producto, no las promesas.",
       "cta": {
         "signUp": "Crear mi consulta",
         "signIn": "Iniciar sesión"
       },
-      "scrollHint": "La ficha, sección a sección"
+      "scrollHint": "La prueba: una ficha real",
+      "subtitle": "Sales de cada revisión con la adherencia leída y el plan publicado.",
+      "answer": "Nutrionyx reúne evaluación, dieta, entreno, medicación GLP-1, mensajes y citas de cada paciente en una ficha única. Tú prescribes y lees adherencia de un vistazo; tu paciente registra su día en menos de un minuto desde el móvil. Datos de salud tratados como exige el RGPD, con aislamiento por consulta verificado en cada despliegue.",
+      "byline": "Por Alejandro · fundador de Nutrionyx",
+      "updated": "Actualizado el 10 de agosto de 2026"
     },
     "sample": "Datos de ejemplo",
     "record": {
@@ -114,7 +118,7 @@
       "active": "Activa",
       "email": "elena@ejemplo.es",
       "identity": {
-        "annotTitle": "Pacientes por invitación",
+        "annotTitle": "¿Cómo entra un paciente?",
         "annotText": "Invitas por email, el paciente activa su cuenta y completa la evaluación desde el móvil. Sin altas manuales ni hojas de cálculo."
       },
       "clinical": {
@@ -127,7 +131,7 @@
         "activityValue": "Media",
         "goals": "Objetivos",
         "goalsValue": "Perder grasa, ganar energía",
-        "annotTitle": "Evaluación digital de 10 pasos",
+        "annotTitle": "¿Cómo capturas el cuadro clínico?",
         "annotText": "El paciente la rellena a su ritmo; tú recibes el cuadro clínico completo con IMC y ratio de objetivo calculados, versionado e inmutable una vez completada."
       },
       "report": {
@@ -143,7 +147,7 @@
         "trainingValue": "11 de 12 sesiones",
         "activity": "Actividad",
         "activityValue": "26 de 28 días con registro",
-        "annotTitle": "Adherencia sin perseguir a nadie",
+        "annotTitle": "¿Se está cumpliendo el plan?",
         "annotText": "Cada registro del paciente alimenta el informe automáticamente. Abres la ficha y sabes si el plan se cumple antes de preguntar."
       },
       "today": {
@@ -153,7 +157,7 @@
         "weightDone": "Registrado · 86,2 kg",
         "protein": "Proteína",
         "proteinValue": "112 g / 150 g",
-        "annotTitle": "Objetivos que se convierten en hábito",
+        "annotTitle": "¿Qué hace tu paciente cada día?",
         "annotText": "Prescribes kcal, proteína y entrenos semanales; el paciente ve su checklist diario y registra en segundos. El check-in completo baja de un minuto."
       },
       "weightChart": {
@@ -184,7 +188,7 @@
         "next": "Próxima dosis: en 3 días · miércoles",
         "drug": "Semaglutida · 0,5 mg semanal",
         "site": "Punto sugerido: abdomen derecho",
-        "annotTitle": "Seguimiento GLP-1 de serie",
+        "annotTitle": "¿Pacientes con GLP-1?",
         "annotText": "El paciente registra la pauta de su médico y cada dosis con rotación de punto de inyección; tú ves adherencia y pauta sin tocar WhatsApp. Nutrionyx nunca sugiere dosis."
       },
       "comms": {
@@ -192,7 +196,7 @@
         "messagePatient": "He tenido antojo por la tarde, ¿cambio la merienda?",
         "messageSpecialist": "Sube el requesón a 200 g y añade una pieza de fruta. Lo vemos el jueves.",
         "cita": "Jueves 21 · 17:30 · Videollamada",
-        "annotTitle": "Comunicación dentro de la historia clínica",
+        "annotTitle": "¿Y la comunicación y las citas?",
         "annotText": "Hilo privado por paciente y citas con recordatorio automático por email el día antes. Todo queda en la ficha, no en tu móvil personal."
       },
       "privacy": {
@@ -203,15 +207,102 @@
           "rights": "Exportación y supresión RGPD como funciones del producto, no como promesa legal.",
           "eu": "Datos de salud (Art. 9 RGPD) en infraestructura europea, con registro de eventos inmutable."
         },
-        "annotTitle": "RGPD como arquitectura",
+        "annotTitle": "¿Qué pasa con el RGPD?",
         "annotText": "Trabajas con datos de salud: la privacidad no puede ser un anexo. Aquí es el diseño del sistema desde el primer commit."
+      },
+      "planCare": {
+        "annotTitle": "¿Dónde viven la dieta y el entreno?",
+        "annotText": "Editas el plan semanal y la rutina en el panel; el paciente siempre ve la versión vigente con su día destacado, y marca cada sesión hecha."
       }
     },
     "closing": {
-      "title": "Pruébalo con tu consulta",
+      "title": "Crea tu consulta",
       "text": "Acceso con código de invitación durante la fase inicial. Crea tu consulta, invita a un paciente y recorre esta misma ficha con datos reales.",
       "cta": "Crear mi consulta",
-      "secondary": "Ya tengo cuenta"
+      "secondary": "Ya tengo cuenta",
+      "noCard": "Con código de invitación · sin tarjeta"
+    },
+    "problem": {
+      "heading": "¿Cuánto te cuesta el método actual?",
+      "items": {
+        "whatsapp": "Los pesos y las dudas llegan por WhatsApp y se entierran entre chats personales.",
+        "excel": "La evolución vive en un Excel que solo tú entiendes y nadie actualiza.",
+        "pdf": "La dieta es un PDF que caduca el mismo día que lo envías."
+      },
+      "cost": "El coste no es solo tiempo: es no poder demostrar el progreso cuando el paciente duda, y pacientes que se van sin que lo veas venir."
+    },
+    "solution": {
+      "heading": "¿Qué cambia con la ficha única?",
+      "text": "Prescribes dieta, entreno y objetivos una vez; el paciente los ve siempre vigentes y registra peso, proteína, medidas, dosis y sesiones desde su móvil. Cada registro alimenta un informe de adherencia de 28 días que lees al abrir la ficha.",
+      "next": "El siguiente paso: crea tu consulta y abre tu primera ficha."
+    },
+    "proofHeading": "¿Y la prueba?",
+    "proofSub": "Sin testimonios inventados: esto es el producto tal cual, sección a sección, con datos de ejemplo.",
+    "faq": {
+      "heading": "Preguntas reales",
+      "items": {
+        "gdpr": {
+          "q": "¿Cumple con el RGPD para datos de salud?",
+          "a": "Los datos clínicos viven en una base de datos en la UE con aislamiento por consulta verificado con tests en cada despliegue. El operador de la plataforma nunca ve datos clínicos, y la exportación y la supresión son funciones del producto, no promesas."
+        },
+        "patient": {
+          "q": "¿Qué necesita mi paciente?",
+          "a": "Un email y un móvil. Recibe la invitación, activa su cuenta y completa la evaluación de 10 pasos a su ritmo. El registro diario tarda menos de un minuto."
+        },
+        "onboarding": {
+          "q": "¿Cuánto tardo en dar de alta a un paciente?",
+          "a": "Invitas con nombre y email; el resto lo hace el paciente. Tú recibes el cuadro clínico completo con IMC calculado al terminar la evaluación."
+        },
+        "glp1": {
+          "q": "¿Sirve para pacientes con GLP-1?",
+          "a": "Sí: el paciente registra la pauta de su prescriptor y cada dosis con rotación del punto de inyección, y tú ves la adherencia en la ficha. Nutrionyx nunca sugiere ni ajusta dosis."
+        },
+        "card": {
+          "q": "¿Necesito tarjeta para empezar?",
+          "a": "No. El acceso es con código de invitación durante la fase inicial, sin tarjeta."
+        },
+        "export": {
+          "q": "¿Puedo llevarme mis datos si me voy?",
+          "a": "Sí. Cada paciente puede descargar sus datos en JSON y la supresión borra los datos clínicos de forma irreversible."
+        }
+      }
+    },
+    "comparison": {
+      "heading": "¿En qué cambia respecto a tu método actual?",
+      "current": "WhatsApp + Excel + PDF",
+      "product": "Nutrionyx",
+      "rows": {
+        "adherence": {
+          "label": "Leer la adherencia",
+          "current": "Preguntando chat a chat",
+          "product": "Informe de 28 días al abrir la ficha"
+        },
+        "diet": {
+          "label": "La dieta vigente",
+          "current": "El último PDF enviado",
+          "product": "Plan editable, siempre actualizado"
+        },
+        "history": {
+          "label": "El historial",
+          "current": "Disperso y sobrescribible",
+          "product": "Inmutable: cada corrección es un registro nuevo"
+        },
+        "privacy": {
+          "label": "Datos de salud",
+          "current": "En tu móvil personal",
+          "product": "Aislados por consulta y verificados con tests"
+        },
+        "reminders": {
+          "label": "Recordatorios",
+          "current": "Los mandas tú a mano",
+          "product": "Automáticos: dosis y citas por email"
+        },
+        "place": {
+          "label": "Dónde vive todo",
+          "current": "En cinco aplicaciones",
+          "product": "En una ficha por paciente"
+        }
+      }
     }
   },
   "panel": {

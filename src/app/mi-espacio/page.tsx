@@ -305,32 +305,67 @@ export default async function PatientHomePage({
                 <p className="text-sm text-ink-subtle">{tb("empty")}</p>
               )}
             </div>
-            <div className="flex flex-col gap-5 sm:flex-row sm:items-stretch">
-              <div className="mx-auto h-44 shrink-0 sm:mx-0 sm:h-52">
+            <div className="grid grid-cols-2 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-6">
+              <dl className="flex flex-col gap-3">
+                {bodyRows.slice(0, 3).map((row) => (
+                  <div
+                    key={row.key}
+                    className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
+                  >
+                    <dt className="text-xs font-medium text-ink-subtle">
+                      {tb(`metrics.${row.key}`)}
+                    </dt>
+                    <dd className="font-display text-xl font-semibold tabular-nums">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="order-first col-span-2 mx-auto h-48 sm:order-none sm:col-span-1 sm:h-60">
                 <BodyFigure
                   waistCm={body.waistCm}
                   hipCm={body.hipCm}
                   bodyFatPct={body.bodyFatPct}
                 />
               </div>
-              <div className="flex min-w-0 flex-1 flex-col gap-4">
-                {bodyRows.length > 0 ? (
-                  <dl className="grid grid-cols-2 gap-x-6 gap-y-2 text-sm sm:grid-cols-3">
-                    {bodyRows.map((row) => (
-                      <div key={row.key} className="flex flex-col">
-                        <dt className="text-ink-subtle">
-                          {tb(`metrics.${row.key}`)}
-                        </dt>
-                        <dd className="font-semibold tabular-nums">
-                          {row.value}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                ) : null}
-                <BodyMetricsForm />
-              </div>
+              <dl className="flex flex-col gap-3">
+                {bodyRows.slice(3, 6).map((row) => (
+                  <div
+                    key={row.key}
+                    className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
+                  >
+                    <dt className="text-xs font-medium text-ink-subtle">
+                      {tb(`metrics.${row.key}`)}
+                    </dt>
+                    <dd className="font-display text-xl font-semibold tabular-nums">
+                      {row.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
+            {leanKg != null && fatKg != null ? (
+              <div className="flex flex-col gap-1.5">
+                <div className="flex h-2 w-full overflow-hidden rounded-full">
+                  <div
+                    className="bg-primary"
+                    style={{ width: `${(leanKg / (leanKg + fatKg)) * 100}%` }}
+                  />
+                  <div className="flex-1 bg-warning" />
+                </div>
+                <div className="flex justify-between text-xs text-ink-subtle">
+                  <span>
+                    <span className="mr-1 inline-block size-2 rounded-full bg-primary align-middle" />
+                    {tb("metrics.leanKg")} · {leanKg.toLocaleString("es")} kg
+                  </span>
+                  <span>
+                    {tb("metrics.fatKg")} · {fatKg.toLocaleString("es")} kg
+                    <span className="ml-1 inline-block size-2 rounded-full bg-warning align-middle" />
+                  </span>
+                </div>
+              </div>
+            ) : null}
+            <BodyMetricsForm />
           </section>
 
           {upcomingAppointments.length > 0 ? (

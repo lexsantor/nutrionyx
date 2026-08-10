@@ -11,19 +11,21 @@ import { Reveal } from "./reveal";
 export const dynamic = "force-dynamic";
 
 /*
-THESIS: the landing IS an annotated patient record - the product proves
-itself with its own surfaces; refuses the feature-grid SaaS scroll.
-OWN-WORLD: NORTE tokens elevated - soft structuralism (airy light ground,
-massive Syne display, diffused ambient shadows), double-bezel clinical
-cards stacked with physical z-axis tilt, one primary accent.
-STORY: a nutritionist reads a familiar clinical record, recognizes their
-daily work, and creates their consulta.
-FIRST VIEWPORT: editorial split - massive type + CTAs left, tilted record
-card stack right; floating pill nav detached from the top.
-FORM: candidate 5 of 7 (record-as-landing), seed 16a1382a; elevation pass
-with high-end-visual-design + redesign audit.
-FINISH: gates + detector + prod check; DESIGN.md not owed (established world).
+THESIS: an AI-SEO answer page whose proof block IS the product - question
+H1 answered in-line, 40-60 word answer above the fold, question
+sub-headings, honest comparison, FAQ with schema; the annotated synthetic
+record survives as the proof section (compacted to 8 varied beats).
+OWN-WORLD: NORTE tokens - soft structuralism, double-bezel clinical cards,
+one primary accent, Syne display.
+STORY: a nutritionist recognizes their problem in their own words, reads a
+real record, checks the FAQ, creates their consulta.
+FIRST VIEWPORT: question H1 + short answer highlight, byline + last-updated
+stamp, answer block, dual CTA; floating pill nav.
+FORM: record-as-proof inside the 14-block answer-page pattern (owner brief).
+FINISH: gates + detector + prod check; no fabricated claims anywhere.
 */
+
+const LAST_UPDATED_ISO = "2026-08-10";
 
 const SAMPLE_WEIGHTS = [88, 87.6, 87.1, 86.7, 86.2].map((kg, i) => ({
   recordedAt: new Date(Date.UTC(2026, 6, 8 + i * 7, 10)),
@@ -32,7 +34,6 @@ const SAMPLE_WEIGHTS = [88, 87.6, 87.1, 86.7, 86.2].map((kg, i) => ({
 
 const EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
 
-/** Double-bezel clinical card: outer machined shell, concentric inner core. */
 function Bezel({
   children,
   tilt = "",
@@ -53,12 +54,11 @@ function Bezel({
   );
 }
 
-/** Primary CTA with the nested trailing-icon island. */
 function CtaButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98] active:duration-150`}
+      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary no-underline shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98] active:duration-150`}
     >
       {children}
       <span
@@ -126,6 +126,12 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
   );
 }
 
+const SampleChip = ({ label }: { label: string }) => (
+  <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">
+    {label}
+  </span>
+);
+
 export default async function Home() {
   const t = await getTranslations("home");
   const tSlots = await getTranslations("diet.slots");
@@ -137,9 +143,61 @@ export default async function Home() {
   }
 
   const r = (key: string) => t(`record.${key}`);
+  const faqKeys = [
+    "gdpr",
+    "patient",
+    "onboarding",
+    "glp1",
+    "card",
+    "export",
+  ] as const;
+  const comparisonKeys = [
+    "adherence",
+    "diet",
+    "history",
+    "privacy",
+    "reminders",
+    "place",
+  ] as const;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        name: "Nutrionyx",
+        url: "https://nutrionyx.vercel.app",
+      },
+      {
+        "@type": "SoftwareApplication",
+        name: "Nutrionyx",
+        applicationCategory: "HealthApplication",
+        operatingSystem: "Web",
+        inLanguage: "es",
+        dateModified: LAST_UPDATED_ISO,
+        description: t("hero.answer"),
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqKeys.map((key) => ({
+          "@type": "Question",
+          name: t(`faq.items.${key}.q`),
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: t(`faq.items.${key}.a`),
+          },
+        })),
+      },
+    ],
+  };
 
   return (
     <main className="relative flex min-h-[100dvh] flex-col overflow-x-clip">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
       {/* Film grain, fixed and inert */}
       <div
         aria-hidden="true"
@@ -166,86 +224,95 @@ export default async function Home() {
           </ButtonLink>
           <Link
             href="/auth/sign-up"
-            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98] active:duration-150`}
+            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98] active:duration-150`}
           >
             {t("hero.cta.signUp")}
           </Link>
         </div>
       </nav>
 
-      {/* Hero: editorial split */}
-      <div className="relative px-6 pb-24 pt-36 sm:pt-44 lg:pb-32">
+      {/* Blocks 1-5: question H1, byline, subheadline, answer, CTA */}
+      <header className="relative px-6 pb-16 pt-36 sm:pt-44">
         <div className="pointer-events-none absolute -inset-x-40 -top-64 h-[42rem] bg-[radial-gradient(ellipse_at_top,var(--color-primary-subtle)_0%,transparent_65%)]" />
-        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
-          <div className="flex flex-col items-start gap-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
-              <span className="size-1.5 rounded-full bg-success" />
-              {t("badge")}
-            </div>
-            <h1 className="text-balance font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl xl:text-7xl">
-              {t("hero.title")}{" "}
-              <span className="text-primary">{t("hero.highlight")}</span>
-            </h1>
-            <p className="max-w-[52ch] text-pretty text-lg leading-relaxed text-ink-subtle">
-              {t("hero.description")}
-            </p>
-            <div className="flex flex-wrap items-center gap-4">
-              <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
-              <ButtonLink href="/auth/sign-in" variant="secondary" className="h-[52px] px-7">
-                {t("hero.cta.signIn")}
-              </ButtonLink>
-            </div>
+        <div className="relative mx-auto flex w-full max-w-6xl flex-col items-start gap-7">
+          <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
+            <span className="size-1.5 rounded-full bg-success" />
+            {t("badge")}
           </div>
+          <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
+            {t("hero.title")}{" "}
+            <span className="text-primary">{t("hero.highlight")}</span>
+          </h1>
+          <p className="text-lg font-medium">{t("hero.subtitle")}</p>
+          <p className="max-w-[68ch] text-pretty leading-relaxed text-ink-subtle">
+            {t("hero.answer")}
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
+            <ButtonLink
+              href="/auth/sign-in"
+              variant="secondary"
+              className="h-[52px] px-7"
+            >
+              {t("hero.cta.signIn")}
+            </ButtonLink>
+          </div>
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-tertiary">
+            <span>{t("hero.byline")}</span>
+            <span aria-hidden="true">·</span>
+            <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
+          </p>
+        </div>
+      </header>
 
-          {/* Tilted record teaser stack (z-axis cascade) */}
-          <div className="relative mx-auto hidden w-full max-w-md lg:block" aria-hidden="true">
-            <div className={`absolute -left-6 top-10 w-64 -rotate-6 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_32px_70px_-30px_rgba(15,23,42,0.35)] transition-transform duration-500 hover:duration-700 ${EASE} hover:-rotate-3`}>
-              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
-                <p className="text-xs font-medium text-ink-subtle">
-                  {r("today.title")}
-                </p>
-                <p className="mt-1 text-sm font-semibold">{r("today.plan")}</p>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-3">
-                  <div className="h-full w-3/4 rounded-full bg-primary" />
+      {/* Block 7: the problem, in their words */}
+      <section className="px-6 py-16">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+          <h2 className="max-w-[30ch] text-balance font-display text-3xl font-semibold tracking-tight">
+            {t("problem.heading")}
+          </h2>
+          <div className="grid gap-4 md:grid-cols-3">
+            {(["whatsapp", "excel", "pdf"] as const).map((key, i) => (
+              <Reveal key={key} delay={i * 60}>
+                <div className="flex h-full flex-col rounded-xl border border-hairline bg-surface-1 p-5 shadow-el-sm">
+                  <p className="text-sm leading-relaxed">
+                    {t(`problem.items.${key}`)}
+                  </p>
                 </div>
-              </div>
-            </div>
-            <div className={`relative z-10 ml-16 w-72 rotate-2 rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_40px_90px_-32px_rgba(15,23,42,0.4)] transition-transform duration-500 hover:duration-700 ${EASE} hover:rotate-0`}>
-              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-semibold">{r("patientName")}</p>
-                  <span className="rounded-full bg-success-soft px-2 py-0.5 text-[10px] font-medium text-success">
-                    {r("active")}
-                  </span>
-                </div>
-                <p className="mt-0.5 text-xs text-ink-subtle">
-                  {r("report.weightValue")}
-                </p>
-                <div className="mt-3">
-                  <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
-                </div>
-              </div>
-            </div>
-            <div className={`absolute -bottom-8 right-0 w-56 rotate-[5deg] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_28px_60px_-28px_rgba(15,23,42,0.35)] transition-transform duration-500 hover:duration-700 ${EASE} hover:rotate-2`}>
-              <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
-                <p className="text-xs font-medium text-ink-subtle">
-                  {r("glp1.title")}
-                </p>
-                <p className="mt-1 text-sm font-semibold">{r("glp1.next")}</p>
-              </div>
-            </div>
+              </Reveal>
+            ))}
+          </div>
+          <p className="max-w-[68ch] leading-relaxed text-ink-subtle">
+            {t("problem.cost")}
+          </p>
+        </div>
+      </section>
+
+      {/* Block 9: the solution, closing on one next step */}
+      <section className="border-y border-hairline bg-surface-1 px-6 py-16">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-5">
+          <h2 className="max-w-[30ch] text-balance font-display text-3xl font-semibold tracking-tight">
+            {t("solution.heading")}
+          </h2>
+          <p className="max-w-[68ch] leading-relaxed text-ink-subtle">
+            {t("solution.text")}
+          </p>
+          <div className="flex flex-wrap items-center gap-4">
+            <p className="text-sm font-medium">{t("solution.next")}</p>
+            <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
           </div>
         </div>
-        <p className="relative mt-20 text-center text-xs uppercase tracking-[0.2em] text-ink-tertiary">
-          <span className="inline-flex items-center gap-1.5">
-            {t("hero.scrollHint")}
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
-          </span>
-        </p>
+      </section>
+
+      {/* Block 11: proof - the annotated record, 8 varied beats */}
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 pt-20">
+        <h2 className="font-display text-3xl font-semibold tracking-tight">
+          {t("proofHeading")}
+        </h2>
+        <p className="max-w-[68ch] text-ink-subtle">{t("proofSub")}</p>
       </div>
 
-      {/* The record */}
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-32 lg:gap-32">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-20 px-6 pb-24 pt-12 lg:gap-24">
         <RecordSection
           tilt="lg:-rotate-1"
           annotation={
@@ -258,19 +325,22 @@ export default async function Home() {
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <h2 className="font-display text-2xl font-semibold tracking-tight">
+              <h3 className="font-display text-2xl font-semibold tracking-tight">
                 {r("patientName")}
-              </h2>
+              </h3>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success">
                 <span className="size-1.5 rounded-full bg-success" />
                 {r("active")}
               </span>
             </div>
-            <span className="rounded-md bg-surface-3 px-2.5 py-0.5 text-xs font-medium text-ink-subtle">
-              {t("sample")}
-            </span>
+            <SampleChip label={t("sample")} />
           </div>
           <p className="mt-1 text-sm text-ink-subtle">{r("email")}</p>
+          <dl className="mt-4 flex flex-col">
+            <Row label={r("clinical.bmi")} value={r("clinical.bmiValue")} />
+            <Row label={r("clinical.target")} value="78 kg" />
+            <Row label={r("clinical.goals")} value={r("clinical.goalsValue")} />
+          </dl>
         </RecordSection>
 
         <RecordSection
@@ -279,42 +349,15 @@ export default async function Home() {
           annotation={
             <Annotation
               index={2}
-              title={r("clinical.annotTitle")}
-              text={r("clinical.annotText")}
-            />
-          }
-        >
-          <div className="mb-2 flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold">{r("clinical.title")}</h2>
-            <span className="text-sm text-ink-subtle">
-              {r("clinical.completed")}
-            </span>
-          </div>
-          <dl className="flex flex-col">
-            <Row label={r("clinical.bmi")} value={r("clinical.bmiValue")} />
-            <Row label={r("clinical.target")} value="78 kg" />
-            <Row
-              label={r("clinical.activity")}
-              value={r("clinical.activityValue")}
-            />
-            <Row label={r("clinical.goals")} value={r("clinical.goalsValue")} />
-          </dl>
-        </RecordSection>
-
-        <RecordSection
-          tilt="lg:-rotate-[0.7deg]"
-          annotation={
-            <Annotation
-              index={3}
               title={r("report.annotTitle")}
               text={r("report.annotText")}
             />
           }
         >
           <div className="mb-2 flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold">{r("report.title")}</h2>
+            <h3 className="text-lg font-semibold">{r("report.title")}</h3>
             <span className="flex items-center gap-2 text-sm text-ink-subtle">
-              {r("report.window")} <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
+              {r("report.window")} <SampleChip label={t("sample")} />
             </span>
           </div>
           <dl className="flex flex-col">
@@ -328,26 +371,34 @@ export default async function Home() {
               label={r("report.training")}
               value={r("report.trainingValue")}
             />
-            <Row
-              label={r("report.activity")}
-              value={r("report.activityValue")}
-            />
           </dl>
         </RecordSection>
 
+        {/* Full-width beat: the chart breaks the column rhythm */}
+        <Reveal>
+          <Bezel tilt="lg:rotate-[0.4deg] hover:rotate-0">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h3 className="text-lg font-semibold">
+                {r("weightChart.title")}
+              </h3>
+              <SampleChip label={t("sample")} />
+            </div>
+            <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
+          </Bezel>
+        </Reveal>
+
         <RecordSection
-          flip
-          tilt="lg:rotate-[0.8deg]"
+          tilt="lg:-rotate-[0.8deg]"
           annotation={
             <Annotation
-              index={4}
+              index={3}
               title={r("today.annotTitle")}
               text={r("today.annotText")}
             />
           }
         >
           <div className="flex flex-col gap-0.5">
-            <h2 className="text-lg font-semibold">{r("today.title")}</h2>
+            <h3 className="text-lg font-semibold">{r("today.title")}</h3>
             <p className="text-sm text-ink-subtle">{r("today.plan")}</p>
           </div>
           <div className="mt-4 flex items-center justify-between gap-4">
@@ -374,80 +425,52 @@ export default async function Home() {
         </RecordSection>
 
         <RecordSection
-          tilt="lg:-rotate-1"
+          flip
+          tilt="lg:rotate-[0.7deg]"
+          annotation={
+            <Annotation
+              index={4}
+              title={r("planCare.annotTitle")}
+              text={r("planCare.annotText")}
+            />
+          }
+        >
+          <div className="grid gap-6 sm:grid-cols-2">
+            <div className="flex flex-col gap-2.5">
+              <h3 className="text-lg font-semibold">{r("diet.title")}</h3>
+              {(["LUNCH", "DINNER"] as const).map((slot) => (
+                <div key={slot} className="flex flex-col gap-0.5">
+                  <span className="text-xs font-medium text-ink-subtle">
+                    {tSlots(slot)}
+                  </span>
+                  <span className="text-sm leading-relaxed">
+                    {r(`diet.meals.${slot}`)}
+                  </span>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-col gap-2.5">
+              <h3 className="text-lg font-semibold">{r("training.title")}</h3>
+              <p className="text-sm leading-relaxed">{r("training.content")}</p>
+              <p className="inline-flex w-fit items-center gap-2 rounded-full bg-success-soft px-4 py-2 text-sm font-medium text-success">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                {r("training.done")}
+              </p>
+            </div>
+          </div>
+        </RecordSection>
+
+        <RecordSection
+          tilt="lg:-rotate-[0.6deg]"
           annotation={
             <Annotation
               index={5}
-              title={r("weightChart.annotTitle")}
-              text={r("weightChart.annotText")}
-            />
-          }
-        >
-          <div className="mb-4 flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold">{r("weightChart.title")}</h2>
-            <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
-          </div>
-          <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
-        </RecordSection>
-
-        <RecordSection
-          flip
-          tilt="lg:rotate-[0.6deg]"
-          annotation={
-            <Annotation
-              index={6}
-              title={r("diet.annotTitle")}
-              text={r("diet.annotText")}
-            />
-          }
-        >
-          <h2 className="mb-3 text-lg font-semibold">{r("diet.title")}</h2>
-          <dl className="flex flex-col gap-2.5">
-            {(["BREAKFAST", "LUNCH", "SNACK", "DINNER"] as const).map(
-              (slot) => (
-                <div key={slot} className="flex flex-col gap-0.5">
-                  <dt className="text-xs font-medium text-ink-subtle">
-                    {tSlots(slot)}
-                  </dt>
-                  <dd className="text-sm leading-relaxed">
-                    {r(`diet.meals.${slot}`)}
-                  </dd>
-                </div>
-              ),
-            )}
-          </dl>
-        </RecordSection>
-
-        <RecordSection
-          tilt="lg:-rotate-[0.8deg]"
-          annotation={
-            <Annotation
-              index={7}
-              title={r("training.annotTitle")}
-              text={r("training.annotText")}
-            />
-          }
-        >
-          <h2 className="mb-2 text-lg font-semibold">{r("training.title")}</h2>
-          <p className="text-sm leading-relaxed">{r("training.content")}</p>
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-success-soft px-4 py-2 text-sm font-medium text-success">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-            {r("training.done")}
-          </p>
-        </RecordSection>
-
-        <RecordSection
-          flip
-          tilt="lg:rotate-1"
-          annotation={
-            <Annotation
-              index={8}
               title={r("glp1.annotTitle")}
               text={r("glp1.annotText")}
             />
           }
         >
-          <h2 className="mb-2 text-lg font-semibold">{r("glp1.title")}</h2>
+          <h3 className="mb-2 text-lg font-semibold">{r("glp1.title")}</h3>
           <p className="font-display text-xl font-semibold">{r("glp1.next")}</p>
           <p className="mt-1 text-sm text-ink-subtle">{r("glp1.drug")}</p>
           <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-dashed border-primary px-4 py-1.5 text-sm">
@@ -456,18 +479,19 @@ export default async function Home() {
         </RecordSection>
 
         <RecordSection
-          tilt="lg:-rotate-[0.6deg]"
+          flip
+          tilt="lg:rotate-[0.8deg]"
           annotation={
             <Annotation
-              index={9}
+              index={6}
               title={r("comms.annotTitle")}
               text={r("comms.annotText")}
             />
           }
         >
           <div className="mb-3 flex items-center justify-between gap-4">
-            <h2 className="text-lg font-semibold">{r("comms.title")}</h2>
-            <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">{t("sample")}</span>
+            <h3 className="text-lg font-semibold">{r("comms.title")}</h3>
+            <SampleChip label={t("sample")} />
           </div>
           <div className="flex flex-col gap-2.5">
             <div className="max-w-[85%] self-start rounded-2xl rounded-bl-md bg-surface-2 px-3.5 py-2 text-sm leading-relaxed">
@@ -484,24 +508,23 @@ export default async function Home() {
         </RecordSection>
 
         <RecordSection
-          flip
-          tilt="lg:rotate-[0.7deg]"
+          tilt="lg:-rotate-[0.7deg]"
           annotation={
             <Annotation
-              index={10}
+              index={7}
               title={r("privacy.annotTitle")}
               text={r("privacy.annotText")}
             />
           }
         >
-          <h2 className="mb-3 text-lg font-semibold">{r("privacy.title")}</h2>
+          <h3 className="mb-3 text-lg font-semibold">{r("privacy.title")}</h3>
           <ul className="flex flex-col gap-2.5">
             {(["isolation", "blind", "rights", "eu"] as const).map((key) => (
               <li
                 key={key}
                 className="flex items-start gap-2.5 text-sm leading-relaxed"
               >
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="mt-0.5 shrink-0 text-success"><path d="M20 6 9 17l-5-5"/></svg>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="mt-0.5 shrink-0 text-ink-subtle"><path d="M20 6 9 17l-5-5"/></svg>
                 {r(`privacy.items.${key}`)}
               </li>
             ))}
@@ -509,8 +532,69 @@ export default async function Home() {
         </RecordSection>
       </div>
 
-      {/* Closing */}
-      <div className="border-t border-hairline bg-surface-1 px-6 py-32">
+      {/* Block 12: honest comparison against the current method */}
+      <section className="border-t border-hairline bg-surface-1 px-6 py-16">
+        <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
+          <h2 className="max-w-[30ch] text-balance font-display text-3xl font-semibold tracking-tight">
+            {t("comparison.heading")}
+          </h2>
+          <div className="w-full overflow-x-auto rounded-xl border border-hairline">
+            <table className="w-full text-left text-sm">
+              <thead>
+                <tr className="border-b border-hairline bg-surface-2 text-ink-subtle">
+                  <th scope="col" className="px-4 py-3 font-medium" />
+                  <th scope="col" className="px-4 py-3 font-medium">
+                    {t("comparison.current")}
+                  </th>
+                  <th scope="col" className="px-4 py-3 font-semibold text-ink">
+                    {t("comparison.product")}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {comparisonKeys.map((key) => (
+                  <tr
+                    key={key}
+                    className="border-b border-hairline last:border-0"
+                  >
+                    <th scope="row" className="px-4 py-3 font-medium text-ink">
+                      {t(`comparison.rows.${key}.label`)}
+                    </th>
+                    <td className="px-4 py-3 text-ink-subtle">
+                      {t(`comparison.rows.${key}.current`)}
+                    </td>
+                    <td className="px-4 py-3 font-medium">
+                      {t(`comparison.rows.${key}.product`)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Block 8: FAQ (schema in head via JSON-LD) */}
+      <section className="px-6 py-16">
+        <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-8 lg:grid-cols-2">
+          <h2 className="max-w-[30ch] text-balance font-display text-3xl font-semibold tracking-tight lg:col-span-2">
+            {t("faq.heading")}
+          </h2>
+          {faqKeys.map((key) => (
+            <div key={key} className="flex flex-col gap-2">
+              <h3 className="font-display text-lg font-semibold tracking-tight">
+                {t(`faq.items.${key}.q`)}
+              </h3>
+              <p className="max-w-[62ch] text-sm leading-relaxed text-ink-subtle">
+                {t(`faq.items.${key}.a`)}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Block 13: closing CTA in plain words */}
+      <div className="border-t border-hairline bg-surface-1 px-6 py-24">
         <Reveal className="mx-auto flex w-full max-w-6xl flex-col items-center gap-6 text-center">
           <h2 className="text-balance font-display text-4xl font-semibold tracking-tight sm:text-5xl">
             {t("closing.title")}
@@ -520,15 +604,22 @@ export default async function Home() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <CtaButton href="/auth/sign-up">{t("closing.cta")}</CtaButton>
-            <ButtonLink href="/auth/sign-in" variant="secondary" className="h-[52px] px-7">
+            <ButtonLink
+              href="/auth/sign-in"
+              variant="secondary"
+              className="h-[52px] px-7"
+            >
               {t("closing.secondary")}
             </ButtonLink>
           </div>
+          <p className="text-xs text-ink-tertiary">{t("closing.noCard")}</p>
         </Reveal>
       </div>
 
-      <footer className="px-6 py-10 text-center text-xs text-ink-tertiary">
-        &copy; {new Date().getFullYear()} Nutrionyx
+      {/* Block 14: visible last-updated stamp */}
+      <footer className="flex flex-col items-center gap-1 px-6 py-10 text-center text-xs text-ink-tertiary">
+        <span>&copy; {new Date().getFullYear()} Nutrionyx</span>
+        <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
       </footer>
     </main>
   );
