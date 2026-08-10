@@ -12,10 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
-    // Generated Prisma client (gitignored) and the vendored dashboard
-    // templates (gitignored, not part of the build - CI never sees them).
+    // Generated Prisma client (gitignored).
     "src/generated/**",
-    "dashboards/**",
   ]),
 ]);
 

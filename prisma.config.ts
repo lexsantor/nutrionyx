@@ -1,10 +1,14 @@
-import { config as loadEnv } from "dotenv";
 import { defineConfig } from "prisma/config";
 
 // Next.js convention keeps secrets in .env.local; load it first
-// (dotenv never overwrites already-set variables), then .env.
-loadEnv({ path: ".env.local" });
-loadEnv();
+// (loadEnvFile never overwrites already-set variables), then .env.
+for (const file of [".env.local", ".env"]) {
+  try {
+    process.loadEnvFile(file);
+  } catch {
+    // file absent (e.g. CI) - fine
+  }
+}
 
 export default defineConfig({
   schema: "prisma/schema.prisma",

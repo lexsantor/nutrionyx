@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { NextIntlClientProvider } from "next-intl";
-import { GeistMono } from "geist/font/mono";
 import "@fontsource-variable/syne";
 import "@fontsource-variable/dm-sans";
 import "./globals.css";
@@ -21,7 +20,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${GeistMono.variable} h-full antialiased`}
+      className="h-full antialiased"
       suppressHydrationWarning
     >
       <head>

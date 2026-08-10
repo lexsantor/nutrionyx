@@ -3,7 +3,6 @@
 import { useActionState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { ASSESSMENT_STEPS } from "@/modules/assessment/definition";
 import { Button } from "@/components/ui/button";
 import { completeAction, type WizardFormState } from "./actions";
 
@@ -76,5 +75,3 @@ export function Review({
     </main>
   );
 }
-
-export const REVIEW_STEP_COUNT = ASSESSMENT_STEPS.length;

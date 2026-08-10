@@ -123,7 +123,6 @@
 
   --font-display: "Syne Variable", "DM Sans Variable", system-ui, sans-serif;
   --font-sans: "DM Sans Variable", system-ui, -apple-system, sans-serif;
-  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
 
   --radius-pill: 9999px;
   --shadow-el-sm: var(--el-sm);

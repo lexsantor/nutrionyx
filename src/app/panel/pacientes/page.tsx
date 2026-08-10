@@ -73,7 +73,7 @@ export default async function PatientsPage() {
                 </tr>
               </thead>
               <tbody>
-                {patients.map((patient, idx) => {
+                {patients.map((patient) => {
                   const assessment = patient.assessments[0] ?? null;
                   const latest = latestWeights.get(patient.id);
                   const latestKg = latest ? Number(latest.value) : null;
