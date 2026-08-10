@@ -23,7 +23,10 @@ import {
   fatMassKg,
   leanMassKg,
   waistHipRatio,
+  zoneStats,
+  BODY_ZONES,
 } from "@/modules/measurement/body";
+import { BodyMapMeasures } from "@/components/body-map-measures";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
@@ -148,6 +151,27 @@ export default async function PatientDetailPage({
   ]);
   const format = await getFormatter();
   const body = await bodyComposition(org.id, patient.id);
+  const allBodyRows = await listMeasurementsSince(org.id, patient.id, new Date(0));
+  const rawZones = zoneStats(allBodyRows);
+  const zonesForMap = Object.fromEntries(
+    BODY_ZONES.flatMap((zone) => {
+      const z = rawZones[zone.key];
+      if (!z) return [];
+      return [
+        [
+          zone.key,
+          {
+            ...z,
+            currentDate: format.dateTime(z.currentDate, { dateStyle: "medium" }),
+            initialDate: format.dateTime(z.initialDate, { dateStyle: "medium" }),
+            previousDate: z.previousDate
+              ? format.dateTime(z.previousDate, { dateStyle: "medium" })
+              : null,
+          },
+        ],
+      ];
+    }),
+  );
   const whRatio =
     body.waistCm != null && body.hipCm != null
       ? waistHipRatio(body.waistCm, body.hipCm)
@@ -565,8 +589,9 @@ export default async function PatientDetailPage({
                 </span>
               ) : null}
             </div>
+            <BodyMapMeasures zones={zonesForMap} />
             {hasBody ? (
-              <dl className="flex flex-col text-sm">
+              <dl className="flex flex-col border-t border-hairline pt-3 text-sm">
                 {body.waistCm != null ? (
                   <Row
                     label={t("body.waist")}

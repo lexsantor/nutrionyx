@@ -16,11 +16,20 @@ export function BodyMetricsForm() {
     FormData
   >(recordBodyMetricsAction, null);
 
-  const fields = ["waistCm", "hipCm", "bodyFatPct"] as const;
+  const fields = [
+    "chestCm",
+    "armCm",
+    "waistCm",
+    "hipCm",
+    "thighCm",
+    "gluteCm",
+    "calfCm",
+    "bodyFatPct",
+  ] as const;
 
   return (
     <form action={formAction} className="flex flex-col gap-3">
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
         {fields.map((name) => (
           <div key={name} className="flex flex-col gap-1.5">
             <label htmlFor={name} className="text-sm font-medium">

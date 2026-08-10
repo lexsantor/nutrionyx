@@ -153,6 +153,11 @@ enum MeasurementKind {
   WAIST_CM
   HIP_CM
   BODY_FAT_PCT
+  CHEST_CM
+  ARM_CM
+  THIGH_CM
+  GLUTE_CM
+  CALF_CM
 }
 
 model Measurement {

@@ -65,8 +65,13 @@ export async function recordWeightAction(
 export type BodyMetricsFormState = { errorKey: string } | { ok: true } | null;
 
 const BODY_FIELDS = [
-  { name: "waistCm", kind: "WAIST_CM", min: 30, max: 300 },
-  { name: "hipCm", kind: "HIP_CM", min: 30, max: 300 },
+  { name: "chestCm", kind: "CHEST_CM", min: 10, max: 250 },
+  { name: "armCm", kind: "ARM_CM", min: 10, max: 250 },
+  { name: "waistCm", kind: "WAIST_CM", min: 10, max: 250 },
+  { name: "hipCm", kind: "HIP_CM", min: 10, max: 250 },
+  { name: "thighCm", kind: "THIGH_CM", min: 10, max: 250 },
+  { name: "gluteCm", kind: "GLUTE_CM", min: 10, max: 250 },
+  { name: "calfCm", kind: "CALF_CM", min: 10, max: 250 },
   { name: "bodyFatPct", kind: "BODY_FAT_PCT", min: 1, max: 75 },
 ] as const;
 

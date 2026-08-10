@@ -825,13 +825,23 @@
     "updatedAt": "Última actualización: {date}",
     "empty": "Registra tus medidas para ver tu composición corporal.",
     "fields": {
+      "chestCm": "Pecho (cm)",
+      "armCm": "Brazo (cm)",
       "waistCm": "Cintura (cm)",
       "hipCm": "Cadera (cm)",
+      "thighCm": "Muslo (cm)",
+      "gluteCm": "Glúteo (cm)",
+      "calfCm": "Gemelo (cm)",
       "bodyFatPct": "Grasa (%)"
     },
     "placeholders": {
+      "chestCm": "117",
+      "armCm": "40",
       "waistCm": "81",
       "hipCm": "90",
+      "thighCm": "72",
+      "gluteCm": "132",
+      "calfCm": "48",
       "bodyFatPct": "23,4"
     },
     "metrics": {
@@ -846,11 +856,32 @@
     "saving": "Guardando…",
     "saved": "Medidas guardadas",
     "errors": {
-      "invalidBodyMetric": "Revisa los valores: cintura/cadera 30-300 cm, grasa 1-75 %.",
+      "invalidBodyMetric": "Revisa los valores: perímetros 10-250 cm, grasa 1-75 %.",
       "emptyBodyMetrics": "Introduce al menos una medida.",
       "generic": "No se ha podido guardar. Inténtalo de nuevo."
     },
-    "exportLink": "Descargar mis datos (JSON)"
+    "exportLink": "Descargar mis datos (JSON)",
+    "zones": {
+      "CHEST_CM": "Pecho",
+      "ARM_CM": "Brazo",
+      "WAIST_CM": "Cintura",
+      "HIP_CM": "Cadera",
+      "THIGH_CM": "Muslo",
+      "GLUTE_CM": "Glúteo",
+      "CALF_CM": "Gemelo"
+    },
+    "map": {
+      "viewLabel": "Vista del cuerpo",
+      "front": "Frontal",
+      "back": "Posterior",
+      "figureLabel": "Silueta con zonas de medición",
+      "noData": "sin datos",
+      "close": "Cerrar detalle",
+      "measuredOn": "medido el {date}",
+      "vsInitial": "vs inicial ({date})",
+      "vsPrevious": "vs anterior",
+      "onePoint": "Solo hay una medición de esta zona. Registra otra para ver la evolución."
+    }
   },
   "erase": {
     "confirmLabel": "Entiendo que esta acción es irreversible y elimina todos los datos clínicos de este paciente.",

@@ -11,6 +11,7 @@ import {
 import { bmiCategory } from "@/modules/assessment/computed";
 import {
   bodyComposition,
+  listMeasurementsSince,
   listWeights,
   proteinOnDay,
 } from "@/modules/measurement/repository";
@@ -18,6 +19,8 @@ import {
   fatMassKg,
   leanMassKg,
   waistHipRatio,
+  zoneStats,
+  BODY_ZONES,
 } from "@/modules/measurement/body";
 import { getTargets } from "@/modules/targets/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
@@ -32,7 +35,7 @@ import { listDocuments } from "@/modules/documents/repository";
 import { listUpcomingByPatient } from "@/modules/scheduling/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
-import { BodyFigure } from "@/components/body-figure";
+import { BodyMapMeasures } from "@/components/body-map-measures";
 import { ButtonLink } from "@/components/ui/button-link";
 
 export const dynamic = "force-dynamic";
@@ -97,6 +100,35 @@ export default async function PatientHomePage({
       await listUpcomingByPatient(patient.organizationId, patient.id, new Date())
     ).slice(0, 3);
     const body = await bodyComposition(patient.organizationId, patient.id);
+    const allMeasurements = await listMeasurementsSince(
+      patient.organizationId,
+      patient.id,
+      new Date(0),
+    );
+    const rawZones = zoneStats(allMeasurements);
+    const zonesForMap = Object.fromEntries(
+      BODY_ZONES.flatMap((zone) => {
+        const z = rawZones[zone.key];
+        if (!z) return [];
+        return [
+          [
+            zone.key,
+            {
+              ...z,
+              currentDate: format.dateTime(z.currentDate, {
+                dateStyle: "medium",
+              }),
+              initialDate: format.dateTime(z.initialDate, {
+                dateStyle: "medium",
+              }),
+              previousDate: z.previousDate
+                ? format.dateTime(z.previousDate, { dateStyle: "medium" })
+                : null,
+            },
+          ],
+        ];
+      }),
+    );
     const ratio =
       body.waistCm != null && body.hipCm != null
         ? waistHipRatio(body.waistCm, body.hipCm)
@@ -109,14 +141,6 @@ export default async function PatientHomePage({
       body.weightKg != null && body.bodyFatPct != null
         ? leanMassKg(body.weightKg, body.bodyFatPct)
         : null;
-    const bodyRows = [
-      body.waistCm != null ? { key: "waist", value: `${body.waistCm.toLocaleString("es")} cm` } : null,
-      body.hipCm != null ? { key: "hip", value: `${body.hipCm.toLocaleString("es")} cm` } : null,
-      ratio != null ? { key: "ratio", value: ratio.toLocaleString("es") } : null,
-      body.bodyFatPct != null ? { key: "fatPct", value: `${body.bodyFatPct.toLocaleString("es")} %` } : null,
-      fatKg != null ? { key: "fatKg", value: `${fatKg.toLocaleString("es")} kg` } : null,
-      leanKg != null ? { key: "leanKg", value: `${leanKg.toLocaleString("es")} kg` } : null,
-    ].filter((r) => r != null);
     const targets = await getTargets(patient.organizationId, patient.id);
     const proteinToday = targets?.proteinTargetG
       ? await proteinOnDay(patient.organizationId, patient.id, new Date())
@@ -157,10 +181,10 @@ export default async function PatientHomePage({
 
     // Bento pairs: when a row partner is absent, the survivor takes the row.
     const medicationSpan = targets ? "lg:col-span-4" : "lg:col-span-12";
-    const medidasSpan =
+    const citasSpan =
+      patientDocuments.length > 0 ? "lg:col-span-5" : "lg:col-span-12";
+    const docsSpan =
       upcomingAppointments.length > 0 ? "lg:col-span-7" : "lg:col-span-12";
-    const fotosSpan =
-      patientDocuments.length > 0 ? "lg:col-span-7" : "lg:col-span-12";
 
     return (
       <>
@@ -290,7 +314,7 @@ export default async function PatientHomePage({
             </p>
           </section>
 
-          <section className={`${TILE} ${medidasSpan}`}>
+          <section className={`${TILE} lg:col-span-12`}>
             <div className="flex flex-col gap-0.5">
               <h2 className="text-lg font-semibold">{tb("title")}</h2>
               {body.updatedAt ? (
@@ -305,71 +329,66 @@ export default async function PatientHomePage({
                 <p className="text-sm text-ink-subtle">{tb("empty")}</p>
               )}
             </div>
-            <div className="grid grid-cols-2 items-center gap-4 sm:grid-cols-[1fr_auto_1fr] sm:gap-6">
-              <dl className="flex flex-col gap-3">
-                {bodyRows.slice(0, 3).map((row) => (
-                  <div
-                    key={row.key}
-                    className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
-                  >
-                    <dt className="text-xs font-medium text-ink-subtle">
-                      {tb(`metrics.${row.key}`)}
-                    </dt>
-                    <dd className="font-display text-xl font-semibold tabular-nums">
-                      {row.value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-              <div className="order-first col-span-2 mx-auto h-48 sm:order-none sm:col-span-1 sm:h-60">
-                <BodyFigure
-                  waistCm={body.waistCm}
-                  hipCm={body.hipCm}
-                  bodyFatPct={body.bodyFatPct}
-                />
+            <BodyMapMeasures zones={zonesForMap} />
+
+            <div className="flex flex-col gap-3 border-t border-hairline pt-4">
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                {[
+                  body.bodyFatPct != null
+                    ? { key: "fatPct", value: `${body.bodyFatPct.toLocaleString("es")} %` }
+                    : null,
+                  ratio != null
+                    ? { key: "ratio", value: ratio.toLocaleString("es") }
+                    : null,
+                  fatKg != null
+                    ? { key: "fatKg", value: `${fatKg.toLocaleString("es")} kg` }
+                    : null,
+                  leanKg != null
+                    ? { key: "leanKg", value: `${leanKg.toLocaleString("es")} kg` }
+                    : null,
+                ]
+                  .filter((x) => x != null)
+                  .map((row) => (
+                    <div
+                      key={row.key}
+                      className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
+                    >
+                      <p className="text-xs font-medium text-ink-subtle">
+                        {tb(`metrics.${row.key}`)}
+                      </p>
+                      <p className="font-display text-xl font-semibold tabular-nums">
+                        {row.value}
+                      </p>
+                    </div>
+                  ))}
               </div>
-              <dl className="flex flex-col gap-3">
-                {bodyRows.slice(3, 6).map((row) => (
-                  <div
-                    key={row.key}
-                    className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
-                  >
-                    <dt className="text-xs font-medium text-ink-subtle">
-                      {tb(`metrics.${row.key}`)}
-                    </dt>
-                    <dd className="font-display text-xl font-semibold tabular-nums">
-                      {row.value}
-                    </dd>
+              {leanKg != null && fatKg != null ? (
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex h-2 w-full overflow-hidden rounded-full">
+                    <div
+                      className="bg-primary"
+                      style={{ width: `${(leanKg / (leanKg + fatKg)) * 100}%` }}
+                    />
+                    <div className="flex-1 bg-warning" />
                   </div>
-                ))}
-              </dl>
+                  <div className="flex justify-between text-xs text-ink-subtle">
+                    <span>
+                      <span className="mr-1 inline-block size-2 rounded-full bg-primary align-middle" />
+                      {tb("metrics.leanKg")} · {leanKg.toLocaleString("es")} kg
+                    </span>
+                    <span>
+                      {tb("metrics.fatKg")} · {fatKg.toLocaleString("es")} kg
+                      <span className="ml-1 inline-block size-2 rounded-full bg-warning align-middle" />
+                    </span>
+                  </div>
+                </div>
+              ) : null}
             </div>
-            {leanKg != null && fatKg != null ? (
-              <div className="flex flex-col gap-1.5">
-                <div className="flex h-2 w-full overflow-hidden rounded-full">
-                  <div
-                    className="bg-primary"
-                    style={{ width: `${(leanKg / (leanKg + fatKg)) * 100}%` }}
-                  />
-                  <div className="flex-1 bg-warning" />
-                </div>
-                <div className="flex justify-between text-xs text-ink-subtle">
-                  <span>
-                    <span className="mr-1 inline-block size-2 rounded-full bg-primary align-middle" />
-                    {tb("metrics.leanKg")} · {leanKg.toLocaleString("es")} kg
-                  </span>
-                  <span>
-                    {tb("metrics.fatKg")} · {fatKg.toLocaleString("es")} kg
-                    <span className="ml-1 inline-block size-2 rounded-full bg-warning align-middle" />
-                  </span>
-                </div>
-              </div>
-            ) : null}
             <BodyMetricsForm />
           </section>
 
           {upcomingAppointments.length > 0 ? (
-            <section className={`${TILE} lg:col-span-5`}>
+            <section className={`${TILE} ${citasSpan}`}>
               <h2 className="text-lg font-semibold">
                 {ta("patientCardTitle")}
               </h2>
@@ -407,7 +426,7 @@ export default async function PatientHomePage({
             </section>
           ) : null}
 
-          <div className={fotosSpan}>
+          <div className="lg:col-span-12">
             <PhotosCard
               photos={(
                 await listPhotos(patient.organizationId, patient.id)
@@ -422,7 +441,7 @@ export default async function PatientHomePage({
           </div>
 
           {patientDocuments.length > 0 ? (
-            <section className={`${TILE} lg:col-span-5`}>
+            <section className={`${TILE} ${docsSpan}`}>
               <h2 className="text-lg font-semibold">{td("title")}</h2>
               <ul className="flex flex-col">
                 {patientDocuments.map((doc) => (

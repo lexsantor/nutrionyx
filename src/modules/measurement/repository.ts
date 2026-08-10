@@ -18,6 +18,11 @@ const EVENT_BY_KIND: Record<MeasurementKind, string> = {
   WAIST_CM: "BodyMetricRecorded",
   HIP_CM: "BodyMetricRecorded",
   BODY_FAT_PCT: "BodyMetricRecorded",
+  CHEST_CM: "BodyMetricRecorded",
+  ARM_CM: "BodyMetricRecorded",
+  THIGH_CM: "BodyMetricRecorded",
+  GLUTE_CM: "BodyMetricRecorded",
+  CALF_CM: "BodyMetricRecorded",
 };
 
 /** Generic append-only metric writer; every kind routes through here. */
