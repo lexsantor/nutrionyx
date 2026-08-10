@@ -129,10 +129,21 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   auth-gated `GET /api/documents/[id]` (admin 403); erasure covers
   documents. Migration `patient_documents` applied.
 
-### Tier 2 remaining
+- **Slice 17 - Diet plan v1** (docs/build/slice-17-plan.md): `DietPlan` as
+  its own aggregate root (resolves the docs/09 reconciliation flag; PRD_03
+  §3.5), 7-day x 5-Spanish-meals Json document, pure normalize/validate in
+  modules/diet/plan.ts (tested); panel editor at
+  `/panel/pacientes/[id]/dieta` + card on detail; patient weekly view at
+  `/mi-espacio/dieta` (today highlighted, empty meals hidden, targets line),
+  nav gains Dieta. Export includes it, erasure deletes it, isolation 18/18.
+  Migration `diet_plans` applied. Owner decisions: no food DB, no recipes,
+  no per-meal macros in v1.
+
+### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
-Then Tier 3: diet plan builder (domain design first) or training log.
+Tier 3 next candidates: diet plan iteration (meal library, macros,
+preferences per adr/0002) or training log (SPORTS_NUTRITIONIST divergence).
 
 ### Migrations (applied on Neon)
 

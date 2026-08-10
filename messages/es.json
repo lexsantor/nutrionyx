@@ -446,6 +446,13 @@
     "documents": {
       "title": "Documentos",
       "subtitle": "PDFs e informes que compartes con el paciente. Los ve y descarga desde su espacio."
+    },
+    "diet": {
+      "title": "Plan de dieta",
+      "updatedAt": "Actualizado el {date}",
+      "empty": "Sin plan de dieta todavía.",
+      "edit": "Editar plan",
+      "create": "Crear plan"
     }
   },
   "auth": {
@@ -592,7 +599,8 @@
   },
   "patientNav": {
     "home": "Inicio",
-    "medication": "Medicación"
+    "medication": "Medicación",
+    "diet": "Dieta"
   },
   "body": {
     "title": "Medidas",
@@ -650,5 +658,44 @@
     "upload": "Subir documento",
     "uploadError": "Documento no válido: PDF, JPG, PNG o WebP de hasta 10 MB.",
     "delete": "Eliminar documento"
+  },
+  "diet": {
+    "days": {
+      "0": "lunes",
+      "1": "martes",
+      "2": "miércoles",
+      "3": "jueves",
+      "4": "viernes",
+      "5": "sábado",
+      "6": "domingo"
+    },
+    "slots": {
+      "BREAKFAST": "Desayuno",
+      "MID_MORNING": "Almuerzo",
+      "LUNCH": "Comida",
+      "SNACK": "Merienda",
+      "DINNER": "Cena"
+    },
+    "editor": {
+      "heading": "Plan de dieta",
+      "hint": "Rellena solo las comidas que uses: las vacías no se muestran al paciente. El plan se guarda entero.",
+      "titleLabel": "Título del plan",
+      "titlePlaceholder": "Plan de definición · agosto",
+      "notesLabel": "Indicaciones generales",
+      "notesPlaceholder": "Bebe 2 L de agua al día…",
+      "save": "Guardar plan",
+      "saving": "Guardando…",
+      "saved": "Plan guardado",
+      "errors": {
+        "invalidContent": "Revisa el contenido: alguna comida supera los 1000 caracteres.",
+        "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      }
+    },
+    "patient": {
+      "heading": "Mi plan de dieta",
+      "updatedAt": "Actualizado el {date}",
+      "today": "Hoy",
+      "empty": "Tu nutricionista aún no ha publicado tu plan de dieta."
+    }
   }
 }

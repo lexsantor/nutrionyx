@@ -1,0 +1,123 @@
+import { getTranslations, getFormatter } from "next-intl/server";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth/server";
+import { findPatientByAuthUserId } from "@/modules/patient/repository";
+import { getDietPlan } from "@/modules/diet/repository";
+import { getTargets } from "@/modules/targets/repository";
+import {
+  MEAL_SLOTS,
+  isEmptyPlan,
+  normalizeContent,
+} from "@/modules/diet/plan";
+import { Topbar } from "@/components/topbar";
+import { PatientNav } from "../patient-nav";
+
+export const dynamic = "force-dynamic";
+
+export default async function PatientDietPage() {
+  const t = await getTranslations("diet");
+  const tt = await getTranslations("targets.today");
+  const format = await getFormatter();
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) {
+    redirect("/auth/sign-in");
+  }
+  const patient = await findPatientByAuthUserId(session.user.id);
+  if (!patient) {
+    redirect("/");
+  }
+
+  const plan = await getDietPlan(patient.organizationId, patient.id);
+  const content = plan ? normalizeContent(plan.content) : null;
+  const hasPlan = plan != null && content != null && !isEmptyPlan(content);
+
+  const targets = await getTargets(patient.organizationId, patient.id);
+  const planParts = targets
+    ? [
+        targets.kcalTarget != null
+          ? tt("plan.kcal", { kcal: targets.kcalTarget })
+          : null,
+        targets.proteinTargetG != null
+          ? tt("plan.protein", { grams: targets.proteinTargetG })
+          : null,
+      ].filter(Boolean)
+    : [];
+
+  // Monday-first index for "today".
+  const todayIndex = (new Date().getDay() + 6) % 7;
+
+  return (
+    <>
+      <Topbar nav={<PatientNav />} />
+      <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold">
+            {plan?.title || t("patient.heading")}
+          </h1>
+          {plan ? (
+            <p className="text-sm text-ink-subtle">
+              {t("patient.updatedAt", {
+                date: format.dateTime(plan.updatedAt, { dateStyle: "long" }),
+              })}
+              {planParts.length > 0 ? ` · ${planParts.join(" · ")}` : ""}
+            </p>
+          ) : null}
+        </div>
+
+        {plan?.notes ? (
+          <p className="rounded-xl border border-hairline bg-surface-1 p-4 text-sm leading-relaxed">
+            {plan.notes}
+          </p>
+        ) : null}
+
+        {hasPlan ? (
+          <div className="flex flex-col gap-4">
+            {content.days.map((day, dayIndex) => {
+              const meals = MEAL_SLOTS.filter((slot) => day[slot]);
+              if (meals.length === 0) return null;
+              const isToday = dayIndex === todayIndex;
+              return (
+                <section
+                  key={dayIndex}
+                  className={`flex flex-col gap-3 rounded-xl border p-5 ${
+                    isToday
+                      ? "border-primary bg-surface-1 shadow-el-sm"
+                      : "border-hairline bg-surface-1"
+                  }`}
+                >
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-base font-semibold capitalize">
+                      {t(`days.${dayIndex}`)}
+                    </h2>
+                    {isToday ? (
+                      <span className="rounded-full bg-surface-3 px-2 py-0.5 text-xs font-medium">
+                        {t("patient.today")}
+                      </span>
+                    ) : null}
+                  </div>
+                  <dl className="flex flex-col gap-2.5">
+                    {meals.map((slot) => (
+                      <div key={slot} className="flex flex-col gap-0.5">
+                        <dt className="text-xs font-medium text-ink-subtle">
+                          {t(`slots.${slot}`)}
+                        </dt>
+                        <dd className="whitespace-pre-wrap text-sm leading-relaxed">
+                          {day[slot]}
+                        </dd>
+                      </div>
+                    ))}
+                  </dl>
+                </section>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="rounded-xl border border-hairline bg-surface-1 p-6 text-sm text-ink-subtle">
+            {t("patient.empty")}
+          </p>
+        )}
+      </main>
+    </>
+  );
+}

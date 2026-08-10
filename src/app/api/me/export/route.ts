@@ -20,16 +20,18 @@ export async function GET() {
   }
 
   const where = { organizationId: patient.organizationId, patientId: patient.id };
-  const [assessments, measurements, plan, doses, targets] = await Promise.all([
-    prisma.assessment.findMany({
-      where,
-      orderBy: { version: "asc" },
-    }),
-    prisma.measurement.findMany({ where, orderBy: { recordedAt: "asc" } }),
-    prisma.medicationPlan.findFirst({ where }),
-    prisma.medicationDose.findMany({ where, orderBy: { takenAt: "asc" } }),
-    prisma.patientTarget.findFirst({ where }),
-  ]);
+  const [assessments, measurements, plan, doses, targets, dietPlan] =
+    await Promise.all([
+      prisma.assessment.findMany({
+        where,
+        orderBy: { version: "asc" },
+      }),
+      prisma.measurement.findMany({ where, orderBy: { recordedAt: "asc" } }),
+      prisma.medicationPlan.findFirst({ where }),
+      prisma.medicationDose.findMany({ where, orderBy: { takenAt: "asc" } }),
+      prisma.patientTarget.findFirst({ where }),
+      prisma.dietPlan.findFirst({ where }),
+    ]);
 
   const data = {
     exportedAt: new Date().toISOString(),
@@ -53,6 +55,7 @@ export async function GET() {
       takenAt: d.takenAt,
     })),
     targets,
+    dietPlan,
   };
 
   return new Response(JSON.stringify(data, null, 2), {

@@ -66,6 +66,7 @@ model Patient {
   notes           PatientNote[]
   photos          PatientPhoto[]
   documents       PatientDocument[]
+  dietPlan        DietPlan?
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -178,6 +179,26 @@ model PatientPhoto {
 
   @@index([organizationId, patientId, createdAt])
   @@map("patient_photos")
+}
+
+// Diet Plan aggregate root (PRD_03 §3.5; docs/build/slice-17-plan.md -
+// resolves the docs/09 reconciliation flag as its own root). One editable
+// plan per patient; `content` is the whole 7-day x 5-meal document (always
+// read/written together). Edit history via DietPlanSaved events.
+model DietPlan {
+  id                  String   @id @default(cuid())
+  organizationId      String
+  patientId           String   @unique
+  patient             Patient  @relation(fields: [patientId], references: [id])
+  title               String?
+  notes               String?
+  content             Json
+  updatedByAuthUserId String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@index([organizationId])
+  @@map("diet_plans")
 }
 
 // Patient documents (docs/build/slice-16-plan.md): PDFs/reports the

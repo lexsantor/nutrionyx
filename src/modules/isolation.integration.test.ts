@@ -47,6 +47,8 @@ import {
   addDocument,
   listDocuments,
 } from "@/modules/documents/repository";
+import { getDietPlan, upsertDietPlan } from "@/modules/diet/repository";
+import { emptyContent } from "@/modules/diet/plan";
 import {
   listMeasurementsSince,
   proteinOnDay,
@@ -124,6 +126,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.patientDocument.deleteMany({
         where: { organizationId: org },
       });
+      await prisma.dietPlan.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -355,6 +358,21 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await listDocuments(orgA, bPatientId)).toEqual([]);
     expect((await listDocuments(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes diet plans: invisible cross-org (R2)", async () => {
+    const content = emptyContent();
+    content.days[0].BREAKFAST = "Avena";
+    await upsertDietPlan({
+      organizationId: orgB,
+      patientId: bPatientId,
+      title: "Plan B",
+      notes: null,
+      content,
+      updatedByAuthUserId: `spec-${suffix}`,
+    });
+    expect(await getDietPlan(orgA, bPatientId)).toBeNull();
+    expect((await getDietPlan(orgB, bPatientId))?.title).toBe("Plan B");
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {

@@ -29,6 +29,7 @@ import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
+import { getDietPlan } from "@/modules/diet/repository";
 import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
@@ -90,6 +91,7 @@ export default async function PatientDetailPage({
   const notes = await listNotes(org.id, patient.id);
   const photos = await listPhotos(org.id, patient.id);
   const documents = await listDocuments(org.id, patient.id);
+  const dietPlan = await getDietPlan(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
   const recentDoses = allDoses.slice(0, 5);
@@ -293,6 +295,29 @@ export default async function PatientDetailPage({
                   : null
               }
             />
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex flex-col gap-1">
+              <h2 className="text-lg font-semibold">{t("diet.title")}</h2>
+              <p className="text-sm text-ink-subtle">
+                {dietPlan
+                  ? t("diet.updatedAt", {
+                      date: format.dateTime(dietPlan.updatedAt, {
+                        dateStyle: "medium",
+                      }),
+                    })
+                  : t("diet.empty")}
+              </p>
+            </div>
+            <Link
+              href={`/panel/pacientes/${patient.id}/dieta`}
+              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
+            >
+              {dietPlan ? t("diet.edit") : t("diet.create")}
+            </Link>
           </div>
         </Card>
 

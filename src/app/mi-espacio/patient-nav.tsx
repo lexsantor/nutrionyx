@@ -7,6 +7,7 @@ export async function PatientNav() {
   return (
     <>
       <NavLink href="/mi-espacio">{t("home")}</NavLink>
+      <NavLink href="/mi-espacio/dieta">{t("diet")}</NavLink>
       <NavLink href="/mi-espacio/medicacion">{t("medication")}</NavLink>
     </>
   );
