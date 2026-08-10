@@ -122,9 +122,20 @@ export async function erasePatientAction(
   }
   const preScrubEmail = patient.email;
 
-  const { ok } = await erasePatient(org.id, patient.id);
+  const { ok, photoPathnames } = await erasePatient(org.id, patient.id);
   if (!ok) {
     return { errorKey: "generic" };
+  }
+
+  // Best-effort blob cleanup; the rows are already gone and the store is
+  // private, so an orphaned blob is unreachable either way.
+  if (photoPathnames.length > 0) {
+    try {
+      const { delPrivate } = await import("@/lib/blob-private");
+      await delPrivate(photoPathnames);
+    } catch (error) {
+      console.error("[erasePatientAction] blob cleanup failed", error);
+    }
   }
 
   // Best-effort: drop the auth-side org membership so the erased login no

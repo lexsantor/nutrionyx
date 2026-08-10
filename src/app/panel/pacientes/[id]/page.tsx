@@ -19,6 +19,7 @@ import {
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
+import { listPhotos } from "@/modules/photos/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
@@ -74,6 +75,7 @@ export default async function PatientDetailPage({
   const assessment = patient.assessments[0] ?? null;
   const targets = await getTargets(org.id, patient.id);
   const notes = await listNotes(org.id, patient.id);
+  const photos = await listPhotos(org.id, patient.id);
   const medicationPlan = await getPlan(org.id, patient.id);
   const recentDoses = medicationPlan
     ? await listDoses(org.id, patient.id, 5)
@@ -403,6 +405,39 @@ export default async function PatientDetailPage({
               </dl>
             ) : (
               <p className="text-sm text-ink-subtle">{t("body.empty")}</p>
+            )}
+          </div>
+        </Card>
+
+        <Card>
+          <div className="flex flex-col gap-3">
+            <h2 className="text-lg font-semibold">{t("photos.title")}</h2>
+            {photos.length > 0 ? (
+              <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                {photos.map((photo) => (
+                  <li
+                    key={photo.id}
+                    className="relative aspect-[3/4] overflow-hidden rounded-[10px] border border-hairline bg-surface-2"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/api/photos/${photo.id}`}
+                      alt={format.dateTime(photo.createdAt, {
+                        dateStyle: "medium",
+                      })}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                    <span className="absolute bottom-0 left-0 right-0 bg-canvas/80 px-2 py-1 text-xs text-ink-subtle backdrop-blur">
+                      {format.dateTime(photo.createdAt, {
+                        dateStyle: "medium",
+                      })}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-ink-subtle">{t("photos.empty")}</p>
             )}
           </div>
         </Card>

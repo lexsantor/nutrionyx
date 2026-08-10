@@ -42,6 +42,7 @@ import {
 } from "@/modules/medication/repository";
 import { getTargets, upsertTargets } from "@/modules/targets/repository";
 import { addNote, listNotes } from "@/modules/notes/repository";
+import { addPhoto, listPhotos } from "@/modules/photos/repository";
 import {
   proteinOnDay,
   recordProtein,
@@ -114,6 +115,7 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
       await prisma.medicationPlan.deleteMany({ where: { organizationId: org } });
       await prisma.patientTarget.deleteMany({ where: { organizationId: org } });
       await prisma.patientNote.deleteMany({ where: { organizationId: org } });
+      await prisma.patientPhoto.deleteMany({ where: { organizationId: org } });
       await prisma.measurement.deleteMany({ where: { organizationId: org } });
       await prisma.assessment.deleteMany({ where: { organizationId: org } });
       await prisma.patient.deleteMany({ where: { organizationId: org } });
@@ -316,6 +318,17 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await listNotes(orgA, bPatientId)).toEqual([]);
     expect((await listNotes(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes photos: invisible cross-org (R2)", async () => {
+    await addPhoto({
+      organizationId: orgB,
+      patientId: bPatientId,
+      pathname: `photos/${orgB}/${bPatientId}/test.jpg`,
+      contentType: "image/jpeg",
+    });
+    expect(await listPhotos(orgA, bPatientId)).toEqual([]);
+    expect((await listPhotos(orgB, bPatientId)).length).toBe(1);
   });
 
   it("erasure: cross-org attempt touches nothing; own-org anonymizes (R2)", async () => {

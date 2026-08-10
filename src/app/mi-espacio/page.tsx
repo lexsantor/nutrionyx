@@ -26,12 +26,19 @@ import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
 import { ProteinLog } from "./protein-log";
 import { BodyMetricsForm } from "./body-metrics-form";
+import { PhotosCard } from "./photos-card";
+import { listPhotos } from "@/modules/photos/repository";
 import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
 
 export const dynamic = "force-dynamic";
 
-export default async function PatientHomePage() {
+export default async function PatientHomePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ photoError?: string }>;
+}) {
+  const { photoError } = await searchParams;
   const t = await getTranslations("patientHome");
   const { data: session } = await auth.getSession();
 
@@ -286,6 +293,16 @@ export default async function PatientHomePage() {
             ) : null}
             <BodyMetricsForm />
           </section>
+
+          <PhotosCard
+            photos={(
+              await listPhotos(patient.organizationId, patient.id)
+            ).map((p) => ({
+              id: p.id,
+              createdAt: format.dateTime(p.createdAt, { dateStyle: "medium" }),
+            }))}
+            uploadError={photoError === "1"}
+          />
 
           <a
             href="/api/me/export"

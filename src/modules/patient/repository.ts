@@ -146,14 +146,19 @@ export async function findPatientByEmail(
 export async function erasePatient(
   organizationId: string,
   patientId: string,
-): Promise<{ ok: boolean }> {
+): Promise<{ ok: boolean; photoPathnames: string[] }> {
   const patient = await prisma.patient.findFirst({
     where: { id: patientId, organizationId },
   });
-  if (!patient) return { ok: false };
+  if (!patient) return { ok: false, photoPathnames: [] };
 
   const scope = { organizationId, patientId };
+  const photoRows = await prisma.patientPhoto.findMany({
+    where: scope,
+    select: { pathname: true },
+  });
   const counts = await prisma.$transaction(async (tx) => {
+    const photos = await tx.patientPhoto.deleteMany({ where: scope });
     const doses = await tx.medicationDose.deleteMany({ where: scope });
     const plans = await tx.medicationPlan.deleteMany({ where: scope });
     const targets = await tx.patientTarget.deleteMany({ where: scope });
@@ -183,6 +188,7 @@ export async function erasePatient(
       notes: notes.count,
       measurements: measurements.count,
       assessments: assessments.count,
+      photos: photos.count,
     };
   });
 
@@ -194,5 +200,5 @@ export async function erasePatient(
     payload: counts,
   });
 
-  return { ok: true };
+  return { ok: true, photoPathnames: photoRows.map((p) => p.pathname) };
 }

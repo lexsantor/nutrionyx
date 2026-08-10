@@ -425,6 +425,10 @@
     "erase": {
       "title": "Eliminar paciente",
       "subtitle": "Derecho de supresión (RGPD): borra evaluaciones, medidas, medicación, objetivos y notas, y anonimiza la ficha. Irreversible."
+    },
+    "photos": {
+      "title": "Fotos de progreso",
+      "empty": "El paciente no ha subido fotos."
     }
   },
   "auth": {
@@ -613,5 +617,14 @@
       "confirmRequired": "Marca la casilla de confirmación.",
       "generic": "No se ha podido eliminar. Inténtalo de nuevo."
     }
+  },
+  "photos": {
+    "title": "Fotos de progreso",
+    "privacy": "Privadas: solo tú y tu especialista podéis verlas. Nunca son públicas.",
+    "empty": "Aún no has subido fotos.",
+    "upload": "Subir foto",
+    "uploadError": "Foto no válida: JPG, PNG o WebP de hasta 8 MB.",
+    "delete": "Eliminar foto",
+    "photoAlt": "Foto de progreso del {date}"
   }
 }

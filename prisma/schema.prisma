@@ -64,6 +64,7 @@ model Patient {
   medicationDoses MedicationDose[]
   target          PatientTarget?
   notes           PatientNote[]
+  photos          PatientPhoto[]
 
   // Invariant (docs/09): every patient belongs to exactly one organization.
   @@unique([organizationId, email])
@@ -160,6 +161,22 @@ model Measurement {
 
   @@index([organizationId, patientId, recordedAt])
   @@map("measurements")
+}
+
+// Progress photos (docs/build/slice-14-plan.md). Art. 9 data: blobs live in
+// the PRIVATE store and are served only through the auth-gated photo route.
+// Patient-owned; the specialist of the org reads; the admin never sees them.
+model PatientPhoto {
+  id             String   @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  pathname       String
+  contentType    String
+  createdAt      DateTime @default(now())
+
+  @@index([organizationId, patientId, createdAt])
+  @@map("patient_photos")
 }
 
 // Specialist-private clinical notes (docs/build/slice-10-plan.md).

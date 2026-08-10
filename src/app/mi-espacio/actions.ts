@@ -118,6 +118,35 @@ export async function recordBodyMetricsAction(
   return { ok: true };
 }
 
+export type PhotoDeleteState = { errorKey: string } | null;
+
+export async function deletePhotoAction(
+  _prevState: PhotoDeleteState,
+  formData: FormData,
+): Promise<PhotoDeleteState> {
+  const photoId = (formData.get("photoId") as string) ?? "";
+  if (!photoId) return { errorKey: "generic" };
+
+  const { data: session } = await auth.getSession();
+  if (!session?.user) return { errorKey: "generic" };
+  const patient = await findPatientByAuthUserId(session.user.id);
+  if (!patient) return { errorKey: "generic" };
+
+  const { deletePhoto } = await import("@/modules/photos/repository");
+  const photo = await deletePhoto(patient.organizationId, patient.id, photoId);
+  if (!photo) return { errorKey: "generic" };
+
+  try {
+    const { delPrivate } = await import("@/lib/blob-private");
+    await delPrivate(photo.pathname);
+  } catch (error) {
+    console.error("[deletePhotoAction] blob delete failed", error);
+  }
+
+  revalidatePath("/mi-espacio");
+  return null;
+}
+
 export type ProteinFormState = { errorKey: string } | { ok: true } | null;
 
 export async function recordProteinAction(
