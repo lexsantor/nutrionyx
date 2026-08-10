@@ -589,7 +589,7 @@ export default async function PatientDetailPage({
                 </span>
               ) : null}
             </div>
-            <BodyMapMeasures zones={zonesForMap} />
+            <BodyMapMeasures zones={zonesForMap} sex={assessment?.sex ?? null} />
             {hasBody ? (
               <dl className="flex flex-col border-t border-hairline pt-3 text-sm">
                 {body.waistCm != null ? (

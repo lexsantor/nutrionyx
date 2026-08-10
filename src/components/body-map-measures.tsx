@@ -27,15 +27,29 @@ type PlainZoneStat = Omit<
 
 export type PlainZones = Partial<Record<BodyZoneKey, PlainZoneStat>>;
 
-// Calibrated to the mannequin renders (viewBox 200 x 358 over 1536x2752).
-const BAND: Record<BodyZoneKey, { y: number; x1: number; x2: number }> = {
-  CHEST_CM: { y: 107, x1: 61, x2: 139 },
-  ARM_CM: { y: 122, x1: 36, x2: 55 },
-  WAIST_CM: { y: 153, x1: 71, x2: 129 },
-  HIP_CM: { y: 177, x1: 68, x2: 132 },
-  THIGH_CM: { y: 228, x1: 70, x2: 99 },
-  GLUTE_CM: { y: 173, x1: 66, x2: 134 },
-  CALF_CM: { y: 297, x1: 73, x2: 98 },
+// Calibrated per render set by measuring the silhouette's alpha channel
+// (viewBox 200 x 358 over 1536x2752). The female figure carries the bust
+// lower and the hip/glute apex ~12 units below the male one.
+type Band = Record<BodyZoneKey, { y: number; x1: number; x2: number }>;
+const BANDS: Record<"MALE" | "FEMALE", Band> = {
+  MALE: {
+    CHEST_CM: { y: 107, x1: 61, x2: 139 },
+    ARM_CM: { y: 122, x1: 36, x2: 55 },
+    WAIST_CM: { y: 153, x1: 71, x2: 129 },
+    HIP_CM: { y: 177, x1: 68, x2: 132 },
+    THIGH_CM: { y: 228, x1: 70, x2: 99 },
+    GLUTE_CM: { y: 173, x1: 66, x2: 134 },
+    CALF_CM: { y: 297, x1: 73, x2: 98 },
+  },
+  FEMALE: {
+    CHEST_CM: { y: 112, x1: 63, x2: 137 },
+    ARM_CM: { y: 122, x1: 40, x2: 58 },
+    WAIST_CM: { y: 153, x1: 71, x2: 129 },
+    HIP_CM: { y: 188, x1: 64, x2: 136 },
+    THIGH_CM: { y: 228, x1: 70, x2: 99 },
+    GLUTE_CM: { y: 188, x1: 62, x2: 138 },
+    CALF_CM: { y: 297, x1: 73, x2: 98 },
+  },
 };
 
 function fmt(v: number) {
@@ -64,11 +78,19 @@ function Delta({ delta }: { delta: number | null }) {
   );
 }
 
-export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
+export function BodyMapMeasures({
+  zones,
+  sex,
+}: {
+  zones: PlainZones;
+  sex?: "MALE" | "FEMALE" | null;
+}) {
   const t = useTranslations("body");
   const [view, setView] = useState<"front" | "back">("front");
   const [selected, setSelected] = useState<BodyZoneKey | null>(null);
 
+  const figure = sex === "FEMALE" ? "FEMALE" : "MALE";
+  const band = BANDS[figure];
   const zonesInView = BODY_ZONES.filter((z) => z.view === view);
   const selData = selected ? (zones[selected] ?? null) : null;
 
@@ -108,7 +130,7 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
         <div className="relative mx-auto h-80 w-auto sm:h-96" style={{ aspectRatio: "200/358" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={view === "front" ? "/mannequin-front.png" : "/mannequin-back.png"}
+            src={`/mannequin-${figure.toLowerCase()}-${view}.png`}
             alt=""
             width={614}
             height={1100}
@@ -121,7 +143,7 @@ export function BodyMapMeasures({ zones }: { zones: PlainZones }) {
             className="absolute inset-0 h-full w-full"
           >
           {zonesInView.map((zone, i) => {
-            const { y, x1, x2 } = BAND[zone.key];
+            const { y, x1, x2 } = band[zone.key];
             const data = zones[zone.key];
             const isSel = selected === zone.key;
             const labelRight = i % 2 === 0;

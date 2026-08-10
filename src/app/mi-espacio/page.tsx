@@ -329,7 +329,7 @@ export default async function PatientHomePage({
                 <p className="text-sm text-ink-subtle">{tb("empty")}</p>
               )}
             </div>
-            <BodyMapMeasures zones={zonesForMap} />
+            <BodyMapMeasures zones={zonesForMap} sex={assessment.sex} />
 
             <div className="flex flex-col gap-3 border-t border-hairline pt-4">
               <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
