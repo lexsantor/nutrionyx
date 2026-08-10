@@ -114,10 +114,9 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   auth-gated `GET /api/photos/[id]` (patient owner or org nutritionist,
   admin 403); multipart upload route; patient card + panel grid; erasure
   covers photos. Migration `patient_photos` applied.
-  **Pending owner (blocks photo upload in every env): connect the store to
-  the project in the dashboard with env prefix `PRIVATE`** →
-  vercel.com/lexsantor/~/stores/blob/store_d5EPcKBZ36Q4hyw6 → Connect
-  Project → nutrionyx → prefix PRIVATE → then `vercel env pull`.
+  Store connected 2026-08-10 with env prefix `PRIVATE_BLOB` (token env
+  `PRIVATE_BLOB_READ_WRITE_TOKEN`), verified end-to-end (direct URL fetch
+  403), production redeployed with the new env.
 
 ### Migrations (applied on Neon)
 
