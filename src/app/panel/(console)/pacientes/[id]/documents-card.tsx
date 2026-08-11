@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
+import { UploadForm } from "@/components/upload-form";
 import {
   deleteDocumentAction,
   type DocumentDeleteState,
@@ -40,11 +40,9 @@ function DeleteDocButton({ documentId }: { documentId: string }) {
 export function DocumentsCard({
   patientId,
   documents,
-  uploadError,
 }: {
   patientId: string;
   documents: { id: string; fileName: string; createdAt: string }[];
-  uploadError: boolean;
 }) {
   const t = useTranslations("documents");
 
@@ -76,32 +74,18 @@ export function DocumentsCard({
         <p className="text-sm text-ink-subtle">{t("empty")}</p>
       )}
 
-      <form
+      <UploadForm
         action="/api/documents"
-        method="post"
-        encType="multipart/form-data"
-        className="flex flex-col gap-2 sm:flex-row sm:items-center"
-      >
-        <input type="hidden" name="patientId" value={patientId} />
-        <input
-          type="file"
-          name="document"
-          required
-          accept="application/pdf,image/jpeg,image/png,image/webp"
-          className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
-        />
-        <Button type="submit" variant="secondary" className="shrink-0">
-          {t("upload")}
-        </Button>
-      </form>
-      {uploadError ? (
-        <p
-          role="alert"
-          className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
-        >
-          {t("uploadError")}
-        </p>
-      ) : null}
+        fieldName="document"
+        accept="application/pdf,image/jpeg,image/png,image/webp"
+        hidden={{ patientId }}
+        labels={{
+          file: t("fileLabel"),
+          upload: t("upload"),
+          uploading: t("uploading"),
+          error: t("uploadError"),
+        }}
+      />
     </div>
   );
 }

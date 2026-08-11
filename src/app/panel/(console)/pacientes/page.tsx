@@ -1,58 +1,46 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { listPatientsWithLatestAssessment } from "@/modules/patient/repository";
 import { latestWeightByPatient } from "@/modules/measurement/repository";
 import { unreadFromPatients } from "@/modules/messaging/repository";
 import { weightDelta } from "@/modules/measurement/progress";
 import { appUrl } from "@/lib/email";
-import { ConsoleShell } from "@/components/console-shell";
 import { InviteForm } from "../invite-form";
 import { CancelInvitationButton } from "../cancel-button";
+import { CopyLinkButton } from "../copy-link-button";
+import { Card } from "@/components/ui/card";
 
 export const dynamic = "force-dynamic";
 
 export default async function PatientsPage() {
   const t = await getTranslations("panel");
-  const { data: session } = await auth.getSession();
-
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-
-  const { data: organizations } = await auth.organization.list();
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-
-  const active = organizations[0];
-  const org = await ensureOrganization(active.id, active.name);
-  const patients = await listPatientsWithLatestAssessment(org.id);
-  const latestWeights = await latestWeightByPatient(org.id);
-  const unreadMessages = await unreadFromPatients(org.id);
-
-  const { data: pending } = await auth.organization.listInvitations({
-    query: { organizationId: active.id },
-  });
+  const { org } = await requireSpecialistOrg();
+  const [patients, latestWeights, unreadMessages, { data: pending }] =
+    await Promise.all([
+      listPatientsWithLatestAssessment(org.id),
+      latestWeightByPatient(org.id),
+      unreadFromPatients(org.id),
+      auth.organization.listInvitations({
+        query: { organizationId: org.id },
+      }),
+    ]);
   const pendingInvitations = (pending ?? []).filter(
     (invitation) => invitation.status === "pending",
   );
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">{t("patients.title")}</h1>
 
         {patients.length === 0 ? (
-          <p className="text-base text-ink-subtle">{t("patients.empty")}</p>
+          <div className="flex flex-col items-start gap-2 py-4">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-ink-subtle"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+            <p className="text-base text-ink-subtle">{t("patients.empty")}</p>
+            <p className="text-xs text-ink-subtle">{t("patients.emptyHint")}</p>
+          </div>
         ) : (
           <div className="w-full overflow-x-auto rounded-xl border border-hairline bg-surface-1">
             <table className="w-full text-left text-sm">
@@ -170,23 +158,38 @@ export default async function PatientsPage() {
         <InviteForm />
 
         {pendingInvitations.length > 0 ? (
-          <div className="flex flex-col gap-2">
-            <h2 className="text-lg font-semibold">{t("invitations.title")}</h2>
-            <p className="text-xs text-ink-subtle">{t("invitations.hint")}</p>
-            <ul className="flex flex-col gap-1 text-sm">
-              {pendingInvitations.map((invitation) => (
-                <li key={invitation.id} className="flex flex-wrap items-center gap-2">
-                  <span>{invitation.email}</span>
-                  <code className="rounded bg-surface-3 px-2 py-0.5 text-xs">
-                    {appUrl()}/auth/accept-invitation?invitationId={invitation.id}
-                  </code>
-                  <CancelInvitationButton invitationId={invitation.id} />
-                </li>
-              ))}
-            </ul>
-          </div>
+          <Card>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-0.5">
+                <h2 className="text-lg font-semibold">
+                  {t("invitations.title")}
+                </h2>
+                <p className="text-xs text-ink-subtle">
+                  {t("invitations.hint")}
+                </p>
+              </div>
+              <ul className="flex flex-col gap-2 text-sm">
+                {pendingInvitations.map((invitation) => {
+                  const link = `${appUrl()}/auth/accept-invitation?invitationId=${invitation.id}`;
+                  return (
+                    <li
+                      key={invitation.id}
+                      className="flex flex-wrap items-center gap-2 border-b border-hairline pb-2 last:border-0 last:pb-0"
+                    >
+                      <span className="font-medium">{invitation.email}</span>
+                      <code className="min-w-0 break-all rounded bg-surface-3 px-2 py-0.5 text-xs">
+                        {link}
+                      </code>
+                      <CopyLinkButton text={link} />
+                      <CancelInvitationButton invitationId={invitation.id} />
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </Card>
         ) : null}
       </div>
-    </ConsoleShell>
+    </>
   );
 }

@@ -47,12 +47,7 @@ export const dynamic = "force-dynamic";
 const TILE =
   "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md";
 
-export default async function PatientHomePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ photoError?: string }>;
-}) {
-  const { photoError } = await searchParams;
+export default async function PatientHomePage() {
   const t = await getTranslations("patientHome");
   const { data: session } = await auth.getSession();
 
@@ -438,7 +433,6 @@ export default async function PatientHomePage({
                   dateStyle: "medium",
                 }),
               }))}
-              uploadError={photoError === "1"}
             />
           </div>
 

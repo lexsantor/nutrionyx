@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { addPhoto } from "@/modules/photos/repository";
@@ -11,9 +10,8 @@ const MAX_BYTES = 8 * 1024 * 1024;
 
 /**
  * Progress-photo upload (docs/build/slice-14-plan.md). Route handler, not a
- * server action: plain multipart form post without the server-action body
- * limit. Redirects back to /mi-espacio (303) so the browser lands on the
- * refreshed page.
+ * server action: multipart post without the server-action body limit. The
+ * card submits it via fetch and refreshes the route on success.
  */
 export async function POST(request: Request) {
   const { data: session } = await auth.getSession();
@@ -33,7 +31,7 @@ export async function POST(request: Request) {
     file.size > MAX_BYTES ||
     !ALLOWED.includes(file.type)
   ) {
-    redirect("/mi-espacio?photoError=1");
+    return Response.json({ errorKey: "invalid" }, { status: 400 });
   }
 
   const ext = file.type.split("/")[1];
@@ -47,5 +45,5 @@ export async function POST(request: Request) {
     contentType: file.type,
   });
 
-  redirect("/mi-espacio");
+  return Response.json({ ok: true });
 }

@@ -342,7 +342,8 @@
         "inProgress": "En curso",
         "completed": "Completada",
         "bmi": "IMC"
-      }
+      },
+      "emptyHint": "Invita a tu primer paciente con el formulario de abajo."
     },
     "invite": {
       "title": "Invitar paciente",
@@ -364,7 +365,9 @@
       "hint": "Comparte este enlace con el paciente para que active su cuenta. También le llega por email al invitarle.",
       "cancel": "Cancelar",
       "cancelling": "Cancelando...",
-      "cancelError": "No se pudo cancelar. Revisa la terminal del servidor para el detalle."
+      "cancelError": "No se pudo cancelar. Revisa la terminal del servidor para el detalle.",
+      "copy": "Copiar enlace",
+      "copied": "Copiado"
     },
     "unreadMessages": "Mensajes sin leer"
   },
@@ -382,7 +385,8 @@
       "notSignedIn": "Inicia sesión para aceptar la invitación.",
       "invalid": "La invitación no es válida o ha caducado."
     },
-    "legal": "Al aceptar la invitación aceptas los <terms>términos del servicio</terms> y la <privacy>política de privacidad</privacy>."
+    "legal": "Al aceptar la invitación aceptas los <terms>términos del servicio</terms> y la <privacy>política de privacidad</privacy>.",
+    "backHome": "Volver al inicio"
   },
   "patientHome": {
     "welcome": "Hola, {name}",
@@ -525,7 +529,8 @@
         "10": "octubre",
         "11": "noviembre",
         "12": "diciembre"
-      }
+      },
+      "select": "Elegir"
     },
     "exit": "Salir"
   },
@@ -906,7 +911,9 @@
     "uploadError": "Foto no válida: JPG, PNG o WebP de hasta 8 MB.",
     "delete": "Eliminar foto",
     "photoAlt": "Foto de progreso del {date}",
-    "deleteError": "No se ha podido eliminar la foto."
+    "deleteError": "No se ha podido eliminar la foto.",
+    "uploading": "Subiendo…",
+    "fileLabel": "Archivo de foto"
   },
   "documents": {
     "title": "Documentos",
@@ -914,7 +921,9 @@
     "upload": "Subir documento",
     "uploadError": "Documento no válido: PDF, JPG, PNG o WebP de hasta 10 MB.",
     "delete": "Eliminar documento",
-    "deleteError": "No se ha podido eliminar."
+    "deleteError": "No se ha podido eliminar.",
+    "uploading": "Subiendo…",
+    "fileLabel": "Archivo del documento"
   },
   "diet": {
     "days": {
@@ -1057,7 +1066,8 @@
         "generic": "No se ha podido crear la cita. Inténtalo de nuevo."
       }
     },
-    "cancelError": "No se ha podido cancelar."
+    "cancelError": "No se ha podido cancelar.",
+    "emptyHint": "Crea la primera cita con el formulario de la derecha."
   },
   "boundary": {
     "notFoundTitle": "Página no encontrada",

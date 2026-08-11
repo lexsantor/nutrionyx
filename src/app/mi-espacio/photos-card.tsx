@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { deletePhotoAction, type PhotoDeleteState } from "./actions";
-import { Button } from "@/components/ui/button";
+import { UploadForm } from "@/components/upload-form";
 
 function DeleteButton({ photoId }: { photoId: string }) {
   const t = useTranslations("photos");
@@ -36,10 +36,8 @@ function DeleteButton({ photoId }: { photoId: string }) {
 
 export function PhotosCard({
   photos,
-  uploadError,
 }: {
   photos: { id: string; createdAt: string }[];
-  uploadError: boolean;
 }) {
   const t = useTranslations("photos");
 
@@ -74,31 +72,17 @@ export function PhotosCard({
         <p className="text-sm text-ink-subtle">{t("empty")}</p>
       )}
 
-      <form
+      <UploadForm
         action="/api/me/photos"
-        method="post"
-        encType="multipart/form-data"
-        className="flex flex-col gap-2 sm:flex-row sm:items-center"
-      >
-        <input
-          type="file"
-          name="photo"
-          required
-          accept="image/jpeg,image/png,image/webp"
-          className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
-        />
-        <Button type="submit" variant="secondary" className="shrink-0">
-          {t("upload")}
-        </Button>
-      </form>
-      {uploadError ? (
-        <p
-          role="alert"
-          className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
-        >
-          {t("uploadError")}
-        </p>
-      ) : null}
+        fieldName="photo"
+        accept="image/jpeg,image/png,image/webp"
+        labels={{
+          file: t("fileLabel"),
+          upload: t("upload"),
+          uploading: t("uploading"),
+          error: t("uploadError"),
+        }}
+      />
     </section>
   );
 }

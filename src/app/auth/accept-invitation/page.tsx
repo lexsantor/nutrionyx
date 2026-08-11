@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { AcceptForm } from "./accept-form";
 import { SignOutAndContinue } from "./sign-out-and-continue";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export const metadata = { title: "Aceptar invitación" };
 
@@ -60,6 +61,9 @@ export default async function AcceptInvitationPage({
           <p role="alert" className="rounded-[10px] bg-surface-3 px-3 py-2 text-sm text-ink-muted">
             {t("unavailable")}
           </p>
+          <ButtonLink href="/" variant="secondary" className="self-center">
+            {t("backHome")}
+          </ButtonLink>
         </div>
       </main>
     );

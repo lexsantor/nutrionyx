@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
@@ -41,7 +40,7 @@ export async function POST(request: Request) {
     file.size > MAX_BYTES ||
     !ALLOWED.includes(file.type)
   ) {
-    redirect(`/panel/pacientes/${patient.id}?docError=1`);
+    return Response.json({ errorKey: "invalid" }, { status: 400 });
   }
 
   const ext = file.type === "application/pdf" ? "pdf" : file.type.split("/")[1];
@@ -57,5 +56,5 @@ export async function POST(request: Request) {
     uploadedByAuthUserId: session.user.id,
   });
 
-  redirect(`/panel/pacientes/${patient.id}`);
+  return Response.json({ ok: true });
 }

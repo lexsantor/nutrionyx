@@ -1,15 +1,12 @@
 import Link from "next/link";
 import { getTranslations, getFormatter } from "next-intl/server";
-import { notFound, redirect } from "next/navigation";
-import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { notFound } from "next/navigation";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
 import {
   listThread,
   markThreadRead,
 } from "@/modules/messaging/repository";
-import { ConsoleShell } from "@/components/console-shell";
 import { MessageThread } from "@/components/message-thread";
 import { Composer } from "./composer";
 
@@ -24,20 +21,7 @@ export default async function SpecialistMessagesPage({
   const t = await getTranslations("messages");
   const format = await getFormatter();
 
-  const { data: session } = await auth.getSession();
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-  const { data: organizations } = await auth.organization.list();
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-  const active = organizations[0];
-  const org = await ensureOrganization(active.id, active.name);
+  const { org } = await requireSpecialistOrg();
 
   const patient = await getPatientDetail(org.id, id);
   if (!patient) {
@@ -48,7 +32,7 @@ export default async function SpecialistMessagesPage({
   const thread = await listThread(org.id, patient.id);
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <Link
@@ -82,6 +66,6 @@ export default async function SpecialistMessagesPage({
           <Composer patientId={patient.id} />
         </div>
       </div>
-    </ConsoleShell>
+    </>
   );
 }

@@ -1,9 +1,7 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import { notFound, redirect } from "next/navigation";
-import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { notFound } from "next/navigation";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { getDietPlan } from "@/modules/diet/repository";
 import {
@@ -11,7 +9,6 @@ import {
   normalizeContent,
   type DietPlanContent,
 } from "@/modules/diet/plan";
-import { ConsoleShell } from "@/components/console-shell";
 import { DietEditor } from "./diet-editor";
 
 export const dynamic = "force-dynamic";
@@ -24,20 +21,7 @@ export default async function DietPlanEditorPage({
   const { id } = await params;
   const t = await getTranslations("diet");
 
-  const { data: session } = await auth.getSession();
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-  const { data: organizations } = await auth.organization.list();
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-  const active = organizations[0];
-  const org = await ensureOrganization(active.id, active.name);
+  const { org } = await requireSpecialistOrg();
 
   const patient = await getPatientDetail(org.id, id);
   if (!patient) {
@@ -49,7 +33,7 @@ export default async function DietPlanEditorPage({
     (plan && normalizeContent(plan.content)) || emptyContent();
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <Link
@@ -72,6 +56,6 @@ export default async function DietPlanEditorPage({
           }}
         />
       </div>
-    </ConsoleShell>
+    </>
   );
 }

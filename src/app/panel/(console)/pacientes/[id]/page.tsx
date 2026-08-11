@@ -1,10 +1,8 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { getTranslations, getFormatter } from "next-intl/server";
-import { notFound, redirect } from "next/navigation";
-import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { notFound } from "next/navigation";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
 import {
@@ -43,7 +41,6 @@ import { bmiCategory } from "@/modules/assessment/computed";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
 import { EraseForm } from "./erase-form";
-import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 import { WeightChart } from "@/components/weight-chart";
 
@@ -51,7 +48,7 @@ export const dynamic = "force-dynamic";
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="flex max-w-2xl justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
+    <div className="flex justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
       <dt className="text-sm text-ink-subtle">{label}</dt>
       <dd className="text-right text-sm font-medium">{value}</dd>
     </div>
@@ -60,33 +57,16 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
 
 export default async function PatientDetailPage({
   params,
-  searchParams,
 }: {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ docError?: string }>;
 }) {
   const { id } = await params;
-  const { docError } = await searchParams;
   const t = await getTranslations("patientDetail");
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
   const tm = await getTranslations("medication");
 
-  const { data: session } = await auth.getSession();
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-
-  const { data: organizations } = await auth.organization.list();
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-  const active = organizations[0];
-  const org = await ensureOrganization(active.id, active.name);
+  const { org } = await requireSpecialistOrg();
 
   // Org-scoped: a patient id from another consulta resolves to nothing → 404.
   const patient = await getPatientDetail(org.id, id);
@@ -95,27 +75,46 @@ export default async function PatientDetailPage({
   }
 
   const assessment = patient.assessments[0] ?? null;
-  const targets = await getTargets(org.id, patient.id);
-  const notes = await listNotes(org.id, patient.id);
-  const photos = await listPhotos(org.id, patient.id);
-  const documents = await listDocuments(org.id, patient.id);
-  const dietPlan = await getDietPlan(org.id, patient.id);
-  const routine = await getRoutine(org.id, patient.id);
-  const allSessions = await listSessions(org.id, patient.id);
-  const unreadMessages = await unreadCount(org.id, patient.id, "SPECIALIST");
-  const medicationPlan = await getPlan(org.id, patient.id);
-  const allDoses = medicationPlan ? await listDoses(org.id, patient.id) : [];
-  const recentDoses = allDoses.slice(0, 5);
 
-  // 28-day adherence report (docs/build/slice-15-plan.md)
+  // 28-day adherence window (docs/build/slice-15-plan.md)
   const since = new Date();
   since.setDate(since.getDate() - REPORT_WINDOW_DAYS);
   since.setHours(0, 0, 0, 0);
-  const windowMeasurements = await listMeasurementsSince(
-    org.id,
-    patient.id,
-    since,
-  );
+
+  // Every read is independent once the patient is resolved: one batch, no
+  // request waterfall (audit 2026-08-11).
+  const [
+    targets,
+    notes,
+    photos,
+    documents,
+    dietPlan,
+    routine,
+    allSessions,
+    unreadMessages,
+    medicationPlan,
+    allDoses,
+    windowMeasurements,
+    body,
+    allBodyRows,
+    weights,
+  ] = await Promise.all([
+    getTargets(org.id, patient.id),
+    listNotes(org.id, patient.id),
+    listPhotos(org.id, patient.id),
+    listDocuments(org.id, patient.id),
+    getDietPlan(org.id, patient.id),
+    getRoutine(org.id, patient.id),
+    listSessions(org.id, patient.id),
+    unreadCount(org.id, patient.id, "SPECIALIST"),
+    getPlan(org.id, patient.id),
+    listDoses(org.id, patient.id),
+    listMeasurementsSince(org.id, patient.id, since),
+    bodyComposition(org.id, patient.id),
+    listMeasurementsSince(org.id, patient.id, new Date(0)),
+    listWeights(org.id, patient.id),
+  ]);
+  const recentDoses = allDoses.slice(0, 5);
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
   const windowProtein = windowMeasurements.filter((m) => m.kind === "PROTEIN");
   const windowDoses = allDoses.filter((d) => d.takenAt >= since);
@@ -150,8 +149,6 @@ export default async function PatientDetailPage({
     ...windowSessions.map((s) => s.sessionAt),
   ]);
   const format = await getFormatter();
-  const body = await bodyComposition(org.id, patient.id);
-  const allBodyRows = await listMeasurementsSince(org.id, patient.id, new Date(0));
   const rawZones = zoneStats(allBodyRows);
   const zonesForMap = Object.fromEntries(
     BODY_ZONES.flatMap((zone) => {
@@ -186,7 +183,6 @@ export default async function PatientDetailPage({
       : null;
   const hasBody =
     body.waistCm != null || body.hipCm != null || body.bodyFatPct != null;
-  const weights = await listWeights(org.id, patient.id);
   const points = weights.map((w) => ({
     recordedAt: w.recordedAt,
     valueKg: Number(w.value),
@@ -206,7 +202,7 @@ export default async function PatientDetailPage({
         : tp("assessments.pending");
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <Link
@@ -216,26 +212,34 @@ export default async function PatientDetailPage({
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
             {t("back")}
           </Link>
-          <div className="flex flex-wrap items-center gap-3">
-            <h1 className="text-2xl font-semibold">{patient.fullName}</h1>
-            <span
-              className={
-                patient.status === "ACTIVE"
-                  ? "inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success"
-                  : "inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-0.5 text-xs font-medium text-warning"
-              }
-            >
-              <span
-                className={`size-1.5 rounded-full ${
-                  patient.status === "ACTIVE" ? "bg-success" : "bg-warning"}`}
-              />
-              {tp(`statuses.${patient.status}`)}
-            </span>
+          <div className="rounded-[1.25rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-[calc(1.25rem-0.375rem)] bg-surface-1 px-5 py-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="font-display text-2xl font-semibold tracking-tight">
+                  {patient.fullName}
+                </h1>
+                <span
+                  className={
+                    patient.status === "ACTIVE"
+                      ? "inline-flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-0.5 text-xs font-medium text-success"
+                      : "inline-flex items-center gap-1.5 rounded-full bg-warning-soft px-2.5 py-0.5 text-xs font-medium text-warning"
+                  }
+                >
+                  <span
+                    className={`size-1.5 rounded-full ${
+                      patient.status === "ACTIVE" ? "bg-success" : "bg-warning"}`}
+                  />
+                  {tp(`statuses.${patient.status}`)}
+                </span>
+              </div>
+              <p className="text-sm text-ink-subtle">{patient.email}</p>
+            </div>
           </div>
-          <p className="text-sm text-ink-subtle">{patient.email}</p>
         </div>
 
-        <Card>
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
+
+        <Card className="lg:col-span-7">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold">{t("report.title")}</h2>
@@ -294,7 +298,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-5">
           <div className="flex flex-col gap-4">
             <h2 className="text-lg font-semibold">{t("weight.title")}</h2>
             {points.length > 0 ? (
@@ -305,7 +309,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-7">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold">{t("clinical.title")}</h2>
@@ -383,7 +387,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-5">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("targets.title")}</h2>
@@ -406,7 +410,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-5">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-2.5">
               <h2 className="text-lg font-semibold">
@@ -427,7 +431,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-7">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("diet.title")}</h2>
@@ -450,7 +454,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-7">
           <div className="flex items-center justify-between gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("training.title")}</h2>
@@ -481,7 +485,7 @@ export default async function PatientDetailPage({
         </Card>
 
 
-        <Card>
+        <Card className="lg:col-span-5">
           <div className="flex flex-col gap-3">
             <h2 className="text-lg font-semibold">
               {t("medication.title")}
@@ -548,7 +552,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-12">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("notes.title")}</h2>
@@ -579,7 +583,7 @@ export default async function PatientDetailPage({
         </Card>
 
 
-        <Card>
+        <Card className="lg:col-span-12">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
               <h2 className="text-lg font-semibold">{t("body.title")}</h2>
@@ -635,7 +639,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-5">
           <div className="flex flex-col gap-3">
             <h2 className="text-lg font-semibold">{t("photos.title")}</h2>
             {photos.length > 0 ? (
@@ -670,7 +674,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card>
+        <Card className="lg:col-span-7">
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("documents.title")}</h2>
@@ -687,12 +691,11 @@ export default async function PatientDetailPage({
                   dateStyle: "medium",
                 }),
               }))}
-              uploadError={docError === "1"}
             />
           </div>
         </Card>
 
-        <Card className="border-error/40">
+        <Card className="border-error/40 lg:col-span-12">
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold text-error">
@@ -703,7 +706,8 @@ export default async function PatientDetailPage({
             <EraseForm patientId={patient.id} />
           </div>
         </Card>
+        </div>
       </div>
-    </ConsoleShell>
+    </>
   );
 }

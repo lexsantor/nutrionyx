@@ -1,12 +1,8 @@
 import { getTranslations } from "next-intl/server";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { computeSliceMetrics } from "@/modules/assessment/metrics";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
 import { specialtyConfig } from "@/modules/specialty/config";
-import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 
 export const metadata = { title: "Panel" };
@@ -18,35 +14,14 @@ export const dynamic = "force-dynamic";
 export default async function PanelPage() {
   const t = await getTranslations("panel");
   const tRoot = await getTranslations();
-  const { data: session } = await auth.getSession();
-
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-
-  // Gate by domain role, not membership. Only nutritionists (Organization
-  // Owners) see the console; patients and platform admins go to their area.
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-
-  const { data: organizations } = await auth.organization.list();
-
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-
-  const active = organizations[0];
-  // Idempotent self-repair: the domain mirror always matches the auth org.
-  const org = await ensureOrganization(active.id, active.name);
+  const { org } = await requireSpecialistOrg();
   const [metrics, dashboard] = await Promise.all([
     computeSliceMetrics(org.id),
     specialistDashboard(org.id),
   ]);
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">{org.name}</h1>
         {org.specialtyType ? (
@@ -57,11 +32,11 @@ export default async function PanelPage() {
       </div>
 
       <section className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
-          <Card>
+          <Card className="col-span-2 row-span-2 flex flex-col justify-between">
             <p className="text-sm text-ink-subtle">
               {t("dashboard.activePatients")}
             </p>
-            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
+            <p className="font-display text-6xl font-semibold tracking-tight tabular-nums">
               {dashboard.activePatients}
             </p>
           </Card>
@@ -81,7 +56,7 @@ export default async function PanelPage() {
               {dashboard.withCompletedAssessment}
             </p>
           </Card>
-          <Card>
+          <Card className="col-span-2">
             <p className="text-sm text-ink-subtle">
               {t("dashboard.pendingFollowUp")}
             </p>
@@ -130,6 +105,6 @@ export default async function PanelPage() {
             <p className="mt-2 text-xs text-ink-subtle">{t("metrics.timeTarget")}</p>
           </Card>
         </section>
-    </ConsoleShell>
+    </>
   );
 }

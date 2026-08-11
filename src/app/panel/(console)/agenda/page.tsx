@@ -1,11 +1,7 @@
 import { getTranslations, getFormatter } from "next-intl/server";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth/server";
-import { resolveUserRole, roleHome } from "@/lib/auth/role";
-import { ensureOrganization } from "@/modules/organization/repository";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { listPatients } from "@/modules/patient/repository";
 import { listUpcomingByOrg } from "@/modules/scheduling/repository";
-import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 import { AppointmentForm, CancelButton } from "./appointment-form";
 
@@ -15,20 +11,7 @@ export default async function AgendaPage() {
   const t = await getTranslations("agenda");
   const format = await getFormatter();
 
-  const { data: session } = await auth.getSession();
-  if (!session?.user) {
-    redirect("/auth/sign-in");
-  }
-  const role = await resolveUserRole(session.user.id);
-  if (role !== "nutritionist") {
-    redirect(roleHome(role));
-  }
-  const { data: organizations } = await auth.organization.list();
-  if (!organizations || organizations.length === 0) {
-    redirect("/panel/nueva-organizacion");
-  }
-  const active = organizations[0];
-  const org = await ensureOrganization(active.id, active.name);
+  const { org } = await requireSpecialistOrg();
 
   const [patients, upcoming] = await Promise.all([
     listPatients(org.id),
@@ -45,7 +28,7 @@ export default async function AgendaPage() {
   }
 
   return (
-    <ConsoleShell>
+    <>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">{t("heading")}</h1>
 
@@ -63,7 +46,11 @@ export default async function AgendaPage() {
 
         {upcoming.length === 0 ? (
           <Card>
-            <p className="text-sm text-ink-subtle">{t("empty")}</p>
+            <div className="flex flex-col items-start gap-2 py-4">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-ink-subtle"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              <p className="text-sm text-ink-subtle">{t("empty")}</p>
+              <p className="text-xs text-ink-subtle">{t("emptyHint")}</p>
+            </div>
           </Card>
         ) : (
           [...groups.entries()].map(([day, items]) => (
@@ -101,6 +88,6 @@ export default async function AgendaPage() {
           ))
         )}
       </div>
-    </ConsoleShell>
+    </>
   );
 }

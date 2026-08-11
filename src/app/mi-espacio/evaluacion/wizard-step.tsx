@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import {
@@ -49,9 +49,15 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
   const years = Array.from({ length: 89 }, (_, i) =>
     String(currentYear - 12 - i),
   );
+  // Feb 31 must not compose: cap days at the selected month's length (leap
+  // default when the year is not chosen yet) and drop a now-invalid day.
+  const maxDay = month
+    ? new Date(Number(year || "2000"), Number(month), 0).getDate()
+    : 31;
+  const safeDay = day && Number(day) <= maxDay ? day : "";
   const value =
-    day && month && year
-      ? `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`
+    safeDay && month && year
+      ? `${year}-${month.padStart(2, "0")}-${safeDay.padStart(2, "0")}`
       : "";
 
   const selectClass =
@@ -68,12 +74,14 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
           </span>
           <select
             required
-            value={day}
+            value={safeDay}
             onChange={(e) => setDay(e.target.value)}
             className={selectClass}
           >
-            <option value="" disabled></option>
-            {Array.from({ length: 31 }, (_, i) => String(i + 1)).map((v) => (
+            <option value="" disabled>
+              {t("dob.select")}
+            </option>
+            {Array.from({ length: maxDay }, (_, i) => String(i + 1)).map((v) => (
               <option key={v} value={v}>
                 {v}
               </option>
@@ -90,7 +98,9 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
             onChange={(e) => setMonth(e.target.value)}
             className={selectClass}
           >
-            <option value="" disabled></option>
+            <option value="" disabled>
+              {t("dob.select")}
+            </option>
             {MONTH_KEYS.map((v) => (
               <option key={v} value={v}>
                 {t(`dob.months.${v}`)}
@@ -108,7 +118,9 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
             onChange={(e) => setYear(e.target.value)}
             className={selectClass}
           >
-            <option value="" disabled></option>
+            <option value="" disabled>
+              {t("dob.select")}
+            </option>
             {years.map((v) => (
               <option key={v} value={v}>
                 {v}
@@ -130,6 +142,12 @@ export function WizardStep(props: StepProps) {
   const [numberValue, setNumberValue] = useState(
     typeof props.initialValue === "string" ? props.initialValue : "",
   );
+  // Each step is a fresh mount (server redirect): move focus to the new
+  // question so keyboard and SR users don't restart from <body>.
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
 
   const singleOptions =
     props.field === "sex"
@@ -172,7 +190,11 @@ export function WizardStep(props: StepProps) {
       <form action={formAction} className="flex flex-col gap-5">
         <input type="hidden" name="field" value={props.field} />
 
-        <h1 className="text-xl font-semibold">
+        <h1
+          ref={headingRef}
+          tabIndex={-1}
+          className="text-xl font-semibold"
+        >
           {t(`fields.${props.field}.title`)}
         </h1>
 
@@ -226,6 +248,7 @@ export function WizardStep(props: StepProps) {
               type="text"
               inputMode="decimal"
               required
+              pattern="[0-9]+([.,][0-9]+)?"
               value={numberValue}
               onChange={(e) => setNumberValue(e.target.value)}
               className={inputClass}
