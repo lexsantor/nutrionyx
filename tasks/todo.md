@@ -123,8 +123,18 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   applied (Reveal blur drop, thread scroll-to-newest + send announce,
   chart date anchors, admin two-step revoke + table wrapper, wizard
   pending label, stroke/touch-target/i18n residue). All four audit
-  tiers done; estimated ~8.6-8.7 vs the 8.5 gate. Remaining: product
-  backlog + optional lexia re-score with real rendering.
+  tiers done; estimated ~8.6-8.7 vs the 8.5 gate.
+- **Autonomous backlog 2026-08-11**: password recovery on Neon Auth
+  requestPasswordReset/resetPassword (emails sent by Neon, not Resend;
+  UNTESTED end-to-end - needs a real inbox check), unsaved-changes
+  guard on diet/routine editors (src/lib/use-unsaved-guard.ts),
+  patient search + pagination (in-memory, SQL when caseloads grow),
+  erase type-to-confirm, two-step photo/document deletes, Topbar skip
+  link + id=contenido mains. General plugin learnings captured in
+  lexia-design/LEARNINGS.md (37 rules for future plugin updates).
+  Remaining backlog NEEDS OWNER: Resend domain verification, patient
+  self-booking (product decisions), Stripe billing, legal review,
+  lexia re-score with real rendering.
 - **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
   `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
   subjetivas) + "Descargar mis datos" link; `erasePatient` = children
