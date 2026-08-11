@@ -120,3 +120,20 @@ fade/stroke transitions. Landing: nav pill -> ButtonLink, lg size for
 hero CTAs. Stat tiles + weight headline on font-display tabular-nums.
 Estimated total after tier 2: ~8.3. Next: tier 3 (patient-detail
 restructure + signature export + uploads-as-actions).
+
+## Tier 3 applied 2026-08-11 (commit e734352, CI green, deployed)
+
+Console: panel/(console)/ route group; layout owns requireSpecialistOrg
+(React cache) + ConsoleShell (persistent sidebar); per-segment loading
+(console + mi-espacio) and console error boundary; 5x guard boilerplate
+deleted. Patient detail: 12-col bento (7/5 pairs), one Promise.all for
+14 reads, double-bezel identity header (signature exported to console),
+Row max-w-2xl dead zone removed. Dashboard: protagonist active-patients
+tile. Uploads: fetch-submitted route handlers (UploadForm: pending,
+double-submit guard, inline error, router.refresh; JSON responses, no
+sticky query params). Wizard: month-clamped day options, labelled empty
+options, native pattern, focus-to-heading per step. Invitations: Card +
+copy button + break-all + dead-end CTA; composed empty states (agenda,
+pacientes). Estimated total after tier 3: ~8.6-8.7 (gate 8.5 pass,
+pending a re-score with rendering). Remaining: tier 4 polish + product
+backlog (password recovery, unsaved-changes guard, search/pagination).

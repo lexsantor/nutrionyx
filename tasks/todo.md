@@ -114,8 +114,14 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   metadata + robots; dark variant fix; invite revalidation fix; Madrid
   "today" helpers; auth overflow; medication radio focus; hero highlight).
   Legal pages are PROVISIONAL: fiscal identification + lawyer review
-  before commercial launch. Tier 2 (system coherence) and tier 3
-  (patient-detail restructure, signature export) pending in the audit.
+  before commercial launch. Tier 2 applied (ease-house + 200ms default
+  motion tier, primary #24405f with real chroma, el-bezel token,
+  ink-tertiary deleted, body-map a11y/motion). Tier 3 applied (console
+  route group panel/(console)/ with cached guard + persistent shell,
+  patient-detail bento + Promise.all + bezel header, fetch uploads via
+  UploadForm, wizard DOB/focus fixes, invite copy button). Estimated
+  ~8.6 vs the 8.5 gate; re-score with rendering pending. Tier 4 polish
+  optional.
 - **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
   `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
   subjetivas) + "Descargar mis datos" link; `erasePatient` = children
