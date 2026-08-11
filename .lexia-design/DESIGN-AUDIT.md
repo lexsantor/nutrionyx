@@ -104,3 +104,19 @@ todayIndex, doneToday, dose todayISO, proteinOnDay; auth overflow-x-clip
 + min-h-dvh sweep; has-[:focus-visible] on medication radio cards; hero
 highlight on primary-subtle chip; animation-iteration-count in RM block.
 Estimated total after tier 1: ~7.9. Next: tier 2 (system coherence).
+
+## Tier 2 applied 2026-08-11 (commit 5f676e7, CI green, deployed)
+
+One motion system: ease-house token, default duration 200ms + default
+timing = house curve in @theme (kills ~30 default-ease sites), buttons
+500->200ms hover (press 150 kept, Card/TILE lift 500 kept), raw beziers
+swept, upload buttons -> <Button>, stepper/cancel get transform in
+lists, destructive hover via --c-error-hover. Color: light primary
+#24405f family (accent has a voice), dark shadows tinted, --el-bezel
+token replaces 4 bespoke slate shadows, ink-tertiary deleted. Body map:
+legible labels (11/12u, ink-muted), aria-pressed toggle (tablist
+removed), bigger hit rects, size-9 close, persistent aria-live,
+fade/stroke transitions. Landing: nav pill -> ButtonLink, lg size for
+hero CTAs. Stat tiles + weight headline on font-display tabular-nums.
+Estimated total after tier 2: ~8.3. Next: tier 3 (patient-detail
+restructure + signature export + uploads-as-actions).
