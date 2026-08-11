@@ -306,7 +306,7 @@ export function WizardStep(props: StepProps) {
             <span />
           )}
           <Button type="submit" disabled={isPending}>
-            {t("next")}
+            {isPending ? t("saving") : t("next")}
           </Button>
         </div>
       </form>

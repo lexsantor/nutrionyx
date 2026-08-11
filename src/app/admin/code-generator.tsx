@@ -1,10 +1,55 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { useFormStatus } from "react-dom";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateCodeAction, revokeCode, type CodeFormState } from "./actions";
+
+function RevokeSubmit({ label }: { label: string }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150 disabled:opacity-60"
+    >
+      {label}
+    </button>
+  );
+}
+
+// Two-step confirm (house pattern, no native dialogs): first click arms,
+// second click submits.
+function RevokeButton({ code }: { code: string }) {
+  const t = useTranslations("admin.codes");
+  const [arming, setArming] = useState(false);
+  if (!arming) {
+    return (
+      <button
+        type="button"
+        onClick={() => setArming(true)}
+        className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150"
+      >
+        {t("revoke")}
+      </button>
+    );
+  }
+  return (
+    <form action={revokeCode} className="inline-flex items-center gap-1.5">
+      <input type="hidden" name="code" value={code} />
+      <RevokeSubmit label={t("confirmRevoke")} />
+      <button
+        type="button"
+        onClick={() => setArming(false)}
+        className="rounded-full px-2 py-0.5 text-xs text-ink-subtle transition-colors hover:text-ink"
+      >
+        {t("cancelRevoke")}
+      </button>
+    </form>
+  );
+}
 
 type CodeRow = {
   code: string;
@@ -59,6 +104,7 @@ export function CodeGenerator({ codes }: { codes: CodeRow[] }) {
       ) : null}
 
       {codes.length > 0 ? (
+        <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-hairline text-ink-subtle">
@@ -93,22 +139,13 @@ export function CodeGenerator({ codes }: { codes: CodeRow[] }) {
                   </span>
                 </td>
                 <td className="py-2">
-                  {!c.used ? (
-                    <form action={revokeCode}>
-                      <input type="hidden" name="code" value={c.code} />
-                      <button
-                        type="submit"
-                        className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-colors hover:bg-error-soft"
-                      >
-                        {t("revoke")}
-                      </button>
-                    </form>
-                  ) : null}
+                  {!c.used ? <RevokeButton code={c.code} /> : null}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+        </div>
       ) : null}
     </div>
   );

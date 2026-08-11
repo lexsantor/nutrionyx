@@ -84,7 +84,7 @@ export default async function PatientsPage() {
                   return (
                     <tr
                       key={patient.id}
-                      className="border-b border-hairline transition-colors last:border-0 hover:bg-surface-2"
+                      className="border-b border-hairline last:border-0"
                     >
                       <td className="px-4 py-3">
                         <span className="inline-flex items-center gap-2">

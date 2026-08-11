@@ -48,6 +48,9 @@ export function Composer({ patientId }: { patientId: string }) {
           {t(`errors.${state.errorKey}`)}
         </p>
       ) : null}
+      <p role="status" className="sr-only">
+        {state && "ok" in state ? t("sent") : ""}
+      </p>
     </form>
   );
 }

@@ -51,7 +51,7 @@ export function ThemeToggle() {
       className="relative inline-flex h-7 w-12 items-center rounded-full border border-hairline bg-surface-3 transition-colors"
     >
       <span
-        className={`inline-flex size-5 items-center justify-center rounded-full bg-surface-1 text-ink-subtle shadow-sm transition-transform ease-house ${
+        className={`inline-flex size-5 items-center justify-center rounded-full bg-surface-1 text-ink-subtle shadow-sm transition-transform duration-150 ease-house ${
           dark ? "translate-x-6" : "translate-x-1"
         }`}
       >

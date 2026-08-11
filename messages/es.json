@@ -13,7 +13,8 @@
       "ajustes": "Ajustes",
       "agenda": "Agenda"
     },
-    "skipToContent": "Saltar al contenido"
+    "skipToContent": "Saltar al contenido",
+    "loading": "Cargando…"
   },
   "admin": {
     "title": "Administración de Nutrionyx",
@@ -49,7 +50,9 @@
       },
       "errors": {
         "generic": "No se pudo generar. Inténtalo de nuevo."
-      }
+      },
+      "confirmRevoke": "Confirmar",
+      "cancelRevoke": "Cancelar"
     }
   },
   "settings": {
@@ -532,7 +535,8 @@
       },
       "select": "Elegir"
     },
-    "exit": "Salir"
+    "exit": "Salir",
+    "saving": "Guardando…"
   },
   "org": {
     "create": {
@@ -1026,7 +1030,8 @@
       "you": "Tú",
       "consulta": "Tu consulta",
       "patient": "Paciente"
-    }
+    },
+    "sent": "Mensaje enviado"
   },
   "agenda": {
     "heading": "Agenda",

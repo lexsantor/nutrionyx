@@ -65,6 +65,7 @@ export default async function PatientDetailPage({
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
   const tm = await getTranslations("medication");
+  const tPhotos = await getTranslations("photos");
 
   const { org } = await requireSpecialistOrg();
 
@@ -652,10 +653,12 @@ export default async function PatientDetailPage({
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={`/api/photos/${photo.id}`}
-                width={600}
-                height={800}
-                      alt={format.dateTime(photo.createdAt, {
-                        dateStyle: "medium",
+                      width={600}
+                      height={800}
+                      alt={tPhotos("photoAlt", {
+                        date: format.dateTime(photo.createdAt, {
+                          dateStyle: "medium",
+                        }),
                       })}
                       className="h-full w-full object-cover"
                       loading="lazy"

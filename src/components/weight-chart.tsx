@@ -115,6 +115,17 @@ export async function WeightChart({
         ))}
       </svg>
 
+      {n > 1 ? (
+        <div aria-hidden="true" className="flex justify-between text-xs text-ink-subtle">
+          <span>
+            {format.dateTime(points[0]!.recordedAt, { day: "numeric", month: "short" })}
+          </span>
+          <span>
+            {format.dateTime(latest.recordedAt, { day: "numeric", month: "short" })}
+          </span>
+        </div>
+      ) : null}
+
       <table className="sr-only">
         <caption>{t("chartLabel")}</caption>
         <thead>

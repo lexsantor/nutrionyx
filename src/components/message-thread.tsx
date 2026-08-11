@@ -1,3 +1,5 @@
+import { ScrollAnchor } from "./scroll-anchor";
+
 /**
  * Presentational chat thread (docs/build/slice-19-plan.md). Server
  * component: pages fetch, mark read, and pass plain data.
@@ -44,6 +46,7 @@ export function MessageThread({
           </li>
         );
       })}
+      <ScrollAnchor />
     </ol>
   );
 }
