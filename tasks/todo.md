@@ -109,6 +109,13 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   calibrated by measuring each render's alpha channel (scratchpad
   measure.py pattern - female hip/glute apex sits ~12 viewBox units
   lower).
+- **Design audit 2026-08-11** (4 reviewers; .lexia-design/DESIGN-AUDIT.md):
+  total 7.41 -> tier 1 applied (trust surface: legal pages + favicon +
+  metadata + robots; dark variant fix; invite revalidation fix; Madrid
+  "today" helpers; auth overflow; medication radio focus; hero highlight).
+  Legal pages are PROVISIONAL: fiscal identification + lawyer review
+  before commercial launch. Tier 2 (system coherence) and tier 3
+  (patient-detail restructure, signature export) pending in the audit.
 - **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
   `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
   subjetivas) + "Descargar mis datos" link; `erasePatient` = children

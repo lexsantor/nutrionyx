@@ -91,3 +91,16 @@ Strengths: copy 9.3, RM safety 9.0, motion perf 8.8, interaction states
 8.6, spacing 8.1. Levers: trust surface (day), patient-detail restructure
 (bento+Promise.all+layout), export signature to console, give accent a
 voice. Projected: Tier1 ~7.9, +Tier2 ~8.3, +Tier3 ~8.7 (gate pass).
+
+## Tier 1 applied 2026-08-11 (commit 76cad9b, deployed)
+
+Trust surface: /privacidad + /terminos (provisional legal text, fiscal id
+pending), icon.svg, opengraph-image, per-route titles + template,
+metadataBase, robots.txt, legal links (footer + sign-up +
+accept-invitation). Fixes: @custom-variant dark -> [data-theme];
+revalidatePath /panel/pacientes; Madrid-day helpers (madridToday/
+sameMadridDay/madridWeekdayIndex) wired into weightToday, diet/training
+todayIndex, doneToday, dose todayISO, proteinOnDay; auth overflow-x-clip
++ min-h-dvh sweep; has-[:focus-visible] on medication radio cards; hero
+highlight on primary-subtle chip; animation-iteration-count in RM block.
+Estimated total after tier 1: ~7.9. Next: tier 2 (system coherence).
