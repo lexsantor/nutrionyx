@@ -9,6 +9,8 @@ import { specialtyConfig } from "@/modules/specialty/config";
 import { ConsoleShell } from "@/components/console-shell";
 import { Card } from "@/components/ui/card";
 
+export const metadata = { title: "Panel" };
+
 export const dynamic = "force-dynamic";
 
 // Inicio: the specialist's at-a-glance dashboard. The patients table and invite

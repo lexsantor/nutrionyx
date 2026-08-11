@@ -1,5 +1,7 @@
 import { SignUpForm } from "./sign-up-form";
 
+export const metadata = { title: "Crear cuenta" };
+
 export default async function SignUpPage({
   searchParams,
 }: {

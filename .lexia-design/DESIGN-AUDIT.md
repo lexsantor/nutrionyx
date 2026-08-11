@@ -39,3 +39,55 @@ neutralized · invite link absolute, jargon removed · autocomplete tokens.
 6. Skip link on patient/landing shells; radius token scale; --el-xl shadow
    token; PhotosCard tile dedup; progress-track color unify; profile the
    landing grain+blur stack when rendering is available.
+
+---
+
+# DESIGN AUDIT - cycle 2026-08-11 (exhaustive multi-skill audit)
+
+4 parallel reviewers (visual/brand, redesign checklist, motion, UX/a11y) +
+lexia detector + impeccable detector. Code-inferred (Chrome ext down).
+
+## Scores (this cycle, mapped to the 15 gate dimensions)
+
+TASK_CLARITY 8.0 · IA 7.5 · USABILITY 7.0 · ACCESSIBILITY 7.0 ·
+CONTENT_INTEGRITY 9.3 · VISUAL_HIERARCHY 7.0 · TYPOGRAPHY 7.4 ·
+COLOR 6.6 · SPACING 8.1 · RESPONSIVENESS 7.5 · SYSTEM_COHERENCE 7.3 ·
+DISTINCTIVENESS 6.8 · MOTION_QUALITY 8.0 · PERFORMANCE 7.5 ·
+PRODUCTION_READINESS 6.2 -> TOTAL 7.41. Deeper audit than iter2's 7.57;
+not a regression, new surface (legal/trust, accent=ink, revalidate bug,
+tz drift, motion second-system).
+
+## Detector verdicts
+
+All 6 placeholder-as-label flags MITIGATED (labels exist). loading.tsx
+pulse MITIGATED (aria-busy + sr-only; residue: no role=status, hardcoded
+"Cargando…"). Float RM waiver holds (global !important block covers
+inline shorthand; missing animation-iteration-count:1 is the only gap).
+
+## Top confirmed defects (cross-agent convergence)
+
+1. No legal surface: /privacidad, /terminos, favicon, per-route metadata
+   missing (EU health SaaS, GDPR Art 13). CRITICAL.
+2. dark: utilities key to prefers-color-scheme, theme toggles [data-theme];
+   no @custom-variant dark -> wrong grain/bezel when app!=OS theme.
+3. revalidatePath("/panel") but invite UI lives on /panel/pacientes ->
+   stale invitations after invite/cancel.
+4. UTC-vs-Madrid "today" drift in weightToday/proteinOnDay/diet-day/dose
+   date (00:00-02:00 window); scheduling/time.ts helpers unused there.
+5. Auth pages: absolute -inset-40 in non-positioned main -> horizontal
+   scroll; min-h-screen not dvh.
+6. sr-only radio cards in medicacion forms: keyboard focus invisible.
+7. Hero highlight text-primary ~= ink: emphasized phrase invisible.
+8. Accent is functionally ink (COLOR 6.6 ceiling).
+9. Patient detail: 12-13 identical stacked cards + ~20 sequential awaits;
+   ConsoleShell in pages not layout; only root loading/error boundaries.
+10. Second motion system: ~30 bare transition-colors sites + broken press
+    on hand-rolled buttons (transform not in transition list); body map
+    interactions motion-dead.
+
+## Verdict
+
+Strengths: copy 9.3, RM safety 9.0, motion perf 8.8, interaction states
+8.6, spacing 8.1. Levers: trust surface (day), patient-detail restructure
+(bento+Promise.all+layout), export signature to console, give accent a
+voice. Projected: Tier1 ~7.9, +Tier2 ~8.3, +Tier3 ~8.7 (gate pass).

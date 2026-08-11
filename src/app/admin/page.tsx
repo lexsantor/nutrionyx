@@ -11,6 +11,8 @@ import { Topbar } from "@/components/topbar";
 import { Card } from "@/components/ui/card";
 import { CodeGenerator } from "./code-generator";
 
+export const metadata = { title: "Administración" };
+
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {

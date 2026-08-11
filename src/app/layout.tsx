@@ -5,8 +5,18 @@ import "@fontsource-variable/dm-sans";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Nutrionyx",
-  description: "Plataforma de nutrición para profesionales",
+  metadataBase: new URL("https://nutrionyx.vercel.app"),
+  title: { default: "Nutrionyx", template: "%s · Nutrionyx" },
+  description:
+    "La ficha única del paciente para nutricionistas: evaluación, dieta, entreno, medicación, mensajes y citas en un solo lugar. RGPD por diseño.",
+  openGraph: {
+    type: "website",
+    locale: "es_ES",
+    siteName: "Nutrionyx",
+    title: "Nutrionyx",
+    description:
+      "La ficha única del paciente para nutricionistas: evaluación, dieta, entreno, medicación, mensajes y citas en un solo lugar.",
+  },
 };
 
 // Set the theme before first paint to avoid a flash (design.md 18.2).

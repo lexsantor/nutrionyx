@@ -303,6 +303,10 @@
           "product": "En una ficha por paciente"
         }
       }
+    },
+    "footer": {
+      "privacy": "Política de privacidad",
+      "terms": "Términos del servicio"
     }
   },
   "panel": {
@@ -377,7 +381,8 @@
       "missing": "Falta el identificador de la invitación.",
       "notSignedIn": "Inicia sesión para aceptar la invitación.",
       "invalid": "La invitación no es válida o ha caducado."
-    }
+    },
+    "legal": "Al aceptar la invitación aceptas los <terms>términos del servicio</terms> y la <privacy>política de privacidad</privacy>."
   },
   "patientHome": {
     "welcome": "Hola, {name}",
@@ -693,7 +698,8 @@
       "errors": {
         "emailRequired": "El correo electrónico es obligatorio.",
         "generic": "No se pudo crear la cuenta. Inténtalo de nuevo."
-      }
+      },
+      "legal": "Al crear tu cuenta aceptas los <terms>términos del servicio</terms> y la <privacy>política de privacidad</privacy>."
     }
   },
   "medication": {

@@ -252,7 +252,9 @@ export default async function Home() {
             </div>
             <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
               {t("hero.title")}{" "}
-              <span className="text-primary">{t("hero.highlight")}</span>
+              <span className="rounded-xl bg-primary-subtle px-2 text-on-primary-subtle">
+                {t("hero.highlight")}
+              </span>
             </h1>
             <p className="text-lg font-medium">{t("hero.subtitle")}</p>
             <p className="max-w-[62ch] text-pretty leading-relaxed text-ink-subtle">
@@ -684,7 +686,22 @@ export default async function Home() {
       </div>
 
       {/* Block 14: visible last-updated stamp */}
-      <footer className="flex flex-col items-center gap-1 px-6 py-10 text-center text-xs text-ink-tertiary">
+      <footer className="flex flex-col items-center gap-2 px-6 py-10 text-center text-xs text-ink-tertiary">
+        <div className="flex items-center gap-3">
+          <Link
+            href="/privacidad"
+            className="font-medium text-ink-subtle transition-colors duration-200 hover:text-ink"
+          >
+            {t("footer.privacy")}
+          </Link>
+          <span aria-hidden="true">·</span>
+          <Link
+            href="/terminos"
+            className="font-medium text-ink-subtle transition-colors duration-200 hover:text-ink"
+          >
+            {t("footer.terms")}
+          </Link>
+        </div>
         <span>&copy; {new Date().getFullYear()} Nutrionyx</span>
         <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
       </footer>

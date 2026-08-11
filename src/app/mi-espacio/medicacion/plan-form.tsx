@@ -105,7 +105,7 @@ export function PlanForm({
           {GLP1_PRESETS.map((p) => (
             <label
               key={p.key}
-              className={`flex cursor-pointer flex-col gap-0.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
+              className={`flex cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring flex-col gap-0.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
                 preset === p.key
                   ? "border-primary bg-surface-2"
                   : "border-hairline bg-surface-1 hover:bg-surface-2"
@@ -126,7 +126,7 @@ export function PlanForm({
             </label>
           ))}
           <label
-            className={`flex cursor-pointer flex-col justify-center gap-0.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
+            className={`flex cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring flex-col justify-center gap-0.5 rounded-[10px] border px-3.5 py-2.5 transition-colors ${
               preset === "custom"
                 ? "border-primary bg-surface-2"
                 : "border-hairline bg-surface-1 hover:bg-surface-2"
@@ -170,7 +170,7 @@ export function PlanForm({
               {(["WEEKLY", "DAILY"] as const).map((f) => (
                 <label
                   key={f}
-                  className={`inline-flex h-9 cursor-pointer items-center rounded-full border px-4 text-sm font-medium transition-colors ${
+                  className={`inline-flex h-9 cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring items-center rounded-full border px-4 text-sm font-medium transition-colors ${
                     customFrequency === f
                       ? "border-primary bg-surface-2"
                       : "border-hairline bg-surface-1 hover:bg-surface-2"
@@ -207,7 +207,7 @@ export function PlanForm({
             {WEEK_DAYS.map((d) => (
               <label
                 key={d}
-                className={`inline-flex h-9 min-w-11 cursor-pointer items-center justify-center rounded-full border px-2 text-sm font-medium transition-colors ${
+                className={`inline-flex h-9 min-w-11 cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus-ring items-center justify-center rounded-full border px-2 text-sm font-medium transition-colors ${
                   shotDay === d
                     ? "border-primary bg-surface-2"
                     : "border-hairline bg-surface-1 hover:bg-surface-2"

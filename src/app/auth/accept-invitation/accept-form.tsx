@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { acceptInvitation, type AcceptFormState } from "./actions";
@@ -28,6 +29,21 @@ export function AcceptForm({ invitationId }: { invitationId: string }) {
       <Button type="submit" disabled={isPending} className="w-full">
         {isPending ? t("submitting") : t("submit")}
       </Button>
+
+      <p className="text-center text-xs text-ink-subtle">
+        {t.rich("legal", {
+          terms: (chunks) => (
+            <Link href="/terminos" className="font-medium text-ink">
+              {chunks}
+            </Link>
+          ),
+          privacy: (chunks) => (
+            <Link href="/privacidad" className="font-medium text-ink">
+              {chunks}
+            </Link>
+          ),
+        })}
+      </p>
     </form>
   );
 }

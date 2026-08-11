@@ -11,6 +11,7 @@ import {
 } from "@/modules/diet/plan";
 import { Topbar } from "@/components/topbar";
 import { PatientNav } from "../patient-nav";
+import { madridWeekdayIndex } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +45,8 @@ export default async function PatientDietPage() {
       ].filter(Boolean)
     : [];
 
-  // Monday-first index for "today".
-  const todayIndex = (new Date().getDay() + 6) % 7;
+  // Monday-first index for "today" (Madrid calendar day).
+  const todayIndex = madridWeekdayIndex();
 
   return (
     <>

@@ -13,6 +13,7 @@ import {
 import { Topbar } from "@/components/topbar";
 import { PatientNav } from "../patient-nav";
 import { SessionForm } from "./session-form";
+import { sameMadridDay, madridWeekdayIndex } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
 
@@ -36,10 +37,9 @@ export default async function PatientTrainingPage() {
 
   const sessions = await listSessions(patient.organizationId, patient.id, 10);
   const doneToday =
-    sessions[0] != null &&
-    sessions[0].sessionAt.toDateString() === new Date().toDateString();
+    sessions[0] != null && sameMadridDay(sessions[0].sessionAt);
 
-  const todayIndex = (new Date().getDay() + 6) % 7;
+  const todayIndex = madridWeekdayIndex();
 
   return (
     <>

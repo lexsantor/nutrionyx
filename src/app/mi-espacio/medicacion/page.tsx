@@ -14,6 +14,7 @@ import { PatientNav } from "../patient-nav";
 import { Card } from "@/components/ui/card";
 import { PlanForm } from "./plan-form";
 import { DoseForm } from "./dose-form";
+import { madridToday } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
 
@@ -37,7 +38,7 @@ export default async function MedicationPage() {
   const lastDose = doses[0] ?? null;
 
   const now = new Date();
-  const todayISO = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+  const todayISO = madridToday(now);
 
   let nextLine: string | null = null;
   if (plan) {

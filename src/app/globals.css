@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+/* Theme toggles via [data-theme] on <html>, not the OS preference; point
+ * the dark: variant at it so both stay in sync. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 /*
  * NORTE - Arctic Prestige design tokens (design.md 1.2/1.3), applied to
  * Nutrionyx. Light is default; dark activates via [data-theme="dark"] on
@@ -226,6 +230,7 @@
   *::before,
   *::after {
     animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }

@@ -37,6 +37,9 @@ import { PatientNav } from "./patient-nav";
 import { WeightChart } from "@/components/weight-chart";
 import { BodyMapMeasures } from "@/components/body-map-measures";
 import { ButtonLink } from "@/components/ui/button-link";
+import { sameMadridDay } from "@/modules/scheduling/time";
+
+export const metadata = { title: "Mi espacio" };
 
 export const dynamic = "force-dynamic";
 
@@ -158,8 +161,7 @@ export default async function PatientHomePage({
 
     const lastWeight = weights[weights.length - 1] ?? null;
     const weightToday =
-      lastWeight != null &&
-      lastWeight.recordedAt.toDateString() === new Date().toDateString();
+      lastWeight != null && sameMadridDay(lastWeight.recordedAt);
     const planParts = targets
       ? [
           targets.kcalTarget != null

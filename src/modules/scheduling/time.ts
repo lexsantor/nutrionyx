@@ -30,3 +30,22 @@ export function madridDayStart(offsetDays: number, now: Date = new Date()): Date
   const base = madridToUtc(ymd, "00:00")!;
   return new Date(base.getTime() + offsetDays * 86_400_000);
 }
+
+/** "YYYY-MM-DD" of the Madrid calendar day containing `now`. */
+export function madridToday(now: Date = new Date()): string {
+  return now.toLocaleDateString("sv-SE", { timeZone: ZONE });
+}
+
+/** Do both instants fall on the same Madrid calendar day? */
+export function sameMadridDay(a: Date, b: Date = new Date()): boolean {
+  return madridToday(a) === madridToday(b);
+}
+
+/** Monday-first weekday index (0-6) of the Madrid day containing `now`. */
+export function madridWeekdayIndex(now: Date = new Date()): number {
+  const wd = new Intl.DateTimeFormat("en-GB", {
+    timeZone: ZONE,
+    weekday: "short",
+  }).format(now);
+  return ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].indexOf(wd);
+}

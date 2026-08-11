@@ -12,7 +12,7 @@ export function SignUpForm({ redirectTo }: { redirectTo?: string }) {
   const [state, formAction, isPending] = useActionState(signUpWithEmail, null);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6">
+    <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-x-clip px-6">
       <div className="pointer-events-none absolute -inset-40 bg-[radial-gradient(ellipse_at_center,var(--color-primary-subtle)_0%,transparent_60%)]" />
       <div className="relative w-full max-w-sm">
         <div className="mb-8 text-center">
@@ -80,6 +80,21 @@ export function SignUpForm({ redirectTo }: { redirectTo?: string }) {
             <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? t("submitting") : t("submit")}
             </Button>
+
+            <p className="text-center text-xs text-ink-subtle">
+              {t.rich("legal", {
+                terms: (chunks) => (
+                  <Link href="/terminos" className="font-medium text-ink">
+                    {chunks}
+                  </Link>
+                ),
+                privacy: (chunks) => (
+                  <Link href="/privacidad" className="font-medium text-ink">
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </p>
           </form>
         </div>
 

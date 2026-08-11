@@ -80,7 +80,7 @@ export async function invitePatient(
     });
   }
 
-  revalidatePath("/panel");
+  revalidatePath("/panel/pacientes");
   return { ok: true };
 }
 
@@ -133,6 +133,6 @@ export async function cancelInvitation(
   const org = await ensureOrganization(activeOrg.id, activeOrg.name);
   await removeInvitedPatient({ organizationId: org.id, email: invitation.email });
 
-  revalidatePath("/panel");
+  revalidatePath("/panel/pacientes");
   return null;
 }

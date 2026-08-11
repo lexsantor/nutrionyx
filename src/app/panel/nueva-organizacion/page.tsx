@@ -19,7 +19,7 @@ export default function NewOrganizationPage() {
   );
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-10">
+    <main className="flex min-h-dvh items-center justify-center px-4 py-10">
       <form action={formAction} className="flex w-full max-w-sm flex-col gap-5">
         <h1 className="text-center text-2xl font-semibold">{t("title")}</h1>
         <p className="text-center text-sm text-ink-subtle">{t("subtitle")}</p>

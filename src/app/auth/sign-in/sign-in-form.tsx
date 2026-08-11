@@ -12,7 +12,7 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
   const [state, formAction, isPending] = useActionState(signInWithEmail, null);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6">
+    <main className="relative flex min-h-dvh flex-col items-center justify-center overflow-x-clip px-6">
       <div className="pointer-events-none absolute -inset-40 bg-[radial-gradient(ellipse_at_center,var(--color-primary-subtle)_0%,transparent_60%)]" />
       <div className="relative w-full max-w-sm">
         <div className="mb-8 text-center">

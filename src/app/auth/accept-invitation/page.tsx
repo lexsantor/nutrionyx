@@ -4,6 +4,8 @@ import { auth } from "@/lib/auth/server";
 import { AcceptForm } from "./accept-form";
 import { SignOutAndContinue } from "./sign-out-and-continue";
 
+export const metadata = { title: "Aceptar invitación" };
+
 export const dynamic = "force-dynamic";
 
 export default async function AcceptInvitationPage({
@@ -37,7 +39,7 @@ export default async function AcceptInvitationPage({
 
   if (wrongSession) {
     return (
-      <main className="flex min-h-screen items-center justify-center px-4">
+      <main className="flex min-h-dvh items-center justify-center px-4">
         <div className="flex w-full max-w-sm flex-col gap-5 text-center">
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p role="alert" className="rounded-[10px] bg-warning-soft px-3 py-2 text-sm text-warning">
@@ -52,7 +54,7 @@ export default async function AcceptInvitationPage({
   // Consumed, cancelled, expired, or unreadable: dead end, say so.
   if (!invitation || invitation.status !== "pending") {
     return (
-      <main className="flex min-h-screen items-center justify-center px-4">
+      <main className="flex min-h-dvh items-center justify-center px-4">
         <div className="flex w-full max-w-sm flex-col gap-5 text-center">
           <h1 className="text-2xl font-semibold">{t("title")}</h1>
           <p role="alert" className="rounded-[10px] bg-surface-3 px-3 py-2 text-sm text-ink-muted">
@@ -64,7 +66,7 @@ export default async function AcceptInvitationPage({
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4">
+    <main className="flex min-h-dvh items-center justify-center px-4">
       <div className="flex w-full max-w-sm flex-col gap-5 text-center">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
         <p className="text-sm text-ink-subtle">{t("subtitle")}</p>
