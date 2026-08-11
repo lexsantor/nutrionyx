@@ -137,3 +137,19 @@ copy button + break-all + dead-end CTA; composed empty states (agenda,
 pacientes). Estimated total after tier 3: ~8.6-8.7 (gate 8.5 pass,
 pending a re-score with rendering). Remaining: tier 4 polish + product
 backlog (password recovery, unsaved-changes guard, search/pagination).
+
+## Tier 4 applied 2026-08-11 (commit d7dbdc6, CI green, deployed)
+
+Reveal: blur dropped, 700->500ms. Threads scroll to newest
+(ScrollAnchor); composer success announced (role=status). Weight chart
+first/last date anchors. Admin: codes table overflow wrapper, two-step
+revoke with pending. Wizard submit pending label. Patients row hover
+dropped (only the name links). Panel photo alt uses photos.photoAlt.
+Overlay deletes size-9. Landing strokes: icons 2, small checks 3.
+Loading skeletons role=status + common.loading (i18n leak closed).
+Nav-link active keeps transition; theme toggle explicit duration-150.
+
+ALL FOUR TIERS APPLIED. Audit-derived work complete; remaining items
+are product backlog (password recovery, unsaved-changes guard, patient
+search/pagination, self-booking, Resend domain, billing) plus an
+optional lexia re-score with real rendering (iterations 3-4 unused).
