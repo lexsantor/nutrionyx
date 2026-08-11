@@ -176,7 +176,7 @@ export function WizardStep(props: StepProps) {
           aria-valuenow={props.stepIndex + 1}
           aria-valuemin={1}
           aria-valuemax={props.totalSteps}
-          className="h-1.5 w-full overflow-hidden rounded-full bg-surface-4"
+          className="h-1.5 w-full overflow-hidden rounded-full bg-surface-3"
         >
           <div
             className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 ease-house"

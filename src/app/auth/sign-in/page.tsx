@@ -5,8 +5,8 @@ export const metadata = { title: "Iniciar sesión" };
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: Promise<{ redirectTo?: string }>;
+  searchParams: Promise<{ redirectTo?: string; reset?: string }>;
 }) {
-  const { redirectTo } = await searchParams;
-  return <SignInForm redirectTo={redirectTo} />;
+  const { redirectTo, reset } = await searchParams;
+  return <SignInForm redirectTo={redirectTo} resetDone={reset === "1"} />;
 }

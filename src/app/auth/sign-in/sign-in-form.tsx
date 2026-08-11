@@ -7,7 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { signInWithEmail } from "./actions";
 
-export function SignInForm({ redirectTo }: { redirectTo?: string }) {
+export function SignInForm({
+  redirectTo,
+  resetDone = false,
+}: {
+  redirectTo?: string;
+  resetDone?: boolean;
+}) {
   const t = useTranslations("auth.signIn");
   const [state, formAction, isPending] = useActionState(signInWithEmail, null);
 
@@ -24,6 +30,15 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
         <div className="rounded-xl border border-hairline bg-surface-1 p-8 shadow-el-sm">
           <h1 className="mb-1 text-center font-display text-xl font-semibold">{t("title")}</h1>
           <p className="mb-8 text-center text-sm text-ink-subtle">{t("subtitle")}</p>
+
+          {resetDone ? (
+            <p
+              role="status"
+              className="mb-5 rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success"
+            >
+              {t("resetDone")}
+            </p>
+          ) : null}
 
           <form action={formAction} className="flex flex-col gap-5">
             <input type="hidden" name="redirectTo" value={redirectTo ?? ""} />
@@ -65,6 +80,15 @@ export function SignInForm({ redirectTo }: { redirectTo?: string }) {
             <Button type="submit" disabled={isPending} className="w-full">
               {isPending ? t("submitting") : t("submit")}
             </Button>
+
+            <p className="text-center">
+              <Link
+                href="/auth/forgot-password"
+                className="text-sm font-medium text-ink-subtle transition-colors hover:text-ink"
+              >
+                {t("forgot")}
+              </Link>
+            </p>
           </form>
         </div>
 

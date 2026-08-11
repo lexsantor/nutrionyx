@@ -346,7 +346,15 @@
         "completed": "Completada",
         "bmi": "IMC"
       },
-      "emptyHint": "Invita a tu primer paciente con el formulario de abajo."
+      "emptyHint": "Invita a tu primer paciente con el formulario de abajo.",
+      "searchLabel": "Buscar paciente",
+      "searchPlaceholder": "Nombre o email",
+      "search": "Buscar",
+      "noResults": "Sin resultados para “{query}”.",
+      "paginationLabel": "Paginación de pacientes",
+      "prevPage": "Anterior",
+      "nextPage": "Siguiente",
+      "pageOf": "Página {page} de {total}"
     },
     "invite": {
       "title": "Invitar paciente",
@@ -695,7 +703,9 @@
         "invalidCredentials": "Correo o contraseña incorrectos.",
         "generic": "No se pudo iniciar sesión. Inténtalo de nuevo."
       },
-      "subtitle": "Entra en tu espacio"
+      "subtitle": "Entra en tu espacio",
+      "forgot": "¿Has olvidado tu contraseña?",
+      "resetDone": "Contraseña actualizada. Inicia sesión con la nueva."
     },
     "signUp": {
       "title": "Regístrate como profesional",
@@ -709,6 +719,29 @@
         "generic": "No se pudo crear la cuenta. Inténtalo de nuevo."
       },
       "legal": "Al crear tu cuenta aceptas los <terms>términos del servicio</terms> y la <privacy>política de privacidad</privacy>."
+    },
+    "forgot": {
+      "title": "Recuperar contraseña",
+      "subtitle": "Te enviaremos un enlace para crear una nueva.",
+      "email": "Correo electrónico",
+      "submit": "Enviar enlace",
+      "submitting": "Enviando…",
+      "sent": "Si la dirección existe, recibirás un correo con el enlace en unos minutos. Revisa también el spam.",
+      "backToSignIn": "Volver a iniciar sesión"
+    },
+    "reset": {
+      "title": "Nueva contraseña",
+      "subtitle": "Elige la contraseña para tu cuenta.",
+      "password": "Nueva contraseña",
+      "hint": "Mínimo 8 caracteres.",
+      "submit": "Guardar contraseña",
+      "submitting": "Guardando…",
+      "missingToken": "El enlace no es válido. Solicita uno nuevo desde recuperar contraseña.",
+      "requestAgain": "Solicitar un enlace nuevo",
+      "errors": {
+        "invalidToken": "El enlace ha caducado o no es válido. Solicita uno nuevo.",
+        "weakPassword": "La contraseña debe tener al menos 8 caracteres."
+      }
     }
   },
   "medication": {
@@ -905,7 +938,8 @@
     "errors": {
       "confirmRequired": "Marca la casilla de confirmación.",
       "generic": "No se ha podido eliminar. Inténtalo de nuevo."
-    }
+    },
+    "typeToConfirm": "Escribe “{name}” para confirmar el borrado definitivo."
   },
   "photos": {
     "title": "Fotos de progreso",
@@ -917,7 +951,10 @@
     "photoAlt": "Foto de progreso del {date}",
     "deleteError": "No se ha podido eliminar la foto.",
     "uploading": "Subiendo…",
-    "fileLabel": "Archivo de foto"
+    "fileLabel": "Archivo de foto",
+    "confirmDelete": "Confirmar",
+    "cancelDelete": "Cancelar borrado",
+    "deleting": "Borrando…"
   },
   "documents": {
     "title": "Documentos",
@@ -927,7 +964,10 @@
     "delete": "Eliminar documento",
     "deleteError": "No se ha podido eliminar.",
     "uploading": "Subiendo…",
-    "fileLabel": "Archivo del documento"
+    "fileLabel": "Archivo del documento",
+    "confirmDelete": "Confirmar",
+    "cancelDelete": "Cancelar borrado",
+    "deleting": "Borrando…"
   },
   "diet": {
     "days": {
@@ -959,7 +999,8 @@
       "errors": {
         "invalidContent": "Revisa el contenido: alguna comida supera los 1000 caracteres.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
-      }
+      },
+      "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?"
     },
     "patient": {
       "heading": "Mi plan de dieta",
@@ -992,7 +1033,8 @@
       "errors": {
         "invalidContent": "Revisa el contenido: algún día supera los 2000 caracteres.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
-      }
+      },
+      "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?"
     },
     "patient": {
       "heading": "Mi entrenamiento",

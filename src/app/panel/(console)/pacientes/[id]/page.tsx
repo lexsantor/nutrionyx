@@ -706,7 +706,7 @@ export default async function PatientDetailPage({
               </h2>
               <p className="text-sm text-ink-subtle">{t("erase.subtitle")}</p>
             </div>
-            <EraseForm patientId={patient.id} />
+            <EraseForm patientId={patient.id} patientName={patient.fullName ?? patient.id} />
           </div>
         </Card>
         </div>

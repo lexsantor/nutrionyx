@@ -11,10 +11,23 @@ import { InviteForm } from "../invite-form";
 import { CancelInvitationButton } from "../cancel-button";
 import { CopyLinkButton } from "../copy-link-button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { ButtonLink } from "@/components/ui/button-link";
 
 export const dynamic = "force-dynamic";
 
-export default async function PatientsPage() {
+const PAGE_SIZE = 20;
+
+const norm = (v: string) =>
+  v.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+export default async function PatientsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string }>;
+}) {
+  const { q = "", page = "1" } = await searchParams;
   const t = await getTranslations("panel");
   const { org } = await requireSpecialistOrg();
   const [patients, latestWeights, unreadMessages, { data: pending }] =
@@ -30,10 +43,47 @@ export default async function PatientsPage() {
     (invitation) => invitation.status === "pending",
   );
 
+  // ponytail: in-memory filter/slice over the full org list; move to SQL
+  // when a caseload outgrows a single query.
+  const query = norm(q.trim());
+  const filtered = query
+    ? patients.filter(
+        (patient) =>
+          norm(patient.fullName ?? "").includes(query) ||
+          norm(patient.email ?? "").includes(query),
+      )
+    : patients;
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const pageN = Math.min(Math.max(1, Number(page) || 1), totalPages);
+  const visible = filtered.slice((pageN - 1) * PAGE_SIZE, pageN * PAGE_SIZE);
+  const pageHref = (target: number) =>
+    `/panel/pacientes?${new URLSearchParams({
+      ...(q ? { q } : {}),
+      ...(target > 1 ? { page: String(target) } : {}),
+    }).toString()}`;
+
   return (
     <>
       <div className="flex flex-col gap-6">
         <h1 className="text-2xl font-semibold">{t("patients.title")}</h1>
+
+        {patients.length > 0 ? (
+          <form method="get" action="/panel/pacientes" className="flex max-w-sm items-center gap-2">
+            <label htmlFor="patient-search" className="sr-only">
+              {t("patients.searchLabel")}
+            </label>
+            <Input
+              id="patient-search"
+              name="q"
+              type="search"
+              defaultValue={q}
+              placeholder={t("patients.searchPlaceholder")}
+            />
+            <Button type="submit" variant="secondary" className="shrink-0">
+              {t("patients.search")}
+            </Button>
+          </form>
+        ) : null}
 
         {patients.length === 0 ? (
           <div className="flex flex-col items-start gap-2 py-4">
@@ -64,7 +114,7 @@ export default async function PatientsPage() {
                 </tr>
               </thead>
               <tbody>
-                {patients.map((patient) => {
+                {visible.map((patient) => {
                   const assessment = patient.assessments[0] ?? null;
                   const latest = latestWeights.get(patient.id);
                   const latestKg = latest ? Number(latest.value) : null;
@@ -154,6 +204,33 @@ export default async function PatientsPage() {
             </table>
           </div>
         )}
+
+        {patients.length > 0 && filtered.length === 0 ? (
+          <p className="text-sm text-ink-subtle">
+            {t("patients.noResults", { query: q })}
+          </p>
+        ) : null}
+
+        {totalPages > 1 ? (
+          <nav
+            aria-label={t("patients.paginationLabel")}
+            className="flex items-center gap-3"
+          >
+            {pageN > 1 ? (
+              <ButtonLink href={pageHref(pageN - 1)} variant="ghost" size="sm">
+                {t("patients.prevPage")}
+              </ButtonLink>
+            ) : null}
+            <span className="text-sm text-ink-subtle">
+              {t("patients.pageOf", { page: pageN, total: totalPages })}
+            </span>
+            {pageN < totalPages ? (
+              <ButtonLink href={pageHref(pageN + 1)} variant="ghost" size="sm">
+                {t("patients.nextPage")}
+              </ButtonLink>
+            ) : null}
+          </nav>
+        ) : null}
 
         <InviteForm />
 

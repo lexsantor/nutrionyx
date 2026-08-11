@@ -56,7 +56,7 @@ export default async function MedicationPage() {
   return (
     <>
       <Topbar nav={<PatientNav />} />
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
+      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
         <div className="flex flex-col gap-2">
           <Link
             href="/mi-espacio"

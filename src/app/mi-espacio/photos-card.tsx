@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { deletePhotoAction, type PhotoDeleteState } from "./actions";
 import { UploadForm } from "@/components/upload-form";
@@ -11,6 +11,7 @@ function DeleteButton({ photoId }: { photoId: string }) {
     PhotoDeleteState,
     FormData
   >(deletePhotoAction, null);
+  const [armed, setArmed] = useState(false);
   return (
     <form action={formAction} className="absolute right-1.5 top-1.5">
       {state?.errorKey ? (
@@ -22,14 +23,35 @@ function DeleteButton({ photoId }: { photoId: string }) {
         </p>
       ) : null}
       <input type="hidden" name="photoId" value={photoId} />
-      <button
-        type="submit"
-        disabled={isPending}
-        aria-label={t("delete")}
-        className="flex size-9 items-center justify-center rounded-full bg-canvas/80 text-ink-subtle backdrop-blur transition-colors hover:text-error"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-      </button>
+      {armed ? (
+        <span className="inline-flex items-center gap-1">
+          <button
+            type="submit"
+            disabled={isPending}
+            aria-label={t("confirmDelete")}
+            className="flex size-9 items-center justify-center rounded-full bg-error text-on-destructive transition-[transform,background-color] hover:bg-error-hover active:scale-[0.97] active:duration-150 disabled:opacity-60"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+          </button>
+          <button
+            type="button"
+            aria-label={t("cancelDelete")}
+            onClick={() => setArmed(false)}
+            className="flex size-9 items-center justify-center rounded-full bg-canvas/80 text-ink-subtle backdrop-blur transition-colors hover:text-ink"
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
+          </button>
+        </span>
+      ) : (
+        <button
+          type="button"
+          onClick={() => setArmed(true)}
+          aria-label={t("delete")}
+          className="flex size-9 items-center justify-center rounded-full bg-canvas/80 text-ink-subtle backdrop-blur transition-colors hover:text-error"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+        </button>
+      )}
     </form>
   );
 }

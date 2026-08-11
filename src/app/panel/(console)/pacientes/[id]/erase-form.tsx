@@ -5,9 +5,16 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { erasePatientAction, type EraseFormState } from "./actions";
 
-export function EraseForm({ patientId }: { patientId: string }) {
+export function EraseForm({
+  patientId,
+  patientName,
+}: {
+  patientId: string;
+  patientName: string;
+}) {
   const t = useTranslations("erase");
-  const [confirmed, setConfirmed] = useState(false);
+  const [typed, setTyped] = useState("");
+  const confirmed = typed.trim() === patientName;
   const [state, formAction, isPending] = useActionState<
     EraseFormState,
     FormData
@@ -16,16 +23,20 @@ export function EraseForm({ patientId }: { patientId: string }) {
   return (
     <form action={formAction} className="flex flex-col gap-3">
       <input type="hidden" name="patientId" value={patientId} />
-      <label className="flex items-start gap-2.5 text-sm">
+      <div className="flex flex-col gap-1.5">
+        <label htmlFor="erase-confirm" className="text-sm text-ink-subtle">
+          {t("typeToConfirm", { name: patientName })}
+        </label>
         <input
-          type="checkbox"
-          name="confirm"
-          checked={confirmed}
-          onChange={(e) => setConfirmed(e.target.checked)}
-          className="mt-0.5 size-4 accent-[var(--c-error)]"
+          id="erase-confirm"
+          type="text"
+          value={typed}
+          onChange={(e) => setTyped(e.target.value)}
+          autoComplete="off"
+          className="block w-full max-w-xs rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink"
         />
-        <span className="text-ink-subtle">{t("confirmLabel")}</span>
-      </label>
+        <input type="hidden" name="confirm" value={confirmed ? "on" : ""} />
+      </div>
       <Button
         type="submit"
         variant="destructive"

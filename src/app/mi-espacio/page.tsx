@@ -186,7 +186,7 @@ export default async function PatientHomePage() {
     return (
       <>
         <Topbar nav={<PatientNav />} />
-        <main className="mx-auto w-full max-w-6xl px-6 py-10">
+        <main id="contenido" className="mx-auto w-full max-w-6xl px-6 py-10">
           <h1 className="mb-6 font-display text-2xl font-semibold tracking-tight">
             {t("welcome", { name: session.user.name })}
           </h1>

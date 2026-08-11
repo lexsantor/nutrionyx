@@ -1,8 +1,9 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 import { Input } from "@/components/ui/input";
 import type { RoutineContent } from "@/modules/training/routine";
 import { saveRoutineAction, type RoutineFormState } from "./actions";
@@ -23,9 +24,21 @@ export function RoutineEditor({
     RoutineFormState,
     FormData
   >(saveRoutineAction, null);
+  const [dirty, setDirty] = useState(false);
+  // Render-time adjustment (not an effect): a fresh ok state clears dirty.
+  const [prevState, setPrevState] = useState(state);
+  if (state !== prevState) {
+    setPrevState(state);
+    if (state && "ok" in state) setDirty(false);
+  }
+  useUnsavedGuard(dirty, t("editor.unsaved"));
 
   return (
-    <form action={formAction} className="flex flex-col gap-6">
+    <form
+      action={formAction}
+      onInput={() => setDirty(true)}
+      className="flex flex-col gap-6"
+    >
       <input type="hidden" name="patientId" value={patientId} />
 
       <div className="grid gap-4 sm:grid-cols-2">

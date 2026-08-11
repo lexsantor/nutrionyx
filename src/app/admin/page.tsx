@@ -37,7 +37,7 @@ export default async function AdminPage() {
   return (
     <>
       <Topbar />
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-10">
+      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-col gap-8 px-6 py-10">
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
 
         <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
