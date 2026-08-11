@@ -33,7 +33,7 @@ const SAMPLE_WEIGHTS = [88, 87.6, 87.1, 86.7, 86.2].map((kg, i) => ({
   valueKg: kg,
 }));
 
-const EASE = "ease-[cubic-bezier(0.32,0.72,0,1)]";
+const EASE = "ease-house";
 
 function Bezel({
   children,
@@ -46,7 +46,7 @@ function Bezel({
 }) {
   return (
     <div
-      className={`rounded-[2rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.25)] transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} ${className}`}
+      className={`rounded-[2rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} ${className}`}
     >
       <div className="rounded-[calc(2rem-0.375rem)] bg-surface-1 p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]">
         {children}
@@ -59,7 +59,7 @@ function CtaButton({ href, children }: { href: string; children: ReactNode }) {
   return (
     <Link
       href={href}
-      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary no-underline shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98] active:duration-150`}
+      className={`group inline-flex items-center gap-3 rounded-full bg-primary py-2 pl-7 pr-2 text-sm font-semibold text-on-primary no-underline shadow-el-md transition-[transform,box-shadow,border-color,background-color,color] duration-200 ${EASE} hover:bg-primary-hover hover:shadow-el-lg active:scale-[0.98] active:duration-150`}
     >
       {children}
       <span
@@ -223,12 +223,9 @@ export default async function Home() {
           >
             {t("hero.cta.signIn")}
           </ButtonLink>
-          <Link
-            href="/auth/sign-up"
-            className={`inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-500 ${EASE} hover:bg-primary-hover active:scale-[0.98] active:duration-150`}
-          >
+          <ButtonLink href="/auth/sign-up" variant="primary" size="sm">
             {t("hero.cta.signUp")}
-          </Link>
+          </ButtonLink>
         </div>
       </nav>
 
@@ -265,12 +262,12 @@ export default async function Home() {
               <ButtonLink
                 href="/auth/sign-in"
                 variant="secondary"
-                className="h-[52px] px-7"
+                size="lg"
               >
                 {t("hero.cta.signIn")}
               </ButtonLink>
             </div>
-            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-tertiary">
+            <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-subtle">
               <span>{t("hero.byline")}</span>
               <span aria-hidden="true">·</span>
               <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
@@ -280,7 +277,7 @@ export default async function Home() {
           {/* Floating record teaser stack */}
           <div className="relative mx-auto hidden h-[26rem] w-full max-w-sm lg:block" aria-hidden="true">
             <div
-              className="absolute left-1/2 top-0 w-56 -translate-x-[85%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_32px_70px_-30px_rgba(15,23,42,0.35)] [--tilt:-5deg]"
+              className="absolute left-1/2 top-0 w-56 -translate-x-[85%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel [--tilt:-5deg]"
               style={{ animation: "float 8s ease-in-out infinite" }}
             >
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
@@ -294,7 +291,7 @@ export default async function Home() {
               </div>
             </div>
             <div
-              className="absolute left-1/2 top-16 z-10 w-60 -translate-x-[15%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_40px_90px_-32px_rgba(15,23,42,0.4)] [--tilt:3deg]"
+              className="absolute left-1/2 top-16 z-10 w-60 -translate-x-[15%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel [--tilt:3deg]"
               style={{ animation: "float 9s ease-in-out 0.8s infinite" }}
             >
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4 text-ink">
@@ -310,7 +307,7 @@ export default async function Home() {
               </div>
             </div>
             <div
-              className="absolute bottom-0 left-1/2 w-52 -translate-x-[60%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-[0_28px_60px_-28px_rgba(15,23,42,0.35)] [--tilt:5deg]"
+              className="absolute bottom-0 left-1/2 w-52 -translate-x-[60%] rounded-[1.5rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel [--tilt:5deg]"
               style={{ animation: "float 7s ease-in-out 1.6s infinite" }}
             >
               <div className="rounded-[calc(1.5rem-0.375rem)] bg-surface-1 p-4">
@@ -676,17 +673,17 @@ export default async function Home() {
             <ButtonLink
               href="/auth/sign-in"
               variant="secondary"
-              className="h-[52px] px-7"
+              size="lg"
             >
               {t("closing.secondary")}
             </ButtonLink>
           </div>
-          <p className="text-xs text-ink-tertiary">{t("closing.noCard")}</p>
+          <p className="text-xs text-ink-subtle">{t("closing.noCard")}</p>
         </Reveal>
       </div>
 
       {/* Block 14: visible last-updated stamp */}
-      <footer className="flex flex-col items-center gap-2 px-6 py-10 text-center text-xs text-ink-tertiary">
+      <footer className="flex flex-col items-center gap-2 px-6 py-10 text-center text-xs text-ink-subtle">
         <div className="flex items-center gap-3">
           <Link
             href="/privacidad"

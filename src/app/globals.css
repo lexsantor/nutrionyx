@@ -15,16 +15,17 @@
 :root {
   accent-color: var(--c-primary);
   color-scheme: light;
-  --c-primary: #1e2a39;
+  /* Primary carries real chroma (arctic navy) so accent moments are not
+   * functionally ink; audit 2026-08-11 COLOR finding. */
+  --c-primary: #24405f;
   --c-on-primary: #f5f8fa;
-  --c-primary-hover: #2c3d52;
-  --c-primary-pressed: #0b0f14;
+  --c-primary-hover: #2d4f75;
+  --c-primary-pressed: #16293f;
   --c-primary-subtle: #dee7ef;
   --c-on-primary-subtle: #2c3d52;
   --c-ink: #0b0f14;
   --c-ink-muted: #303e4e;
   --c-ink-subtle: #5c7386;
-  --c-ink-tertiary: #5b7080;
   --c-canvas: #f5f8fa;
   --c-surface-1: #ffffff;
   --c-surface-2: #fafcfe;
@@ -42,16 +43,18 @@
   --c-warning: #8a5800;
   --c-warning-soft: #fbeecf;
   --c-error: #b03200;
+  --c-error-hover: #992b00;
   --c-error-soft: #fde3d8;
   --c-on-destructive: #f5f8fa;
   --c-info: #303e4e;
   --c-focus-ring: #5c7386;
-  --c-selection-bg: #1e2a39;
+  --c-selection-bg: #24405f;
   --c-selection-fg: #f5f8fa;
   --c-accent-text: #3a5068;
   --el-sm: 0 1px 2px rgba(11, 15, 20, 0.06);
   --el-md: 0 4px 14px rgba(11, 15, 20, 0.08);
   --el-lg: 0 18px 40px rgba(11, 15, 20, 0.12);
+  --el-bezel: 0 32px 70px -30px rgba(11, 15, 20, 0.28);
 }
 
 [data-theme="dark"] {
@@ -65,7 +68,6 @@
   --c-ink: #f5f8fa;
   --c-ink-muted: #d6dee6;
   --c-ink-subtle: #9db4c6;
-  --c-ink-tertiary: #93a8bc;
   --c-canvas: #0b0f14;
   --c-surface-1: #121a24;
   --c-surface-2: #161f2b;
@@ -83,6 +85,7 @@
   --c-warning: #f5a623;
   --c-warning-soft: #2b2008;
   --c-error: #ff5236;
+  --c-error-hover: #ff6b52;
   --c-error-soft: #2e150f;
   --c-on-destructive: #0b0f14;
   --c-info: #d6dee6;
@@ -90,9 +93,11 @@
   --c-selection-bg: #9db4c6;
   --c-selection-fg: #0b0f14;
   --c-accent-text: #9db4c6;
-  --el-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --el-md: 0 4px 12px rgba(0, 0, 0, 0.45);
-  --el-lg: 0 12px 32px rgba(0, 0, 0, 0.55);
+  /* Shadows tinted toward the canvas navy, never pure black. */
+  --el-sm: 0 1px 2px rgba(3, 10, 20, 0.4);
+  --el-md: 0 4px 12px rgba(3, 10, 20, 0.45);
+  --el-lg: 0 12px 32px rgba(3, 10, 20, 0.55);
+  --el-bezel: 0 32px 70px -30px rgba(3, 10, 20, 0.6);
 }
 
 @theme inline {
@@ -105,7 +110,6 @@
   --color-ink: var(--c-ink);
   --color-ink-muted: var(--c-ink-muted);
   --color-ink-subtle: var(--c-ink-subtle);
-  --color-ink-tertiary: var(--c-ink-tertiary);
   --color-canvas: var(--c-canvas);
   --color-surface-1: var(--c-surface-1);
   --color-surface-2: var(--c-surface-2);
@@ -123,6 +127,7 @@
   --color-warning: var(--c-warning);
   --color-warning-soft: var(--c-warning-soft);
   --color-error: var(--c-error);
+  --color-error-hover: var(--c-error-hover);
   --color-error-soft: var(--c-error-soft);
   --color-on-destructive: var(--c-on-destructive);
   --color-info: var(--c-info);
@@ -136,6 +141,13 @@
   --shadow-el-sm: var(--el-sm);
   --shadow-el-md: var(--el-md);
   --shadow-el-lg: var(--el-lg);
+  --shadow-el-bezel: var(--el-bezel);
+  /* House motion: one signature curve; bare transition utilities default to
+   * the fast tier (200ms). Slow tier (500/700) stays explicit per component. */
+  --ease-house: cubic-bezier(0.32, 0.72, 0, 1);
+  --default-transition-timing-function: var(--ease-house);
+  --default-transition-duration: 200ms;
+  --animate-fade-in: fade-in 200ms var(--ease-house);
 }
 
 /*
@@ -234,6 +246,11 @@
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
   }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Ambient float for the landing teaser stack (reduced-motion zeroes it). */

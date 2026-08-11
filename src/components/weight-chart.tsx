@@ -55,7 +55,7 @@ export async function WeightChart({
   return (
     <figure className="flex flex-col gap-3">
       <figcaption className="flex items-baseline justify-between gap-4">
-        <span className="text-2xl font-semibold">{fmtKg(latest.valueKg)}</span>
+        <span className="font-display text-2xl font-semibold tabular-nums">{fmtKg(latest.valueKg)}</span>
         {delta != null ? (
           <span
             className={

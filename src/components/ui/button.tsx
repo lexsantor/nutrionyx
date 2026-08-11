@@ -10,7 +10,7 @@ const VARIANTS: Record<Variant, string> = {
   secondary:
     "border border-hairline bg-surface-1 text-ink hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.97]",
   ghost: "text-ink hover:bg-surface-3 active:scale-[0.97]",
-  destructive: "bg-error text-on-destructive hover:opacity-90 active:scale-[0.97]",
+  destructive: "bg-error text-on-destructive hover:bg-error-hover active:scale-[0.97]",
 };
 
 export function Button({
@@ -20,7 +20,7 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: Variant }) {
   return (
     <button
-      className={`inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:duration-150 disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex h-11 items-center justify-center gap-2 rounded-full px-5 text-sm font-semibold transition-[transform,box-shadow,border-color,background-color,color] duration-200 ease-house active:duration-150 disabled:cursor-not-allowed disabled:opacity-60 ${VARIANTS[variant]} ${className}`}
       {...props}
     />
   );

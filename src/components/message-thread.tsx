@@ -38,7 +38,7 @@ export function MessageThread({
               </span>
               {message.body}
             </div>
-            <span className="px-1 text-xs text-ink-tertiary">
+            <span className="px-1 text-xs text-ink-subtle">
               {message.sentAt}
             </span>
           </li>

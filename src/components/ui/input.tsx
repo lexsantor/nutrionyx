@@ -8,7 +8,7 @@ export function Input({
 }: InputHTMLAttributes<HTMLInputElement>) {
   return (
     <input
-      className={`block h-11 w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 text-base text-ink placeholder:text-ink-tertiary ${className}`}
+      className={`block h-11 w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 text-base text-ink placeholder:text-ink-subtle ${className}`}
       {...props}
     />
   );

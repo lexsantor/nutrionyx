@@ -61,7 +61,7 @@ export default async function PanelPage() {
             <p className="text-sm text-ink-subtle">
               {t("dashboard.activePatients")}
             </p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
               {dashboard.activePatients}
             </p>
           </Card>
@@ -69,7 +69,7 @@ export default async function PanelPage() {
             <p className="text-sm text-ink-subtle">
               {t("dashboard.newIn30Days")}
             </p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
               {dashboard.newIn30Days}
             </p>
           </Card>
@@ -77,7 +77,7 @@ export default async function PanelPage() {
             <p className="text-sm text-ink-subtle">
               {t("dashboard.withCompletedAssessment")}
             </p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
               {dashboard.withCompletedAssessment}
             </p>
           </Card>
@@ -85,7 +85,7 @@ export default async function PanelPage() {
             <p className="text-sm text-ink-subtle">
               {t("dashboard.pendingFollowUp")}
             </p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
               {dashboard.pendingFollowUp}
             </p>
           </Card>
@@ -122,7 +122,7 @@ export default async function PanelPage() {
           </Card>
           <Card>
             <p className="text-sm text-ink-subtle">{t("metrics.medianTime")}</p>
-            <p className="mt-1 text-2xl font-semibold">
+            <p className="mt-1 font-display text-3xl font-semibold tabular-nums">
               {metrics.medianCompletionMinutes !== null
                 ? t("metrics.minutes", { min: metrics.medianCompletionMinutes })
                 : "—"}

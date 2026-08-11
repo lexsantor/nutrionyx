@@ -159,7 +159,7 @@ export function CancelButton({ appointmentId }: { appointmentId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-colors duration-150 ease-[cubic-bezier(0.32,0.72,0,1)] hover:bg-error-soft hover:text-error active:scale-[0.98]"
+        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-[transform,background-color,color] hover:bg-error-soft hover:text-error active:scale-[0.98] active:duration-150"
       >
         {t("cancel")}
       </button>

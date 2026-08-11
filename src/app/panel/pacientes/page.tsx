@@ -141,7 +141,7 @@ export default async function PatientsPage() {
                         ) : assessment?.status === "IN_PROGRESS" ? (
                           <span className="text-ink-subtle">{t("patients.assessments.inProgress")}</span>
                         ) : (
-                          <span className="text-ink-tertiary">{t("patients.assessments.pending")}</span>
+                          <span className="text-ink-subtle">{t("patients.assessments.pending")}</span>
                         )}
                       </td>
                       <td className="px-4 py-3 text-sm tabular-nums">
@@ -156,7 +156,7 @@ export default async function PatientsPage() {
                             ) : null}
                           </span>
                         ) : (
-                          <span className="text-ink-tertiary">—</span>
+                          <span className="text-ink-subtle">—</span>
                         )}
                       </td>
                     </tr>

@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { useTranslations } from "next-intl";
 import { deletePhotoAction, type PhotoDeleteState } from "./actions";
+import { Button } from "@/components/ui/button";
 
 function DeleteButton({ photoId }: { photoId: string }) {
   const t = useTranslations("photos");
@@ -43,7 +44,7 @@ export function PhotosCard({
   const t = useTranslations("photos");
 
   return (
-    <section className="flex h-full flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-el-md">
+    <section className="flex h-full flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md">
       <div className="flex flex-col gap-0.5">
         <h2 className="text-lg font-semibold">{t("title")}</h2>
         <p className="text-sm text-ink-subtle">{t("privacy")}</p>
@@ -86,12 +87,9 @@ export function PhotosCard({
           accept="image/jpeg,image/png,image/webp"
           className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
         />
-        <button
-          type="submit"
-          className="inline-flex h-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-colors hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.97]"
-        >
+        <Button type="submit" variant="secondary" className="shrink-0">
           {t("upload")}
-        </button>
+        </Button>
       </form>
       {uploadError ? (
         <p

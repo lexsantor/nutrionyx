@@ -24,7 +24,7 @@ type StepProps = {
 };
 
 const inputClass =
-  "block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary";
+  "block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle";
 
 const optionClass =
   "flex cursor-pointer items-center gap-3 rounded-[10px] border border-hairline px-4 py-3 text-sm has-[:checked]:border-primary has-[:checked]:bg-primary-subtle";
@@ -161,7 +161,7 @@ export function WizardStep(props: StepProps) {
           className="h-1.5 w-full overflow-hidden rounded-full bg-surface-4"
         >
           <div
-            className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)]"
+            className="h-full w-full origin-left rounded-full bg-primary transition-transform duration-300 ease-house"
             style={{
               transform: `scaleX(${(props.stepIndex + 1) / props.totalSteps})`,
             }}
@@ -275,7 +275,7 @@ export function WizardStep(props: StepProps) {
           {props.stepIndex > 0 ? (
             <Link
               href={`/mi-espacio/evaluacion?paso=${props.stepIndex - 1}`}
-              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
+              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
             >
               {t("back")}
             </Link>

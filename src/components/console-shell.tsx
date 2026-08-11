@@ -33,7 +33,7 @@ const SETTINGS_NAV = { key: "ajustes", href: "/panel/ajustes", icon: Settings };
 const ICON_SIZE = 18;
 
 const navBase =
-  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[background-color,color,box-shadow] duration-200 ease-[cubic-bezier(0.32,0.72,0,1)]";
+  "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[background-color,color,box-shadow] duration-200 ease-house";
 const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el-sm`;
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 

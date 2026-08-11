@@ -34,7 +34,7 @@ export function Composer({ patientId }: { patientId: string }) {
           maxLength={4000}
           rows={2}
           placeholder={t("composerPlaceholder")}
-          className="block w-full flex-1 resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary"
+          className="block w-full flex-1 resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle"
         />
         <Button type="submit" disabled={isPending}>
           {isPending ? t("sending") : t("send")}

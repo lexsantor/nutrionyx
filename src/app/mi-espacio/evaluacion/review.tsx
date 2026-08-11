@@ -44,7 +44,7 @@ export function Review({
             key={entry.field}
             href={`/mi-espacio/evaluacion?paso=${index}`}
             aria-label={`${t("back")}: ${t(`fields.${entry.field}.title`)}`}
-            className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99] active:duration-150"
+            className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99] active:duration-150"
           >
             <span className="flex items-center justify-between gap-2 text-xs font-medium text-ink-subtle">
               {t(`fields.${entry.field}.title`)}
@@ -58,14 +58,14 @@ export function Review({
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 aria-hidden="true"
-                className="shrink-0 opacity-0 transition-opacity duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:opacity-100"
+                className="shrink-0 opacity-0 transition-opacity duration-500 ease-house group-hover:opacity-100"
               >
                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
               </svg>
             </span>
             <span
               className={`text-base font-semibold ${
-                entry.display ? "" : "font-normal text-ink-tertiary"
+                entry.display ? "" : "font-normal text-ink-subtle"
               }`}
             >
               {entry.display ?? t("review.empty")}
@@ -95,7 +95,7 @@ export function Review({
           {isPending ? t("review.completing") : t("review.complete")}
         </Button>
       </form>
-      <p className="text-center text-xs text-ink-tertiary">
+      <p className="text-center text-xs text-ink-subtle">
         {t("review.editHint")}
       </p>
     </main>

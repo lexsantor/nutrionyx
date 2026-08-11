@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ComponentProps } from "react";
 
 type Variant = "primary" | "secondary" | "ghost";
-type Size = "md" | "sm";
+type Size = "lg" | "md" | "sm";
 
 // Site-wide rule: the primary action is a filled pill, the secondary is an
 // OUTLINED pill - never an underlined text link. Ghost is for tertiary,
@@ -16,6 +16,7 @@ const VARIANTS: Record<Variant, string> = {
 };
 
 const SIZES: Record<Size, string> = {
+  lg: "h-[52px] px-7 text-sm",
   md: "h-11 px-6 text-sm",
   sm: "h-9 px-4 text-sm",
 };
@@ -28,7 +29,7 @@ export function ButtonLink({
 }: ComponentProps<typeof Link> & { variant?: Variant; size?: Size }) {
   return (
     <Link
-      className={`inline-flex items-center justify-center gap-2 rounded-full font-semibold no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] active:scale-[0.98] active:duration-150 ${SIZES[size]} ${VARIANTS[variant]} ${className}`}
+      className={`inline-flex items-center justify-center gap-2 rounded-full font-semibold no-underline transition-[transform,box-shadow,border-color,background-color,color] duration-200 ease-house active:scale-[0.98] active:duration-150 ${SIZES[size]} ${VARIANTS[variant]} ${className}`}
       {...props}
     />
   );

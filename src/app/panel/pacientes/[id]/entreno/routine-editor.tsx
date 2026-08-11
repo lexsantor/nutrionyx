@@ -53,7 +53,7 @@ export function RoutineEditor({
             rows={2}
             defaultValue={initial.notes ?? ""}
             placeholder={t("editor.notesPlaceholder")}
-            className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-tertiary"
+            className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle"
           />
         </div>
       </div>
@@ -74,7 +74,7 @@ export function RoutineEditor({
               maxLength={2000}
               defaultValue={day}
               placeholder={t("editor.dayPlaceholder")}
-              className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3 py-2 text-sm text-ink placeholder:text-ink-tertiary"
+              className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3 py-2 text-sm text-ink placeholder:text-ink-subtle"
             />
           </div>
         ))}

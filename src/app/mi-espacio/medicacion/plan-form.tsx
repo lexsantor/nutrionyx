@@ -39,7 +39,7 @@ export function DoseStepper({
           type="button"
           onClick={() => bump(-0.25)}
           aria-label="−0,25 mg"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface-2 text-lg font-semibold text-ink transition-colors hover:bg-surface-3 active:scale-[0.97]"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface-2 text-lg font-semibold text-ink transition-[transform,background-color,border-color] hover:bg-surface-3 active:scale-[0.97] active:duration-150"
         >
           −
         </button>
@@ -58,7 +58,7 @@ export function DoseStepper({
           type="button"
           onClick={() => bump(0.25)}
           aria-label="+0,25 mg"
-          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface-2 text-lg font-semibold text-ink transition-colors hover:bg-surface-3 active:scale-[0.97]"
+          className="flex size-11 shrink-0 items-center justify-center rounded-full border border-hairline bg-surface-2 text-lg font-semibold text-ink transition-[transform,background-color,border-color] hover:bg-surface-3 active:scale-[0.97] active:duration-150"
         >
           +
         </button>

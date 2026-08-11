@@ -9,7 +9,7 @@ export function Card({
   ...props
 }: HTMLAttributes<HTMLDivElement> & { interactive?: boolean }) {
   const motion = interactive
-    ? " transition-[transform,box-shadow,border-color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-el-md"
+    ? " transition-[transform,box-shadow,border-color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md"
     : "";
   return (
     <div

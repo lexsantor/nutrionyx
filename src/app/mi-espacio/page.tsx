@@ -45,7 +45,7 @@ export const dynamic = "force-dynamic";
 
 // Bento tile: shared card surface with premium hover physics.
 const TILE =
-  "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:-translate-y-0.5 hover:shadow-el-md";
+  "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md";
 
 export default async function PatientHomePage({
   searchParams,
@@ -247,7 +247,7 @@ export default async function PatientHomePage({
                     className="h-1.5 overflow-hidden rounded-full bg-surface-3"
                   >
                     <div
-                      className={`h-full w-full origin-left rounded-full transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] ${
+                      className={`h-full w-full origin-left rounded-full transition-transform duration-300 ease-house ${
                         proteinRatio >= 1 ? "bg-success" : "bg-primary"
                       }`}
                       style={{ transform: `scaleX(${proteinRatio})` }}
@@ -474,7 +474,7 @@ export default async function PatientHomePage({
             <a
               href="/api/me/export"
               download
-              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
+              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
             >
               {tb("exportLink")}
             </a>

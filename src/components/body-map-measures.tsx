@@ -61,7 +61,7 @@ function fmt(v: number) {
 
 function Delta({ delta }: { delta: number | null }) {
   if (delta == null) {
-    return <span className="text-ink-tertiary">—</span>;
+    return <span className="text-ink-subtle">—</span>;
   }
   const dir = delta < -0.05 ? "down" : delta > 0.05 ? "up" : "flat";
   const sign = delta > 0 ? "+" : delta < 0 ? "−" : "±";
@@ -104,21 +104,19 @@ export function BodyMapMeasures({
   return (
     <div className="flex flex-col gap-4">
       <div
-        role="tablist"
+        role="group"
         aria-label={t("map.viewLabel")}
         className="flex w-fit items-center gap-1 rounded-full border border-hairline bg-surface-2 p-1"
       >
         <button
-          role="tab"
-          aria-selected={view === "front"}
+          aria-pressed={view === "front"}
           className={segBtn(view === "front")}
           onClick={() => setView("front")}
         >
           {t("map.front")}
         </button>
         <button
-          role="tab"
-          aria-selected={view === "back"}
+          aria-pressed={view === "back"}
           className={segBtn(view === "back")}
           onClick={() => setView("back")}
         >
@@ -127,7 +125,11 @@ export function BodyMapMeasures({
       </div>
 
       <div className="grid gap-6 sm:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
-        <div className="relative mx-auto h-80 w-auto sm:h-96" style={{ aspectRatio: "200/358" }}>
+        <div
+          key={view}
+          className="relative mx-auto h-80 w-auto animate-fade-in sm:h-96"
+          style={{ aspectRatio: "200/358" }}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={`/mannequin-${figure.toLowerCase()}-${view}.png`}
@@ -170,9 +172,9 @@ export function BodyMapMeasures({
               >
                 <rect
                   x={Math.min(x1, lineEnd) - 6}
-                  y={y - 12}
+                  y={y - 16}
                   width={Math.abs(Math.max(x2, lineEnd) - Math.min(x1, lineEnd)) + 12}
-                  height={24}
+                  height={32}
                   fill="transparent"
                 />
                 <line
@@ -181,7 +183,9 @@ export function BodyMapMeasures({
                   x2={x2}
                   y2={y}
                   strokeWidth={isSel ? 2.5 : 1.75}
-                  className={isSel ? "stroke-primary" : "stroke-ink/50"}
+                  className={`transition-[stroke,stroke-width] ${
+                    isSel ? "stroke-primary" : "stroke-ink/50"
+                  }`}
                 />
                 <line
                   x1={labelRight ? x2 : x1}
@@ -196,21 +200,23 @@ export function BodyMapMeasures({
                   cx={labelRight ? x2 : x1}
                   cy={y}
                   r="3"
-                  className={isSel ? "fill-primary" : "fill-ink/50"}
+                  className={`transition-[fill] ${
+                    isSel ? "fill-primary" : "fill-ink/50"
+                  }`}
                 />
                 <text
                   x={lx}
-                  y={y - 3.5}
+                  y={y - 4.5}
                   textAnchor={anchor}
-                  className="fill-ink-subtle text-[9px] font-medium"
+                  className="fill-ink-muted text-[11px] font-medium"
                 >
                   {t(`zones.${zone.key}`)}
                 </text>
                 <text
                   x={lx}
-                  y={y + 9}
+                  y={y + 10.5}
                   textAnchor={anchor}
-                  className={`text-[10px] font-semibold tabular-nums ${
+                  className={`text-[12px] font-semibold tabular-nums transition-[fill] ${
                     isSel ? "fill-primary" : "fill-ink"
                   }`}
                 >
@@ -222,10 +228,12 @@ export function BodyMapMeasures({
           </svg>
         </div>
 
+        {/* Persistent live region: mounted always so selection changes announce. */}
+        <div aria-live="polite">
         {selected && selData ? (
           <div
-            aria-live="polite"
-            className="flex h-fit flex-col gap-3 rounded-xl border border-hairline bg-surface-2 p-4"
+            key={selected}
+            className="flex h-fit animate-fade-in flex-col gap-3 rounded-xl border border-hairline bg-surface-2 p-4"
           >
             <div className="flex items-center justify-between gap-2">
               <h3 className="text-base font-semibold">
@@ -234,7 +242,7 @@ export function BodyMapMeasures({
               <button
                 aria-label={t("map.close")}
                 onClick={() => setSelected(null)}
-                className="flex size-7 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-surface-3 hover:text-ink"
+                className="flex size-9 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-surface-3 hover:text-ink"
               >
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>
               </button>
@@ -267,7 +275,7 @@ export function BodyMapMeasures({
               </div>
             </dl>
             {selData.points < 2 ? (
-              <p className="text-xs text-ink-tertiary">{t("map.onePoint")}</p>
+              <p className="text-xs text-ink-subtle">{t("map.onePoint")}</p>
             ) : null}
           </div>
         ) : (
@@ -299,6 +307,7 @@ export function BodyMapMeasures({
             })}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
