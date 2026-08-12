@@ -219,6 +219,16 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   **Left**: D (exercise illustrations, `ILLUSTRATED` still empty - see the
   Pletor protocol in the plan) and E (print/PDF routes for both).
 
+- **Slice 22 - Biblioteca** (navigation audit tier 1): `/panel/biblioteca` gives
+  the consulta's saved weeks a door of their own. Lists diet and training
+  templates with day/entry counts, renames, duplicates (`nextCopyName` picks a
+  free name so the upsert cannot eat the source), deletes, and previews the
+  week in a native `<details>`. Nav gains Biblioteca.
+  **Two bugs found by verifying it end to end**: saving a week as a template
+  had never worked, because `TEMPLATE_NAME_MAX` was exported from a
+  `"use client"` module and `slice(0, <client reference>)` returns ""; and the
+  isolation suite never cleaned up template rows (no FK to Organization).
+
 ### Navigation audit (2026-08-12)
 
 [docs/build/navigation-audit.md](../docs/build/navigation-audit.md) compares the

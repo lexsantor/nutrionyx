@@ -20,3 +20,30 @@ Checkable rules from corrections in this project. Review at session start.
 - 2026-08-11: Vercel's git webhook can silently skip a push (no
   deployment row appears). Check `vercel ls` age after every push; an
   empty commit re-triggers it.
+
+## A constant shared with a server action cannot live in a client component
+
+`TEMPLATE_NAME_MAX` sat in `components/template-bar.tsx` (`"use client"`) and
+was re-exported by the template repositories. On the server that export is a
+client reference, not a number, so `name.slice(0, TEMPLATE_NAME_MAX)` coerced
+to `NaN` and returned `""`. Every "guardar semana" answered "ponle un nombre"
+with the name filled in on screen, for the whole life of slice 21B.
+
+**Check:** a value imported by a server action must come from a module with no
+`"use client"` directive, directly or through any re-export chain. Put shared
+constants in a plain module (`modules/*/constants.ts`).
+
+**Second lesson from the same bug:** validate emptiness before applying a cap.
+`if (!typed) return nameRequired;` then `typed.slice(0, MAX)` fails loudly at
+the right place instead of blaming the user for a field they filled in.
+
+## A feature is not shipped until it has been driven through the UI
+
+Slice 21B shipped templates with unit tests, integration tests, a green build
+and a production deploy. None of it exercised the actual button, so the
+feature was broken from the first commit and stayed broken through three more
+slices that touched it.
+
+**Check:** for anything with a form and a server action, drive it once against
+production with real credentials and confirm the row in the database, not the
+message on screen.
