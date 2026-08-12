@@ -134,7 +134,9 @@
       "logoUploadFailed": "No se ha podido subir el logo. Inténtalo de nuevo."
     },
     "logoFile": "Subir logo",
-    "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL."
+    "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL.",
+    "logoChoose": "Elegir archivo",
+    "logoNoFile": "Ningún archivo seleccionado"
   },
   "home": {
     "badge": "Plataforma para profesionales de la nutrición · acceso con invitación",

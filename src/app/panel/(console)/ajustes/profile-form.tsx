@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -16,7 +16,7 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
   >(updateProfileAction, null);
 
   return (
-    <form action={formAction} className="flex w-full max-w-3xl flex-col gap-6">
+    <form action={formAction} className="flex w-full flex-col gap-6">
       {/* One grid for the whole record: rows of two and three left the
           card two thirds empty on a desktop. The longer values span. */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -50,16 +50,10 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
       <Card className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
         <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
-          <label htmlFor="logo" className="text-sm font-medium">
+          <span id="logo-label" className="text-sm font-medium">
             {t("logoFile")}
-          </label>
-          <input
-            id="logo"
-            name="logo"
-            type="file"
-            accept="image/png,image/jpeg,image/webp"
-            className="block w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-sm text-ink file:mr-3 file:rounded-full file:border-0 file:bg-surface-3 file:px-3 file:py-1 file:text-sm file:font-medium file:text-ink"
-          />
+          </span>
+          <LogoFileInput chooseLabel={t("logoChoose")} emptyLabel={t("logoNoFile")} />
           <p className="text-sm text-ink-subtle">{t("logoFileHint")}</p>
         </div>
         <div className="flex flex-col gap-1.5">
@@ -150,6 +144,46 @@ function Field({
         maxLength={200}
       />
       {hint ? <p className="text-sm text-ink-subtle">{hint}</p> : null}
+    </div>
+  );
+}
+
+/**
+ * The browser's file input renders its own button, with its own words, in
+ * the browser's language: "Choose File" appears on a Spanish page and no
+ * CSS or attribute reaches the text. The input keeps working and keeps its
+ * semantics; it is visually hidden behind a label that acts as the button,
+ * which is the one native control on this page that can be replaced
+ * without taking on a widget.
+ */
+function LogoFileInput({
+  chooseLabel,
+  emptyLabel,
+}: {
+  chooseLabel: string;
+  emptyLabel: string;
+}) {
+  const [fileName, setFileName] = useState<string | null>(null);
+  return (
+    <div className="flex items-center gap-3 rounded-[10px] border border-field-border bg-surface-2 p-1.5">
+      <label
+        htmlFor="logo"
+        className="inline-flex h-8 shrink-0 cursor-pointer items-center rounded-full bg-surface-3 px-3.5 text-sm font-medium text-ink transition-colors hover:bg-surface-4"
+      >
+        {chooseLabel}
+      </label>
+      <input
+        id="logo"
+        name="logo"
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        aria-labelledby="logo-label"
+        onChange={(event) => setFileName(event.target.files?.[0]?.name ?? null)}
+        className="sr-only"
+      />
+      <span className="min-w-0 truncate text-sm text-ink-subtle">
+        {fileName ?? emptyLabel}
+      </span>
     </div>
   );
 }
