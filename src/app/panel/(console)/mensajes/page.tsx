@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { listPatients } from "@/modules/patient/repository";
 import { listInbox } from "@/modules/messaging/repository";
+import { sameMadridDay } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
 
@@ -79,9 +80,15 @@ export default async function InboxPage() {
                   dateTime={thread.last.createdAt.toISOString()}
                   className="shrink-0 text-xs text-ink-subtle"
                 >
-                  {format.dateTime(thread.last.createdAt, {
-                    dateStyle: "medium",
-                  })}
+                  {sameMadridDay(thread.last.createdAt)
+                    ? t("today", {
+                        time: format.dateTime(thread.last.createdAt, {
+                          timeStyle: "short",
+                        }),
+                      })
+                    : format.dateTime(thread.last.createdAt, {
+                        dateStyle: "medium",
+                      })}
                 </time>
               </Link>
             </li>

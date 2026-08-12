@@ -1057,7 +1057,8 @@
     "empty": "Todavía no hay ninguna conversación.",
     "unread": "{count, plural, one {# sin leer} other {# sin leer}}",
     "youPrefix": "Tú:",
-    "unknownPatient": "Paciente"
+    "unknownPatient": "Paciente",
+    "today": "Hoy, {time}"
   },
   "library": {
     "title": "Biblioteca",
@@ -1269,7 +1270,7 @@
     "subtitle": "Tus datos, tu evaluación y tus documentos.",
     "signOut": "Cerrar sesión",
     "account": {
-      "title": "Mis datos",
+      "title": "Mi cuenta",
       "name": "Nombre",
       "email": "Correo",
       "consulta": "Consulta",
@@ -1287,7 +1288,7 @@
       "empty": "Tu especialista aún no ha compartido ningún documento."
     },
     "data": {
-      "title": "Mis datos personales",
+      "title": "Privacidad",
       "export": "Descargar mis datos",
       "exportHint": "Un archivo con todo lo que la plataforma guarda sobre ti.",
       "erasureTitle": "Borrar mis datos",

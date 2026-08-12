@@ -18,7 +18,7 @@ export function InviteForm() {
       action={formAction}
       className="flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6"
     >
-      <h3 className="font-semibold">{t("title")}</h3>
+      <h2 className="text-lg font-semibold">{t("title")}</h2>
 
       <div className="flex flex-col gap-3 sm:flex-row">
         <div className="flex flex-1 flex-col gap-1.5">
