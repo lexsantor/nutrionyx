@@ -263,9 +263,20 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   skipped level on /panel/pacientes), the profile's clashing "Mis datos" /
   "Mis datos personales" become "Mi cuenta" / "Privacidad", and the inbox
   stamps today's threads with a time instead of a date.
-  **Left**: tier 3 (superadmin shell, consulta detail, `/admin/auditoria` so
-  `DomainEvent` becomes readable) and the two database cleanups awaiting the
-  owner's go-ahead.
+  Tier 3 done: `/admin` gets the shared shell and splits into resumen /
+  consultas / auditoría / códigos, with the platform-admin guard in the
+  layout. `/admin/auditoria` reads `DomainEvent` for the first time, filtered
+  by consulta, type and window, all in the URL.
+  **Payloads are never selected**: several carry clinical values (BMI,
+  measured perimeters, drug name and dose, email), and adr/0004's
+  operator-blindness forbids this area seeing them.
+  **Not built, on purpose**: suspending a consulta (needs a status column and
+  a migration, for one consulta) and a separate user-lookup page.
+  **Unverified**: the browser walk. `superadmin.email` is empty in the
+  credentials file, so there is no way to sign in as platform-admin.
+  **Open decision**: events should probably stop storing values at all.
+  `modules/events` says payloads carry ids; several call sites disagree.
+  Changing them forward is easy; the stored history is a separate question.
 
 ### Navigation audit (2026-08-12)
 
