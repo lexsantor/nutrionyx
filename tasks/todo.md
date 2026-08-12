@@ -135,6 +135,13 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Remaining backlog NEEDS OWNER: Resend domain verification, patient
   self-booking (product decisions), Stripe billing, legal review,
   lexia re-score with real rendering.
+- **Ponytail cleanup 2026-08-12** (commit 72383f2): vendored
+  lexia-design/ deleted (plugin installs from GitHub 0.7.3; LEARNINGS.md
+  ported upstream first), screens-ui-examples/ deleted from disk, 6 dead
+  NORTE tokens + 10 dead es.json keys removed, BodySilhouette simplified
+  (landing-only now). graphify knowledge graph in graphify-out/
+  (gitignored, rebuild with /graphify; use /graphify query for codebase
+  questions).
 - **Slice 13 - Export & erasure GDPR** (docs/build/slice-13-plan.md):
   `GET /api/me/export` (patient JSON download, notes excluded - anotaciones
   subjetivas) + "Descargar mis datos" link; `erasePatient` = children
