@@ -113,5 +113,10 @@ export function exerciseImage(key: string): string | null {
 /**
  * Keys with an illustration in public/exercises/. Add a key here only
  * once its file exists — a missing image renders as a broken box.
+ *
+ * Every file is the same mannequin as public/mannequin-male-front.png,
+ * generated with it as the style reference, background removed, cropped
+ * to content on a square canvas at 320px. Keeping to that recipe is what
+ * makes the set look like one set.
  */
-export const ILLUSTRATED = new Set<string>([]);
+export const ILLUSTRATED = new Set<string>(["press-banca"]);

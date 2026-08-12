@@ -14,7 +14,11 @@ import {
   type Exercise,
   type RoutineContent,
 } from "@/modules/training/routine";
-import { exercisesByGroup, findExercise } from "@/modules/training/exercises";
+import {
+  exerciseImage,
+  exercisesByGroup,
+  findExercise,
+} from "@/modules/training/exercises";
 import {
   loadTrainingTemplateAction,
   saveRoutineAction,
@@ -39,6 +43,28 @@ import { TemplateBar } from "@/components/template-bar";
 const GROUPED = exercisesByGroup();
 
 type WeekDraft = Exercise[][];
+
+/**
+ * The picked exercise's illustration, beside the picker. Absent for a
+ * keyless row and for a catalogue entry not drawn yet, so the slot
+ * collapses rather than reserving a hole the specialist has to read past.
+ */
+function ExerciseThumb({ exerciseKey }: { exerciseKey?: string }) {
+  const src = exerciseKey ? exerciseImage(exerciseKey) : null;
+  if (!src) return null;
+  return (
+    /* The exercise is named in the select right next to it: announcing
+       the same thing twice adds nothing. */
+    /* eslint-disable-next-line @next/next/no-img-element */
+    <img
+      src={src}
+      alt=""
+      width={176}
+      height={176}
+      className="size-11 shrink-0 rounded-[10px] border border-hairline bg-surface-2 object-contain"
+    />
+  );
+}
 
 function toDraft(content: RoutineContent): WeekDraft {
   return content.days.map((day) => day.exercises.map((e) => ({ ...e })));
@@ -212,32 +238,46 @@ export function RoutineEditor({
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
                       />
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <select
-                          name={`${base}-key`}
-                          value={exercise.key ?? ""}
-                          onChange={(event) =>
-                            pickExercise(dayIndex, rowIndex, event.target.value)
-                          }
-                          aria-label={t("editor.exerciseLabel")}
-                          className={`w-full ${cell}`}
-                        >
-                          <option value="">
-                            {exercise.key || !exercise.name
-                              ? t("editor.chooseExercise")
-                              : t("editor.customExercise", {
-                                  name: exercise.name,
-                                })}
-                          </option>
-                          {GROUPED.map(({ group, exercises: options }) => (
-                            <optgroup key={group} label={t(`groups.${group}`)}>
-                              {options.map((option) => (
-                                <option key={option.key} value={option.key}>
-                                  {option.name}
-                                </option>
-                              ))}
-                            </optgroup>
-                          ))}
-                        </select>
+                        <div className="flex items-center gap-2">
+                          <select
+                            name={`${base}-key`}
+                            value={exercise.key ?? ""}
+                            onChange={(event) =>
+                              pickExercise(
+                                dayIndex,
+                                rowIndex,
+                                event.target.value,
+                              )
+                            }
+                            aria-label={t("editor.exerciseLabel")}
+                            className={`w-full max-w-80 ${cell}`}
+                          >
+                            <option value="">
+                              {exercise.key || !exercise.name
+                                ? t("editor.chooseExercise")
+                                : t("editor.customExercise", {
+                                    name: exercise.name,
+                                  })}
+                            </option>
+                            {GROUPED.map(({ group, exercises: options }) => (
+                              <optgroup key={group} label={t(`groups.${group}`)}>
+                                {options.map((option) => (
+                                  <option key={option.key} value={option.key}>
+                                    {/* An <option> renders text only, so the
+                                        "has an illustration" cue has to be a
+                                        word, not an icon. */}
+                                    {exerciseImage(option.key)
+                                      ? t("editor.withImage", {
+                                          name: option.name,
+                                        })
+                                      : option.name}
+                                  </option>
+                                ))}
+                              </optgroup>
+                            ))}
+                          </select>
+                          <ExerciseThumb exerciseKey={exercise.key} />
+                        </div>
                         {/* Keeps the row's label if its catalogue entry is
                             ever withdrawn, and carries legacy free text. */}
                         <input
@@ -252,7 +292,9 @@ export function RoutineEditor({
                           defaultValue={v(`${base}-notes`, exercise.notes ?? "")}
                           aria-label={t("editor.exerciseNotesLabel")}
                           placeholder={t("editor.exerciseNotesPlaceholder")}
-                          className={`w-full ${cell} text-xs placeholder:text-ink-subtle`}
+                          /* Same width as the picker above it: the two
+                             read as one column, image hanging off it. */
+                          className={`w-full max-w-80 ${cell} text-xs placeholder:text-ink-subtle`}
                         />
                       </div>
                       <button

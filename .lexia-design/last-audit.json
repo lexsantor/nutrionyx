@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T14:14:30.377Z",
+  "updated": "2026-08-12T14:25:11.257Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -46,7 +46,7 @@
       "severity": "moderate",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
-      "line": 151,
+      "line": 177,
       "evidence": "<textarea",
       "msg": "Input with placeholder — verify a real associated <label> exists",
       "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."

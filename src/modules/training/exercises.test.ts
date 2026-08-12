@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import {
   EXERCISES,
@@ -23,6 +24,15 @@ describe("exercise catalogue", () => {
   it("only marks catalogue entries as illustrated", () => {
     for (const key of ILLUSTRATED) {
       expect(findExercise(key)).toBeDefined();
+    }
+  });
+
+  it("has a real file behind every illustrated key", () => {
+    // The set is hand-maintained: a key added before its file exists
+    // would ship a broken image into the editor.
+    for (const key of ILLUSTRATED) {
+      const path = exerciseImage(key)!;
+      expect(existsSync(`public${path}`), path).toBe(true);
     }
   });
 

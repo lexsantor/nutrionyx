@@ -1076,6 +1076,7 @@
       "exerciseLabel": "Ejercicio",
       "chooseExercise": "Elegir ejercicio",
       "customExercise": "{name} (fuera de catálogo)",
+      "withImage": "{name} (con imagen)",
       "exerciseNotesLabel": "Indicación",
       "exerciseNotesPlaceholder": "Indicación opcional (técnica, descanso…)",
       "addExercise": "Añadir ejercicio",
