@@ -250,6 +250,19 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   `WeightCheckIn` inside the targets tile, so a patient with no targets set
   lost every way to log weight. The "hoy" tile is unconditional now.
 
+- **Slice 25 - One shell, and the mobile tier-1 fixes** (state audit
+  2026-08-12): `components/app-shell.tsx` serves both areas; the patient space
+  loses the legacy Topbar and gains a layout with `requirePatient`. Then the
+  two blocking findings from walking 36 route/viewport combinations as both
+  roles: the routine row wraps below `sm` (the exercise picker measured 18px
+  at 390px, 292px after) and the weight table drops its `min-w-80`.
+  Also fixed: the profile's "ver mis respuestas" pointed at
+  `/mi-espacio/evaluacion`, which redirects a completed assessment away; the
+  answers render in the profile now.
+  **Left**: tier 2 of that audit (duplicate "Mis datos" headings, h1->h3 jump
+  on /panel/pacientes, inbox dates without a time) and tier 3 (superadmin
+  shell, consulta detail, `/admin/auditoria`).
+
 ### Navigation audit (2026-08-12)
 
 [docs/build/navigation-audit.md](../docs/build/navigation-audit.md) compares the
