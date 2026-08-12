@@ -178,3 +178,21 @@ error-reset, cita 2-step, hover 500ms stragglers, tabular-nums ledger,
 patient-home Promise.all), T3 identity (bezel dashboard, warning-as-
 data, detail hierarchy, DESIGN-SYSTEM.md fill, copy density), T4
 verification (render, byline owner confirm, React19 repro).
+
+## Tier 2 applied 2026-08-12 (commit da7eec5, CI green, deployed)
+
+Forms contract: persistent role=status wrappers across 15 forms
+(session-form restructured); React19 error-reset data loss fixed on
+diet/routine editors + composers + note-form (actions echo values,
+fields re-hydrate via defaultValue). Destructive: invitation +
+appointment cancel two-step arm/confirm; sub-24px controls to 32px.
+Motion register: TILE/photos lift lists trimmed to transform+shadow
+(instant theme swap, body fade deleted); export pill/wizard-back/review
+cards on fast tier; review edit reveals on focus-visible; house press on
+pre-assessment CTA + ajustes consent; CTA chip 300ms; scroll anchor
+follows appended messages. tabular-nums on detail Row + dose history.
+Patient home: 10 reads in one Promise.all. Reference set stored
+(Healthie, Nutrium + state-of-the-art delegation).
+Projected ~79; re-score with same reviewers pending. Next: T3 identity
+(bezel dashboard, warning-as-data, detail hierarchy, DESIGN-SYSTEM.md,
+copy density) then T4 verification (render, byline confirm).
