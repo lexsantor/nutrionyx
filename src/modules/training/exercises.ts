@@ -119,4 +119,9 @@ export function exerciseImage(key: string): string | null {
  * to content on a square canvas at 320px. Keeping to that recipe is what
  * makes the set look like one set.
  */
-export const ILLUSTRATED = new Set<string>(["press-banca"]);
+export const ILLUSTRATED = new Set<string>([
+  "press-banca",
+  "sentadilla",
+  "press-militar",
+  "dominadas",
+]);
