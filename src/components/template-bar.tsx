@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-/** Shared by the diet and training editors; both cap names the same. */
-export const TEMPLATE_NAME_MAX = 80;
+import { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 
 /** What the clicked submit button asks the editor's action to do. */
 export type EditorIntent = "save" | "template-save" | "template-load";
@@ -15,11 +14,9 @@ export type EditorIntent = "save" | "template-save" | "template-load";
  * is looking at rather than the last persisted one.
  *
  * The three buttons are plain submits carrying name="intent": the editor
- * has ONE action, which reads that value and branches. They used to target
- * separate actions through formAction, which silently delivered a partial
- * FormData to the button's action, so saving a template always failed with
- * "name required" while the name sat right there in the form. One form,
- * one action, and the browser's own submitter value is the fix.
+ * has ONE action, which reads that value and branches. They used to point
+ * at separate actions through formAction, which worked but put two action
+ * descriptors in one payload for no benefit.
  *
  * Loading overwrites the stored plan, so it arms first.
  */

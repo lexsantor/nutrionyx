@@ -2,7 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
-import { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+import { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 import {
   deleteTemplateAction,
   duplicateTemplateAction,

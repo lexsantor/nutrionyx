@@ -10,7 +10,7 @@ import type { RoutineContent } from "./routine";
  * consulta, loads into any of its patients, and into none of another.
  */
 
-export { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+export { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 
 export async function listTrainingTemplates(
   organizationId: string,

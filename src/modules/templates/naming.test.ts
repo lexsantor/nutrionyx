@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+import { TEMPLATE_NAME_MAX } from "./constants";
 import { nextCopyName } from "./naming";
 
 describe("nextCopyName", () => {

@@ -21,8 +21,7 @@ import type { Organization } from "@/generated/prisma/client";
 
 /**
  * One action for the whole editor form, branching on the `intent` carried
- * by the pressed submit button. See the routine editor's actions.ts for
- * why the three stopped being separate formAction targets.
+ * by the pressed submit button, mirroring the routine editor.
  */
 export type DietPlanFormState =
   | { errorKey: string; scope: Scope; values?: Record<string, string> }
@@ -120,10 +119,12 @@ async function savePlan(formData: FormData): Promise<DietPlanFormState> {
 /** Save the week currently in the editor as a reusable template. */
 async function saveTemplate(formData: FormData): Promise<DietPlanFormState> {
   const scope = "template" as const;
-  const name = ((formData.get("templateName") as string) ?? "")
-    .trim()
-    .slice(0, TEMPLATE_NAME_MAX);
-  if (!name) return { errorKey: "nameRequired", scope };
+  // Emptiness is decided before the cap is applied: a broken cap should
+  // yield a wrong length, never a phantom "name required" (see
+  // modules/templates/constants.ts).
+  const typed = ((formData.get("templateName") as string) ?? "").trim();
+  if (!typed) return { errorKey: "nameRequired", scope };
+  const name = typed.slice(0, TEMPLATE_NAME_MAX);
 
   const content = weekFrom(formData);
   if (!content) return { errorKey: "invalidContent", scope };

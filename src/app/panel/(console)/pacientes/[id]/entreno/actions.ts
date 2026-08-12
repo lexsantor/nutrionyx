@@ -23,10 +23,10 @@ import type { Organization } from "@/generated/prisma/client";
  * One action for the whole editor form, branching on the `intent` carried
  * by whichever submit button was pressed.
  *
- * The three used to be separate actions reached through formAction on the
- * buttons. That delivered a partial FormData to the button's action, so
- * "guardar semana" always came back asking for a name that was already
- * filled in. A form gets one action; the submitter says what to do.
+ * They used to be three actions reached through formAction on the buttons.
+ * That worked; it just put two action descriptors in one payload for no
+ * benefit. (The bug that sent me looking was elsewhere: see
+ * modules/templates/constants.ts.)
  */
 export type RoutineFormState =
   | { errorKey: string; scope: Scope; values?: Record<string, string> }
@@ -124,10 +124,12 @@ async function saveRoutine(formData: FormData): Promise<RoutineFormState> {
 /** Save the week currently in the editor as a reusable template. */
 async function saveTemplate(formData: FormData): Promise<RoutineFormState> {
   const scope = "template" as const;
-  const name = ((formData.get("templateName") as string) ?? "")
-    .trim()
-    .slice(0, TEMPLATE_NAME_MAX);
-  if (!name) return { errorKey: "nameRequired", scope };
+  // Emptiness is decided before the cap is applied: a broken cap should
+  // yield a wrong length, never a phantom "name required" (see
+  // modules/templates/constants.ts).
+  const typed = ((formData.get("templateName") as string) ?? "").trim();
+  if (!typed) return { errorKey: "nameRequired", scope };
+  const name = typed.slice(0, TEMPLATE_NAME_MAX);
 
   const content = weekFrom(formData);
   if (!content) return { errorKey: "invalidContent", scope };

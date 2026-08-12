@@ -11,7 +11,7 @@ import type { DietPlanContent } from "./plan";
  * another. Every query filters by organizationId.
  */
 
-export { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+export { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 
 export async function listDietTemplates(
   organizationId: string,

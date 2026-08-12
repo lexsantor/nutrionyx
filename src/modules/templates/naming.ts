@@ -1,4 +1,4 @@
-import { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+import { TEMPLATE_NAME_MAX } from "./constants";
 
 /**
  * A free name for a copy. Templates are unique on (organizationId, name),

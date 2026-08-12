@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
-import { TEMPLATE_NAME_MAX } from "@/components/template-bar";
+import { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 import {
   deleteDietTemplate,
   duplicateDietTemplate,
@@ -35,11 +35,10 @@ export async function renameTemplateAction(
 ): Promise<LibraryFormState> {
   const kind = readKind(formData);
   const id = (formData.get("id") as string) ?? "";
-  const name = ((formData.get("name") as string) ?? "")
-    .trim()
-    .slice(0, TEMPLATE_NAME_MAX);
+  const typed = ((formData.get("name") as string) ?? "").trim();
   if (!kind || !id) return { errorKey: "generic" };
-  if (!name) return { errorKey: "nameRequired" };
+  if (!typed) return { errorKey: "nameRequired" };
+  const name = typed.slice(0, TEMPLATE_NAME_MAX);
 
   // Org comes from the session, never from the form: an id belonging to
   // another consulta resolves to null inside the repository.
