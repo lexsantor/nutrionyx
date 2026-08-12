@@ -68,7 +68,6 @@ export function SignInForm({
                 type="password"
                 autoComplete="current-password"
                 required
-                placeholder="••••••••"
               />
             </div>
 

@@ -149,6 +149,13 @@
     box-sizing: border-box;
   }
 
+  /* Focus must not land under the sticky topbar or the floating nav
+   * pill (WCAG 2.4.11). ConsoleShell scrolls its own <main>, so its
+   * header sits outside this. */
+  html {
+    scroll-padding-top: 5rem;
+  }
+
   body {
     margin: 0;
     background: var(--color-canvas);

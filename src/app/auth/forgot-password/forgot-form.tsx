@@ -33,34 +33,46 @@ export function ForgotPasswordForm() {
             {t("subtitle")}
           </p>
 
-          {state?.ok ? (
-            <p
-              role="status"
-              className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success"
-            >
-              {t("sent")}
-            </p>
-          ) : (
-            <form action={formAction} className="flex flex-col gap-5">
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="email" className="text-sm font-medium text-ink">
-                  {t("email")}
-                </label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  placeholder="tu@email.com"
-                />
-              </div>
+          <div aria-live="polite">
+            {state && "ok" in state ? (
+              <p className="mb-5 rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success">
+                {t("sent")}
+              </p>
+            ) : null}
+          </div>
 
-              <Button type="submit" disabled={isPending} className="w-full">
-                {isPending ? t("submitting") : t("submit")}
-              </Button>
-            </form>
-          )}
+          {state && "errorKey" in state ? (
+            <p
+              role="alert"
+              className="mb-5 rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
+            >
+              {t(`errors.${state.errorKey}`)}
+            </p>
+          ) : null}
+
+          <form action={formAction} className="flex flex-col gap-5">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="text-sm font-medium text-ink">
+                {t("email")}
+              </label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                placeholder="tu@email.com"
+              />
+            </div>
+
+            <Button type="submit" disabled={isPending} className="w-full">
+              {isPending
+                ? t("submitting")
+                : state && "ok" in state
+                  ? t("resend")
+                  : t("submit")}
+            </Button>
+          </form>
         </Bezel>
 
         <p className="mt-6 text-center text-sm text-ink-subtle">

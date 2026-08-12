@@ -26,7 +26,7 @@ function H2({ children }: { children: React.ReactNode }) {
 export default function PrivacyPage() {
   return (
     <main className="mx-auto w-full max-w-6xl px-6 py-10">
-      <nav className="mb-12">
+      <nav className="mx-auto mb-12 max-w-[70ch]">
         <Link
           href="/"
           className="font-display text-xl font-semibold tracking-tight text-ink"

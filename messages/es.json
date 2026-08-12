@@ -726,7 +726,11 @@
       "submit": "Enviar enlace",
       "submitting": "Enviando…",
       "sent": "Si la dirección existe, recibirás un correo con el enlace en unos minutos. Revisa también el spam.",
-      "backToSignIn": "Volver a iniciar sesión"
+      "backToSignIn": "Volver a iniciar sesión",
+      "resend": "Enviar de nuevo",
+      "errors": {
+        "transport": "No hemos podido enviar el correo. Inténtalo de nuevo en unos minutos."
+      }
     },
     "reset": {
       "title": "Nueva contraseña",
@@ -845,7 +849,8 @@
       "errors": {
         "invalidProtein": "Introduce una cantidad válida (1-300 g).",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
-      }
+      },
+      "saved": "Registrado"
     }
   },
   "notes": {

@@ -3,12 +3,13 @@
 import { auth } from "@/lib/auth/server";
 import { appUrl } from "@/lib/email";
 
-export type ForgotFormState = { ok: true } | null;
+export type ForgotFormState = { ok: true } | { errorKey: string } | null;
 
 /**
- * Always resolves to ok: whether the address exists is never revealed
- * (account enumeration). Neon Auth sends the reset email with a link to
- * /auth/reset-password?token=...
+ * Never reveals whether the address exists (account enumeration): the
+ * success response is identical for known and unknown addresses. A
+ * transport failure is different — it says so, because silently claiming
+ * "check your inbox" for an email that was never sent is worse.
  */
 export async function requestPasswordReset(
   _prevState: ForgotFormState,
@@ -21,8 +22,8 @@ export async function requestPasswordReset(
       redirectTo: `${appUrl()}/auth/reset-password`,
     });
     if (error) {
-      // Logged only: the response to the user is identical either way.
       console.error("[requestPasswordReset] failed", error);
+      return { errorKey: "transport" };
     }
   }
   return { ok: true };

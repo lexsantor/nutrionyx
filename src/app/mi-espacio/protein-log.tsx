@@ -33,6 +33,11 @@ export function ProteinLog() {
           {isPending ? t("adding") : t("add")}
         </Button>
       </div>
+      <div role="status">
+        {state && "ok" in state ? (
+          <p className="text-sm text-success">{t("saved")}</p>
+        ) : null}
+      </div>
       {state && "errorKey" in state ? (
         <p
           role="alert"

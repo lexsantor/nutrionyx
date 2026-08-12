@@ -23,7 +23,6 @@ export async function WeightChart({
     })} kg`;
 
   const latest = points[points.length - 1]!;
-  const prev = points.length >= 2 ? points[points.length - 2]! : null;
   const delta = targetKg != null ? weightDelta(latest.valueKg, targetKg) : null;
 
   const W = 320;

@@ -48,7 +48,6 @@ export function ResetPasswordForm({ token }: { token: string }) {
                   autoComplete="new-password"
                   required
                   minLength={8}
-                  placeholder="••••••••"
                 />
                 <p className="text-xs text-ink-subtle">{t("hint")}</p>
               </div>
