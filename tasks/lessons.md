@@ -86,3 +86,17 @@ redundant copy of a value. Redacting the values while keeping type, aggregate,
 id and timestamp preserves everything the trail is for and is the
 minimisation the data deserved in the first place. Do it with the owner's
 agreement and print what changed, row by row.
+
+## Two competing utilities never settle by attribute order
+
+`<Button className="w-auto">` did not override the primitive's `w-full`:
+Tailwind emits `w-auto` before `w-full`, and at equal specificity the
+stylesheet order wins, not the order in the class attribute. The search
+button went full width and overflowed its row. This is the second time this
+class of bug has landed here; the first was `hidden sm:inline-flex` losing to
+ButtonLink's own `inline-flex`.
+
+**Check:** a primitive must pick ONE utility per property and expose the
+choice as a prop (`width="auto" | "block"`), never let a caller add a second
+one and hope. If you find yourself writing a className to undo a base class,
+the base class should have been a variant.
