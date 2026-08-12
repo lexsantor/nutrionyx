@@ -1,9 +1,5 @@
 import { getFormatter, getTranslations } from "next-intl/server";
-import {
-  chartRange,
-  trendToward,
-  weightDelta,
-} from "@/modules/measurement/progress";
+import { chartRange, weightDelta } from "@/modules/measurement/progress";
 
 type Point = { recordedAt: Date; valueKg: number };
 
@@ -28,10 +24,6 @@ export async function WeightChart({
 
   const latest = points[points.length - 1]!;
   const prev = points.length >= 2 ? points[points.length - 2]! : null;
-  const toward =
-    prev && targetKg != null
-      ? trendToward(prev.valueKg, latest.valueKg, targetKg)
-      : null;
   const delta = targetKg != null ? weightDelta(latest.valueKg, targetKg) : null;
 
   const W = 320;
@@ -59,11 +51,9 @@ export async function WeightChart({
         {delta != null ? (
           <span
             className={
-              toward === true
+              delta === 0
                 ? "text-sm font-medium text-success"
-                : toward === false
-                  ? "text-sm font-medium text-warning"
-                  : "text-sm font-medium text-ink-subtle"
+                : "text-sm font-medium text-ink-subtle"
             }
           >
             {delta === 0
@@ -78,7 +68,7 @@ export async function WeightChart({
 
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="max-h-64 w-full"
+        className="w-full"
         role="img"
         aria-label={t("chartLabel")}
       >

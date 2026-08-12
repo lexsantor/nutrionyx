@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Bezel } from "@/components/ui/bezel";
 import { resetPassword } from "./actions";
 
 export function ResetPasswordForm({ token }: { token: string }) {
@@ -21,7 +22,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           </Link>
         </div>
 
-        <div className="rounded-xl border border-hairline bg-surface-1 p-8 shadow-el-sm">
+        <Bezel radius="1.25rem" innerClassName="p-8">
           <h1 className="mb-1 text-center font-display text-xl font-semibold">
             {t("title")}
           </h1>
@@ -73,7 +74,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
               {t("missingToken")}
             </p>
           )}
-        </div>
+        </Bezel>
 
         <p className="mt-6 text-center text-sm text-ink-subtle">
           <Link

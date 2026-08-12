@@ -202,7 +202,7 @@ export default async function Home() {
 
       {/* Floating pill nav */}
       <nav className="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
-        <div className="pointer-events-auto mt-5 flex w-max max-w-full items-center gap-4 whitespace-nowrap rounded-full border border-hairline bg-canvas/70 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl sm:gap-5">
+        <div className="pointer-events-auto mt-5 flex w-max max-w-full items-center gap-4 whitespace-nowrap rounded-full border border-hairline bg-canvas/95 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl sm:gap-5">
           <span className="font-display text-sm font-semibold tracking-tight">
             Nutrionyx
           </span>
@@ -440,7 +440,9 @@ export default async function Home() {
               </h3>
               <SampleChip label={t("sample")} />
             </div>
-            <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
+            <div className="mx-auto w-full max-w-3xl">
+              <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
+            </div>
           </Bezel>
         </Reveal>
 

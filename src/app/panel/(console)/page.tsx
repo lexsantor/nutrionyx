@@ -79,7 +79,7 @@ export default async function PanelPage() {
               <p className="text-sm text-ink-subtle">
                 {t("metrics.completionRate")}
               </p>
-              <span className="rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success">
+              <span className="rounded-full bg-primary-subtle px-2 py-0.5 text-xs font-medium text-on-primary-subtle tabular-nums">
                 {metrics.completionRate !== null
                   ? `${metrics.completionRate}%`
                   : "—"}
@@ -87,7 +87,7 @@ export default async function PanelPage() {
             </div>
             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-surface-3">
               <div
-                className="h-full rounded-full bg-success"
+                className="h-full rounded-full bg-primary"
                 style={{
                   width: `${metrics.completionRate ?? 0}%`,
                 }}

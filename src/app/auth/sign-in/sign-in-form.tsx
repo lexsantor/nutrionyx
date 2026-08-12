@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Bezel } from "@/components/ui/bezel";
 import { signInWithEmail } from "./actions";
 
 export function SignInForm({
@@ -27,7 +28,7 @@ export function SignInForm({
           </Link>
         </div>
 
-        <div className="rounded-xl border border-hairline bg-surface-1 p-8 shadow-el-sm">
+        <Bezel radius="1.25rem" innerClassName="p-8">
           <h1 className="mb-1 text-center font-display text-xl font-semibold">{t("title")}</h1>
           <p className="mb-8 text-center text-sm text-ink-subtle">{t("subtitle")}</p>
 
@@ -90,7 +91,7 @@ export function SignInForm({
               </Link>
             </p>
           </form>
-        </div>
+        </Bezel>
 
         <p className="mt-6 text-center text-sm text-ink-subtle">
           ¿No tienes cuenta?{" "}
