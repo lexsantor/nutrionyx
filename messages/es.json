@@ -1020,6 +1020,30 @@
       "today": "Hoy",
       "empty": "Tu nutricionista aún no ha publicado tu plan de dieta.",
       "alternative": "Alternativa #{n}"
+    },
+    "templates": {
+      "title": "Plantillas",
+      "hint": "Guarda esta semana para reutilizarla con cualquier paciente de tu consulta.",
+      "nameLabel": "Nombre de la plantilla",
+      "namePlaceholder": "Definición · 1800 kcal",
+      "save": "Guardar semana",
+      "saving": "Guardando…",
+      "savedOk": "Plantilla guardada.",
+      "loadLabel": "Cargar plantilla",
+      "loadPlaceholder": "Elegir plantilla",
+      "load": "Cargar",
+      "loading": "Cargando…",
+      "confirmLoad": "Sustituir la semana",
+      "cancelLoad": "Cancelar",
+      "loadedOk": "Plantilla cargada.",
+      "overwriteWarning": "Al cargar se sustituye la semana guardada de este paciente.",
+      "errors": {
+        "nameRequired": "Ponle un nombre a la plantilla.",
+        "emptyPlan": "No hay nada que guardar todavía.",
+        "invalidContent": "Revisa los campos: hay algún valor demasiado largo.",
+        "notFound": "Esa plantilla ya no existe.",
+        "generic": "No se ha podido completar. Inténtalo de nuevo."
+      }
     }
   },
   "training": {
@@ -1072,6 +1096,30 @@
       "errors": {
         "alreadyToday": "Ya has registrado la sesión de hoy.",
         "generic": "No se ha podido registrar. Inténtalo de nuevo."
+      }
+    },
+    "templates": {
+      "title": "Plantillas",
+      "hint": "Guarda esta semana para reutilizarla con cualquier paciente de tu consulta.",
+      "nameLabel": "Nombre de la plantilla",
+      "namePlaceholder": "Volumen · fase 1",
+      "save": "Guardar semana",
+      "saving": "Guardando…",
+      "savedOk": "Plantilla guardada.",
+      "loadLabel": "Cargar plantilla",
+      "loadPlaceholder": "Elegir plantilla",
+      "load": "Cargar",
+      "loading": "Cargando…",
+      "confirmLoad": "Sustituir la semana",
+      "cancelLoad": "Cancelar",
+      "loadedOk": "Plantilla cargada.",
+      "overwriteWarning": "Al cargar se sustituye la semana guardada de este paciente.",
+      "errors": {
+        "nameRequired": "Ponle un nombre a la plantilla.",
+        "emptyPlan": "No hay nada que guardar todavía.",
+        "invalidContent": "Revisa los campos: hay algún valor demasiado largo.",
+        "notFound": "Esa plantilla ya no existe.",
+        "generic": "No se ha podido completar. Inténtalo de nuevo."
       }
     }
   },

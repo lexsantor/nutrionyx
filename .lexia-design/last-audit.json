@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T13:40:06.561Z",
+  "updated": "2026-08-12T13:49:03.820Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -38,6 +38,16 @@
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
       "line": 108,
       "evidence": "<textarea",
+      "msg": "Input with placeholder — verify a real associated <label> exists",
+      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
+    },
+    {
+      "id": "a11y/placeholder-as-label",
+      "severity": "moderate",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/template-bar.tsx",
+      "line": 58,
+      "evidence": "<input",
       "msg": "Input with placeholder — verify a real associated <label> exists",
       "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
     }

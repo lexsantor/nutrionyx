@@ -50,6 +50,17 @@ import {
 import { getDietPlan, upsertDietPlan } from "@/modules/diet/repository";
 import { emptyContent } from "@/modules/diet/plan";
 import {
+  deleteDietTemplate,
+  getDietTemplate,
+  listDietTemplates,
+  saveDietTemplate,
+} from "@/modules/diet/templates";
+import {
+  getTrainingTemplate,
+  listTrainingTemplates,
+  saveTrainingTemplate,
+} from "@/modules/training/templates";
+import {
   getRoutine,
   listSessions,
   logSession,
@@ -384,6 +395,48 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     });
     expect(await listDocuments(orgA, bPatientId)).toEqual([]);
     expect((await listDocuments(orgB, bPatientId)).length).toBe(1);
+  });
+
+  it("scopes templates: a consulta cannot load another's (R2)", async () => {
+    // Templates are the one aggregate deliberately NOT tied to a patient,
+    // so their isolation rests entirely on organizationId.
+    const dietContent = emptyContent();
+    dietContent.days[0].LUNCH = {
+      main: [{ amount: "150 g", food: "Pollo" }],
+      alternatives: [],
+    };
+    const saved = await saveDietTemplate({
+      organizationId: orgB,
+      name: `Plantilla B ${suffix}`,
+      content: dietContent,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+
+    expect(await listDietTemplates(orgA)).toEqual([]);
+    expect((await listDietTemplates(orgB)).length).toBe(1);
+    // The id is guessable; the scope is what protects it.
+    expect(await getDietTemplate(orgA, saved.id)).toBeNull();
+    expect((await getDietTemplate(orgB, saved.id))?.id).toBe(saved.id);
+    expect(await deleteDietTemplate({ organizationId: orgA, id: saved.id })).toBe(
+      false,
+    );
+    expect((await listDietTemplates(orgB)).length).toBe(1);
+
+    const routineContent = emptyRoutine();
+    routineContent.days[0] = {
+      exercises: [{ name: "Sentadilla", sets: "4", reps: "8" }],
+    };
+    const savedRoutine = await saveTrainingTemplate({
+      organizationId: orgB,
+      name: `Rutina B ${suffix}`,
+      content: routineContent,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+    expect(await listTrainingTemplates(orgA)).toEqual([]);
+    expect(await getTrainingTemplate(orgA, savedRoutine.id)).toBeNull();
+    expect((await getTrainingTemplate(orgB, savedRoutine.id))?.id).toBe(
+      savedRoutine.id,
+    );
   });
 
   it("scopes diet plans: invisible cross-org (R2)", async () => {

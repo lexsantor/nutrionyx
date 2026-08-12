@@ -15,7 +15,13 @@ import {
   type Exercise,
   type RoutineContent,
 } from "@/modules/training/routine";
-import { saveRoutineAction, type RoutineFormState } from "./actions";
+import {
+  loadTrainingTemplateAction,
+  saveRoutineAction,
+  saveTrainingTemplateAction,
+  type RoutineFormState,
+} from "./actions";
+import { TemplateBar } from "@/components/template-bar";
 
 /**
  * Structured week editor (slice-21C), mirroring the diet editor: rows in
@@ -36,6 +42,7 @@ function toDraft(content: RoutineContent): WeekDraft {
 export function RoutineEditor({
   patientId,
   initial,
+  templates,
 }: {
   patientId: string;
   initial: {
@@ -43,6 +50,7 @@ export function RoutineEditor({
     notes: string | null;
     content: RoutineContent;
   };
+  templates: { id: string; name: string }[];
 }) {
   const t = useTranslations("training");
   const [state, formAction, isPending] = useActionState<
@@ -116,6 +124,13 @@ export function RoutineEditor({
           />
         </div>
       </div>
+
+      <TemplateBar
+        namespace="training.templates"
+        templates={templates}
+        saveAction={saveTrainingTemplateAction}
+        loadAction={loadTrainingTemplateAction}
+      />
 
       <div className="flex flex-col gap-4">
         {week.map((exercises, dayIndex) => (

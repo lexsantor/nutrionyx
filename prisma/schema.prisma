@@ -331,6 +331,38 @@ model PatientNote {
   @@map("patient_notes")
 }
 
+// Reusable week templates (docs/build/slice-21-plan.md). Org-scoped and
+// NOT tied to a patient: a specialist saves a week once and loads it into
+// any patient of the same consulta. Cross-org reuse is deliberately
+// impossible - it would breach tenant isolation (LPEF Prisma R2/R4).
+model DietTemplate {
+  id                  String   @id @default(cuid())
+  organizationId      String
+  name                String
+  content             Json
+  createdByAuthUserId String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId, createdAt])
+  @@map("diet_templates")
+}
+
+model TrainingTemplate {
+  id                  String   @id @default(cuid())
+  organizationId      String
+  name                String
+  content             Json
+  createdByAuthUserId String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  @@unique([organizationId, name])
+  @@index([organizationId, createdAt])
+  @@map("training_templates")
+}
+
 // Clinical targets prescribed by the specialist (docs/build/slice-9-plan.md):
 // kcal reference, daily protein grams, training sessions per week. One per
 // patient, org-scoped, editable - unlike Measurement facts this is config.

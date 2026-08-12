@@ -15,7 +15,13 @@ import {
   type FoodRow,
   type MealSlot,
 } from "@/modules/diet/plan";
-import { saveDietPlanAction, type DietPlanFormState } from "./actions";
+import {
+  loadDietTemplateAction,
+  saveDietPlanAction,
+  saveDietTemplateAction,
+  type DietPlanFormState,
+} from "./actions";
+import { TemplateBar } from "@/components/template-bar";
 
 /**
  * Structured week editor (slice-21). Rows live in React state because the
@@ -51,6 +57,7 @@ function toDraft(content: DietPlanContent): WeekDraft {
 export function DietEditor({
   patientId,
   initial,
+  templates,
 }: {
   patientId: string;
   initial: {
@@ -58,6 +65,7 @@ export function DietEditor({
     notes: string | null;
     content: DietPlanContent;
   };
+  templates: { id: string; name: string }[];
 }) {
   const t = useTranslations("diet");
   const [state, formAction, isPending] = useActionState<
@@ -194,6 +202,13 @@ export function DietEditor({
           />
         </div>
       </div>
+
+      <TemplateBar
+        namespace="diet.templates"
+        templates={templates}
+        saveAction={saveDietTemplateAction}
+        loadAction={loadDietTemplateAction}
+      />
 
       <div className="flex flex-col gap-4">
         {week.map((day, dayIndex) => (

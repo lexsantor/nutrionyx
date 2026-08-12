@@ -9,6 +9,7 @@ import {
   normalizeRoutine,
   type RoutineContent,
 } from "@/modules/training/routine";
+import { listTrainingTemplates } from "@/modules/training/templates";
 import { RoutineEditor } from "./routine-editor";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,7 @@ export default async function RoutineEditorPage({
   }
 
   const routine = await getRoutine(org.id, patient.id);
+  const templates = await listTrainingTemplates(org.id);
   const content: RoutineContent =
     (routine && normalizeRoutine(routine.content)) || emptyRoutine();
 
@@ -54,6 +56,10 @@ export default async function RoutineEditorPage({
             notes: routine?.notes ?? null,
             content,
           }}
+          templates={templates.map((template) => ({
+            id: template.id,
+            name: template.name,
+          }))}
         />
       </div>
     </>

@@ -9,6 +9,7 @@ import {
   normalizeContent,
   type DietPlanContent,
 } from "@/modules/diet/plan";
+import { listDietTemplates } from "@/modules/diet/templates";
 import { DietEditor } from "./diet-editor";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,7 @@ export default async function DietPlanEditorPage({
   }
 
   const plan = await getDietPlan(org.id, patient.id);
+  const templates = await listDietTemplates(org.id);
   const content: DietPlanContent =
     (plan && normalizeContent(plan.content)) || emptyContent();
 
@@ -54,6 +56,10 @@ export default async function DietPlanEditorPage({
             notes: plan?.notes ?? null,
             content,
           }}
+          templates={templates.map((template) => ({
+            id: template.id,
+            name: template.name,
+          }))}
         />
       </div>
     </>
