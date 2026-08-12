@@ -47,3 +47,19 @@ slices that touched it.
 **Check:** for anything with a form and a server action, drive it once against
 production with real credentials and confirm the row in the database, not the
 message on screen.
+
+## An overflow check against documentElement is blind inside a clipping shell
+
+The audit sweep measured `documentElement.scrollWidth > clientWidth` and
+reported 36 of 36 routes clean. It could not have reported anything else: the
+app shell is `h-dvh overflow-hidden`, so horizontal overflow is clipped rather
+than turned into document scroll.
+
+**Check:** measure each element's `getBoundingClientRect().right` against the
+scroll container's right edge, not the document's. And know that neither check
+catches the opposite failure: a flex row that *compresses* instead of
+overflowing. The routine editor's exercise select renders at 18px on a 390px
+viewport while overflowing nothing at all.
+
+**Corollary:** a clean automated sweep is a floor, not a verdict. Look at the
+captures.
