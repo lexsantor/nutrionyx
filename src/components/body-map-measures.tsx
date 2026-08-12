@@ -126,18 +126,25 @@ export function BodyMapMeasures({
 
       <div className="grid gap-6 sm:grid-cols-[minmax(0,260px)_minmax(0,1fr)]">
         <div
-          key={view}
-          className="relative mx-auto h-80 w-auto animate-fade-in sm:h-96"
+          className="relative mx-auto h-80 w-auto sm:h-96"
           style={{ aspectRatio: "200/358" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={`/mannequin-${figure.toLowerCase()}-${view}.png`}
-            alt=""
-            width={614}
-            height={1100}
-            className="h-full w-full object-contain [filter:drop-shadow(0_12px_20px_rgba(11,15,20,0.18))]"
-          />
+          {/* Both views render so the counterpart PNG is already fetched
+              when the toggle flips; a fade over an unloaded image asserts
+              a readiness that is not there. */}
+          {(["front", "back"] as const).map((v) => (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img
+              key={v}
+              src={`/mannequin-${figure.toLowerCase()}-${v}.png`}
+              alt=""
+              width={614}
+              height={1100}
+              className={`h-full w-full object-contain [filter:drop-shadow(0_12px_20px_rgba(11,15,20,0.18))] ${
+                v === view ? "" : "hidden"
+              }`}
+            />
+          ))}
           <svg
             viewBox="0 0 200 358"
             role="group"

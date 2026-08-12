@@ -151,8 +151,8 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
                 aria-current={active ? "page" : undefined}
                 className={
                   active
-                    ? "whitespace-nowrap rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-on-primary no-underline shadow-el-sm"
-                    : "whitespace-nowrap rounded-full px-3 py-1.5 text-sm text-ink-subtle no-underline"
+                    ? "whitespace-nowrap rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-on-primary no-underline shadow-el-sm transition-[background-color,color,box-shadow] duration-200 ease-house"
+                    : "whitespace-nowrap rounded-full px-3 py-1.5 text-sm text-ink-subtle no-underline transition-[background-color,color,box-shadow] duration-200 ease-house"
                 }
               >
                 {t(`nav.${item.key}`)}

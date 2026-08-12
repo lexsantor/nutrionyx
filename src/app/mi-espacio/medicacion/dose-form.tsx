@@ -77,7 +77,7 @@ function BodyMap({
               strokeLinecap="round"
               strokeLinejoin="round"
               aria-hidden="true"
-              className={`text-on-primary ${selected === site ? "opacity-100" : "opacity-0"}`}
+              className={`text-on-primary transition-opacity ${selected === site ? "opacity-100" : "opacity-0"}`}
             >
               <path d="M20 6 9 17l-5-5" />
             </svg>
