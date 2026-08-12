@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T14:46:29.539Z",
+  "updated": "2026-08-12T16:49:55.624Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -25,26 +25,6 @@
       "id": "a11y/placeholder-as-label",
       "severity": "moderate",
       "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
-      "line": 156,
-      "evidence": "<textarea",
-      "msg": "Input with placeholder — verify a real associated <label> exists",
-      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
-    },
-    {
-      "id": "content/claim-repetition",
-      "severity": "minor",
-      "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
-      "line": 1,
-      "evidence": "\"use client\";",
-      "msg": "A four-word-plus phrase repeats three or more times",
-      "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
-    },
-    {
-      "id": "a11y/placeholder-as-label",
-      "severity": "moderate",
-      "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/diet-editor.tsx",
       "line": 205,
       "evidence": "<textarea",
@@ -56,6 +36,26 @@
       "severity": "minor",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/diet-editor.tsx",
+      "line": 1,
+      "evidence": "\"use client\";",
+      "msg": "A four-word-plus phrase repeats three or more times",
+      "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
+    },
+    {
+      "id": "a11y/placeholder-as-label",
+      "severity": "moderate",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
+      "line": 156,
+      "evidence": "<textarea",
+      "msg": "Input with placeholder — verify a real associated <label> exists",
+      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
+    },
+    {
+      "id": "content/claim-repetition",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
       "line": 1,
       "evidence": "\"use client\";",
       "msg": "A four-word-plus phrase repeats three or more times",

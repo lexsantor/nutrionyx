@@ -267,10 +267,10 @@ export function RoutineEditor({
                           className={`w-full ${cell} text-xs placeholder:text-ink-subtle`}
                         />
                       </div>
-                      <ExerciseThumb
-                        exerciseKey={exercise.key}
-                        className="size-28"
-                      />
+                      {/* Before the illustration, not after: the image slot
+                          collapses on an unpicked row, and a control that
+                          slides sideways depending on its neighbour is a
+                          control you have to hunt for. */}
                       <button
                         type="button"
                         onClick={() =>
@@ -283,6 +283,10 @@ export function RoutineEditor({
                       >
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
                       </button>
+                      <ExerciseThumb
+                        exerciseKey={exercise.key}
+                        className="size-28"
+                      />
                     </div>
                   );
                 })}
