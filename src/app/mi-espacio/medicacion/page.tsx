@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
+import { findLatestAssessment } from "@/modules/assessment/repository";
 import {
   daysUntil,
   nextDoseDate,
@@ -29,7 +30,12 @@ export default async function MedicationPage() {
     redirect("/");
   }
 
-  const plan = await getPlan(patient.organizationId, patient.id);
+  // The injection figure follows the sex the patient answered in their
+  // assessment, like the body map does.
+  const [plan, assessment] = await Promise.all([
+    getPlan(patient.organizationId, patient.id),
+    findLatestAssessment(patient.id),
+  ]);
   const doses = plan
     ? await listDoses(patient.organizationId, patient.id, 10)
     : [];
@@ -82,6 +88,7 @@ export default async function MedicationPage() {
                   planDoseMg={Number(plan.doseMg)}
                   suggested={suggestNextSite(lastDose?.site ?? null)}
                   todayISO={todayISO}
+                  sex={assessment?.sex ?? null}
                 />
               </div>
             </Card>

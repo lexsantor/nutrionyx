@@ -21,7 +21,7 @@ export function Select({
   return (
     <div className="relative w-full">
       <select
-        className={`block h-11 w-full appearance-none rounded-[10px] border border-field-border bg-surface-2 py-0 pl-3.5 pr-10 text-base text-ink ${className}`}
+        className={`block h-11 w-full min-w-0 appearance-none rounded-[10px] border border-field-border bg-surface-2 py-0 pl-3.5 pr-10 text-base text-ink ${className}`}
         {...props}
       >
         {children}

@@ -79,7 +79,7 @@ export default async function PatientsPage({
               defaultValue={q}
               placeholder={t("patients.searchPlaceholder")}
             />
-            <Button type="submit" variant="secondary" className="shrink-0">
+            <Button type="submit" variant="secondary" className="w-auto shrink-0">
               {t("patients.search")}
             </Button>
           </form>

@@ -8,49 +8,73 @@ import type { InjectionSite } from "@/generated/prisma/client";
 import { DoseStepper } from "./plan-form";
 import { logDoseAction, type MedicationFormState } from "./actions";
 
-// Viewer-mirrored (patient facing their own front): "izquierdo" on the left.
-const SITE_POSITIONS: Record<InjectionSite, { x: number; y: number }> = {
-  LEFT_ARM: { x: 13, y: 30 },
-  RIGHT_ARM: { x: 87, y: 30 },
-  LEFT_BELLY: { x: 39, y: 46 },
-  RIGHT_BELLY: { x: 61, y: 46 },
-  LEFT_THIGH: { x: 41, y: 68 },
-  RIGHT_THIGH: { x: 59, y: 68 },
+import type { Sex } from "@/generated/prisma/client";
+
+/**
+ * Injection sites over the anatomical mannequin, the same figure the body
+ * map uses (public/mannequin-{sex}-front.png). The crude blob of circles
+ * and rounded rectangles this replaces asked a patient to place a needle
+ * on a shape that was not a body.
+ *
+ * Percentages are derived from the calibrated bands in
+ * components/body-map-measures.tsx, which were measured off each render's
+ * alpha channel: arms from the ARM band, belly from WAIST, thighs from
+ * THIGH. The female figure carries a wider hip and a slightly wider arm
+ * line, so its columns differ.
+ *
+ * Viewer-mirrored, because the patient is facing their own front: the site
+ * they call "izquierdo" appears on the left of the picture.
+ */
+type Spot = { x: number; y: number };
+const SITE_POSITIONS: Record<"MALE" | "FEMALE", Record<InjectionSite, Spot>> = {
+  MALE: {
+    LEFT_ARM: { x: 22.8, y: 34.1 },
+    RIGHT_ARM: { x: 77.2, y: 34.1 },
+    LEFT_BELLY: { x: 43, y: 42.7 },
+    RIGHT_BELLY: { x: 57, y: 42.7 },
+    LEFT_THIGH: { x: 42.3, y: 63.7 },
+    RIGHT_THIGH: { x: 57.7, y: 63.7 },
+  },
+  FEMALE: {
+    LEFT_ARM: { x: 24.5, y: 34.1 },
+    RIGHT_ARM: { x: 75.5, y: 34.1 },
+    LEFT_BELLY: { x: 43, y: 42.7 },
+    RIGHT_BELLY: { x: 57, y: 42.7 },
+    LEFT_THIGH: { x: 42.3, y: 63.7 },
+    RIGHT_THIGH: { x: 57.7, y: 63.7 },
+  },
 };
 
 function BodyMap({
+  sex,
   suggested,
   selected,
   onSelect,
 }: {
+  sex: Sex | null;
   suggested: InjectionSite;
   selected: InjectionSite;
   onSelect: (site: InjectionSite) => void;
 }) {
   const t = useTranslations("medication");
+  const figure = sex === "FEMALE" ? "FEMALE" : "MALE";
+  const spots = SITE_POSITIONS[figure];
 
   return (
-    <div className="relative mx-auto h-64 w-44">
-      <svg
-        viewBox="0 0 100 90"
-        className="h-full w-full fill-ink/10"
-        aria-hidden="true"
-      >
-        <circle cx="50" cy="9" r="7" />
-        <path d="M38 18h24a8 8 0 0 1 8 8v16a8 8 0 0 1-8 8H38a8 8 0 0 1-8-8V26a8 8 0 0 1 8-8Z" />
-        <rect x="24" y="20" width="6" height="27" rx="3" />
-        <rect x="70" y="20" width="6" height="27" rx="3" />
-        <rect x="38" y="50" width="10" height="36" rx="5" />
-        <rect x="52" y="50" width="10" height="36" rx="5" />
-      </svg>
-      {(Object.keys(SITE_POSITIONS) as InjectionSite[]).map((site) => (
+    <div className="relative mx-auto aspect-[200/358] w-44">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`/mannequin-${figure.toLowerCase()}-front.png`}
+        alt=""
+        width={614}
+        height={1100}
+        className="h-full w-full object-contain"
+      />
+      {(Object.keys(spots) as InjectionSite[]).map((site) => (
         <label
           key={site}
           className="absolute -translate-x-1/2 -translate-y-1/2 cursor-pointer"
-          style={{
-            left: `${SITE_POSITIONS[site].x}%`,
-            top: `${SITE_POSITIONS[site].y}%`,
-          }}
+          style={{ left: `${spots[site].x}%`, top: `${spots[site].y}%` }}
         >
           <input
             type="radio"
@@ -93,10 +117,13 @@ export function DoseForm({
   planDoseMg,
   suggested,
   todayISO,
+  sex,
 }: {
   planDoseMg: number;
   suggested: InjectionSite;
   todayISO: string;
+  /** From the completed assessment; the figure follows it. */
+  sex: Sex | null;
 }) {
   const t = useTranslations("medication");
   const [state, formAction, isPending] = useActionState<
@@ -115,7 +142,12 @@ export function DoseForm({
 
       <fieldset className="flex flex-col gap-1">
         <legend className="text-sm font-medium">{t("log.siteLabel")}</legend>
-        <BodyMap suggested={suggested} selected={site} onSelect={setSite} />
+        <BodyMap
+          sex={sex}
+          suggested={suggested}
+          selected={site}
+          onSelect={setSite}
+        />
         <p className="text-center text-sm font-medium">{t(`sites.${site}`)}</p>
         {site !== suggested ? (
           <p className="text-center text-xs text-ink-subtle">
