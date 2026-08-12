@@ -130,14 +130,15 @@ export function AppointmentForm({
           {t(`errors.${state.errorKey}`)}
         </p>
       ) : null}
-      {state && "ok" in state ? (
-        <p
-          role="status"
+      <div role="status">
+        {state && "ok" in state ? (
+          <p
           className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success"
         >
           {t("saved")}
         </p>
-      ) : null}
+        ) : null}
+        </div>
     </form>
   );
 }
@@ -148,6 +149,20 @@ export function CancelButton({ appointmentId }: { appointmentId: string }) {
     CancelAppointmentState,
     FormData
   >(cancelAppointmentAction, null);
+  const [armed, setArmed] = useState(false);
+
+  if (!armed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setArmed(true)}
+        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-[transform,background-color,color] hover:bg-error-soft hover:text-error active:scale-[0.98] active:duration-150"
+      >
+        {t("cancel")}
+      </button>
+    );
+  }
+
   return (
     <form action={formAction} className="flex items-center gap-2">
       <input type="hidden" name="appointmentId" value={appointmentId} />
@@ -159,9 +174,16 @@ export function CancelButton({ appointmentId }: { appointmentId: string }) {
       <button
         type="submit"
         disabled={isPending}
-        className="inline-flex h-8 items-center rounded-full px-3 text-sm text-ink-subtle transition-[transform,background-color,color] hover:bg-error-soft hover:text-error active:scale-[0.98] active:duration-150"
+        className="inline-flex h-8 items-center rounded-full bg-error px-3 text-sm font-semibold text-on-destructive transition-[transform,background-color] hover:bg-error-hover active:scale-[0.97] active:duration-150 disabled:opacity-60"
       >
-        {t("cancel")}
+        {t("confirmCancel")}
+      </button>
+      <button
+        type="button"
+        onClick={() => setArmed(false)}
+        className="inline-flex h-8 items-center rounded-full px-2 text-sm text-ink-subtle transition-colors hover:text-ink"
+      >
+        {t("keep")}
       </button>
     </form>
   );

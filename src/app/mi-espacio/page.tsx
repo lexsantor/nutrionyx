@@ -45,7 +45,7 @@ export const dynamic = "force-dynamic";
 
 // Bento tile: shared card surface with premium hover physics.
 const TILE =
-  "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md";
+  "flex flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md";
 
 export default async function PatientHomePage() {
   const t = await getTranslations("patientHome");
@@ -68,10 +68,34 @@ export default async function PatientHomePage() {
     const bmiValue = Number(assessment.bmi);
 
     const tm = await getTranslations("medication");
-    const plan = await getPlan(patient.organizationId, patient.id);
-    const lastDoses = plan
-      ? await listDoses(patient.organizationId, patient.id, 1)
-      : [];
+
+    // Every read is independent once the patient is resolved: one batch,
+    // no request waterfall on the highest-frequency screen (audit 2026-08-12).
+    const [
+      plan,
+      lastDoses,
+      patientDocuments,
+      upcomingAll,
+      body,
+      allMeasurements,
+      targets,
+      proteinToday,
+      weights,
+      photos,
+    ] = await Promise.all([
+      getPlan(patient.organizationId, patient.id),
+      listDoses(patient.organizationId, patient.id, 1),
+      listDocuments(patient.organizationId, patient.id),
+      listUpcomingByPatient(patient.organizationId, patient.id, new Date()),
+      bodyComposition(patient.organizationId, patient.id),
+      listMeasurementsSince(patient.organizationId, patient.id, new Date(0)),
+      getTargets(patient.organizationId, patient.id),
+      proteinOnDay(patient.organizationId, patient.id, new Date()),
+      listWeights(patient.organizationId, patient.id),
+      listPhotos(patient.organizationId, patient.id),
+    ]);
+    const upcomingAppointments = upcomingAll.slice(0, 3);
+
     let medicationLine: string | null = null;
     if (plan) {
       const now = new Date();
@@ -90,19 +114,6 @@ export default async function PatientHomePage() {
     const tb = await getTranslations("body");
     const td = await getTranslations("documents");
     const ta = await getTranslations("agenda");
-    const patientDocuments = await listDocuments(
-      patient.organizationId,
-      patient.id,
-    );
-    const upcomingAppointments = (
-      await listUpcomingByPatient(patient.organizationId, patient.id, new Date())
-    ).slice(0, 3);
-    const body = await bodyComposition(patient.organizationId, patient.id);
-    const allMeasurements = await listMeasurementsSince(
-      patient.organizationId,
-      patient.id,
-      new Date(0),
-    );
     const rawZones = zoneStats(allMeasurements);
     const zonesForMap = Object.fromEntries(
       BODY_ZONES.flatMap((zone) => {
@@ -139,12 +150,6 @@ export default async function PatientHomePage() {
       body.weightKg != null && body.bodyFatPct != null
         ? leanMassKg(body.weightKg, body.bodyFatPct)
         : null;
-    const targets = await getTargets(patient.organizationId, patient.id);
-    const proteinToday = targets?.proteinTargetG
-      ? await proteinOnDay(patient.organizationId, patient.id, new Date())
-      : 0;
-
-    const weights = await listWeights(patient.organizationId, patient.id);
     const targetKg =
       assessment.targetWeightKg != null
         ? Number(assessment.targetWeightKg)
@@ -386,9 +391,7 @@ export default async function PatientHomePage() {
 
           <div className="lg:col-span-6">
             <PhotosCard
-              photos={(
-                await listPhotos(patient.organizationId, patient.id)
-              ).map((p) => ({
+              photos={photos.map((p) => ({
                 id: p.id,
                 createdAt: format.dateTime(p.createdAt, {
                   dateStyle: "medium",
@@ -468,7 +471,7 @@ export default async function PatientHomePage() {
             <a
               href="/api/me/export"
               download
-              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
+              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] ease-house hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
             >
               {tb("exportLink")}
             </a>
@@ -508,7 +511,7 @@ export default async function PatientHomePage() {
         </p>
         <Link
           href="/mi-espacio/evaluacion"
-          className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-colors hover:bg-primary-hover"
+          className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] active:duration-150"
         >
           {inProgress ? t("continue") : t("start")}
         </Link>

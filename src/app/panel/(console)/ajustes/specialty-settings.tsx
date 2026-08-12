@@ -56,11 +56,11 @@ export function SpecialtySettings({
         ))}
       </fieldset>
 
-      {state && "ok" in state ? (
-        <p role="status" className="text-sm text-success">
-          {t("saved")}
-        </p>
-      ) : null}
+      <div role="status">
+        {state && "ok" in state ? (
+          <p className="text-sm text-success">{t("saved")}</p>
+        ) : null}
+      </div>
 
       <div>
         <Button type="submit" disabled={isPending}>

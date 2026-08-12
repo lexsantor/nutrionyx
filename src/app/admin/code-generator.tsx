@@ -13,7 +13,7 @@ function RevokeSubmit({ label }: { label: string }) {
     <button
       type="submit"
       disabled={pending}
-      className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150 disabled:opacity-60"
+      className="inline-flex h-8 items-center rounded-full border border-hairline px-3 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150 disabled:opacity-60"
     >
       {label}
     </button>
@@ -30,7 +30,7 @@ function RevokeButton({ code }: { code: string }) {
       <button
         type="button"
         onClick={() => setArming(true)}
-        className="rounded-full border border-hairline px-3 py-0.5 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150"
+        className="inline-flex h-8 items-center rounded-full border border-hairline px-3 text-xs font-medium text-error transition-[transform,background-color,border-color] hover:bg-error-soft active:scale-[0.97] active:duration-150"
       >
         {t("revoke")}
       </button>
@@ -43,7 +43,7 @@ function RevokeButton({ code }: { code: string }) {
       <button
         type="button"
         onClick={() => setArming(false)}
-        className="rounded-full px-2 py-0.5 text-xs text-ink-subtle transition-colors hover:text-ink"
+        className="inline-flex h-8 items-center rounded-full px-2 text-xs text-ink-subtle transition-colors hover:text-ink"
       >
         {t("cancelRevoke")}
       </button>
@@ -85,15 +85,16 @@ export function CodeGenerator({ codes }: { codes: CodeRow[] }) {
         </Button>
       </form>
 
-      {state && "ok" in state ? (
-        <p
-          role="status"
+      <div role="status">
+        {state && "ok" in state ? (
+          <p
           className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success"
         >
           {t("generated")}{" "}
           <code className="font-mono font-semibold">{state.code}</code>
         </p>
-      ) : null}
+        ) : null}
+        </div>
       {state && "errorKey" in state ? (
         <p
           role="alert"

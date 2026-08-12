@@ -155,7 +155,6 @@
     color: var(--color-ink);
     font: 400 16px/1.5 var(--font-sans);
     -webkit-font-smoothing: antialiased;
-    transition: background 0.2s, color 0.2s;
   }
 
   h1,

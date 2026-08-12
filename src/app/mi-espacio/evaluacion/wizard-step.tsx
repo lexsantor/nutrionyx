@@ -298,7 +298,7 @@ export function WizardStep(props: StepProps) {
           {props.stepIndex > 0 ? (
             <Link
               href={`/mi-espacio/evaluacion?paso=${props.stepIndex - 1}`}
-              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
+              className="inline-flex h-11 items-center rounded-full border border-hairline bg-surface-1 px-5 text-sm font-semibold text-ink transition-[transform,box-shadow,border-color,background-color,color] ease-house hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
             >
               {t("back")}
             </Link>

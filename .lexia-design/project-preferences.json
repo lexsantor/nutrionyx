@@ -20,5 +20,15 @@
   },
   "hooks": {
     "notes": "Disable all lexia-design hooks per-session with LEXIA_DESIGN_HOOKS=0, or per-install with: claude plugin disable lexia-design"
+  },
+  "referenceSet": {
+    "products": [
+      "Healthie",
+      "Nutrium"
+    ],
+    "standard": "state-of-the-art clinical SaaS craft (owner delegated selection: judge against the best current examples in the nutrition-practice niche plus top-tier product craft, e.g. Linear-class console polish)",
+    "audience": "nutricionistas/dietistas ES + sus pacientes (moviles, edad variada)",
+    "recordedAt": "2026-08-12",
+    "notes": "Owner chose names over images; audits benchmark against these products' public standard."
   }
 }

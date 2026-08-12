@@ -8,7 +8,10 @@ import { getPatientDetail } from "@/modules/patient/repository";
 import { sendMessage } from "@/modules/messaging/repository";
 import { appUrl, sendEmail } from "@/lib/email";
 
-export type MessageFormState = { errorKey: string } | { ok: true } | null;
+export type MessageFormState =
+  | { errorKey: string; body?: string }
+  | { ok: true }
+  | null;
 
 export async function sendSpecialistMessageAction(
   _prevState: MessageFormState,
@@ -16,30 +19,30 @@ export async function sendSpecialistMessageAction(
 ): Promise<MessageFormState> {
   const body = ((formData.get("body") as string) ?? "").trim();
   if (!body || body.length > 4000) {
-    return { errorKey: "invalidBody" };
+    return { errorKey: "invalidBody", body };
   }
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
     console.error("[sendSpecialistMessageAction] non-nutritionist attempted", {
       userId: session.user.id,
     });
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   const { data: organizations } = await auth.organization.list();
   const active = organizations?.[0];
   if (!active) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   const org = await ensureOrganization(active.id, active.name);
 
   const patientId = (formData.get("patientId") as string) ?? "";
   const patient = await getPatientDetail(org.id, patientId);
   if (!patient) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   try {
@@ -52,7 +55,7 @@ export async function sendSpecialistMessageAction(
     });
   } catch (error) {
     console.error("[sendSpecialistMessageAction] sendMessage failed", error);
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   // Best-effort nudge - never the message content (slice 11 guardrail).

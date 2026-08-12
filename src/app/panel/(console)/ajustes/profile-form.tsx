@@ -88,11 +88,13 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
           {t(`errors.${state.errorKey}`)}
         </p>
       ) : null}
-      {state && "ok" in state ? (
-        <p role="status" className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success">
-          {t("saved")}
-        </p>
-      ) : null}
+      <div role="status">
+        {state && "ok" in state ? (
+          <p className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success">
+            {t("saved")}
+          </p>
+        ) : null}
+      </div>
 
       <Button type="submit" disabled={isPending} className="self-start">
         {isPending ? t("saving") : t("save")}

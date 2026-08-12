@@ -51,7 +51,7 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex justify-between gap-4 border-b border-hairline px-4 py-2.5 last:border-0 even:bg-surface-2/50">
       <dt className="text-sm text-ink-subtle">{label}</dt>
-      <dd className="text-right text-sm font-medium">{value}</dd>
+      <dd className="text-right text-sm font-medium tabular-nums">{value}</dd>
     </div>
   );
 }
@@ -532,7 +532,7 @@ export default async function PatientDetailPage({
                               dateStyle: "medium",
                             })}
                           </span>
-                          <span className="text-sm text-ink-subtle">
+                          <span className="text-sm tabular-nums text-ink-subtle">
                             {Number(dose.doseMg).toLocaleString("es")} mg ·{" "}
                             {tm(`sites.${dose.site}`)}
                           </span>

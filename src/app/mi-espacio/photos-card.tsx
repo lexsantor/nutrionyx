@@ -64,7 +64,7 @@ export function PhotosCard({
   const t = useTranslations("photos");
 
   return (
-    <section className="flex h-full flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md">
+    <section className="flex h-full flex-col gap-4 rounded-xl border border-hairline bg-surface-1 p-6 shadow-el-sm transition-[transform,box-shadow] duration-500 ease-house hover:-translate-y-0.5 hover:shadow-el-md">
       <div className="flex flex-col gap-0.5">
         <h2 className="text-lg font-semibold">{t("title")}</h2>
         <p className="text-sm text-ink-subtle">{t("privacy")}</p>

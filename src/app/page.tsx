@@ -63,7 +63,7 @@ function CtaButton({ href, children }: { href: string; children: ReactNode }) {
     >
       {children}
       <span
-        className={`flex size-9 items-center justify-center rounded-full bg-canvas/20 transition-transform duration-500 ${EASE} group-hover:-translate-y-px group-hover:translate-x-1 group-hover:scale-105`}
+        className={`flex size-9 items-center justify-center rounded-full bg-canvas/20 transition-transform duration-300 ${EASE} group-hover:-translate-y-px group-hover:translate-x-1 group-hover:scale-105`}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>
       </span>

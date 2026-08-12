@@ -31,6 +31,9 @@ export function NoteForm({ patientId }: { patientId: string }) {
           required
           maxLength={4000}
           rows={3}
+          defaultValue={
+            state && "errorKey" in state ? (state.body ?? "") : ""
+          }
           placeholder={t("placeholder")}
           className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle"
         />

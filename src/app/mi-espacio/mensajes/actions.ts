@@ -5,7 +5,10 @@ import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { sendMessage } from "@/modules/messaging/repository";
 
-export type MessageFormState = { errorKey: string } | { ok: true } | null;
+export type MessageFormState =
+  | { errorKey: string; body?: string }
+  | { ok: true }
+  | null;
 
 export async function sendPatientMessageAction(
   _prevState: MessageFormState,
@@ -13,16 +16,16 @@ export async function sendPatientMessageAction(
 ): Promise<MessageFormState> {
   const body = ((formData.get("body") as string) ?? "").trim();
   if (!body || body.length > 4000) {
-    return { errorKey: "invalidBody" };
+    return { errorKey: "invalidBody", body };
   }
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   const patient = await findPatientByAuthUserId(session.user.id);
   if (!patient) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   try {
@@ -35,7 +38,7 @@ export async function sendPatientMessageAction(
     });
   } catch (error) {
     console.error("[sendPatientMessageAction] sendMessage failed", error);
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   revalidatePath("/mi-espacio/mensajes");

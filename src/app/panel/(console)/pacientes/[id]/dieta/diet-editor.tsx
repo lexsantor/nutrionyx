@@ -33,6 +33,13 @@ export function DietEditor({
   }
   useUnsavedGuard(dirty, t("editor.unsaved"));
 
+  // After an error the browser form has been reset (React 19): fall back
+  // to the echoed submitted values so nothing the user typed is lost.
+  const v = (name: string, fallback: string) =>
+    state && "errorKey" in state && state.values
+      ? (state.values[name] ?? fallback)
+      : fallback;
+
   return (
     <form
       action={formAction}
@@ -51,7 +58,7 @@ export function DietEditor({
             name="title"
             type="text"
             maxLength={120}
-            defaultValue={initial.title ?? ""}
+            defaultValue={v("title", initial.title ?? "")}
             placeholder={t("editor.titlePlaceholder")}
           />
         </div>
@@ -64,7 +71,7 @@ export function DietEditor({
             name="notes"
             maxLength={2000}
             rows={2}
-            defaultValue={initial.notes ?? ""}
+            defaultValue={v("notes", initial.notes ?? "")}
             placeholder={t("editor.notesPlaceholder")}
             className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle"
           />
@@ -94,7 +101,7 @@ export function DietEditor({
                     name={`meal-${dayIndex}-${slot}`}
                     rows={2}
                     maxLength={1000}
-                    defaultValue={day[slot] ?? ""}
+                    defaultValue={v(`meal-${dayIndex}-${slot}`, day[slot] ?? "")}
                     className="block w-full resize-y rounded-[10px] border border-field-border bg-surface-2 px-3 py-2 text-sm text-ink placeholder:text-ink-subtle"
                   />
                 </div>
@@ -108,14 +115,15 @@ export function DietEditor({
         <Button type="submit" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
-        {state && "ok" in state ? (
-          <span
-            role="status"
+        <div role="status">
+          {state && "ok" in state ? (
+            <span
             className="rounded-full bg-success-soft px-3 py-1.5 text-sm text-success"
           >
             {t("editor.saved")}
           </span>
-        ) : null}
+          ) : null}
+          </div>
         {state && "errorKey" in state ? (
           <span
             role="alert"

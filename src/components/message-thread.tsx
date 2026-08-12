@@ -46,7 +46,7 @@ export function MessageThread({
           </li>
         );
       })}
-      <ScrollAnchor />
+      <ScrollAnchor watch={messages.length} />
     </ol>
   );
 }

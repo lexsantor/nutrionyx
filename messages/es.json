@@ -372,7 +372,9 @@
       "cancelling": "Cancelando...",
       "cancelError": "No se pudo cancelar. Revisa la terminal del servidor para el detalle.",
       "copy": "Copiar enlace",
-      "copied": "Copiado"
+      "copied": "Copiado",
+      "confirmCancel": "Confirmar",
+      "keep": "Mantener"
     },
     "unreadMessages": "Mensajes sin leer"
   },
@@ -1105,7 +1107,9 @@
       }
     },
     "cancelError": "No se ha podido cancelar.",
-    "emptyHint": "Crea la primera cita con el formulario de la derecha."
+    "emptyHint": "Crea la primera cita con el formulario de la derecha.",
+    "confirmCancel": "Confirmar cancelación",
+    "keep": "Mantener"
   },
   "boundary": {
     "notFoundTitle": "Página no encontrada",

@@ -11,7 +11,10 @@ import {
   normalizeRoutine,
 } from "@/modules/training/routine";
 
-export type RoutineFormState = { errorKey: string } | { ok: true } | null;
+export type RoutineFormState =
+  | { errorKey: string; values?: Record<string, string> }
+  | { ok: true }
+  | null;
 
 export async function saveRoutineAction(
   _prevState: RoutineFormState,
@@ -19,6 +22,12 @@ export async function saveRoutineAction(
 ): Promise<RoutineFormState> {
   const title = ((formData.get("title") as string) ?? "").trim().slice(0, 120);
   const notes = ((formData.get("notes") as string) ?? "").trim().slice(0, 2000);
+  // Echo submitted values so the editor re-hydrates after the reset.
+  const values = Object.fromEntries(
+    [...formData.entries()]
+      .filter(([k, v]) => typeof v === "string" && k !== "patientId")
+      .map(([k, v]) => [k, v as string]),
+  );
   const content = normalizeRoutine({
     days: Array.from(
       { length: DAYS_PER_WEEK },
@@ -26,30 +35,30 @@ export async function saveRoutineAction(
     ),
   });
   if (!content) {
-    return { errorKey: "invalidContent" };
+    return { errorKey: "invalidContent", values };
   }
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values };
   }
   if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
     console.error("[saveRoutineAction] non-nutritionist attempted", {
       userId: session.user.id,
     });
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values };
   }
   const { data: organizations } = await auth.organization.list();
   const active = organizations?.[0];
   if (!active) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values };
   }
   const org = await ensureOrganization(active.id, active.name);
 
   const patientId = (formData.get("patientId") as string) ?? "";
   const patient = await getPatientDetail(org.id, patientId);
   if (!patient) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values };
   }
 
   try {
@@ -63,7 +72,7 @@ export async function saveRoutineAction(
     });
   } catch (error) {
     console.error("[saveRoutineAction] upsertRoutine failed", error);
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values };
   }
 
   revalidatePath(`/panel/pacientes/${patient.id}`);

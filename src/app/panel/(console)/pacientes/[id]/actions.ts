@@ -188,7 +188,10 @@ export async function deleteDocumentAction(
   return null;
 }
 
-export type NoteFormState = { errorKey: string } | { ok: true } | null;
+export type NoteFormState =
+  | { errorKey: string; body?: string }
+  | { ok: true }
+  | null;
 
 export async function addNoteAction(
   _prevState: NoteFormState,
@@ -196,23 +199,23 @@ export async function addNoteAction(
 ): Promise<NoteFormState> {
   const body = ((formData.get("body") as string) ?? "").trim();
   if (!body || body.length > 4000) {
-    return { errorKey: "invalidBody" };
+    return { errorKey: "invalidBody", body };
   }
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
     console.error("[addNoteAction] non-nutritionist attempted", {
       userId: session.user.id,
     });
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   const { data: organizations } = await auth.organization.list();
   if (!organizations || organizations.length === 0) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
   const active = organizations[0];
   const org = await ensureOrganization(active.id, active.name);
@@ -220,7 +223,7 @@ export async function addNoteAction(
   const patientId = (formData.get("patientId") as string) ?? "";
   const patient = await getPatientDetail(org.id, patientId);
   if (!patient) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   try {
@@ -232,7 +235,7 @@ export async function addNoteAction(
     });
   } catch (error) {
     console.error("[addNoteAction] addNote failed", error);
-    return { errorKey: "generic" };
+    return { errorKey: "generic", body };
   }
 
   revalidatePath(`/panel/pacientes/${patient.id}`);

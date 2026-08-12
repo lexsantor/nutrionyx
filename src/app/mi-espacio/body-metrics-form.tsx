@@ -62,14 +62,15 @@ export function BodyMetricsForm() {
           {t(`errors.${state.errorKey}`)}
         </p>
       ) : null}
-      {state && "ok" in state ? (
-        <p
-          role="status"
+      <div role="status">
+        {state && "ok" in state ? (
+          <p
           className="rounded-[10px] bg-success-soft px-3 py-2 text-sm text-success"
         >
           {t("saved")}
         </p>
-      ) : null}
+        ) : null}
+        </div>
     </form>
   );
 }
