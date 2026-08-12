@@ -13,29 +13,38 @@ import {
   type Exercise,
 } from "@/modules/training/routine";
 import { Topbar } from "@/components/topbar";
+import { ExerciseThumb } from "@/components/exercise-thumb";
 import { PatientNav } from "../patient-nav";
 import { SessionForm } from "./session-form";
 import { sameMadridDay, madridWeekdayIndex } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
 
-/** One day's prescription: series x reps, exercise, optional cue. */
+/**
+ * One day's prescription: series x reps, exercise, optional cue, and the
+ * illustration where the catalogue has one. The image sits last so the
+ * text columns stay aligned whether or not a given exercise is drawn.
+ */
 function ExerciseList({ exercises }: { exercises: Exercise[] }) {
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-3">
       {exercises.map((exercise, i) => (
-        <li key={i} className="flex items-baseline gap-3 text-sm">
+        <li
+          key={i}
+          className="flex items-start gap-3 border-b border-hairline pb-3 text-sm last:border-0 last:pb-0"
+        >
           {formatPrescription(exercise) ? (
             <span className="w-16 shrink-0 tabular-nums text-ink-subtle">
               {formatPrescription(exercise)}
             </span>
           ) : null}
-          <span className="flex min-w-0 flex-col">
+          <span className="flex min-w-0 flex-1 flex-col">
             <span className="leading-relaxed">{exercise.name}</span>
             {exercise.notes ? (
               <span className="text-xs text-ink-subtle">{exercise.notes}</span>
             ) : null}
           </span>
+          <ExerciseThumb exerciseKey={exercise.key} className="size-24" />
         </li>
       ))}
     </ul>

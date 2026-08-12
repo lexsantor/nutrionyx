@@ -347,7 +347,9 @@ export function DietEditor({
         ))}
       </div>
 
-      <div className="sticky bottom-4 flex items-center gap-3 self-start">
+      {/* Same dock as the routine editor: spans the content column and
+          carries its own surface. The console wrapper is px-6. */}
+      <div className="sticky bottom-0 z-10 -mx-6 flex flex-wrap items-center gap-3 border-t border-hairline bg-surface-1 px-6 py-4">
         <Button type="submit" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
