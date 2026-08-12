@@ -271,3 +271,42 @@ Spanish strings in auth · theme-toggle name/state contradiction · unread
 badge unnamed for SR · no Cmd+Enter in composers · erase confirm text-sm
 (iOS zoom) · landing skip link + empty first th · synthetic chip on 4 of
 8 beats · 640KB unoptimized mannequin PNGs · React19 repro still pending.
+
+---
+
+# Iteration 4 attempt — 2026-08-12 (INVALIDATED, process gap)
+
+Dispatched both reviewers against shots-auth/ (first authenticated
+capture) expecting a real re-score. Both independently caught, by file
+mtime, that the captures (14:28) predate the fixes they were meant to
+verify (i18n key + chart + dashboard tile, committed 14:32-14:34) — the
+capture happened, bugs were seen and fixed from the SAME batch, creds
+were deleted, then the stale batch was re-used for scoring instead of
+re-capturing. No new LEXIA SCORE published: scoring 3 of the evaluated
+findings against known-fixed-but-unphotographed code would be evidence
+theater, the exact thing the honesty rules exist to prevent.
+
+Both reviewers surfaced independent, code-verifiable findings not tied
+to the stale items:
+- entreno/page.tsx: "today" card claimed a scheduled rest day even when
+  no routine was ever published, contradicting the card below it. FIXED
+  (commit 373cdb2) — hasRoutine now gates the rest-day copy.
+- mi-espacio: PhotosCard stretched to match its taller sibling's grid-row
+  height (CSS Grid default stretch, no items-start), leaving a mostly-
+  empty bordered box for patients with few photos. FIXED (373cdb2) —
+  wrapper takes self-start. medicacion's equivalent pairing already had
+  items-start and needed no change.
+- Patient list optimizes the "Peso" column for progress-to-goal, not
+  recency/adherence — the brief's stated primary specialist task. NOT
+  FIXED: product decision, flagged for the owner, not silently redesigned.
+- Mobile patient table already scrolls (overflow-x-auto); lacks a visual
+  cue that more columns exist off-screen. NOT FIXED: both reviewers rated
+  it REVIEW-severity, out of scope without being asked.
+- /panel/pacientes/[id] (patient detail) was never captured this round —
+  two of three claimed signature touchpoints (bezel identity header,
+  plans ledger) remain code-verified only.
+
+Coverage note for the next real iteration 4: dark theme is completely
+unverified for every authenticated surface; the detail page needs its
+own capture; re-run shoot-auth.mjs fresh (new credentials, immediately
+before dispatching reviewers, no gap for fixes to land in between).
