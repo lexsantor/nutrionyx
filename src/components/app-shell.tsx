@@ -10,29 +10,58 @@ import { Users } from "reicon-react/icons/Users";
 import { Calendar } from "reicon-react/icons/Calendar";
 import { Book } from "reicon-react/icons/Book";
 import { ChatRound } from "reicon-react/icons/ChatRound";
+import { ChefHat } from "reicon-react/icons/ChefHat";
+import { Dumbbell } from "reicon-react/icons/Dumbbell";
+import { Pills } from "reicon-react/icons/Pills";
+import { ChartLine } from "reicon-react/icons/ChartLine";
+import { User } from "reicon-react/icons/User";
 import { Settings } from "reicon-react/icons/Settings";
 import { Logout } from "reicon-react/icons/Logout";
 import { ThemeToggle } from "./theme-toggle";
 import { signOut } from "@/lib/auth/sign-out";
 
-// Specialist console shell (adapted from Pulse CRM, adr/0005; rethemed to
-// NORTE). Icons are Reicon (reicon-react). Primary nav sits at the top of a
-// fixed sidebar; Ajustes, the theme switch and sign-out sit at the bottom
-// behind a separator. On mobile the sidebar collapses to a top header.
-// The scroll area is <main> only, with a stable scrollbar gutter, so the
-// centered content never shifts by the scrollbar width between routes.
+// The platform shell (adapted from Pulse CRM, adr/0005; rethemed to NORTE).
+// One chrome for both areas: a fixed sidebar with the primary nav, and a
+// bottom slot for the account controls behind a separator. On mobile the
+// sidebar collapses to a top header plus a scrolling row. The scroll area
+// is <main> only, with a stable scrollbar gutter, so the centered content
+// never shifts by the scrollbar width between routes.
+//
+// The patient space used its own Topbar until the shells were unified;
+// two chromes for one product taught two mental models for no reason.
+//
+// Nav arrays live in this client module because their icons are
+// components, which cannot cross the server boundary as props.
 
 type IconType = IconComponent;
+type NavItemDef = { key: string; href: string; icon: IconType };
 
-const PRIMARY_NAV: { key: string; href: string; icon: IconType }[] = [
+const CONSOLE_NAV: NavItemDef[] = [
   { key: "inicio", href: "/panel", icon: Home },
   { key: "pacientes", href: "/panel/pacientes", icon: Users },
   { key: "mensajes", href: "/panel/mensajes", icon: ChatRound },
   { key: "agenda", href: "/panel/agenda", icon: Calendar },
   { key: "biblioteca", href: "/panel/biblioteca", icon: Book },
 ];
+const CONSOLE_ACCOUNT: NavItemDef = {
+  key: "ajustes",
+  href: "/panel/ajustes",
+  icon: Settings,
+};
 
-const SETTINGS_NAV = { key: "ajustes", href: "/panel/ajustes", icon: Settings };
+const PATIENT_NAV: NavItemDef[] = [
+  { key: "home", href: "/mi-espacio", icon: Home },
+  { key: "diet", href: "/mi-espacio/dieta", icon: ChefHat },
+  { key: "training", href: "/mi-espacio/entreno", icon: Dumbbell },
+  { key: "medication", href: "/mi-espacio/medicacion", icon: Pills },
+  { key: "progress", href: "/mi-espacio/progreso", icon: ChartLine },
+  { key: "messages", href: "/mi-espacio/mensajes", icon: ChatRound },
+];
+const PATIENT_ACCOUNT: NavItemDef = {
+  key: "profile",
+  href: "/mi-espacio/perfil",
+  icon: User,
+};
 
 const ICON_SIZE = 18;
 
@@ -66,19 +95,34 @@ function NavItem({
   );
 }
 
-export function ConsoleShell({ children }: { children: ReactNode }) {
+function Shell({
+  primary,
+  account,
+  labelNamespace,
+  root,
+  children,
+}: {
+  primary: NavItemDef[];
+  account: NavItemDef;
+  /** Where the nav labels come from: "common.nav" or "patientNav". */
+  labelNamespace: string;
+  /** The area's index route, matched exactly so it does not stay lit. */
+  root: string;
+  children: ReactNode;
+}) {
   const t = useTranslations("common");
+  const label = useTranslations(labelNamespace);
   const pathname = usePathname();
   const isActive = (href: string) =>
-    href === "/panel" ? pathname === "/panel" : pathname.startsWith(href);
+    href === root ? pathname === root : pathname.startsWith(href);
 
   const bottomControls = (
     <>
       <NavItem
-        href={SETTINGS_NAV.href}
-        label={t(`nav.${SETTINGS_NAV.key}`)}
-        icon={SETTINGS_NAV.icon}
-        active={isActive(SETTINGS_NAV.href)}
+        href={account.href}
+        label={label(account.key)}
+        icon={account.icon}
+        active={isActive(account.href)}
       />
       <div className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ink-subtle">
         <span>{t("theme")}</span>
@@ -109,11 +153,11 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
         </div>
         <nav className="flex-1 px-3 py-2">
           <ul className="flex flex-col gap-1">
-            {PRIMARY_NAV.map((item) => (
+            {primary.map((item) => (
               <li key={item.key}>
                 <NavItem
                   href={item.href}
-                  label={t(`nav.${item.key}`)}
+                  label={label(item.key)}
                   icon={item.icon}
                   active={isActive(item.href)}
                 />
@@ -146,7 +190,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
         </header>
 
         <nav className="flex items-center gap-1 overflow-x-auto border-b border-hairline bg-surface-1 px-3 py-2 lg:hidden">
-          {[...PRIMARY_NAV, SETTINGS_NAV].map((item) => {
+          {[...primary, account].map((item) => {
             const active = isActive(item.href);
             return (
               <Link
@@ -159,7 +203,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
                     : "whitespace-nowrap rounded-full px-3 py-1.5 text-sm text-ink-subtle no-underline transition-[background-color,color,box-shadow] duration-200 ease-house"
                 }
               >
-                {t(`nav.${item.key}`)}
+                {label(item.key)}
               </Link>
             );
           })}
@@ -170,5 +214,31 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
         </main>
       </div>
     </div>
+  );
+}
+
+export function ConsoleShell({ children }: { children: ReactNode }) {
+  return (
+    <Shell
+      primary={CONSOLE_NAV}
+      account={CONSOLE_ACCOUNT}
+      labelNamespace="common.nav"
+      root="/panel"
+    >
+      {children}
+    </Shell>
+  );
+}
+
+export function PatientShell({ children }: { children: ReactNode }) {
+  return (
+    <Shell
+      primary={PATIENT_NAV}
+      account={PATIENT_ACCOUNT}
+      labelNamespace="patientNav"
+      root="/mi-espacio"
+    >
+      {children}
+    </Shell>
   );
 }

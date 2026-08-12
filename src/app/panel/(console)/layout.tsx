@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
-import { ConsoleShell } from "@/components/console-shell";
+import { ConsoleShell } from "@/components/app-shell";
 
 export const dynamic = "force-dynamic";
 

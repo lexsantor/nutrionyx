@@ -12,11 +12,9 @@ import { listWeights, proteinOnDay } from "@/modules/measurement/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
-import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
 import { ProteinLog } from "./protein-log";
 import { listUpcomingByPatient } from "@/modules/scheduling/repository";
-import { PatientNav } from "./patient-nav";
 import { ButtonLink } from "@/components/ui/button-link";
 import { sameMadridDay } from "@/modules/scheduling/time";
 
@@ -106,8 +104,7 @@ export default async function PatientHomePage() {
 
     return (
       <>
-        <Topbar nav={<PatientNav />} />
-        <main id="contenido" className="mx-auto w-full max-w-6xl px-6 py-10">
+        <div className="flex flex-col gap-6">
           <h1 className="mb-6 font-display text-2xl font-semibold tracking-tight">
             {t("welcome", { name: session.user.name })}
           </h1>
@@ -236,7 +233,7 @@ export default async function PatientHomePage() {
           ) : null}
 
           </div>
-        </main>
+        </div>
       </>
     );
   }
@@ -255,27 +252,24 @@ export default async function PatientHomePage() {
     : 0;
 
   return (
-    <>
-      <Topbar nav={<PatientNav />} />
-      <main id="contenido" className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-10 text-center">
-        <h1 className="text-2xl font-semibold">
-          {t("welcome", { name: session.user.name })}
-        </h1>
-        <p className="max-w-md text-sm text-ink-subtle">
+    <div className="flex flex-col items-center gap-4 py-16 text-center">
+      <h1 className="font-display text-2xl font-semibold tracking-tight">
+        {t("welcome", { name: session.user.name })}
+      </h1>
+      <p className="max-w-md text-sm text-ink-subtle">
           {inProgress
             ? t("continueHint", {
                 step: Math.min(step + 1, ASSESSMENT_STEPS.length),
                 total: ASSESSMENT_STEPS.length,
               })
-            : t("startHint")}
-        </p>
-        <Link
-          href="/mi-espacio/evaluacion"
-          className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] active:duration-150"
-        >
-          {inProgress ? t("continue") : t("start")}
-        </Link>
-      </main>
-    </>
+          : t("startHint")}
+      </p>
+      <Link
+        href="/mi-espacio/evaluacion"
+        className="inline-flex h-11 items-center justify-center rounded-full bg-primary px-5 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] active:duration-150"
+      >
+        {inProgress ? t("continue") : t("start")}
+      </Link>
+    </div>
   );
 }

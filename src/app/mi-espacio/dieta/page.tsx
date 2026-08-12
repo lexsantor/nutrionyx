@@ -9,8 +9,6 @@ import {
   isEmptyPlan,
   normalizeContent,
 } from "@/modules/diet/plan";
-import { Topbar } from "@/components/topbar";
-import { PatientNav } from "../patient-nav";
 import { madridWeekdayIndex } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
@@ -50,8 +48,7 @@ export default async function PatientDietPage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">
             {plan?.title || t("patient.heading")}
@@ -156,7 +153,7 @@ export default async function PatientDietPage() {
             {t("patient.empty")}
           </p>
         )}
-      </main>
+      </div>
     </>
   );
 }

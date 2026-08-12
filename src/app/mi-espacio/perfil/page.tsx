@@ -5,8 +5,6 @@ import { findLatestAssessment } from "@/modules/assessment/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { listDocuments } from "@/modules/documents/repository";
 import { getOrgProfile } from "@/modules/organization/repository";
-import { Topbar } from "@/components/topbar";
-import { PatientNav } from "../patient-nav";
 import { signOut } from "@/lib/auth/sign-out";
 
 export const metadata = { title: "Mi perfil" };
@@ -38,11 +36,7 @@ export default async function PatientProfilePage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main
-        id="contenido"
-        className="mx-auto flex w-full max-w-3xl flex-col gap-6 px-6 py-10"
-      >
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-2xl font-semibold tracking-tight">
             {t("title")}
@@ -187,7 +181,7 @@ export default async function PatientProfilePage() {
             {t("signOut")}
           </button>
         </form>
-      </main>
+      </div>
     </>
   );
 }

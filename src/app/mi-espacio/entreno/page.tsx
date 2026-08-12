@@ -12,9 +12,7 @@ import {
   normalizeRoutine,
   type Exercise,
 } from "@/modules/training/routine";
-import { Topbar } from "@/components/topbar";
 import { ExerciseThumb } from "@/components/exercise-thumb";
-import { PatientNav } from "../patient-nav";
 import { SessionForm } from "./session-form";
 import { sameMadridDay, madridWeekdayIndex } from "@/modules/scheduling/time";
 
@@ -77,8 +75,7 @@ export default async function PatientTrainingPage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">
             {routine?.title || t("patient.heading")}
@@ -161,7 +158,7 @@ export default async function PatientTrainingPage() {
             </ul>
           </section>
         ) : null}
-      </main>
+      </div>
     </>
   );
 }

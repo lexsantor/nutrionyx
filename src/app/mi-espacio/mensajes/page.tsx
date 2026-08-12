@@ -6,9 +6,7 @@ import {
   listThread,
   markThreadRead,
 } from "@/modules/messaging/repository";
-import { Topbar } from "@/components/topbar";
 import { MessageThread } from "@/components/message-thread";
-import { PatientNav } from "../patient-nav";
 import { Composer } from "./composer";
 
 export const dynamic = "force-dynamic";
@@ -31,8 +29,7 @@ export default async function PatientMessagesPage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-1">
           <h1 className="text-2xl font-semibold">{t("patientHeading")}</h1>
           <p className="text-sm text-ink-subtle">{t("patientHint")}</p>
@@ -58,7 +55,7 @@ export default async function PatientMessagesPage() {
           />
           <Composer />
         </div>
-      </main>
+      </div>
     </>
   );
 }

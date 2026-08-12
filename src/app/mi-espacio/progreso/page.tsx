@@ -15,10 +15,8 @@ import {
   zoneStats,
 } from "@/modules/measurement/body";
 import { listPhotos } from "@/modules/photos/repository";
-import { Topbar } from "@/components/topbar";
 import { WeightChart } from "@/components/weight-chart";
 import { BodyMapMeasures } from "@/components/body-map-measures";
-import { PatientNav } from "../patient-nav";
 import { BodyMetricsForm } from "../body-metrics-form";
 import { PhotosCard } from "../photos-card";
 
@@ -110,11 +108,7 @@ export default async function PatientProgressPage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main
-        id="contenido"
-        className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10"
-      >
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-display text-2xl font-semibold tracking-tight">
             {t("title")}
@@ -256,7 +250,7 @@ export default async function PatientProgressPage() {
             createdAt: format.dateTime(p.createdAt, { dateStyle: "medium" }),
           }))}
         />
-      </main>
+      </div>
     </>
   );
 }

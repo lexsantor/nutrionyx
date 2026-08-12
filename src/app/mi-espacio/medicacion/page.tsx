@@ -9,8 +9,6 @@ import {
   nextDoseDate,
   suggestNextSite,
 } from "@/modules/medication/glp1";
-import { Topbar } from "@/components/topbar";
-import { PatientNav } from "../patient-nav";
 import { Card } from "@/components/ui/card";
 import { PlanForm } from "./plan-form";
 import { DoseForm } from "./dose-form";
@@ -55,8 +53,7 @@ export default async function MedicationPage() {
 
   return (
     <>
-      <Topbar nav={<PatientNav />} />
-      <main id="contenido" className="mx-auto flex w-full max-w-6xl flex-col gap-6 px-6 py-10">
+      <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <Link
             href="/mi-espacio"
@@ -146,7 +143,7 @@ export default async function MedicationPage() {
             </div>
           </Card>
         )}
-      </main>
+      </div>
     </>
   );
 }
