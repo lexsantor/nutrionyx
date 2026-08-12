@@ -100,8 +100,9 @@ export default async function PatientHomePage() {
         ? Math.min(1, proteinToday / proteinTarget)
         : 0;
 
-    // Bento pairs: when a row partner is absent, the survivor takes the row.
-    const medicationSpan = targets ? "lg:col-span-4" : "lg:col-span-12";
+    // Bento pairs: the "hoy" tile and medication share the first row.
+    const todaySpan = "lg:col-span-8";
+    const medicationSpan = "lg:col-span-4";
 
     return (
       <>
@@ -112,68 +113,66 @@ export default async function PatientHomePage() {
           </h1>
 
           <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-          {targets ? (
-            <section className={`${TILE} lg:col-span-8`}>
-              <div className="flex flex-col gap-0.5">
-                <h2 className="text-lg font-semibold">{tt("title")}</h2>
-                {planParts.length > 0 ? (
-                  <p className="text-sm text-ink-subtle">
-                    {planParts.join(" · ")}
-                  </p>
-                ) : null}
-              </div>
-
-              <div className="flex items-center justify-between gap-4">
-                <span className="text-sm font-medium">{tt("weight")}</span>
-                {weightToday ? (
-                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-success">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
-                    {tt("weightDone", {
-                      kg: Number(lastWeight!.value).toLocaleString("es"),
-                    })}
-                  </span>
-                ) : (
-                  <span className="text-sm text-ink-subtle">
-                    {tt("weightPending")}
-                  </span>
-                )}
-              </div>
-
-              {proteinTarget != null ? (
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="text-sm font-medium">
-                      {tt("protein")}
-                    </span>
-                    <span
-                      className={`text-sm font-medium tabular-nums ${
-                        proteinRatio >= 1 ? "text-success" : "text-ink-subtle"
-                      }`}
-                    >
-                      {proteinToday.toLocaleString("es")} g / {proteinTarget} g
-                    </span>
-                  </div>
-                  <div
-                    role="progressbar"
-                    aria-valuenow={Math.round(proteinRatio * 100)}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                    aria-label={tt("protein")}
-                    className="h-1.5 overflow-hidden rounded-full bg-surface-3"
-                  >
-                    <div
-                      className={`h-full w-full origin-left rounded-full transition-transform duration-300 ease-house ${
-                        proteinRatio >= 1 ? "bg-success" : "bg-primary"
-                      }`}
-                      style={{ transform: `scaleX(${proteinRatio})` }}
-                    />
-                  </div>
-                  <ProteinLog />
-                </div>
+          <section className={`${TILE} ${todaySpan}`}>
+            <div className="flex flex-col gap-0.5">
+              <h2 className="text-lg font-semibold">{tt("title")}</h2>
+              {planParts.length > 0 ? (
+                <p className="text-sm text-ink-subtle">
+                  {planParts.join(" · ")}
+                </p>
               ) : null}
-              <WeightCheckIn />
-            </section>
-          ) : null}
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <span className="text-sm font-medium">{tt("weight")}</span>
+              {weightToday ? (
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-success">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+                  {tt("weightDone", {
+                    kg: Number(lastWeight!.value).toLocaleString("es"),
+                  })}
+                </span>
+              ) : (
+                <span className="text-sm text-ink-subtle">
+                  {tt("weightPending")}
+                </span>
+              )}
+            </div>
+
+            {proteinTarget != null ? (
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-sm font-medium">
+                    {tt("protein")}
+                  </span>
+                  <span
+                    className={`text-sm font-medium tabular-nums ${
+                      proteinRatio >= 1 ? "text-success" : "text-ink-subtle"
+                    }`}
+                  >
+                    {proteinToday.toLocaleString("es")} g / {proteinTarget} g
+                  </span>
+                </div>
+                <div
+                  role="progressbar"
+                  aria-valuenow={Math.round(proteinRatio * 100)}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-label={tt("protein")}
+                  className="h-1.5 overflow-hidden rounded-full bg-surface-3"
+                >
+                  <div
+                    className={`h-full w-full origin-left rounded-full transition-transform duration-300 ease-house ${
+                      proteinRatio >= 1 ? "bg-success" : "bg-primary"
+                    }`}
+                    style={{ transform: `scaleX(${proteinRatio})` }}
+                  />
+                </div>
+                <ProteinLog />
+              </div>
+            ) : null}
+            <WeightCheckIn />
+          </section>
 
           <section className={`${TILE} ${medicationSpan}`}>
             <div className="flex items-start justify-between gap-4">
