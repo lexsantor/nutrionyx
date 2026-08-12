@@ -626,6 +626,9 @@
       "title": "Objetivos",
       "subtitle": "Plan que el paciente ve en su espacio: referencia de kcal, proteína diaria a registrar y entrenos semanales."
     },
+    "plans": {
+      "title": "Plan y seguimiento"
+    },
     "notes": {
       "title": "Notas",
       "subtitle": "Privadas de la consulta: el paciente nunca las ve. Historial inmutable; una corrección es una nota nueva.",
@@ -1107,7 +1110,7 @@
       }
     },
     "cancelError": "No se ha podido cancelar.",
-    "emptyHint": "Crea la primera cita con el formulario de la derecha.",
+    "emptyHint": "Crea la primera cita con el formulario de arriba.",
     "confirmCancel": "Confirmar cancelación",
     "keep": "Mantener"
   },

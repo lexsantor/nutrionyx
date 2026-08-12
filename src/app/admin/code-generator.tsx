@@ -132,7 +132,7 @@ export function CodeGenerator({ codes }: { codes: CodeRow[] }) {
                   <span
                     className={
                       c.used
-                        ? "rounded-full bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle"
+                        ? "rounded-full bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-muted"
                         : "rounded-full bg-success-soft px-2 py-0.5 text-xs font-medium text-success"
                     }
                   >

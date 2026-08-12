@@ -242,7 +242,9 @@ export default async function PatientDetailPage({
         <Card className="lg:col-span-7">
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between gap-4">
-              <h2 className="text-lg font-semibold">{t("report.title")}</h2>
+              <h2 className="font-display text-xl font-semibold tracking-tight">
+                {t("report.title")}
+              </h2>
               <span className="text-sm text-ink-subtle">
                 {t("report.window", { days: REPORT_WINDOW_DAYS })}
               </span>
@@ -410,77 +412,82 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card className="lg:col-span-5">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <h2 className="text-lg font-semibold">
-                {t("messages.title")}
-              </h2>
-              {unreadMessages > 0 ? (
-                <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-xs font-semibold text-on-primary">
-                  {unreadMessages}
-                </span>
-              ) : null}
-            </div>
-            <Link
-              href={`/panel/pacientes/${patient.id}/mensajes`}
-              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
-            >
-              {t("messages.open")}
-            </Link>
-          </div>
-        </Card>
+        <Card className="lg:col-span-12">
+          <div className="flex flex-col gap-4">
+            <h2 className="text-lg font-semibold">{t("plans.title")}</h2>
+            <div className="flex flex-col">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline py-3 first:pt-0 last:border-0 last:pb-0">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <div className="flex items-center gap-2.5">
+                    <h3 className="text-base font-semibold">
+                      {t("messages.title")}
+                    </h3>
+                    {unreadMessages > 0 ? (
+                      <span className="inline-flex min-w-6 items-center justify-center rounded-full bg-primary px-1.5 py-0.5 text-xs font-semibold text-on-primary">
+                        {unreadMessages}
+                      </span>
+                    ) : null}
+                  </div>
+                </div>
+                <Link
+                  href={`/panel/pacientes/${patient.id}/mensajes`}
+                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
+                >
+                  {t("messages.open")}
+                </Link>
+              </div>
 
-        <Card className="lg:col-span-7">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <h2 className="text-lg font-semibold">{t("diet.title")}</h2>
-              <p className="text-sm text-ink-subtle">
-                {dietPlan
-                  ? t("diet.updatedAt", {
-                      date: format.dateTime(dietPlan.updatedAt, {
-                        dateStyle: "medium",
-                      }),
-                    })
-                  : t("diet.empty")}
-              </p>
-            </div>
-            <Link
-              href={`/panel/pacientes/${patient.id}/dieta`}
-              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
-            >
-              {dietPlan ? t("diet.edit") : t("diet.create")}
-            </Link>
-          </div>
-        </Card>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline py-3 last:border-0 last:pb-0">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <h3 className="text-base font-semibold">{t("diet.title")}</h3>
+                  <p className="text-sm text-ink-subtle">
+                    {dietPlan
+                      ? t("diet.updatedAt", {
+                          date: format.dateTime(dietPlan.updatedAt, {
+                            dateStyle: "medium",
+                          }),
+                        })
+                      : t("diet.empty")}
+                  </p>
+                </div>
+                <Link
+                  href={`/panel/pacientes/${patient.id}/dieta`}
+                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
+                >
+                  {dietPlan ? t("diet.edit") : t("diet.create")}
+                </Link>
+              </div>
 
-        <Card className="lg:col-span-7">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <h2 className="text-lg font-semibold">{t("training.title")}</h2>
-              <p className="text-sm text-ink-subtle">
-                {routine
-                  ? t("training.updatedAt", {
-                      date: format.dateTime(routine.updatedAt, {
-                        dateStyle: "medium",
-                      }),
-                    })
-                  : t("training.empty")}
-                {allSessions[0]
-                  ? ` · ${t("training.lastSession", {
-                      date: format.dateTime(allSessions[0].sessionAt, {
-                        dateStyle: "medium",
-                      }),
-                    })}`
-                  : ""}
-              </p>
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-hairline py-3 last:border-0 last:pb-0">
+                <div className="flex min-w-0 flex-col gap-0.5">
+                  <h3 className="text-base font-semibold">
+                    {t("training.title")}
+                  </h3>
+                  <p className="text-sm text-ink-subtle">
+                    {routine
+                      ? t("training.updatedAt", {
+                          date: format.dateTime(routine.updatedAt, {
+                            dateStyle: "medium",
+                          }),
+                        })
+                      : t("training.empty")}
+                    {allSessions[0]
+                      ? ` · ${t("training.lastSession", {
+                          date: format.dateTime(allSessions[0].sessionAt, {
+                            dateStyle: "medium",
+                          }),
+                        })}`
+                      : ""}
+                  </p>
+                </div>
+                <Link
+                  href={`/panel/pacientes/${patient.id}/entreno`}
+                  className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
+                >
+                  {routine ? t("training.edit") : t("training.create")}
+                </Link>
+              </div>
             </div>
-            <Link
-              href={`/panel/pacientes/${patient.id}/entreno`}
-              className="inline-flex h-9 shrink-0 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink no-underline transition-colors hover:border-hairline-strong hover:bg-surface-2"
-            >
-              {routine ? t("training.edit") : t("training.create")}
-            </Link>
           </div>
         </Card>
 
@@ -552,7 +559,7 @@ export default async function PatientDetailPage({
           </div>
         </Card>
 
-        <Card className="lg:col-span-12">
+        <Card className="lg:col-span-7">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
               <h2 className="text-lg font-semibold">{t("notes.title")}</h2>

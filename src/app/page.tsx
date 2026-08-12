@@ -6,6 +6,7 @@ import { auth } from "@/lib/auth/server";
 import { resolveUserRole, roleHome } from "@/lib/auth/role";
 import { WeightChart } from "@/components/weight-chart";
 import { ButtonLink } from "@/components/ui/button-link";
+import { Bezel } from "@/components/ui/bezel";
 import { Reveal } from "./reveal";
 import { BodySilhouette } from "@/components/body-silhouette";
 
@@ -34,26 +35,6 @@ const SAMPLE_WEIGHTS = [88, 87.6, 87.1, 86.7, 86.2].map((kg, i) => ({
 }));
 
 const EASE = "ease-house";
-
-function Bezel({
-  children,
-  tilt = "",
-  className = "",
-}: {
-  children: ReactNode;
-  tilt?: string;
-  className?: string;
-}) {
-  return (
-    <div
-      className={`rounded-[2rem] border border-hairline bg-ink/[0.04] p-1.5 shadow-el-bezel transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} ${className}`}
-    >
-      <div className="rounded-[calc(2rem-0.375rem)] bg-surface-1 p-6 shadow-[inset_0_1px_1px_rgba(255,255,255,0.6)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.06)]">
-        {children}
-      </div>
-    </div>
-  );
-}
 
 function CtaButton({ href, children }: { href: string; children: ReactNode }) {
   return (
@@ -114,7 +95,12 @@ function RecordSection({
   return (
     <section className={`grid items-start gap-6 ${tracks} lg:gap-16`}>
       <Reveal className={flip ? "lg:order-2" : ""}>
-        <Bezel tilt={`${tilt} hover:rotate-0`}>{children}</Bezel>
+        <Bezel
+          className={`transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} hover:rotate-0`}
+          innerClassName="p-6"
+        >
+          {children}
+        </Bezel>
       </Reveal>
       <Reveal delay={80} className={flip ? "lg:order-1" : ""}>
         {annotation}
@@ -447,7 +433,10 @@ export default async function Home() {
 
         {/* Full-width beat: the chart breaks the column rhythm */}
         <Reveal>
-          <Bezel tilt="lg:rotate-[0.4deg] hover:rotate-0">
+          <Bezel
+            className={`transition-transform duration-500 hover:duration-700 ${EASE} lg:rotate-[0.4deg] hover:rotate-0`}
+            innerClassName="p-6"
+          >
             <div className="mb-4 flex items-center justify-between gap-4">
               <h3 className="text-lg font-semibold">
                 {r("weightChart.title")}

@@ -151,7 +151,7 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
                 aria-current={active ? "page" : undefined}
                 className={
                   active
-                    ? "whitespace-nowrap rounded-full bg-surface-3 px-3 py-1.5 text-sm font-semibold text-ink no-underline"
+                    ? "whitespace-nowrap rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-on-primary no-underline shadow-el-sm"
                     : "whitespace-nowrap rounded-full px-3 py-1.5 text-sm text-ink-subtle no-underline"
                 }
               >

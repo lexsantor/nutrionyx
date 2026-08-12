@@ -371,7 +371,7 @@ export default async function PatientHomePage() {
                       className="bg-primary"
                       style={{ width: `${(leanKg / (leanKg + fatKg)) * 100}%` }}
                     />
-                    <div className="flex-1 bg-warning" />
+                    <div className="flex-1 bg-surface-4" />
                   </div>
                   <div className="flex justify-between text-xs text-ink-subtle">
                     <span>
@@ -380,7 +380,7 @@ export default async function PatientHomePage() {
                     </span>
                     <span>
                       {tb("metrics.fatKg")} · {fatKg.toLocaleString("es")} kg
-                      <span className="ml-1 inline-block size-2 rounded-full bg-warning align-middle" />
+                      <span className="ml-1 inline-block size-2 rounded-full bg-surface-4 align-middle" />
                     </span>
                   </div>
                 </div>

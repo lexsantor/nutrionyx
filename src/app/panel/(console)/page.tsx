@@ -4,6 +4,7 @@ import { computeSliceMetrics } from "@/modules/assessment/metrics";
 import { specialistDashboard } from "@/modules/dashboard/specialist";
 import { specialtyConfig } from "@/modules/specialty/config";
 import { Card } from "@/components/ui/card";
+import { Bezel } from "@/components/ui/bezel";
 
 export const metadata = { title: "Panel" };
 
@@ -21,7 +22,7 @@ export default async function PanelPage() {
   ]);
 
   return (
-    <>
+    <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-center gap-3">
         <h1 className="text-2xl font-semibold">{org.name}</h1>
         {org.specialtyType ? (
@@ -31,15 +32,19 @@ export default async function PanelPage() {
         ) : null}
       </div>
 
-      <section className="grid grid-cols-2 gap-4 py-6 sm:grid-cols-4">
-          <Card className="col-span-2 row-span-2 flex flex-col justify-between">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <Bezel
+            radius="1.25rem"
+            className="col-span-2 row-span-2"
+            innerClassName="flex h-full flex-col justify-between p-6"
+          >
             <p className="text-sm text-ink-subtle">
               {t("dashboard.activePatients")}
             </p>
             <p className="font-display text-6xl font-semibold tracking-tight tabular-nums">
               {dashboard.activePatients}
             </p>
-          </Card>
+          </Bezel>
           <Card>
             <p className="text-sm text-ink-subtle">
               {t("dashboard.newIn30Days")}
@@ -68,7 +73,7 @@ export default async function PanelPage() {
 
         <h2 className="text-lg font-semibold">{t("metrics.title")}</h2>
 
-        <section className="grid grid-cols-2 gap-4 pb-6">
+        <section className="grid grid-cols-2 gap-4">
           <Card>
             <div className="flex items-center justify-between">
               <p className="text-sm text-ink-subtle">
@@ -105,6 +110,6 @@ export default async function PanelPage() {
             <p className="mt-2 text-xs text-ink-subtle">{t("metrics.timeTarget")}</p>
           </Card>
         </section>
-    </>
+    </div>
   );
 }
