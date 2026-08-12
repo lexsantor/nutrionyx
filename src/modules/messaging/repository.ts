@@ -80,3 +80,63 @@ export async function unreadFromPatients(
   });
   return new Map(rows.map((row) => [row.patientId, row._count.id]));
 }
+
+export type InboxThread = {
+  patientId: string;
+  unread: number;
+  last: Pick<Message, "body" | "sender" | "createdAt">;
+};
+
+/**
+ * Every thread with activity, for the console inbox
+ * (docs/build/navigation-audit.md, tier 1). Unread first, then by recency,
+ * because "who is waiting on me" is the question the page answers.
+ *
+ * Two queries plus the unread counts, bounded by the number of patients
+ * who have ever written rather than by the message count.
+ */
+export async function listInbox(
+  organizationId: string,
+): Promise<InboxThread[]> {
+  const latest = await prisma.message.groupBy({
+    by: ["patientId"],
+    where: { organizationId },
+    _max: { createdAt: true },
+  });
+  if (latest.length === 0) return [];
+
+  const messages = await prisma.message.findMany({
+    where: {
+      organizationId,
+      OR: latest
+        .filter((row) => row._max.createdAt !== null)
+        .map((row) => ({
+          patientId: row.patientId,
+          createdAt: row._max.createdAt!,
+        })),
+    },
+    select: { patientId: true, body: true, sender: true, createdAt: true },
+  });
+
+  // Two messages in the same thread can share a timestamp; keep one.
+  const byPatient = new Map<string, (typeof messages)[number]>();
+  for (const message of messages) {
+    const kept = byPatient.get(message.patientId);
+    if (!kept || message.createdAt > kept.createdAt) {
+      byPatient.set(message.patientId, message);
+    }
+  }
+
+  const unread = await unreadFromPatients(organizationId);
+  return [...byPatient.values()]
+    .map((last) => ({
+      patientId: last.patientId,
+      unread: unread.get(last.patientId) ?? 0,
+      last,
+    }))
+    .sort(
+      (a, b) =>
+        Number(b.unread > 0) - Number(a.unread > 0) ||
+        b.last.createdAt.getTime() - a.last.createdAt.getTime(),
+    );
+}

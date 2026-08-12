@@ -72,6 +72,7 @@ import {
 } from "@/modules/training/repository";
 import { emptyRoutine } from "@/modules/training/routine";
 import {
+  listInbox,
   listThread,
   markThreadRead,
   sendMessage,
@@ -597,6 +598,63 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect((await unreadFromPatients(orgB)).get(bPatientId)).toBe(1);
     await markThreadRead(orgB, bPatientId, "SPECIALIST");
     expect((await unreadFromPatients(orgB)).size).toBe(0);
+
+    // The console inbox reads the same scope.
+    expect(await listInbox(orgA)).toEqual([]);
+    expect((await listInbox(orgB)).map((t) => t.patientId)).toEqual([bPatientId]);
+  });
+
+  it("orders the inbox by who is waiting, then by recency", async () => {
+    // Three threads: the quietest one has the only unread message, so it
+    // must come first even though it is the oldest.
+    const patients = [];
+    for (const label of ["Waiting", "Recent", "Older"]) {
+      patients.push(
+        await createInvitedPatient({
+          organizationId: orgB,
+          email: `${label.toLowerCase()}-${suffix}@example.test`,
+          fullName: `${label} ${suffix}`,
+        }),
+      );
+    }
+    const [waiting, recent, older] = patients;
+
+    // Written FIRST, so it is the oldest of the three: recency alone would
+    // put it last. Being unread is the only thing that can lift it.
+    await sendMessage({
+      organizationId: orgB,
+      patientId: waiting.id,
+      sender: "PATIENT",
+      senderAuthUserId: `pat-${suffix}`,
+      body: "¿puedo cambiar la cena?",
+    });
+    for (const [patient, body] of [
+      [older, "el intermedio"],
+      [recent, "el más reciente"],
+    ] as const) {
+      await sendMessage({
+        organizationId: orgB,
+        patientId: patient.id,
+        sender: "SPECIALIST",
+        senderAuthUserId: `spec-${suffix}`,
+        body,
+      });
+    }
+
+    const inbox = await listInbox(orgB);
+    const order = inbox.map((thread) => thread.patientId);
+    expect(order[0]).toBe(waiting.id);
+    expect(inbox[0].unread).toBe(1);
+    expect(inbox[0].last.body).toBe("¿puedo cambiar la cena?");
+    // Among the read threads, the newer one wins.
+    expect(order.indexOf(recent.id)).toBeLessThan(order.indexOf(older.id));
+
+    // Read, it drops to where recency puts it: last of the three.
+    await markThreadRead(orgB, waiting.id, "SPECIALIST");
+    const settled = (await listInbox(orgB)).map((thread) => thread.patientId);
+    expect(settled.indexOf(waiting.id)).toBeGreaterThan(
+      settled.indexOf(older.id),
+    );
   });
 
   it("scopes appointments: list and cancel stay in-org (R2)", async () => {

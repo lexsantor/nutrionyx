@@ -9,7 +9,8 @@
       "pacientes": "Pacientes",
       "ajustes": "Ajustes",
       "agenda": "Agenda",
-      "biblioteca": "Biblioteca"
+      "biblioteca": "Biblioteca",
+      "mensajes": "Mensajes"
     },
     "skipToContent": "Saltar al contenido",
     "loading": "Cargando…"
@@ -1046,6 +1047,15 @@
         "generic": "No se ha podido completar. Inténtalo de nuevo."
       }
     }
+  },
+  "inbox": {
+    "title": "Mensajes",
+    "subtitle": "Las conversaciones con tus pacientes, la más reciente arriba.",
+    "waiting": "{count, plural, one {Un paciente espera respuesta} other {# pacientes esperan respuesta}}.",
+    "empty": "Todavía no hay ninguna conversación.",
+    "unread": "{count, plural, one {# sin leer} other {# sin leer}}",
+    "youPrefix": "Tú:",
+    "unknownPatient": "Paciente"
   },
   "library": {
     "title": "Biblioteca",

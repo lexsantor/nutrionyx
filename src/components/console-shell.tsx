@@ -9,6 +9,7 @@ import { Home } from "reicon-react/icons/Home";
 import { Users } from "reicon-react/icons/Users";
 import { Calendar } from "reicon-react/icons/Calendar";
 import { Book } from "reicon-react/icons/Book";
+import { ChatRound } from "reicon-react/icons/ChatRound";
 import { Settings } from "reicon-react/icons/Settings";
 import { Logout } from "reicon-react/icons/Logout";
 import { ThemeToggle } from "./theme-toggle";
@@ -26,6 +27,7 @@ type IconType = IconComponent;
 const PRIMARY_NAV: { key: string; href: string; icon: IconType }[] = [
   { key: "inicio", href: "/panel", icon: Home },
   { key: "pacientes", href: "/panel/pacientes", icon: Users },
+  { key: "mensajes", href: "/panel/mensajes", icon: ChatRound },
   { key: "agenda", href: "/panel/agenda", icon: Calendar },
   { key: "biblioteca", href: "/panel/biblioteca", icon: Book },
 ];
