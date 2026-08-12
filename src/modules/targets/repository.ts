@@ -34,7 +34,7 @@ export async function upsertTargets(params: {
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: "TargetsSet",
-    payload: data,
+    payload: { targetId: target.id },
   });
 
   return target;

@@ -46,7 +46,7 @@ export async function upsertPlan(params: {
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: "MedicationPlanSet",
-    payload: { planId: plan.id, drugName: plan.drugName, doseMg: params.doseMg },
+    payload: { planId: plan.id },
   });
 
   return plan;
@@ -85,7 +85,7 @@ export async function logDose(params: {
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: "MedicationDoseLogged",
-    payload: { doseId: dose.id, doseMg: params.doseMg, site: params.site },
+    payload: { doseId: dose.id },
   });
 
   return dose;

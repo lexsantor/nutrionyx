@@ -49,11 +49,7 @@ export async function recordMetric(params: {
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: EVENT_BY_KIND[params.kind],
-    payload: {
-      measurementId: measurement.id,
-      kind: params.kind,
-      value: params.value,
-    },
+    payload: { measurementId: measurement.id, kind: params.kind },
   });
 
   return measurement;

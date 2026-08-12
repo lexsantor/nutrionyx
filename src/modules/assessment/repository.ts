@@ -131,7 +131,7 @@ export async function completeAssessment(params: {
     aggregate: "Assessment",
     aggregateId: completed.id,
     type: "AssessmentCompleted",
-    payload: { version: completed.version, bmi: Number(completed.bmi) },
+    payload: { version: completed.version },
   });
 
   return { ok: true, assessment: completed };

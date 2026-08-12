@@ -25,10 +25,7 @@ export async function createAppointment(params: {
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: "AppointmentScheduled",
-    payload: {
-      appointmentId: appointment.id,
-      startsAt: params.startsAt.toISOString(),
-    },
+    payload: { appointmentId: appointment.id },
   });
   return appointment;
 }

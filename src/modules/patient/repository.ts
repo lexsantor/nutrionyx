@@ -27,7 +27,7 @@ export async function createInvitedPatient(params: {
     aggregate: "Patient",
     aggregateId: patient.id,
     type: "PatientCreated",
-    payload: { email: patient.email },
+    payload: { patientId: patient.id },
   });
 
   return patient;
@@ -77,7 +77,7 @@ export async function removeInvitedPatient(params: {
     aggregate: "Patient",
     aggregateId: patient.id,
     type: "PatientInvitationCancelled",
-    payload: { email: patient.email },
+    payload: {},
   });
 
   return true;
