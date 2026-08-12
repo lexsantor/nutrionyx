@@ -202,18 +202,15 @@ export default async function Home() {
 
       {/* Floating pill nav */}
       <nav className="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
-        <div className="pointer-events-auto mt-5 flex w-max items-center gap-5 rounded-full border border-hairline bg-canvas/70 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl">
+        <div className="pointer-events-auto mt-5 flex w-max max-w-full items-center gap-4 whitespace-nowrap rounded-full border border-hairline bg-canvas/70 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl sm:gap-5">
           <span className="font-display text-sm font-semibold tracking-tight">
             Nutrionyx
           </span>
-          <ButtonLink
-            href="/auth/sign-in"
-            variant="ghost"
-            size="sm"
-            className="hidden sm:inline-flex"
-          >
-            {t("hero.cta.signIn")}
-          </ButtonLink>
+          <div className="hidden sm:block">
+            <ButtonLink href="/auth/sign-in" variant="ghost" size="sm">
+              {t("hero.cta.signIn")}
+            </ButtonLink>
+          </div>
           <ButtonLink href="/auth/sign-up" variant="primary" size="sm">
             {t("hero.cta.signUp")}
           </ButtonLink>
@@ -234,13 +231,13 @@ export default async function Home() {
         />
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <div className="flex flex-col items-start gap-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium uppercase tracking-[0.18em] text-ink-subtle shadow-el-sm">
-              <span className="size-1.5 rounded-full bg-success" />
+            <div className="inline-flex max-w-full items-start gap-2 rounded-2xl border border-hairline bg-surface-1 px-3 py-1.5 text-xs font-medium uppercase leading-relaxed tracking-[0.18em] text-ink-subtle shadow-el-sm sm:rounded-full">
+              <span className="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-success" />
               {t("badge")}
             </div>
             <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
               {t("hero.title")}{" "}
-              <span className="rounded-xl bg-primary-subtle px-2 text-on-primary-subtle">
+              <span className="box-decoration-clone rounded-xl bg-primary-subtle px-2 py-0.5 text-on-primary-subtle">
                 {t("hero.highlight")}
               </span>
             </h1>

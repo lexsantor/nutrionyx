@@ -78,7 +78,7 @@ export async function WeightChart({
 
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        className="w-full"
+        className="max-h-64 w-full"
         role="img"
         aria-label={t("chartLabel")}
       >
