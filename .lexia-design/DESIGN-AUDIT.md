@@ -153,3 +153,28 @@ ALL FOUR TIERS APPLIED. Audit-derived work complete; remaining items
 are product backlog (password recovery, unsaved-changes guard, patient
 search/pagination, self-booking, Resend domain, billing) plus an
 optional lexia re-score with real rendering (iterations 3-4 unused).
+
+---
+
+# Audit cycle 2026-08-12 (plugin 0.7.3, iteration 2 gate)
+
+LEXIA SCORE 75.4/100 (C) - .lexia-design/DESIGN-REPORT.md. Coverage:
+code-inferred (NOT RENDERED), detector 0.7.3 + verification, 3 fresh
+plugin reviewer agents, measured contrast, correctness lens. Gates:
+total 7.49 FAIL, DIST 6.8 FAIL, criticals 0/0 PASS. 6 dims improved vs
+Aug-10 (PR +0.9, RESP +0.8, IA +0.5); visual dims down on new lenses.
+
+Tier 1 applied same day (commit d631af9, CI green, deployed): missing
+panel.metrics.title key; dark accent de-collapse (#8dbde6); bento
+photos<->citas reorder (6/6 + 5/7 rows); RecordSection flip template
+(order + asymmetric tracks bug on 3 landing sections); madridDayStart
+in cron dose-dedupe + training dedupe + 28d window; weight date capped
+client+server; sample chip to ink-muted (9.69:1); skip target on
+pre-assessment screen. Projected ~77.5; re-score pending (needs same
+reviewers + ideally render).
+
+Pending tiers: T2 forms contract (live regions persistentes, React19
+error-reset, cita 2-step, hover 500ms stragglers, tabular-nums ledger,
+patient-home Promise.all), T3 identity (bezel dashboard, warning-as-
+data, detail hierarchy, DESIGN-SYSTEM.md fill, copy density), T4
+verification (render, byline owner confirm, React19 repro).
