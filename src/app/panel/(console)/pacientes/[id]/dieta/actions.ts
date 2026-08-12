@@ -6,12 +6,7 @@ import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { upsertDietPlan } from "@/modules/diet/repository";
-import {
-  DAYS_PER_WEEK,
-  MEAL_SLOTS,
-  normalizeContent,
-  type DietPlanContent,
-} from "@/modules/diet/plan";
+import { contentFromEntries, normalizeContent } from "@/modules/diet/plan";
 
 export type DietPlanFormState =
   | { errorKey: string; values?: Record<string, string> }
@@ -32,15 +27,13 @@ export async function saveDietPlanAction(
       .map(([k, v]) => [k, v as string]),
   );
 
-  const raw: DietPlanContent = { days: [] };
-  for (let day = 0; day < DAYS_PER_WEEK; day++) {
-    const meals: Record<string, string> = {};
-    for (const slot of MEAL_SLOTS) {
-      meals[slot] = (formData.get(`meal-${day}-${slot}`) as string) ?? "";
-    }
-    raw.days.push(meals);
-  }
-  const content = normalizeContent(raw);
+  const content = normalizeContent(
+    contentFromEntries(
+      [...formData.entries()].filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string",
+      ),
+    ),
+  );
   if (!content) {
     return { errorKey: "invalidContent", values };
   }

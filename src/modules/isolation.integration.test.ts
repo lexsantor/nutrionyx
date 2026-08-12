@@ -388,7 +388,10 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
 
   it("scopes diet plans: invisible cross-org (R2)", async () => {
     const content = emptyContent();
-    content.days[0].BREAKFAST = "Avena";
+    content.days[0].BREAKFAST = {
+      main: [{ amount: "60 g", food: "Avena" }],
+      alternatives: [],
+    };
     await upsertDietPlan({
       organizationId: orgB,
       patientId: bPatientId,

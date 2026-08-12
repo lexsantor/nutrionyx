@@ -97,17 +97,55 @@ export default async function PatientDietPage() {
                       </span>
                     ) : null}
                   </div>
-                  <dl className="flex flex-col gap-2.5">
-                    {meals.map((slot) => (
-                      <div key={slot} className="flex flex-col gap-0.5">
-                        <dt className="text-xs font-medium text-ink-subtle">
-                          {t(`slots.${slot}`)}
-                        </dt>
-                        <dd className="whitespace-pre-wrap text-sm leading-relaxed">
-                          {day[slot]}
-                        </dd>
-                      </div>
-                    ))}
+                  <dl className="flex flex-col gap-3">
+                    {meals.map((slot) => {
+                      const meal = day[slot]!;
+                      return (
+                        <div key={slot} className="flex flex-col gap-1">
+                          <dt className="text-xs font-medium text-ink-subtle">
+                            {t(`slots.${slot}`)}
+                          </dt>
+                          <dd className="flex flex-col gap-1.5 text-sm leading-relaxed">
+                            <ul className="flex flex-col gap-0.5">
+                              {meal.main.map((row, i) => (
+                                <li key={i} className="flex gap-2">
+                                  {row.amount ? (
+                                    <span className="shrink-0 tabular-nums text-ink-subtle">
+                                      {row.amount}
+                                    </span>
+                                  ) : null}
+                                  <span>{row.food}</span>
+                                </li>
+                              ))}
+                            </ul>
+                            {meal.alternatives.map((rows, altIndex) => (
+                              <div
+                                key={altIndex}
+                                className="flex flex-col gap-0.5 border-l border-hairline pl-2.5"
+                              >
+                                <p className="text-xs font-medium text-ink-subtle">
+                                  {t("patient.alternative", {
+                                    n: altIndex + 1,
+                                  })}
+                                </p>
+                                <ul className="flex flex-col gap-0.5">
+                                  {rows.map((row, i) => (
+                                    <li key={i} className="flex gap-2">
+                                      {row.amount ? (
+                                        <span className="shrink-0 tabular-nums text-ink-subtle">
+                                          {row.amount}
+                                        </span>
+                                      ) : null}
+                                      <span>{row.food}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </dd>
+                        </div>
+                      );
+                    })}
                   </dl>
                 </section>
               );
