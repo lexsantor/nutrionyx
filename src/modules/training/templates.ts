@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { appendEvent } from "@/modules/events";
+import { nextCopyName } from "@/modules/templates/naming";
 import type { Prisma, TrainingTemplate } from "@/generated/prisma/client";
 import type { RoutineContent } from "./routine";
 
@@ -59,6 +60,65 @@ export async function saveTrainingTemplate(params: {
     payload: { templateId: template.id, name: template.name },
   });
 
+  return template;
+}
+
+/** Rename in place; null when the name is taken (see diet/templates.ts). */
+export async function renameTrainingTemplate(params: {
+  organizationId: string;
+  id: string;
+  name: string;
+}): Promise<TrainingTemplate | null> {
+  const existing = await getTrainingTemplate(params.organizationId, params.id);
+  if (!existing) return null;
+  if (existing.name === params.name) return existing;
+
+  const clash = await prisma.trainingTemplate.findFirst({
+    where: { organizationId: params.organizationId, name: params.name },
+  });
+  if (clash) return null;
+
+  const template = await prisma.trainingTemplate.update({
+    where: { id: existing.id },
+    data: { name: params.name },
+  });
+  await appendEvent({
+    organizationId: params.organizationId,
+    aggregate: "Organization",
+    aggregateId: params.organizationId,
+    type: "TrainingTemplateRenamed",
+    payload: { templateId: template.id, from: existing.name, to: template.name },
+  });
+  return template;
+}
+
+/** Copy under a free name (see modules/templates/naming.ts). */
+export async function duplicateTrainingTemplate(params: {
+  organizationId: string;
+  id: string;
+  createdByAuthUserId: string;
+}): Promise<TrainingTemplate | null> {
+  const existing = await getTrainingTemplate(params.organizationId, params.id);
+  if (!existing) return null;
+
+  const taken = (await listTrainingTemplates(params.organizationId)).map(
+    (t) => t.name,
+  );
+  const template = await prisma.trainingTemplate.create({
+    data: {
+      organizationId: params.organizationId,
+      name: nextCopyName(existing.name, taken),
+      content: existing.content as Prisma.InputJsonValue,
+      createdByAuthUserId: params.createdByAuthUserId,
+    },
+  });
+  await appendEvent({
+    organizationId: params.organizationId,
+    aggregate: "Organization",
+    aggregateId: params.organizationId,
+    type: "TrainingTemplateSaved",
+    payload: { templateId: template.id, name: template.name },
+  });
   return template;
 }
 

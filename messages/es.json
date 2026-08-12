@@ -8,7 +8,8 @@
       "inicio": "Inicio",
       "pacientes": "Pacientes",
       "ajustes": "Ajustes",
-      "agenda": "Agenda"
+      "agenda": "Agenda",
+      "biblioteca": "Biblioteca"
     },
     "skipToContent": "Saltar al contenido",
     "loading": "Cargando…"
@@ -1044,6 +1045,42 @@
         "notFound": "Esa plantilla ya no existe.",
         "generic": "No se ha podido completar. Inténtalo de nuevo."
       }
+    }
+  },
+  "library": {
+    "title": "Biblioteca",
+    "subtitle": "Las semanas que guardas para reutilizar con cualquier paciente de tu consulta.",
+    "nameLabel": "Nombre de la plantilla",
+    "rename": "Renombrar",
+    "renaming": "Renombrando…",
+    "duplicate": "Duplicar",
+    "duplicating": "Duplicando…",
+    "delete": "Borrar",
+    "deleting": "Borrando…",
+    "confirmDelete": "Borrar definitivamente",
+    "cancel": "Cancelar",
+    "deleteWarning": "Se borra la plantilla. Los planes ya cargados en tus pacientes no cambian.",
+    "done": "Hecho.",
+    "preview": "Ver la semana",
+    "hidePreview": "Ocultar la semana",
+    "summary": "{days} días · {items} entradas",
+    "unreadable": "Contenido no legible",
+    "updatedAt": "Actualizada el {date}",
+    "diet": {
+      "title": "Plantillas de dieta",
+      "hint": "Se cargan desde el plan de dieta de cualquier paciente.",
+      "empty": "Todavía no has guardado ninguna semana de dieta como plantilla."
+    },
+    "training": {
+      "title": "Plantillas de entrenamiento",
+      "hint": "Se cargan desde la rutina de cualquier paciente.",
+      "empty": "Todavía no has guardado ninguna semana de entrenamiento como plantilla."
+    },
+    "errors": {
+      "nameRequired": "Ponle un nombre a la plantilla.",
+      "nameTaken": "Ya tienes una plantilla con ese nombre.",
+      "notFound": "Esa plantilla ya no existe.",
+      "generic": "No se ha podido completar. Inténtalo de nuevo."
     }
   },
   "training": {

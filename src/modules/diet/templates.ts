@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { appendEvent } from "@/modules/events";
+import { nextCopyName } from "@/modules/templates/naming";
 import type { DietTemplate, Prisma } from "@/generated/prisma/client";
 import type { DietPlanContent } from "./plan";
 
@@ -64,6 +65,67 @@ export async function saveDietTemplate(params: {
     payload: { templateId: template.id, name: template.name },
   });
 
+  return template;
+}
+
+/**
+ * Rename in place. Returns null when the name is already held inside this
+ * consulta: the unique index would reject it anyway, and the caller needs
+ * to say so rather than surface a database error.
+ */
+export async function renameDietTemplate(params: {
+  organizationId: string;
+  id: string;
+  name: string;
+}): Promise<DietTemplate | null> {
+  const existing = await getDietTemplate(params.organizationId, params.id);
+  if (!existing) return null;
+  if (existing.name === params.name) return existing;
+
+  const clash = await prisma.dietTemplate.findFirst({
+    where: { organizationId: params.organizationId, name: params.name },
+  });
+  if (clash) return null;
+
+  const template = await prisma.dietTemplate.update({
+    where: { id: existing.id },
+    data: { name: params.name },
+  });
+  await appendEvent({
+    organizationId: params.organizationId,
+    aggregate: "Organization",
+    aggregateId: params.organizationId,
+    type: "DietTemplateRenamed",
+    payload: { templateId: template.id, from: existing.name, to: template.name },
+  });
+  return template;
+}
+
+/** Copy a template under a free name (see modules/templates/naming.ts). */
+export async function duplicateDietTemplate(params: {
+  organizationId: string;
+  id: string;
+  createdByAuthUserId: string;
+}): Promise<DietTemplate | null> {
+  const existing = await getDietTemplate(params.organizationId, params.id);
+  if (!existing) return null;
+
+  const taken = (await listDietTemplates(params.organizationId)).map((t) => t.name);
+  const template = await prisma.dietTemplate.create({
+    data: {
+      organizationId: params.organizationId,
+      name: nextCopyName(existing.name, taken),
+      content: existing.content as Prisma.InputJsonValue,
+      createdByAuthUserId: params.createdByAuthUserId,
+    },
+  });
+  await appendEvent({
+    organizationId: params.organizationId,
+    aggregate: "Organization",
+    aggregateId: params.organizationId,
+    type: "DietTemplateSaved",
+    payload: { templateId: template.id, name: template.name },
+  });
   return template;
 }
 

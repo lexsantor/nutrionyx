@@ -51,13 +51,17 @@ import { getDietPlan, upsertDietPlan } from "@/modules/diet/repository";
 import { emptyContent } from "@/modules/diet/plan";
 import {
   deleteDietTemplate,
+  duplicateDietTemplate,
   getDietTemplate,
+  renameDietTemplate,
   listDietTemplates,
   saveDietTemplate,
 } from "@/modules/diet/templates";
 import {
+  duplicateTrainingTemplate,
   getTrainingTemplate,
   listTrainingTemplates,
+  renameTrainingTemplate,
   saveTrainingTemplate,
 } from "@/modules/training/templates";
 import {
@@ -156,6 +160,12 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
         where: { organizationId: org },
       });
       await prisma.dietPlan.deleteMany({ where: { organizationId: org } });
+      // Templates carry no FK to Organization, so deleting the org leaves
+      // them behind. Every run used to leak a few rows.
+      await prisma.dietTemplate.deleteMany({ where: { organizationId: org } });
+      await prisma.trainingTemplate.deleteMany({
+        where: { organizationId: org },
+      });
       await prisma.trainingSession.deleteMany({
         where: { organizationId: org },
       });
@@ -437,6 +447,83 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
     expect((await getTrainingTemplate(orgB, savedRoutine.id))?.id).toBe(
       savedRoutine.id,
     );
+
+    // The library page added rename and duplicate, which both take an id
+    // from a form. Same rule as delete: the wrong consulta gets null and
+    // the row is left untouched.
+    expect(
+      await renameDietTemplate({
+        organizationId: orgA,
+        id: saved.id,
+        name: `Robada ${suffix}`,
+      }),
+    ).toBeNull();
+    expect((await getDietTemplate(orgB, saved.id))?.name).toBe(saved.name);
+    expect(
+      await duplicateDietTemplate({
+        organizationId: orgA,
+        id: saved.id,
+        createdByAuthUserId: `spec-${suffix}`,
+      }),
+    ).toBeNull();
+    expect(await listDietTemplates(orgA)).toEqual([]);
+
+    expect(
+      await renameTrainingTemplate({
+        organizationId: orgA,
+        id: savedRoutine.id,
+        name: `Robada ${suffix}`,
+      }),
+    ).toBeNull();
+    expect(
+      await duplicateTrainingTemplate({
+        organizationId: orgA,
+        id: savedRoutine.id,
+        createdByAuthUserId: `spec-${suffix}`,
+      }),
+    ).toBeNull();
+    expect(await listTrainingTemplates(orgA)).toEqual([]);
+  });
+
+  it("duplicates within a consulta under a free name (R2)", async () => {
+    const content = emptyContent();
+    content.days[0].DINNER = {
+      main: [{ amount: "200 g", food: "Merluza" }],
+      alternatives: [],
+    };
+    const original = await saveDietTemplate({
+      organizationId: orgB,
+      name: `Volumen ${suffix}`,
+      content,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+
+    const copy = await duplicateDietTemplate({
+      organizationId: orgB,
+      id: original.id,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+    // A copy that reused the name would overwrite the original on upsert.
+    expect(copy?.name).not.toBe(original.name);
+    expect(copy?.content).toEqual(original.content);
+    expect((await getDietTemplate(orgB, original.id))?.name).toBe(original.name);
+
+    const second = await duplicateDietTemplate({
+      organizationId: orgB,
+      id: original.id,
+      createdByAuthUserId: `spec-${suffix}`,
+    });
+    expect(second?.name).not.toBe(copy?.name);
+
+    // Renaming onto a name the consulta already holds is refused, not
+    // silently dropped by the unique index.
+    expect(
+      await renameDietTemplate({
+        organizationId: orgB,
+        id: original.id,
+        name: copy!.name,
+      }),
+    ).toBeNull();
   });
 
   it("scopes diet plans: invisible cross-org (R2)", async () => {
