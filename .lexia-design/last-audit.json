@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T16:49:55.624Z",
+  "updated": "2026-08-12T17:19:43.229Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -58,6 +58,36 @@
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
       "line": 1,
       "evidence": "\"use client\";",
+      "msg": "A four-word-plus phrase repeats three or more times",
+      "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
+    },
+    {
+      "id": "slop/em-dash-density",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/private/tmp/claude-501/-Users-lexsantor-Desktop-nutrionyx/073ec642-8e10-485d-9813-d6f5b64114a1/scratchpad/nav-audit.html",
+      "line": 411,
+      "evidence": "5 occurrences (threshold 3)",
+      "msg": "Repeated em-dashes in UI copy",
+      "fix": "Generated-text rhythm signal in microcopy. Prefer periods/commas in UI strings."
+    },
+    {
+      "id": "system/hardcoded-hex-density",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/private/tmp/claude-501/-Users-lexsantor-Desktop-nutrionyx/073ec642-8e10-485d-9813-d6f5b64114a1/scratchpad/nav-audit.html",
+      "line": 10,
+      "evidence": "32 occurrences (threshold 9)",
+      "msg": "Many distinct hardcoded hex colors",
+      "fix": "Resolve visual values to tokens; off-token values drift the system."
+    },
+    {
+      "id": "content/claim-repetition",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/private/tmp/claude-501/-Users-lexsantor-Desktop-nutrionyx/073ec642-8e10-485d-9813-d6f5b64114a1/scratchpad/nav-audit.html",
+      "line": 1,
+      "evidence": "<title>Nutrionyx · Auditoría de navegación</title>",
       "msg": "A four-word-plus phrase repeats three or more times",
       "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
     }

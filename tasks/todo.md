@@ -219,6 +219,16 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   **Left**: D (exercise illustrations, `ILLUSTRATED` still empty - see the
   Pletor protocol in the plan) and E (print/PDF routes for both).
 
+### Navigation audit (2026-08-12)
+
+[docs/build/navigation-audit.md](../docs/build/navigation-audit.md) compares the
+three navigations against docs/07 and the domain model. Verified gaps, in
+sequence: (1) `/panel/biblioteca` so templates have a door at all, (2)
+`/panel/mensajes` inbox, (3-5) `/mi-espacio/progreso` + `/perfil` + trim the
+patient home, (6) admin shell with consulta detail, (7) `/admin/auditoria`
+so `DomainEvent` becomes readable. Rule adopted: no nav entry without a
+screen behind it.
+
 ### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
