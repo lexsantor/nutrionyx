@@ -29,22 +29,24 @@ type Spot = { x: number; y: number };
 const SITE_POSITIONS: Record<"MALE" | "FEMALE", Record<InjectionSite, Spot>> = {
   // Measured off each render's alpha channel, not derived: at 34% of the
   // image the silhouette breaks into three runs (arm, torso, arm) and the
-  // arm centres fall where these say; at 46% the torso spans 36-64 for the
-  // male and 35-65 for the female, so the abdominal pair sits just inside
-  // its edges; at 62% the two legs are separate runs.
+  // arm centres fall where these say. The abdominal pair sits at 42%: the
+  // waist is narrowest at 38% and the navel just below it, so 46% put the
+  // targets over the groin. At 42% the torso spans 37-63, and 8% either
+  // side of the midline keeps both inside it. At 62% the legs are separate
+  // runs.
   MALE: {
     LEFT_ARM: { x: 31.8, y: 34 },
     RIGHT_ARM: { x: 68.3, y: 34 },
-    LEFT_BELLY: { x: 41, y: 46 },
-    RIGHT_BELLY: { x: 59, y: 46 },
+    LEFT_BELLY: { x: 42, y: 42 },
+    RIGHT_BELLY: { x: 58, y: 42 },
     LEFT_THIGH: { x: 41.2, y: 62 },
     RIGHT_THIGH: { x: 59, y: 62 },
   },
   FEMALE: {
     LEFT_ARM: { x: 32.9, y: 34 },
     RIGHT_ARM: { x: 67.2, y: 34 },
-    LEFT_BELLY: { x: 41, y: 46 },
-    RIGHT_BELLY: { x: 59, y: 46 },
+    LEFT_BELLY: { x: 42, y: 42 },
+    RIGHT_BELLY: { x: 58, y: 42 },
     LEFT_THIGH: { x: 41.1, y: 62 },
     RIGHT_THIGH: { x: 59.1, y: 62 },
   },
