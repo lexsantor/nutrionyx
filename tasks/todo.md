@@ -238,6 +238,18 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   a client component and would need the count threaded through the console
   layout; the page itself already answers the question.
 
+- **Slice 24 - Patient IA** (navigation audit tier 2): `/mi-espacio/progreso`
+  (weight history + chart + list, body composition, photos) and
+  `/mi-espacio/perfil` (my data, my assessment, documents, export, erasure
+  route, sign out). `/mi-espacio` keeps only "hoy": check-in, protein, next
+  dose, next appointment. 521 -> 282 lines and four queries removed from the
+  highest-traffic patient screen. New guard `lib/auth/patient.ts` mirrors
+  `requireSpecialistOrg`. **Decision**: erasure is explained and routed to
+  the specialist, not a button - the consulta is the controller.
+  **Regression caught on the rendered page**: the trim first put
+  `WeightCheckIn` inside the targets tile, so a patient with no targets set
+  lost every way to log weight. The "hoy" tile is unconditional now.
+
 ### Navigation audit (2026-08-12)
 
 [docs/build/navigation-audit.md](../docs/build/navigation-audit.md) compares the
