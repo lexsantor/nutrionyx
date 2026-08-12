@@ -30,5 +30,13 @@
     "audience": "nutricionistas/dietistas ES + sus pacientes (moviles, edad variada)",
     "recordedAt": "2026-08-12",
     "notes": "Owner chose names over images; audits benchmark against these products' public standard."
+  },
+  "contentClaims": {
+    "byline": {
+      "value": "Por Alejandro · fundador de Nutrionyx",
+      "status": "CONFIRMED_BY_OWNER",
+      "confirmedAt": "2026-08-12",
+      "note": "Alejandro is the founder's real public name. Not a fabricated persona; audits must not re-flag it."
+    }
   }
 }
