@@ -796,7 +796,9 @@
       "label": "Medicación",
       "due": "Te toca hoy",
       "in": "{days, plural, =1 {Mañana} other {En # días}} · {weekday}",
-      "none": "Registra la pauta que te indicó tu médico para llevar el control de tus dosis."
+      "none": "Registra la pauta que te indicó tu médico para llevar el control de tus dosis.",
+      "setupCta": "Configurar medicación",
+      "logCta": "Registrar dosis"
     },
     "sites": {
       "LEFT_ARM": "Brazo izquierdo",

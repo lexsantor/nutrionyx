@@ -440,9 +440,7 @@ export default async function Home() {
               </h3>
               <SampleChip label={t("sample")} />
             </div>
-            <div className="mx-auto w-full max-w-3xl">
-              <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
-            </div>
+            <WeightChart points={SAMPLE_WEIGHTS} targetKg={78} />
           </Bezel>
         </Reveal>
 

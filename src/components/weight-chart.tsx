@@ -25,10 +25,12 @@ export async function WeightChart({
   const latest = points[points.length - 1]!;
   const delta = targetKg != null ? weightDelta(latest.valueKg, targetKg) : null;
 
-  const W = 320;
-  const H = 160;
-  const padX = 12;
-  const padY = 16;
+  // Wide plot: matches the aspect the cards actually give it (roughly
+  // 3.6:1), so w-full needs no per-surface height cap.
+  const W = 720;
+  const H = 200;
+  const padX = 16;
+  const padY = 20;
   const values = points.map((p) => p.valueKg);
   const range = chartRange(targetKg != null ? [...values, targetKg] : values);
   const span = range.max - range.min || 1;
