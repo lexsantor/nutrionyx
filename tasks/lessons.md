@@ -100,3 +100,22 @@ ButtonLink's own `inline-flex`.
 choice as a prop (`width="auto" | "block"`), never let a caller add a second
 one and hope. If you find yourself writing a className to undo a base class,
 the base class should have been a variant.
+
+## Never poll for a condition that expires
+
+Six background shells sat spinning for hours, some over three, waiting on
+deploys that had finished minutes after they started. The loops tested the
+deployment's *age* (`until vercel ls | grep -E "^  ([0-9]+s|[1-3]m) .*Ready"`),
+which is true only inside a window. Miss the window, because CI was still
+running when the loop began, and it can never become true again: a deployment
+only gets older.
+
+**Check:** poll a monotonic fact, not a transient one. For Vercel that is the
+commit, which `vercel ls --json` carries:
+
+    until [ "$(npx vercel ls --yes --json | python3 -c \
+      'import json,sys;print(json.load(sys.stdin)["deployments"][0]["meta"]["githubCommitSha"][:7])')" \
+      = "$(git rev-parse --short HEAD)" ]; do sleep 20; done
+
+Once true it stays true. The same rule applies to any wait: if the predicate
+can go from false to true to false, it is the wrong predicate.
