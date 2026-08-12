@@ -196,3 +196,26 @@ Patient home: 10 reads in one Promise.all. Reference set stored
 Projected ~79; re-score with same reviewers pending. Next: T3 identity
 (bezel dashboard, warning-as-data, detail hierarchy, DESIGN-SYSTEM.md,
 copy density) then T4 verification (render, byline confirm).
+
+## Tier 3 applied 2026-08-12 (commit f01b000, CI green, deployed)
+
+Signature: Bezel extracted to ui/bezel.tsx (concentric radii via radius
+prop); consumed by landing beats + console dashboard protagonist tile
+(the daily-first screen previously had zero identity). Detail page: 3
+single-button cards -> one "Plan y seguimiento" ledger; notes 12->7 to
+pair with medication; report heading font-display xl (primary task wins
+the squint test); rows still sum to 12. Color semantics: warning-as-data
+removed from the composition bar (surface-4); admin status chip off the
+4.39:1 pair. Console: mobile active nav adopts desktop grammar;
+dashboard gap-6 rhythm. DESIGN-SYSTEM.md filled from built reality
+(thesis, 8-item BREAKS IF, scales, every measured contrast pair both
+themes, component inventory, motion tiers) - the contract is auditable
+for the first time. agenda.emptyHint corrected.
+
+Waivers recorded (owner-facing, revisit on render): landing radial halos,
+problem triptych. Copy proposals NOT applied (brand voice needs owner
+sign-off): negative-parallelism density x5 on the landing.
+
+Projected ~80-81 with DISTINCTIVENESS reaching the 7.5 gate. Remaining:
+T4 verification (render, byline confirm, React19 repro) + known issues
+(ledger Row x3 treatments, hardcoded auth strings, theme-toggle name).
