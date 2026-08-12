@@ -20,12 +20,7 @@ import {
   findExercise,
 } from "@/modules/training/exercises";
 import { ExerciseThumb } from "@/components/exercise-thumb";
-import {
-  loadTrainingTemplateAction,
-  saveRoutineAction,
-  saveTrainingTemplateAction,
-  type RoutineFormState,
-} from "./actions";
+import { routineFormAction, type RoutineFormState } from "./actions";
 import { TemplateBar } from "@/components/template-bar";
 
 /**
@@ -63,17 +58,18 @@ export function RoutineEditor({
   templates: { id: string; name: string }[];
 }) {
   const t = useTranslations("training");
+  const tpl = useTranslations("training.templates");
   const [state, formAction, isPending] = useActionState<
     RoutineFormState,
     FormData
-  >(saveRoutineAction, null);
+  >(routineFormAction, null);
   const [week, setWeek] = useState<WeekDraft>(() => toDraft(initial.content));
   const [dirty, setDirty] = useState(false);
   // Render-time adjustment (not an effect): a fresh ok state clears dirty.
   const [prevState, setPrevState] = useState(state);
   if (state !== prevState) {
     setPrevState(state);
-    if (state && "ok" in state) setDirty(false);
+    if (state && "ok" in state && state.scope === "routine") setDirty(false);
   }
   // Loading a template rewrites the routine on the server and revalidates,
   // but the rows live in state, which a re-render leaves untouched: the
@@ -168,8 +164,14 @@ export function RoutineEditor({
       <TemplateBar
         namespace="training.templates"
         templates={templates}
-        saveAction={saveTrainingTemplateAction}
-        loadAction={loadTrainingTemplateAction}
+        pending={isPending}
+        message={
+          state && state.scope === "template"
+            ? "ok" in state
+              ? { kind: "ok", text: tpl(state.kind === "loaded" ? "loadedOk" : "savedOk") }
+              : { kind: "error", text: tpl(`errors.${state.errorKey}`) }
+            : null
+        }
       />
 
       <div className="flex flex-col gap-4">
@@ -312,17 +314,17 @@ export function RoutineEditor({
           rather than as a button that escaped its card. The console's
           content wrapper is px-6, which -mx-6 cancels. */}
       <div className="sticky bottom-0 z-10 -mx-6 flex flex-wrap items-center gap-3 border-t border-hairline bg-surface-1 px-6 py-4">
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" name="intent" value="save" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
         <div role="status">
-          {state && "ok" in state ? (
+          {state && "ok" in state && state.scope === "routine" ? (
             <span className="rounded-full bg-success-soft px-3 py-1.5 text-sm text-success">
               {t("editor.saved")}
             </span>
           ) : null}
         </div>
-        {state && "errorKey" in state ? (
+        {state && "errorKey" in state && state.scope === "routine" ? (
           <span
             role="alert"
             className="rounded-full bg-error-soft px-3 py-1.5 text-sm text-error"

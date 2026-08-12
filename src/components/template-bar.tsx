@@ -1,55 +1,45 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 /** Shared by the diet and training editors; both cap names the same. */
 export const TEMPLATE_NAME_MAX = 80;
 
-export type TemplateFormState =
-  | { errorKey: string }
-  | { ok: true; kind: "saved" | "loaded" }
-  | null;
+/** What the clicked submit button asks the editor's action to do. */
+export type EditorIntent = "save" | "template-save" | "template-load";
 
 /**
- * Template controls for the week editor (slice-21B). Both live inside the
- * editor's own <form>, so "save as template" posts the week the
- * specialist is looking at rather than the last persisted one.
+ * Template controls for the week editor (slice-21B). They live inside the
+ * editor's own <form>, so "save as template" posts the week the specialist
+ * is looking at rather than the last persisted one.
  *
- * The two buttons use formAction to target different server actions from
- * that single form. Loading overwrites the stored plan, so it arms first.
+ * The three buttons are plain submits carrying name="intent": the editor
+ * has ONE action, which reads that value and branches. They used to target
+ * separate actions through formAction, which silently delivered a partial
+ * FormData to the button's action, so saving a template always failed with
+ * "name required" while the name sat right there in the form. One form,
+ * one action, and the browser's own submitter value is the fix.
+ *
+ * Loading overwrites the stored plan, so it arms first.
  */
 export function TemplateBar({
   namespace,
   templates,
-  saveAction,
-  loadAction,
+  pending,
+  message,
 }: {
   /** "diet.templates" | "training.templates" - same keys either side. */
   namespace: string;
   templates: { id: string; name: string }[];
-  saveAction: (
-    state: TemplateFormState,
-    formData: FormData,
-  ) => Promise<TemplateFormState>;
-  loadAction: (
-    state: TemplateFormState,
-    formData: FormData,
-  ) => Promise<TemplateFormState>;
+  /** The editor's action is in flight; every submit is disabled. */
+  pending: boolean;
+  /** Rendered under the controls. The editor owns the action state. */
+  message: { kind: "ok"; text: string } | { kind: "error"; text: string } | null;
 }) {
   const t = useTranslations(namespace);
-  const [saveState, saveFormAction, savePending] = useActionState<
-    TemplateFormState,
-    FormData
-  >(saveAction, null);
-  const [loadState, loadFormAction, loadPending] = useActionState<
-    TemplateFormState,
-    FormData
-  >(loadAction, null);
   const [selected, setSelected] = useState("");
   const [armed, setArmed] = useState(false);
-
-  const state = saveState ?? loadState;
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-2 p-4">
@@ -75,11 +65,12 @@ export function TemplateBar({
           </div>
           <button
             type="submit"
-            formAction={saveFormAction}
-            disabled={savePending}
+            name="intent"
+            value="template-save"
+            disabled={pending}
             className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150 disabled:opacity-60"
           >
-            {savePending ? t("saving") : t("save")}
+            {t("save")}
           </button>
         </div>
 
@@ -111,11 +102,12 @@ export function TemplateBar({
               <div className="flex items-center gap-1.5">
                 <button
                   type="submit"
-                  formAction={loadFormAction}
-                  disabled={loadPending}
+                  name="intent"
+                  value="template-load"
+                  disabled={pending}
                   className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] active:duration-150 disabled:opacity-60"
                 >
-                  {loadPending ? t("loading") : t("confirmLoad")}
+                  {pending ? t("loading") : t("confirmLoad")}
                 </button>
                 <button
                   type="button"
@@ -144,15 +136,13 @@ export function TemplateBar({
       ) : null}
 
       <div role="status">
-        {state && "ok" in state ? (
-          <p className="text-xs text-success">
-            {state.kind === "saved" ? t("savedOk") : t("loadedOk")}
-          </p>
+        {message?.kind === "ok" ? (
+          <p className="text-xs text-success">{message.text}</p>
         ) : null}
       </div>
-      {state && "errorKey" in state ? (
+      {message?.kind === "error" ? (
         <p role="alert" className="text-xs text-error">
-          {t(`errors.${state.errorKey}`)}
+          {message.text}
         </p>
       ) : null}
     </div>

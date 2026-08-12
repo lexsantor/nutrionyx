@@ -15,12 +15,7 @@ import {
   type FoodRow,
   type MealSlot,
 } from "@/modules/diet/plan";
-import {
-  loadDietTemplateAction,
-  saveDietPlanAction,
-  saveDietTemplateAction,
-  type DietPlanFormState,
-} from "./actions";
+import { dietFormAction, type DietPlanFormState } from "./actions";
 import { TemplateBar } from "@/components/template-bar";
 
 /**
@@ -68,17 +63,18 @@ export function DietEditor({
   templates: { id: string; name: string }[];
 }) {
   const t = useTranslations("diet");
+  const tpl = useTranslations("diet.templates");
   const [state, formAction, isPending] = useActionState<
     DietPlanFormState,
     FormData
-  >(saveDietPlanAction, null);
+  >(dietFormAction, null);
   const [week, setWeek] = useState<WeekDraft>(() => toDraft(initial.content));
   const [dirty, setDirty] = useState(false);
   // Render-time adjustment (not an effect): a fresh ok state clears dirty.
   const [prevState, setPrevState] = useState(state);
   if (state !== prevState) {
     setPrevState(state);
-    if (state && "ok" in state) setDirty(false);
+    if (state && "ok" in state && state.scope === "plan") setDirty(false);
   }
   // Loading a template rewrites the plan on the server and revalidates,
   // but the rows live in state, which a re-render leaves untouched: the
@@ -217,8 +213,14 @@ export function DietEditor({
       <TemplateBar
         namespace="diet.templates"
         templates={templates}
-        saveAction={saveDietTemplateAction}
-        loadAction={loadDietTemplateAction}
+        pending={isPending}
+        message={
+          state && state.scope === "template"
+            ? "ok" in state
+              ? { kind: "ok", text: tpl(state.kind === "loaded" ? "loadedOk" : "savedOk") }
+              : { kind: "error", text: tpl(`errors.${state.errorKey}`) }
+            : null
+        }
       />
 
       <div className="flex flex-col gap-4">
@@ -350,17 +352,17 @@ export function DietEditor({
       {/* Same dock as the routine editor: spans the content column and
           carries its own surface. The console wrapper is px-6. */}
       <div className="sticky bottom-0 z-10 -mx-6 flex flex-wrap items-center gap-3 border-t border-hairline bg-surface-1 px-6 py-4">
-        <Button type="submit" disabled={isPending}>
+        <Button type="submit" name="intent" value="save" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
         <div role="status">
-          {state && "ok" in state ? (
+          {state && "ok" in state && state.scope === "plan" ? (
             <span className="rounded-full bg-success-soft px-3 py-1.5 text-sm text-success">
               {t("editor.saved")}
             </span>
           ) : null}
         </div>
-        {state && "errorKey" in state ? (
+        {state && "errorKey" in state && state.scope === "plan" ? (
           <span
             role="alert"
             className="rounded-full bg-error-soft px-3 py-1.5 text-sm text-error"
