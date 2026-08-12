@@ -1280,7 +1280,8 @@
       "title": "Mi evaluación",
       "review": "Ver mis respuestas",
       "pending": "Todavía no has terminado la evaluación inicial.",
-      "continue": "Continuar la evaluación"
+      "continue": "Continuar la evaluación",
+      "hideReview": "Ocultar mis respuestas"
     },
     "documents": {
       "empty": "Tu especialista aún no ha compartido ningún documento."

@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { requirePatient } from "@/lib/auth/patient";
 import { findLatestAssessment } from "@/modules/assessment/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { ASSESSMENT_STEPS } from "@/modules/assessment/definition";
 import { listDocuments } from "@/modules/documents/repository";
 import { getOrgProfile } from "@/modules/organization/repository";
 import { signOut } from "@/lib/auth/sign-out";
@@ -33,6 +34,38 @@ export default async function PatientProfilePage() {
   ]);
   const completed = assessment?.status === "COMPLETED";
   const bmiValue = completed ? Number(assessment.bmi) : null;
+
+  /**
+   * The answers, read-only. They used to be unreachable once the wizard
+   * finished: /mi-espacio/evaluacion redirects a completed assessment
+   * straight back out, so a "review my answers" link there would bounce.
+   * Showing them here needs no navigation at all.
+   */
+  const tw = await getTranslations("wizard");
+  const answers = completed
+    ? ASSESSMENT_STEPS.map((step) => {
+        const raw = (assessment as unknown as Record<string, unknown>)[
+          step.field
+        ];
+        if (raw === null || raw === undefined) return null;
+        let display: string;
+        if (step.field === "sex" || step.field === "activityLevel") {
+          display = tw(`options.${step.field}.${String(raw)}`);
+        } else if (Array.isArray(raw)) {
+          if (raw.length === 0) return null;
+          display =
+            step.field === "goals"
+              ? raw.map((g) => tw(`options.goals.${String(g)}`)).join(", ")
+              : raw.map(String).join(", ");
+        } else if (raw instanceof Date) {
+          display = format.dateTime(raw, { dateStyle: "long" });
+        } else {
+          display = String(raw);
+          if (display.length === 0) return null;
+        }
+        return { field: step.field, display };
+      }).filter((entry) => entry !== null)
+    : [];
 
   return (
     <>
@@ -94,12 +127,31 @@ export default async function PatientProfilePage() {
                   </dd>
                 </div>
               </dl>
-              <Link
-                href="/mi-espacio/evaluacion"
-                className="w-fit text-sm text-accent-text"
-              >
-                {t("assessment.review")}
-              </Link>
+              {answers.length > 0 ? (
+                <details className="group border-t border-hairline pt-3">
+                  <summary className="w-fit cursor-pointer list-none text-sm text-accent-text">
+                    <span className="group-open:hidden">
+                      {t("assessment.review")}
+                    </span>
+                    <span className="hidden group-open:inline">
+                      {t("assessment.hideReview")}
+                    </span>
+                  </summary>
+                  <dl className="mt-3 flex flex-col gap-2 text-sm">
+                    {answers.map((entry) => (
+                      <div
+                        key={entry.field}
+                        className="flex flex-col gap-0.5 border-b border-hairline pb-2 last:border-0"
+                      >
+                        <dt className="text-xs text-ink-subtle">
+                          {tw(`fields.${entry.field}.title`)}
+                        </dt>
+                        <dd className="font-medium">{entry.display}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </details>
+              ) : null}
             </>
           ) : (
             <>
