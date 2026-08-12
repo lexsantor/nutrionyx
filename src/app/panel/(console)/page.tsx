@@ -36,7 +36,7 @@ export default async function PanelPage() {
           <Bezel
             radius="1.25rem"
             className="col-span-2 row-span-2"
-            innerClassName="flex h-full flex-col justify-between p-6"
+            innerClassName="flex h-full flex-col justify-center gap-1 p-6"
           >
             <p className="text-sm text-ink-subtle">
               {t("dashboard.activePatients")}
