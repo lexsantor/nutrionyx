@@ -1,10 +1,10 @@
 # Nutrionyx Task Log
 
-## Current state - RESUME HERE (updated 2026-07-11)
+## Current state - RESUME HERE (updated 2026-08-12)
 
-**Where we are:** the specialist portal is built through **Slice 7**, on `main`,
-CI green, deployed to Vercel. `origin/main` head at the time of writing:
-`dc25c4d`. This is an LPEF reference project (governed by LPEF v0.2.0, see
+**Where we are:** the specialist portal is built through **Slice 21C**, on
+`main`, CI green, deployed to Vercel. `origin/main` head at the time of
+writing: `73f2180`. This is an LPEF reference project (governed by LPEF v0.2.0, see
 [../lpef.yml](../lpef.yml) and the repo [../CLAUDE.md](../CLAUDE.md)).
 
 **Stack:** Next.js 16.2.10 (App Router, Turbopack) · React 19.2.4 · Tailwind 4
@@ -203,6 +203,21 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Europe/Madrid everywhere; inputs parsed via modules/scheduling/time.ts
   (CET/CEST tested). Daily cron also emails tomorrow's cita reminders.
   Export + erasure + isolation (21/21). Migration `appointments`.
+
+- **Slice 21 - Diet and training week editors v2**
+  (docs/build/slice-21-plan.md). **A**: a meal is rows of cantidad + alimento
+  with numbered alternatives, not one free-text box (`DietPlanContent v2`).
+  **B**: `DietTemplate` / `TrainingTemplate`, org-scoped, unique on
+  `(organizationId, name)` so re-saving a name overwrites it; the shared
+  `components/template-bar.tsx` serves both editors. Loading replaces the week
+  behind an arm/confirm. **C**: a routine day is a list of exercises with
+  series, repetitions and an optional cue; the exercise is picked from the
+  catalogue in `modules/training/exercises.ts` (`key` = identity, `name`
+  resolved from it on every read), so only series and reps are typed. Both
+  slices lift their v1 documents, drop blank rows and reject cap breaches
+  rather than truncating. Migration `diet_and_training_templates`.
+  **Left**: D (exercise illustrations, `ILLUSTRATED` still empty - see the
+  Pletor protocol in the plan) and E (print/PDF routes for both).
 
 ### Remaining
 
