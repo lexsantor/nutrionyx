@@ -1063,7 +1063,7 @@
     "done": "Hecho.",
     "preview": "Ver la semana",
     "hidePreview": "Ocultar la semana",
-    "summary": "{days} días · {items} entradas",
+    "summary": "{days, plural, one {# día} other {# días}} · {items, plural, one {# entrada} other {# entradas}}",
     "unreadable": "Contenido no legible",
     "updatedAt": "Actualizada el {date}",
     "diet": {
