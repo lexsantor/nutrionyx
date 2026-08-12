@@ -136,7 +136,7 @@ export default async function PatientProgressPage() {
             <>
               <WeightChart points={points} targetKg={targetKg} />
               <div className="overflow-x-auto">
-                <table className="w-full min-w-80 text-left text-sm">
+                <table className="w-full text-left text-sm">
                   <caption className="sr-only">{t("weightTable")}</caption>
                   <thead>
                     <tr className="text-xs uppercase tracking-wide text-ink-subtle">

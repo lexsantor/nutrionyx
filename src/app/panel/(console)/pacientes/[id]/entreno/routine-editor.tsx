@@ -196,12 +196,12 @@ export function RoutineEditor({
                 <div className="flex gap-1.5 px-0.5 text-[11px] font-medium text-ink-subtle">
                   <span className="w-14 shrink-0">{t("editor.setsLabel")}</span>
                   <span className="w-20 shrink-0">{t("editor.repsLabel")}</span>
-                  <span>{t("editor.exerciseLabel")}</span>
+                  <span className="hidden sm:inline">{t("editor.exerciseLabel")}</span>
                 </div>
                 {exercises.map((exercise, rowIndex) => {
                   const base = `ex-${dayIndex}-${rowIndex}`;
                   return (
-                    <div key={rowIndex} className="flex items-start gap-2">
+                    <div key={rowIndex} className="flex flex-wrap items-start gap-2">
                       <input
                         name={`${base}-sets`}
                         type="text"
@@ -218,7 +218,7 @@ export function RoutineEditor({
                         aria-label={t("editor.repsLabel")}
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
                       />
-                      <div className="flex min-w-0 max-w-80 flex-1 flex-col gap-1">
+                      <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:max-w-80 sm:flex-1">
                         <select
                           name={`${base}-key`}
                           value={exercise.key ?? ""}
