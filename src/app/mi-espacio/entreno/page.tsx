@@ -66,8 +66,10 @@ export default async function PatientTrainingPage() {
             <p className="whitespace-pre-wrap text-sm leading-relaxed">
               {content.days[todayIndex]}
             </p>
-          ) : (
+          ) : hasRoutine ? (
             <p className="text-sm text-ink-subtle">{t("patient.restDay")}</p>
+          ) : (
+            <p className="text-sm text-ink-subtle">{t("patient.empty")}</p>
           )}
           <SessionForm doneToday={doneToday} />
         </section>

@@ -389,7 +389,7 @@ export default async function PatientHomePage() {
             <BodyMetricsForm />
           </section>
 
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 lg:self-start">
             <PhotosCard
               photos={photos.map((p) => ({
                 id: p.id,

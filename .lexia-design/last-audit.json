@@ -1,0 +1,15 @@
+{
+  "updated": "2026-08-12T12:55:35.453Z",
+  "findings": [
+    {
+      "id": "content/claim-repetition",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/mi-espacio/page.tsx",
+      "line": 1,
+      "evidence": "import Link from \"next/link\";",
+      "msg": "A four-word-plus phrase repeats three or more times",
+      "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
+    }
+  ]
+}
