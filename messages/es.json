@@ -1058,23 +1058,24 @@
     },
     "editor": {
       "heading": "Rutina de entrenamiento",
-      "hint": "Escribe la rutina de cada día (ejercicios, series, descansos). Un día vacío es día de descanso.",
+      "hint": "Elige los ejercicios de cada día e indica series y repeticiones. Un día vacío es día de descanso.",
       "titleLabel": "Título de la rutina",
       "titlePlaceholder": "Fuerza 3 días · agosto",
       "notesLabel": "Indicaciones generales",
       "notesPlaceholder": "Calienta 10 min antes de cada sesión…",
-      "dayPlaceholder": "Sentadilla 4x8\nPress banca 3x10\nRemo 3x12",
       "save": "Guardar rutina",
       "saving": "Guardando…",
       "saved": "Rutina guardada",
       "errors": {
-        "invalidContent": "Revisa el contenido: algún día supera los 2000 caracteres.",
+        "invalidContent": "Revisa los campos: hay algún valor demasiado largo.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
       },
       "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?",
       "setsLabel": "Series",
       "repsLabel": "Repeticiones",
       "exerciseLabel": "Ejercicio",
+      "chooseExercise": "Elegir ejercicio",
+      "customExercise": "{name} (fuera de catálogo)",
       "exerciseNotesLabel": "Indicación",
       "exerciseNotesPlaceholder": "Indicación opcional (técnica, descanso…)",
       "addExercise": "Añadir ejercicio",
@@ -1121,6 +1122,15 @@
         "notFound": "Esa plantilla ya no existe.",
         "generic": "No se ha podido completar. Inténtalo de nuevo."
       }
+    },
+    "groups": {
+      "CHEST": "Pecho",
+      "BACK": "Espalda",
+      "LEGS": "Piernas",
+      "SHOULDERS": "Hombros",
+      "ARMS": "Brazos",
+      "CORE": "Core",
+      "CARDIO": "Cardio"
     }
   },
   "messages": {

@@ -7,7 +7,6 @@ import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 import { Input } from "@/components/ui/input";
 import {
   EXERCISES_PER_DAY_MAX,
-  EXERCISE_NAME_MAX,
   NOTES_MAX,
   REPS_MAX,
   SETS_MAX,
@@ -15,6 +14,7 @@ import {
   type Exercise,
   type RoutineContent,
 } from "@/modules/training/routine";
+import { exercisesByGroup, findExercise } from "@/modules/training/exercises";
 import {
   loadTrainingTemplateAction,
   saveRoutineAction,
@@ -27,11 +27,16 @@ import { TemplateBar } from "@/components/template-bar";
  * Structured week editor (slice-21C), mirroring the diet editor: rows in
  * React state, plain named fields on the wire.
  *
- *   ex-{day}-{row}-{name|sets|reps|notes}
+ *   ex-{day}-{row}-{key|name|sets|reps|notes}
  *
- * A day with no exercises is a rest day, which is why every day opens
- * with an empty list rather than a blank row.
+ * The exercise is picked from the catalogue, never typed: `key` carries
+ * the choice and `name` rides along as a hidden field so a row keeps its
+ * label even if the catalogue entry is later withdrawn. Only series and
+ * repetitions are free text. A day with no exercises is a rest day, which
+ * is why every day opens with an empty list rather than a blank row.
  */
+
+const GROUPED = exercisesByGroup();
 
 type WeekDraft = Exercise[][];
 
@@ -65,6 +70,17 @@ export function RoutineEditor({
     setPrevState(state);
     if (state && "ok" in state) setDirty(false);
   }
+  // Loading a template rewrites the routine on the server and revalidates,
+  // but the rows live in state, which a re-render leaves untouched: the
+  // specialist would be told "plantilla cargada" over the old week.
+  // Compare by value, since every server render rebuilds the object.
+  const contentKey = JSON.stringify(initial.content);
+  const [prevContent, setPrevContent] = useState(contentKey);
+  if (contentKey !== prevContent) {
+    setPrevContent(contentKey);
+    setWeek(toDraft(initial.content));
+    setDirty(false);
+  }
   useUnsavedGuard(dirty, t("editor.unsaved"));
 
   // After an error the browser form has been reset (React 19): fall back
@@ -83,6 +99,25 @@ export function RoutineEditor({
       current.map((day, i) => (i === dayIndex ? edit(day) : day)),
     );
   };
+
+  /**
+   * The picker is controlled, unlike the free-text cells: the choice must
+   * survive React 19's post-action form reset, and state does that on its
+   * own without the `v()` echo.
+   */
+  const pickExercise = (dayIndex: number, rowIndex: number, key: string) =>
+    editDay(dayIndex, (list) =>
+      list.map((exercise, i) => {
+        if (i !== rowIndex) return exercise;
+        const picked = findExercise(key);
+        if (picked) return { ...exercise, key: picked.key, name: picked.name };
+        // Back to the placeholder: a catalogue row loses its derived
+        // name, a legacy row keeps the text its specialist typed.
+        return exercise.key
+          ? { ...exercise, key: undefined, name: "" }
+          : exercise;
+      }),
+    );
 
   const cell =
     "rounded-[10px] border border-field-border bg-surface-2 px-2 py-1.5 text-sm text-ink";
@@ -177,13 +212,38 @@ export function RoutineEditor({
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
                       />
                       <div className="flex min-w-0 flex-1 flex-col gap-1">
-                        <input
-                          name={`${base}-name`}
-                          type="text"
-                          maxLength={EXERCISE_NAME_MAX}
-                          defaultValue={v(`${base}-name`, exercise.name)}
+                        <select
+                          name={`${base}-key`}
+                          value={exercise.key ?? ""}
+                          onChange={(event) =>
+                            pickExercise(dayIndex, rowIndex, event.target.value)
+                          }
                           aria-label={t("editor.exerciseLabel")}
                           className={`w-full ${cell}`}
+                        >
+                          <option value="">
+                            {exercise.key || !exercise.name
+                              ? t("editor.chooseExercise")
+                              : t("editor.customExercise", {
+                                  name: exercise.name,
+                                })}
+                          </option>
+                          {GROUPED.map(({ group, exercises: options }) => (
+                            <optgroup key={group} label={t(`groups.${group}`)}>
+                              {options.map((option) => (
+                                <option key={option.key} value={option.key}>
+                                  {option.name}
+                                </option>
+                              ))}
+                            </optgroup>
+                          ))}
+                        </select>
+                        {/* Keeps the row's label if its catalogue entry is
+                            ever withdrawn, and carries legacy free text. */}
+                        <input
+                          type="hidden"
+                          name={`${base}-name`}
+                          value={exercise.name}
                         />
                         <input
                           name={`${base}-notes`}

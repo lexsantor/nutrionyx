@@ -80,6 +80,17 @@ export function DietEditor({
     setPrevState(state);
     if (state && "ok" in state) setDirty(false);
   }
+  // Loading a template rewrites the plan on the server and revalidates,
+  // but the rows live in state, which a re-render leaves untouched: the
+  // specialist would be told "plantilla cargada" over the old week.
+  // Compare by value, since every server render rebuilds the object.
+  const contentKey = JSON.stringify(initial.content);
+  const [prevContent, setPrevContent] = useState(contentKey);
+  if (contentKey !== prevContent) {
+    setPrevContent(contentKey);
+    setWeek(toDraft(initial.content));
+    setDirty(false);
+  }
   useUnsavedGuard(dirty, t("editor.unsaved"));
 
   // After an error the browser form has been reset (React 19): fall back

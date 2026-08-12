@@ -52,12 +52,12 @@ describe("normalizeRoutine", () => {
     expect(result?.days[0].exercises).toEqual([]);
   });
 
-  it("keeps optional notes and imageKey only when present", () => {
+  it("keeps optional notes only when present", () => {
     const result = normalizeRoutine(
       week({
         exercises: [
-          { name: "Remo", sets: "4", reps: "10", notes: "Espalda recta", imageKey: "remo" },
-          { name: "Zancada", sets: "3", reps: "12", notes: "", imageKey: "" },
+          { name: "Remo", sets: "4", reps: "10", notes: "Espalda recta" },
+          { name: "Zancada", sets: "3", reps: "12", notes: "" },
         ],
       }),
     );
@@ -66,13 +66,45 @@ describe("normalizeRoutine", () => {
       sets: "4",
       reps: "10",
       notes: "Espalda recta",
-      imageKey: "remo",
     });
     expect(result?.days[0].exercises[1]).toEqual({
       name: "Zancada",
       sets: "3",
       reps: "12",
     });
+  });
+
+  it("takes the name from the catalogue, not from the posted name", () => {
+    const result = normalizeRoutine(
+      week({
+        exercises: [
+          { key: "sentadilla", name: "nombre viejo", sets: "4", reps: "12" },
+        ],
+      }),
+    );
+    expect(result?.days[0].exercises).toEqual([
+      { key: "sentadilla", name: "Sentadilla", sets: "4", reps: "12" },
+    ]);
+  });
+
+  it("drops a key outside the catalogue and keeps the row's own name", () => {
+    const result = normalizeRoutine(
+      week({
+        exercises: [
+          { key: "retirado-del-catalogo", name: "Sentadilla búlgara", sets: "3", reps: "10" },
+        ],
+      }),
+    );
+    expect(result?.days[0].exercises).toEqual([
+      { name: "Sentadilla búlgara", sets: "3", reps: "10" },
+    ]);
+  });
+
+  it("drops a row whose key is unknown and has no name to fall back on", () => {
+    const result = normalizeRoutine(
+      week({ exercises: [{ key: "inventado", name: "", sets: "4", reps: "12" }] }),
+    );
+    expect(result?.days[0].exercises).toEqual([]);
   });
 
   it("rejects input past the caps instead of truncating", () => {
@@ -159,6 +191,20 @@ describe("routineFromEntries", () => {
     expect(content?.days[0].exercises).toEqual([
       { name: "Sentadilla", sets: "4", reps: "12" },
       { name: "Press banca", sets: "3", reps: "10" },
+    ]);
+  });
+
+  it("resolves the picker's key into the catalogue name", () => {
+    const content = normalizeRoutine(
+      routineFromEntries([
+        field(0, 0, "key", "press-banca"),
+        field(0, 0, "name", "Press de banca"),
+        field(0, 0, "sets", "4"),
+        field(0, 0, "reps", "8"),
+      ]),
+    );
+    expect(content?.days[0].exercises).toEqual([
+      { key: "press-banca", name: "Press de banca", sets: "4", reps: "8" },
     ]);
   });
 

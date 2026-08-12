@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T13:49:03.820Z",
+  "updated": "2026-08-12T14:14:30.377Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -15,8 +15,18 @@
       "id": "a11y/placeholder-as-label",
       "severity": "moderate",
       "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/template-bar.tsx",
+      "line": 58,
+      "evidence": "<input",
+      "msg": "Input with placeholder — verify a real associated <label> exists",
+      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
+    },
+    {
+      "id": "a11y/placeholder-as-label",
+      "severity": "moderate",
+      "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/diet-editor.tsx",
-      "line": 169,
+      "line": 205,
       "evidence": "<textarea",
       "msg": "Input with placeholder — verify a real associated <label> exists",
       "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
@@ -36,20 +46,20 @@
       "severity": "moderate",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
-      "line": 108,
+      "line": 151,
       "evidence": "<textarea",
       "msg": "Input with placeholder — verify a real associated <label> exists",
       "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
     },
     {
-      "id": "a11y/placeholder-as-label",
-      "severity": "moderate",
+      "id": "content/claim-repetition",
+      "severity": "minor",
       "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/dieta/template-bar.tsx",
-      "line": 58,
-      "evidence": "<input",
-      "msg": "Input with placeholder — verify a real associated <label> exists",
-      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
+      "line": 1,
+      "evidence": "\"use client\";",
+      "msg": "A four-word-plus phrase repeats three or more times",
+      "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
     }
   ]
 }

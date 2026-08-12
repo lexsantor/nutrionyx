@@ -109,8 +109,8 @@ model DietTemplate {
 
 ```ts
 type Exercise = {
-  name: string; sets?: string; reps?: string;
-  notes?: string; imageKey?: string;
+  key?: string; name: string; sets: string; reps: string;
+  notes?: string;
 };
 type RoutineContent = { version: 2; days: { exercises: Exercise[] }[] };
 ```
@@ -119,14 +119,20 @@ type RoutineContent = { version: 2; days: { exercises: Exercise[] }[] };
   with that text as `name`).
 - Same editor pattern: add/remove exercise rows per day.
 - `TrainingTemplate` model mirroring `DietTemplate`.
-- `imageKey` is optional and references the library from Slice D; a
-  routine without images must render fine.
+- `key` references the catalogue (brought forward from Slice D): the
+  editor picks the exercise instead of typing it, `name` is resolved from
+  the catalogue, and only series and repetitions stay free text. A key
+  that no longer resolves is dropped and the stored name carries the row,
+  so a routine without images renders fine.
 
 ### Slice D — Exercise image library (credit-bound)
 
-- Fixed catalogue in code (`src/modules/training/exercises.ts`): slug,
-  Spanish name, muscle group. The editor picks from it; `imageKey` stores
-  the slug. Unknown slug renders no image, never a broken one.
+- Catalogue in code (`src/modules/training/exercises.ts`): slug, Spanish
+  name, muscle group. Shipped with Slice C — the editor already picks
+  from it. Keys are append-only: renaming a `name` updates every routine,
+  changing a `key` orphans them.
+- `ILLUSTRATED` gates which keys have a file in `public/exercises/`; an
+  exercise not listed there renders no image, never a broken one.
 - Generation protocol, same as the mannequins: the existing
   `public/mannequin-male-front.png` is passed as `reference_image_ids` on
   every request so material, lighting and framing stay identical across
