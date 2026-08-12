@@ -1,8 +1,0 @@
-node_modules/
-dist/
-*.plugin
-*.zip
-.DS_Store
-.lexia-design/
-UPDATE_PROPOSAL.md
-evals/results/

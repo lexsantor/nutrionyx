@@ -1,18 +1,13 @@
 /**
- * Anatomical body silhouette (front/back) on a 200x420 canvas - shared by
- * the interactive body map and the landing teaser. Server-safe (pure SVG).
- * Zone latitudes are calibrated to modules/measurement/body.ts BODY_ZONES:
- * chest y=104, arm y=122, waist y=152, hip y=196, glute y=208, thigh y=258,
- * calf y=344. Subtle vertical gradient + faint definition lines; theme-aware
- * via currentColor (set text color on the wrapping element).
+ * Hand-drawn anatomical silhouette (front/back) on a 200x420 canvas, used by
+ * the landing hero teaser. The interactive body map uses the mannequin
+ * renders instead (public/mannequin-*.png). Server-safe (pure SVG); subtle
+ * vertical gradient + faint definition lines; theme-aware via currentColor.
  */
-export function BodySilhouette({
-  view,
-  gradientId,
-}: {
-  view: "front" | "back";
-  gradientId: string;
-}) {
+const GRADIENT_ID = "body-silhouette-grad";
+
+export function BodySilhouette({ view }: { view: "front" | "back" }) {
+  const gradientId = GRADIENT_ID;
   return (
     <g aria-hidden="true">
       <defs>

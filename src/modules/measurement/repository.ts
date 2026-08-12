@@ -60,7 +60,7 @@ export async function recordMetric(params: {
 }
 
 /** Latest measurement of a kind for a patient, or null. */
-export async function latestOfKind(
+async function latestOfKind(
   organizationId: string,
   patientId: string,
   kind: MeasurementKind,

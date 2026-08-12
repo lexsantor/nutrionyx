@@ -1,12 +1,9 @@
 {
   "common": {
-    "appName": "Nutrionyx",
     "signOut": "Cerrar sesión",
     "theme": "Tema",
     "themeDark": "Cambiar a tema oscuro",
     "themeLight": "Cambiar a tema claro",
-    "navDashboard": "Panel",
-    "navSettings": "Ajustes",
     "nav": {
       "inicio": "Inicio",
       "pacientes": "Pacientes",
@@ -104,12 +101,10 @@
     "hero": {
       "title": "¿Cómo llevas tu consulta sin perderte entre WhatsApp, Excel y PDFs?",
       "highlight": "Con una sola ficha.",
-      "description": "Evaluación, dieta, entreno, medicación, mensajes y citas. Debajo tienes una ficha de paciente real de la plataforma — con datos de ejemplo — para que juzgues el producto, no las promesas.",
       "cta": {
         "signUp": "Crear mi consulta",
         "signIn": "Iniciar sesión"
       },
-      "scrollHint": "La prueba: una ficha real",
       "subtitle": "Sales de cada revisión con la adherencia leída y el plan publicado.",
       "answer": "Nutrionyx reúne evaluación, dieta, entreno, medicación GLP-1, mensajes y citas de cada paciente en una ficha única. Tú prescribes y lees adherencia de un vistazo; tu paciente registra su día en menos de un minuto desde el móvil. Datos de salud tratados como exige el RGPD, con aislamiento por consulta verificado en cada despliegue.",
       "byline": "Por Alejandro · fundador de Nutrionyx",
@@ -313,7 +308,6 @@
     }
   },
   "panel": {
-    "settingsLink": "Ajustes",
     "dashboard": {
       "activePatients": "Pacientes activos",
       "newIn30Days": "Nuevos (30 días)",
@@ -322,7 +316,6 @@
     },
     "metrics": {
       "completionRate": "Tasa de finalización de evaluaciones",
-      "completionTarget": "Objetivo ≥ 80%",
       "completedOf": "{completed} de {active} pacientes activos",
       "medianTime": "Tiempo mediano de evaluación",
       "timeTarget": "Objetivo ≤ 15 min",
@@ -793,9 +786,7 @@
       "label": "Medicación",
       "due": "Te toca hoy",
       "in": "{days, plural, =1 {Mañana} other {En # días}} · {weekday}",
-      "none": "Registra la pauta que te indicó tu médico para llevar el control de tus dosis.",
-      "setupCta": "Configurar",
-      "logCta": "Registrar dosis"
+      "none": "Registra la pauta que te indicó tu médico para llevar el control de tus dosis."
     },
     "sites": {
       "LEFT_ARM": "Brazo izquierdo",
@@ -932,7 +923,6 @@
     }
   },
   "erase": {
-    "confirmLabel": "Entiendo que esta acción es irreversible y elimina todos los datos clínicos de este paciente.",
     "erase": "Eliminar definitivamente",
     "erasing": "Eliminando…",
     "errors": {

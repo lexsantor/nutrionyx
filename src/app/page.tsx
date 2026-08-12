@@ -299,7 +299,7 @@ export default async function Home() {
                   {r("weightChart.title")}
                 </p>
                 <svg viewBox="0 0 200 300" className="mx-auto mt-2 h-48 w-auto">
-                  <BodySilhouette view="front" gradientId="hero-grad" />
+                  <BodySilhouette view="front" />
                   <line x1="58" y1="152" x2="142" y2="152" strokeWidth="2" className="stroke-primary" />
                   <circle cx="142" cy="152" r="3.5" className="fill-primary" />
                   <line x1="51" y1="196" x2="149" y2="196" strokeWidth="2" className="stroke-ink/40" />

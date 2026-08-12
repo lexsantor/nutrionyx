@@ -20,7 +20,6 @@
   --c-primary: #24405f;
   --c-on-primary: #f5f8fa;
   --c-primary-hover: #2d4f75;
-  --c-primary-pressed: #16293f;
   --c-primary-subtle: #dee7ef;
   --c-on-primary-subtle: #2c3d52;
   --c-ink: #0b0f14;
@@ -34,10 +33,6 @@
   --c-hairline: #dde4ec;
   --c-hairline-strong: #c3cfdb;
   --c-field-border: #64798c;
-  --c-inverse-surface-1: #1e2a39;
-  --c-inverse-ink: #f5f8fa;
-  --c-neutral: #5c7386;
-  --c-neutral-soft: #cbd5df;
   --c-success: #1f7a3d;
   --c-success-soft: #e3f1e8;
   --c-warning: #8a5800;
@@ -62,7 +57,6 @@
   --c-primary: #9db4c6;
   --c-on-primary: #0b0f14;
   --c-primary-hover: #b9cbda;
-  --c-primary-pressed: #7c97ac;
   --c-primary-subtle: #1c2c40;
   --c-on-primary-subtle: #b9cbda;
   --c-ink: #f5f8fa;
@@ -76,10 +70,6 @@
   --c-hairline: #1d2836;
   --c-hairline-strong: #2e3f54;
   --c-field-border: #5d7893;
-  --c-inverse-surface-1: #e8edf3;
-  --c-inverse-ink: #0b0f14;
-  --c-neutral: #5c7386;
-  --c-neutral-soft: #26313f;
   --c-success: #3ba55c;
   --c-success-soft: #152a1d;
   --c-warning: #f5a623;
@@ -104,7 +94,6 @@
   --color-primary: var(--c-primary);
   --color-on-primary: var(--c-on-primary);
   --color-primary-hover: var(--c-primary-hover);
-  --color-primary-pressed: var(--c-primary-pressed);
   --color-primary-subtle: var(--c-primary-subtle);
   --color-on-primary-subtle: var(--c-on-primary-subtle);
   --color-ink: var(--c-ink);
@@ -118,10 +107,6 @@
   --color-hairline: var(--c-hairline);
   --color-hairline-strong: var(--c-hairline-strong);
   --color-field-border: var(--c-field-border);
-  --color-inverse-surface-1: var(--c-inverse-surface-1);
-  --color-inverse-ink: var(--c-inverse-ink);
-  --color-neutral: var(--c-neutral);
-  --color-neutral-soft: var(--c-neutral-soft);
   --color-success: var(--c-success);
   --color-success-soft: var(--c-success-soft);
   --color-warning: var(--c-warning);
@@ -137,7 +122,6 @@
   --font-display: "Syne Variable", "DM Sans Variable", system-ui, sans-serif;
   --font-sans: "DM Sans Variable", system-ui, -apple-system, sans-serif;
 
-  --radius-pill: 9999px;
   --shadow-el-sm: var(--el-sm);
   --shadow-el-md: var(--el-md);
   --shadow-el-lg: var(--el-lg);
