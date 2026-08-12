@@ -219,3 +219,55 @@ sign-off): negative-parallelism density x5 on the landing.
 Projected ~80-81 with DISTINCTIVENESS reaching the 7.5 gate. Remaining:
 T4 verification (render, byline confirm, React19 repro) + known issues
 (ledger Row x3 treatments, hardcoded auth strings, theme-toggle name).
+
+---
+
+# Iteration 3 — 2026-08-12 (RENDERED)
+
+LEXIA SCORE 77.1/100 (C) · TOTAL 7.67 (+0.18) · verdict continue.
+Gates: total FAIL (>=8.5), distinctiveness 7.0 FAIL (>=7.5), criticals
+0/0 PASS, regressions 0 PASS. 12 of 15 dimensions improved.
+
+Render: Playwright (scratchpad/render/shoot.mjs) vs production, 84
+captures at 375/768/1440 x light/dark with real scrolling. Public
+surfaces only; mi-espacio + panel + admin stay code-only (no
+authenticated session).
+
+## What the render caught that code review could not
+
+1. nav sign-in link never hid below sm: `hidden` and ButtonLink's own
+   `inline-flex` have equal specificity, Tailwind emits inline-flex last.
+2. hero highlight chip split across lines rendered as two broken
+   rectangles (needed box-decoration-clone).
+3. eyebrow badge wrapped inside a pill radius with a mis-centred dot.
+4. WeightChart stretched ~750px tall in the landing bezel; the first fix
+   (max-h-64) traded it for a horizontal void painting 12% of the card —
+   a self-inflicted regression the reviewer caught. Correct fix: the 2:1
+   aspect is right for app tiles, only the landing's full-width usage was
+   wrong, so the container is constrained there.
+5. floating nav ghosted content (translucent enough to erase, opaque
+   enough to show through) over the comparison table and a patient name.
+
+## Fixed after the reviewers scored (verify next iteration)
+
+chart regression · nav occlusion · auth screens adopt Bezel (BREAKS IF #3
+closed at both ends) · focus-ring off ink-subtle onto the accent ·
+semantic colour off quantities (console rate bar, chart delta) · WCAG
+2.4.11 scroll-padding-top · password-recovery form contract (persistent
+region, resend, transport failure surfaced) · protein-log silent success ·
+password placeholder · legal wordmark alignment · dead trendToward/prev.
+
+## Standing, owner's call
+
+tile-lift-signature waiver re-flagged by the motion reviewer (hover lift
+on 8 non-link sections). Copy proposals not applied: eyebrow badge is 60
+chars and cannot be a badge at any width; negative-parallelism x6.
+Byline "Alejandro" still unconfirmed — CRITICAL if the name is invented.
+
+## Remaining tail
+
+ledger Row in 4 ad-hoc shapes (needs a ui/ primitive) · 6 hardcoded
+Spanish strings in auth · theme-toggle name/state contradiction · unread
+badge unnamed for SR · no Cmd+Enter in composers · erase confirm text-sm
+(iOS zoom) · landing skip link + empty first th · synthetic chip on 4 of
+8 beats · 640KB unoptimized mannequin PNGs · React19 repro still pending.
