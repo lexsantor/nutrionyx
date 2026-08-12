@@ -8,34 +8,15 @@ import {
   ASSESSMENT_STEPS,
   firstUnansweredStep,
 } from "@/modules/assessment/definition";
-import { bmiCategory } from "@/modules/assessment/computed";
-import {
-  bodyComposition,
-  listMeasurementsSince,
-  listWeights,
-  proteinOnDay,
-} from "@/modules/measurement/repository";
-import {
-  fatMassKg,
-  leanMassKg,
-  waistHipRatio,
-  zoneStats,
-  BODY_ZONES,
-} from "@/modules/measurement/body";
+import { listWeights, proteinOnDay } from "@/modules/measurement/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
 import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
 import { Topbar } from "@/components/topbar";
 import { WeightCheckIn } from "./weight-check-in";
 import { ProteinLog } from "./protein-log";
-import { BodyMetricsForm } from "./body-metrics-form";
-import { PhotosCard } from "./photos-card";
-import { listPhotos } from "@/modules/photos/repository";
-import { listDocuments } from "@/modules/documents/repository";
 import { listUpcomingByPatient } from "@/modules/scheduling/repository";
 import { PatientNav } from "./patient-nav";
-import { WeightChart } from "@/components/weight-chart";
-import { BodyMapMeasures } from "@/components/body-map-measures";
 import { ButtonLink } from "@/components/ui/button-link";
 import { sameMadridDay } from "@/modules/scheduling/time";
 
@@ -64,36 +45,20 @@ export default async function PatientHomePage() {
 
   if (assessment?.status === "COMPLETED") {
     const format = await getFormatter();
-    const tp = await getTranslations("progress");
-    const bmiValue = Number(assessment.bmi);
 
     const tm = await getTranslations("medication");
 
     // Every read is independent once the patient is resolved: one batch,
     // no request waterfall on the highest-frequency screen (audit 2026-08-12).
-    const [
-      plan,
-      lastDoses,
-      patientDocuments,
-      upcomingAll,
-      body,
-      allMeasurements,
-      targets,
-      proteinToday,
-      weights,
-      photos,
-    ] = await Promise.all([
-      getPlan(patient.organizationId, patient.id),
-      listDoses(patient.organizationId, patient.id, 1),
-      listDocuments(patient.organizationId, patient.id),
-      listUpcomingByPatient(patient.organizationId, patient.id, new Date()),
-      bodyComposition(patient.organizationId, patient.id),
-      listMeasurementsSince(patient.organizationId, patient.id, new Date(0)),
-      getTargets(patient.organizationId, patient.id),
-      proteinOnDay(patient.organizationId, patient.id, new Date()),
-      listWeights(patient.organizationId, patient.id),
-      listPhotos(patient.organizationId, patient.id),
-    ]);
+    const [plan, lastDoses, upcomingAll, targets, proteinToday, weights] =
+      await Promise.all([
+        getPlan(patient.organizationId, patient.id),
+        listDoses(patient.organizationId, patient.id, 1),
+        listUpcomingByPatient(patient.organizationId, patient.id, new Date()),
+        getTargets(patient.organizationId, patient.id),
+        proteinOnDay(patient.organizationId, patient.id, new Date()),
+        listWeights(patient.organizationId, patient.id),
+      ]);
     const upcomingAppointments = upcomingAll.slice(0, 3);
 
     let medicationLine: string | null = null;
@@ -111,53 +76,7 @@ export default async function PatientHomePage() {
     }
 
     const tt = await getTranslations("targets.today");
-    const tb = await getTranslations("body");
-    const td = await getTranslations("documents");
     const ta = await getTranslations("agenda");
-    const rawZones = zoneStats(allMeasurements);
-    const zonesForMap = Object.fromEntries(
-      BODY_ZONES.flatMap((zone) => {
-        const z = rawZones[zone.key];
-        if (!z) return [];
-        return [
-          [
-            zone.key,
-            {
-              ...z,
-              currentDate: format.dateTime(z.currentDate, {
-                dateStyle: "medium",
-              }),
-              initialDate: format.dateTime(z.initialDate, {
-                dateStyle: "medium",
-              }),
-              previousDate: z.previousDate
-                ? format.dateTime(z.previousDate, { dateStyle: "medium" })
-                : null,
-            },
-          ],
-        ];
-      }),
-    );
-    const ratio =
-      body.waistCm != null && body.hipCm != null
-        ? waistHipRatio(body.waistCm, body.hipCm)
-        : null;
-    const fatKg =
-      body.weightKg != null && body.bodyFatPct != null
-        ? fatMassKg(body.weightKg, body.bodyFatPct)
-        : null;
-    const leanKg =
-      body.weightKg != null && body.bodyFatPct != null
-        ? leanMassKg(body.weightKg, body.bodyFatPct)
-        : null;
-    const targetKg =
-      assessment.targetWeightKg != null
-        ? Number(assessment.targetWeightKg)
-        : null;
-    const points = weights.map((w) => ({
-      recordedAt: w.recordedAt,
-      valueKg: Number(w.value),
-    }));
 
     const lastWeight = weights[weights.length - 1] ?? null;
     const weightToday =
@@ -183,10 +102,6 @@ export default async function PatientHomePage() {
 
     // Bento pairs: when a row partner is absent, the survivor takes the row.
     const medicationSpan = targets ? "lg:col-span-4" : "lg:col-span-12";
-    const citasSpan =
-      patientDocuments.length > 0 ? "lg:col-span-5" : "lg:col-span-12";
-    const docsSpan =
-      upcomingAppointments.length > 0 ? "lg:col-span-7" : "lg:col-span-12";
 
     return (
       <>
@@ -256,6 +171,7 @@ export default async function PatientHomePage() {
                   <ProteinLog />
                 </div>
               ) : null}
+              <WeightCheckIn />
             </section>
           ) : null}
 
@@ -281,127 +197,8 @@ export default async function PatientHomePage() {
             )}
           </section>
 
-          <section className={`${TILE} lg:col-span-8`}>
-            <h2 className="text-lg font-semibold">{tp("title")}</h2>
-            {points.length > 0 ? (
-              <WeightChart points={points} targetKg={targetKg} />
-            ) : (
-              <p className="text-sm text-ink-subtle">{tp("empty")}</p>
-            )}
-            <WeightCheckIn />
-          </section>
-
-          <section className={`${TILE} lg:col-span-4`}>
-            <h2 className="text-lg font-semibold">{t("summary.title")}</h2>
-            <dl className="flex flex-col gap-2 text-sm">
-              <div className="flex justify-between">
-                <dt className="text-ink-subtle">{t("summary.bmi")}</dt>
-                <dd className="font-semibold tabular-nums">
-                  {bmiValue} · {t(`bmiCategories.${bmiCategory(bmiValue)}`)}
-                </dd>
-              </div>
-              <div className="flex justify-between">
-                <dt className="text-ink-subtle">{t("summary.goal")}</dt>
-                <dd className="font-semibold tabular-nums">
-                  {Number(assessment.targetWeightKg)} kg
-                </dd>
-              </div>
-            </dl>
-            <p className="mt-auto text-xs text-ink-subtle">
-              {t("summary.completedAt", {
-                date: format.dateTime(assessment.completedAt!, {
-                  dateStyle: "long",
-                }),
-              })}
-            </p>
-          </section>
-
-          <section className={`${TILE} lg:col-span-6`}>
-            <div className="flex flex-col gap-0.5">
-              <h2 className="text-lg font-semibold">{tb("title")}</h2>
-              {body.updatedAt ? (
-                <p className="text-sm text-ink-subtle">
-                  {tb("updatedAt", {
-                    date: format.dateTime(body.updatedAt, {
-                      dateStyle: "medium",
-                    }),
-                  })}
-                </p>
-              ) : (
-                <p className="text-sm text-ink-subtle">{tb("empty")}</p>
-              )}
-            </div>
-            <BodyMapMeasures zones={zonesForMap} sex={assessment.sex} />
-
-            <div className="flex flex-col gap-3 border-t border-hairline pt-4">
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {[
-                  body.bodyFatPct != null
-                    ? { key: "fatPct", value: `${body.bodyFatPct.toLocaleString("es")} %` }
-                    : null,
-                  ratio != null
-                    ? { key: "ratio", value: ratio.toLocaleString("es") }
-                    : null,
-                  fatKg != null
-                    ? { key: "fatKg", value: `${fatKg.toLocaleString("es")} kg` }
-                    : null,
-                  leanKg != null
-                    ? { key: "leanKg", value: `${leanKg.toLocaleString("es")} kg` }
-                    : null,
-                ]
-                  .filter((x) => x != null)
-                  .map((row) => (
-                    <div
-                      key={row.key}
-                      className="rounded-[10px] bg-surface-2 px-3.5 py-2.5"
-                    >
-                      <p className="text-xs font-medium text-ink-subtle">
-                        {tb(`metrics.${row.key}`)}
-                      </p>
-                      <p className="font-display text-xl font-semibold tabular-nums">
-                        {row.value}
-                      </p>
-                    </div>
-                  ))}
-              </div>
-              {leanKg != null && fatKg != null ? (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex h-2 w-full overflow-hidden rounded-full">
-                    <div
-                      className="bg-primary"
-                      style={{ width: `${(leanKg / (leanKg + fatKg)) * 100}%` }}
-                    />
-                    <div className="flex-1 bg-surface-4" />
-                  </div>
-                  <div className="flex justify-between text-xs text-ink-subtle">
-                    <span>
-                      <span className="mr-1 inline-block size-2 rounded-full bg-primary align-middle" />
-                      {tb("metrics.leanKg")} · {leanKg.toLocaleString("es")} kg
-                    </span>
-                    <span>
-                      {tb("metrics.fatKg")} · {fatKg.toLocaleString("es")} kg
-                      <span className="ml-1 inline-block size-2 rounded-full bg-surface-4 align-middle" />
-                    </span>
-                  </div>
-                </div>
-              ) : null}
-            </div>
-            <BodyMetricsForm />
-          </section>
-
-          <div className="lg:col-span-6 lg:self-start">
-            <PhotosCard
-              photos={photos.map((p) => ({
-                id: p.id,
-                createdAt: format.dateTime(p.createdAt, {
-                  dateStyle: "medium",
-                }),
-              }))}
-            />
-          </div>
-
           {upcomingAppointments.length > 0 ? (
-            <section className={`${TILE} ${citasSpan}`}>
+            <section className={`${TILE} lg:col-span-12`}>
               <h2 className="text-lg font-semibold">
                 {ta("patientCardTitle")}
               </h2>
@@ -439,42 +236,6 @@ export default async function PatientHomePage() {
             </section>
           ) : null}
 
-          {patientDocuments.length > 0 ? (
-            <section className={`${TILE} ${docsSpan}`}>
-              <h2 className="text-lg font-semibold">{td("title")}</h2>
-              <ul className="flex flex-col">
-                {patientDocuments.map((doc) => (
-                  <li
-                    key={doc.id}
-                    className="flex items-center justify-between gap-3 border-b border-hairline py-2 last:border-0"
-                  >
-                    <a
-                      href={`/api/documents/${doc.id}`}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="min-w-0 flex-1 truncate text-sm font-medium text-ink no-underline transition-colors hover:text-accent-text"
-                    >
-                      {doc.fileName}
-                    </a>
-                    <span className="shrink-0 text-xs text-ink-subtle">
-                      {format.dateTime(doc.createdAt, { dateStyle: "medium" })}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          </div>
-
-          <div className="mt-8 flex justify-center">
-            <a
-              href="/api/me/export"
-              download
-              className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-xs font-semibold text-ink-subtle no-underline shadow-el-sm transition-[transform,box-shadow,border-color,background-color,color] ease-house hover:border-hairline-strong hover:bg-surface-2 hover:text-ink active:scale-[0.98] active:duration-150"
-            >
-              {tb("exportLink")}
-            </a>
           </div>
         </main>
       </>

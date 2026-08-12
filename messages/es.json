@@ -870,9 +870,11 @@
   "patientNav": {
     "home": "Inicio",
     "medication": "Medicación",
+    "progress": "Progreso",
     "diet": "Dieta",
     "training": "Entreno",
-    "messages": "Mensajes"
+    "messages": "Mensajes",
+    "profile": "Mi perfil"
   },
   "body": {
     "title": "Medidas",
@@ -1252,5 +1254,44 @@
     "errorTitle": "Algo ha fallado",
     "errorText": "No se ha podido cargar esta página. Puedes reintentarlo.",
     "retry": "Reintentar"
+  },
+  "patientProgress": {
+    "title": "Mi progreso",
+    "subtitle": "Tu peso, tus medidas y tus fotos a lo largo del tiempo.",
+    "sinceStart": "{delta} kg desde el {date}",
+    "weightTable": "Historial de peso",
+    "date": "Fecha",
+    "weight": "Peso",
+    "logHint": "Tu peso de hoy se registra en <link>la portada</link>."
+  },
+  "patientProfile": {
+    "title": "Mi perfil",
+    "subtitle": "Tus datos, tu evaluación y tus documentos.",
+    "signOut": "Cerrar sesión",
+    "account": {
+      "title": "Mis datos",
+      "name": "Nombre",
+      "email": "Correo",
+      "consulta": "Consulta",
+      "unknownConsulta": "Tu consulta",
+      "changeHint": "Para corregir algún dato, escribe a tu especialista: la ficha clínica la lleva la consulta."
+    },
+    "assessment": {
+      "title": "Mi evaluación",
+      "review": "Ver mis respuestas",
+      "pending": "Todavía no has terminado la evaluación inicial.",
+      "continue": "Continuar la evaluación"
+    },
+    "documents": {
+      "empty": "Tu especialista aún no ha compartido ningún documento."
+    },
+    "data": {
+      "title": "Mis datos personales",
+      "export": "Descargar mis datos",
+      "exportHint": "Un archivo con todo lo que la plataforma guarda sobre ti.",
+      "erasureTitle": "Borrar mis datos",
+      "erasureHint": "Tu historial clínico lo custodia {consulta}, así que el borrado lo tramitan ellos. Pídeselo y están obligados a atenderlo.",
+      "erasureCta": "Escribir a mi especialista"
+    }
   }
 }
