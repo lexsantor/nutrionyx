@@ -384,6 +384,19 @@ export default async function PatientHomePage() {
             <BodyMetricsForm />
           </section>
 
+          <div className="lg:col-span-6">
+            <PhotosCard
+              photos={(
+                await listPhotos(patient.organizationId, patient.id)
+              ).map((p) => ({
+                id: p.id,
+                createdAt: format.dateTime(p.createdAt, {
+                  dateStyle: "medium",
+                }),
+              }))}
+            />
+          </div>
+
           {upcomingAppointments.length > 0 ? (
             <section className={`${TILE} ${citasSpan}`}>
               <h2 className="text-lg font-semibold">
@@ -422,19 +435,6 @@ export default async function PatientHomePage() {
               </ul>
             </section>
           ) : null}
-
-          <div className="lg:col-span-6">
-            <PhotosCard
-              photos={(
-                await listPhotos(patient.organizationId, patient.id)
-              ).map((p) => ({
-                id: p.id,
-                createdAt: format.dateTime(p.createdAt, {
-                  dateStyle: "medium",
-                }),
-              }))}
-            />
-          </div>
 
           {patientDocuments.length > 0 ? (
             <section className={`${TILE} ${docsSpan}`}>
@@ -494,7 +494,7 @@ export default async function PatientHomePage() {
   return (
     <>
       <Topbar nav={<PatientNav />} />
-      <main className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-10 text-center">
+      <main id="contenido" className="flex flex-1 flex-col items-center justify-center gap-4 px-4 py-10 text-center">
         <h1 className="text-2xl font-semibold">
           {t("welcome", { name: session.user.name })}
         </h1>

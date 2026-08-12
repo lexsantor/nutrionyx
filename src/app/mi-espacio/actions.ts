@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
+import { madridDayStart } from "@/modules/scheduling/time";
 import {
   recordMetric,
   recordProtein,
@@ -28,6 +29,10 @@ export async function recordWeightAction(
   if (dateRaw) {
     const parsed = new Date(`${dateRaw}T12:00:00`);
     if (Number.isNaN(parsed.getTime())) {
+      return { errorKey: "invalidDate" };
+    }
+    // Future-dated weights would corrupt the 28-day adherence window.
+    if (parsed >= madridDayStart(1)) {
       return { errorKey: "invalidDate" };
     }
     recordedAt = parsed;

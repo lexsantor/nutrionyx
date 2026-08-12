@@ -315,6 +315,7 @@
       "pendingFollowUp": "Pendientes de seguimiento"
     },
     "metrics": {
+      "title": "Métricas de evaluación",
       "completionRate": "Tasa de finalización de evaluaciones",
       "completedOf": "{completed} de {active} pacientes activos",
       "medianTime": "Tiempo mediano de evaluación",

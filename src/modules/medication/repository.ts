@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { appendEvent } from "@/modules/events";
+import { madridDayStart } from "@/modules/scheduling/time";
 import type {
   InjectionSite,
   MedicationDose,
@@ -113,10 +114,8 @@ export async function plansDueOn(
   });
   if (plans.length === 0) return [];
 
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  const start = madridDayStart(0, now);
+  const end = new Date(start.getTime() + 86_400_000);
   const dosedToday = await prisma.medicationDose.findMany({
     where: {
       patientId: { in: plans.map((p) => p.patientId) },

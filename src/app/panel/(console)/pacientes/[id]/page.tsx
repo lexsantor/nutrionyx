@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations, getFormatter } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
+import { madridDayStart } from "@/modules/scheduling/time";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { ageInYears } from "@/modules/patient/age";
 import {
@@ -78,9 +79,7 @@ export default async function PatientDetailPage({
   const assessment = patient.assessments[0] ?? null;
 
   // 28-day adherence window (docs/build/slice-15-plan.md)
-  const since = new Date();
-  since.setDate(since.getDate() - REPORT_WINDOW_DAYS);
-  since.setHours(0, 0, 0, 0);
+  const since = madridDayStart(-REPORT_WINDOW_DAYS);
 
   // Every read is independent once the patient is resolved: one batch, no
   // request waterfall (audit 2026-08-11).

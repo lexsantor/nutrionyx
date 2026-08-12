@@ -8,6 +8,7 @@ import { recordWeightAction, type WeightFormState } from "./actions";
 
 export function WeightCheckIn() {
   const t = useTranslations("progress");
+  const maxDate = new Date().toLocaleDateString("sv-SE");
   const [state, formAction, isPending] = useActionState<
     WeightFormState,
     FormData
@@ -33,7 +34,7 @@ export function WeightCheckIn() {
           <label htmlFor="recordedAt" className="text-sm font-medium">
             {t("dateLabel")}
           </label>
-          <Input id="recordedAt" name="recordedAt" type="date" />
+          <Input id="recordedAt" name="recordedAt" type="date" max={maxDate} />
         </div>
         <Button type="submit" disabled={isPending}>
           {isPending ? t("saving") : t("save")}

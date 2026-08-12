@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { appendEvent } from "@/modules/events";
+import { madridDayStart } from "@/modules/scheduling/time";
 import type {
   Prisma,
   TrainingRoutine,
@@ -64,10 +65,8 @@ export async function logSession(params: {
   now?: Date;
 }): Promise<TrainingSession | null> {
   const now = params.now ?? new Date();
-  const start = new Date(now);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  const start = madridDayStart(0, now);
+  const end = new Date(start.getTime() + 86_400_000);
 
   const existing = await prisma.trainingSession.findFirst({
     where: {

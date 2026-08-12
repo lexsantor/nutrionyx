@@ -106,8 +106,13 @@ function RecordSection({
   flip?: boolean;
   tilt: string;
 }) {
+  // order-* moves the item, not the track: the template must flip with it
+  // so the record card always lands in the fluid column (audit 2026-08-12).
+  const tracks = flip
+    ? "lg:grid-cols-[280px_minmax(0,1fr)]"
+    : "lg:grid-cols-[minmax(0,1fr)_280px]";
   return (
-    <section className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-16">
+    <section className={`grid items-start gap-6 ${tracks} lg:gap-16`}>
       <Reveal className={flip ? "lg:order-2" : ""}>
         <Bezel tilt={`${tilt} hover:rotate-0`}>{children}</Bezel>
       </Reveal>
@@ -128,7 +133,7 @@ function Row({ label, value }: { label: string; value: ReactNode }) {
 }
 
 const SampleChip = ({ label }: { label: string }) => (
-  <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-subtle">
+  <span className="rounded-md bg-surface-3 px-2 py-0.5 text-xs font-medium text-ink-muted">
     {label}
   </span>
 );

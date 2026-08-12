@@ -54,9 +54,11 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --c-primary: #9db4c6;
+  /* Dark accent carries real chroma: distinct from ink-subtle/focus-ring
+   * (#9db4c6), mirroring the light-theme fix (audit 2026-08-12). */
+  --c-primary: #8dbde6;
   --c-on-primary: #0b0f14;
-  --c-primary-hover: #b9cbda;
+  --c-primary-hover: #a5cbee;
   --c-primary-subtle: #1c2c40;
   --c-on-primary-subtle: #b9cbda;
   --c-ink: #f5f8fa;
@@ -80,9 +82,9 @@
   --c-on-destructive: #0b0f14;
   --c-info: #d6dee6;
   --c-focus-ring: #9db4c6;
-  --c-selection-bg: #9db4c6;
+  --c-selection-bg: #8dbde6;
   --c-selection-fg: #0b0f14;
-  --c-accent-text: #9db4c6;
+  --c-accent-text: #8dbde6;
   /* Shadows tinted toward the canvas navy, never pure black. */
   --el-sm: 0 1px 2px rgba(3, 10, 20, 0.4);
   --el-md: 0 4px 12px rgba(3, 10, 20, 0.45);
