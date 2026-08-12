@@ -259,9 +259,13 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   Also fixed: the profile's "ver mis respuestas" pointed at
   `/mi-espacio/evaluacion`, which redirects a completed assessment away; the
   answers render in the profile now.
-  **Left**: tier 2 of that audit (duplicate "Mis datos" headings, h1->h3 jump
-  on /panel/pacientes, inbox dates without a time) and tier 3 (superadmin
-  shell, consulta detail, `/admin/auditoria`).
+  Tier 2 done in the same pass: the invite form's h3 becomes an h2 (no
+  skipped level on /panel/pacientes), the profile's clashing "Mis datos" /
+  "Mis datos personales" become "Mi cuenta" / "Privacidad", and the inbox
+  stamps today's threads with a time instead of a date.
+  **Left**: tier 3 (superadmin shell, consulta detail, `/admin/auditoria` so
+  `DomainEvent` becomes readable) and the two database cleanups awaiting the
+  owner's go-ahead.
 
 ### Navigation audit (2026-08-12)
 
