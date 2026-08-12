@@ -15,6 +15,8 @@ import { Dumbbell } from "reicon-react/icons/Dumbbell";
 import { Pills } from "reicon-react/icons/Pills";
 import { ChartLine } from "reicon-react/icons/ChartLine";
 import { User } from "reicon-react/icons/User";
+import { Buildings } from "reicon-react/icons/Buildings";
+import { ClipboardList } from "reicon-react/icons/ClipboardList";
 import { Settings } from "reicon-react/icons/Settings";
 import { Logout } from "reicon-react/icons/Logout";
 import { ThemeToggle } from "./theme-toggle";
@@ -61,6 +63,19 @@ const PATIENT_ACCOUNT: NavItemDef = {
   key: "profile",
   href: "/mi-espacio/perfil",
   icon: User,
+};
+
+const ADMIN_NAV: NavItemDef[] = [
+  { key: "resumen", href: "/admin", icon: Home },
+  { key: "consultas", href: "/admin/consultas", icon: Buildings },
+  { key: "auditoria", href: "/admin/auditoria", icon: ClipboardList },
+];
+// The platform has one administrator and a handful of consultas, so the
+// account slot carries the codes rather than a settings page nobody needs.
+const ADMIN_ACCOUNT: NavItemDef = {
+  key: "codigos",
+  href: "/admin/codigos",
+  icon: Book,
 };
 
 const ICON_SIZE = 18;
@@ -224,6 +239,19 @@ export function ConsoleShell({ children }: { children: ReactNode }) {
       account={CONSOLE_ACCOUNT}
       labelNamespace="common.nav"
       root="/panel"
+    >
+      {children}
+    </Shell>
+  );
+}
+
+export function AdminShell({ children }: { children: ReactNode }) {
+  return (
+    <Shell
+      primary={ADMIN_NAV}
+      account={ADMIN_ACCOUNT}
+      labelNamespace="admin.nav"
+      root="/admin"
     >
       {children}
     </Shell>

@@ -100,3 +100,68 @@ export async function revokeAccessCode(code: string): Promise<boolean> {
   });
   return result.count === 1;
 }
+
+export type PlatformEvent = {
+  id: string;
+  organizationId: string;
+  aggregate: string;
+  aggregateId: string;
+  type: string;
+  createdAt: Date;
+};
+
+export const EVENTS_PAGE_SIZE = 50;
+
+/**
+ * The append-only trail, for the platform audit view.
+ *
+ * `payload` is deliberately NOT selected. Operator-blindness (adr/0004)
+ * keeps this module out of clinical tables, and several event payloads
+ * carry exactly that: AssessmentCompleted stores a BMI, BodyMetricRecorded
+ * and WeightRecorded store measured values, MedicationPlanSet stores a drug
+ * name and dose, PatientCreated stores an email. Rendering them here would
+ * hand the operator special-category health data through the back door.
+ *
+ * What an audit trail owes its reader is who touched what and when. That
+ * is the shape returned: organization, aggregate, id, type, timestamp.
+ */
+export async function listPlatformEvents(filters: {
+  organizationId?: string;
+  type?: string;
+  since?: Date;
+  page?: number;
+}): Promise<{ rows: PlatformEvent[]; total: number }> {
+  const where = {
+    ...(filters.organizationId ? { organizationId: filters.organizationId } : {}),
+    ...(filters.type ? { type: filters.type } : {}),
+    ...(filters.since ? { createdAt: { gte: filters.since } } : {}),
+  };
+  const page = Math.max(1, filters.page ?? 1);
+  const [rows, total] = await Promise.all([
+    prisma.domainEvent.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * EVENTS_PAGE_SIZE,
+      take: EVENTS_PAGE_SIZE,
+      select: {
+        id: true,
+        organizationId: true,
+        aggregate: true,
+        aggregateId: true,
+        type: true,
+        createdAt: true,
+      },
+    }),
+    prisma.domainEvent.count({ where }),
+  ]);
+  return { rows, total };
+}
+
+/** Distinct event types present, for the filter. */
+export async function listEventTypes(): Promise<string[]> {
+  const rows = await prisma.domainEvent.groupBy({
+    by: ["type"],
+    orderBy: { type: "asc" },
+  });
+  return rows.map((r) => r.type);
+}

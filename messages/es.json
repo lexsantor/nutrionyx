@@ -28,7 +28,9 @@
       "empty": "Aún no hay consultas.",
       "name": "Consulta",
       "created": "Creada",
-      "patients": "Pacientes"
+      "patients": "Pacientes",
+      "subtitle": "Las consultas dadas de alta en la plataforma.",
+      "blindness": "Solo datos de negocio. Esta área nunca lee tablas clínicas: ni evaluaciones, ni medidas, ni medicación."
     },
     "codes": {
       "title": "Códigos de acceso",
@@ -52,6 +54,42 @@
       },
       "confirmRevoke": "Confirmar",
       "cancelRevoke": "Cancelar"
+    },
+    "nav": {
+      "resumen": "Resumen",
+      "consultas": "Consultas",
+      "auditoria": "Auditoría",
+      "codigos": "Códigos"
+    },
+    "overview": {
+      "subtitle": "Estado de la plataforma.",
+      "hint": "Entra en <consultas>consultas</consultas> para ver el detalle, o en <auditoria>auditoría</auditoria> para el registro de actividad."
+    },
+    "audit": {
+      "title": "Auditoría",
+      "subtitle": "El registro de actividad de la plataforma, en orden inverso.",
+      "consulta": "Consulta",
+      "allConsultas": "Todas",
+      "type": "Tipo",
+      "allTypes": "Todos",
+      "range": "Periodo",
+      "ranges": {
+        "24h": "Últimas 24 h",
+        "7d": "Últimos 7 días",
+        "30d": "Últimos 30 días",
+        "all": "Todo"
+      },
+      "apply": "Filtrar",
+      "count": "{total, plural, one {# evento} other {# eventos}}",
+      "empty": "No hay eventos en este periodo.",
+      "when": "Cuándo",
+      "subject": "Sujeto",
+      "deletedConsulta": "Consulta eliminada",
+      "pagination": "Paginación del registro",
+      "previous": "← Anteriores",
+      "next": "Siguientes →",
+      "page": "Página {page} de {total}",
+      "blindness": "El contenido de cada evento no se muestra: algunos guardan valores clínicos (un IMC, un perímetro, un fármaco y su dosis) y esta área no los lee. Un registro de auditoría debe decir quién tocó qué y cuándo, que es lo que hay en las columnas."
     }
   },
   "settings": {
