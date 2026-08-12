@@ -229,6 +229,15 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   `"use client"` module and `slice(0, <client reference>)` returns ""; and the
   isolation suite never cleaned up template rows (no FK to Organization).
 
+- **Slice 23 - Bandeja de mensajes** (navigation audit tier 2):
+  `/panel/mensajes` lists every thread with activity, unread first then by
+  recency, one line of preview, linking into the patient thread. `listInbox`
+  is two queries plus the unread counts, bounded by patients-who-wrote rather
+  than by message count. Nav gains Mensajes.
+  **Not done on purpose**: an unread badge on the sidebar entry. The shell is
+  a client component and would need the count threaded through the console
+  layout; the page itself already answers the question.
+
 ### Navigation audit (2026-08-12)
 
 [docs/build/navigation-audit.md](../docs/build/navigation-audit.md) compares the
