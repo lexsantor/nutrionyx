@@ -63,3 +63,26 @@ viewport while overflowing nothing at all.
 
 **Corollary:** a clean automated sweep is a floor, not a verdict. Look at the
 captures.
+
+## An append-only log is still a place data can be over-collected
+
+DomainEvent stored a weight, a BMI, a drug name and dose, an injection site
+and two emails, because eight call sites copied the value instead of pointing
+at the row that owns it. Nothing read those payloads for eleven slices, so the
+defect was invisible until the platform audit view made the table readable.
+
+**Check:** an event payload carries identifiers, never values. Categories
+(`kind`, `sender`, `version`) are fine; a measured number is not. The rule is
+enforced by `modules/events.test.ts`, which reads every payload literal in the
+module tree.
+
+**Why it matters more than it looks:** this table is the one clinical-adjacent
+store the platform operator may read under adr/0004. Every value written into
+it is special-category data handed to the widest audience in the system, and
+duplicated from a row that already holds it.
+
+**On the stored history:** append-only protects the fact of the event, not a
+redundant copy of a value. Redacting the values while keeping type, aggregate,
+id and timestamp preserves everything the trail is for and is the
+minimisation the data deserved in the first place. Do it with the owner's
+agreement and print what changed, row by row.
