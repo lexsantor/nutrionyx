@@ -1010,7 +1010,9 @@
       "addAlternative": "Añadir alternativa",
       "alternative": "Alternativa #{n}",
       "removeRow": "Quitar alimento",
-      "removeAlternative": "Quitar alternativa #{n}"
+      "removeAlternative": "Quitar alternativa #{n}",
+      "addFoodToMain": "Añadir otro alimento a la comida principal",
+      "addFoodToAlternative": "Añadir otro alimento a la alternativa #{n}"
     },
     "patient": {
       "heading": "Mi plan de dieta",
@@ -1045,7 +1047,15 @@
         "invalidContent": "Revisa el contenido: algún día supera los 2000 caracteres.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
       },
-      "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?"
+      "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?",
+      "setsLabel": "Series",
+      "repsLabel": "Repeticiones",
+      "exerciseLabel": "Ejercicio",
+      "exerciseNotesLabel": "Indicación",
+      "exerciseNotesPlaceholder": "Indicación opcional (técnica, descanso…)",
+      "addExercise": "Añadir ejercicio",
+      "removeExercise": "Quitar ejercicio",
+      "restDay": "Sin ejercicios: día de descanso"
     },
     "patient": {
       "heading": "Mi entrenamiento",

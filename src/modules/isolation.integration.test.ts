@@ -406,7 +406,9 @@ describe.skipIf(!hasDb)("tenant isolation", () => {
 
   it("scopes training: routine and sessions invisible cross-org (R2)", async () => {
     const content = emptyRoutine();
-    content.days[0] = "Sentadilla 4x8";
+    content.days[0] = {
+      exercises: [{ name: "Sentadilla", sets: "4", reps: "8" }],
+    };
     await upsertRoutine({
       organizationId: orgB,
       patientId: bPatientId,

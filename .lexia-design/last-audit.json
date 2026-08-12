@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-12T13:24:12.265Z",
+  "updated": "2026-08-12T13:40:06.561Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -30,6 +30,16 @@
       "evidence": "\"use client\";",
       "msg": "A four-word-plus phrase repeats three or more times",
       "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
+    },
+    {
+      "id": "a11y/placeholder-as-label",
+      "severity": "moderate",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/panel/(console)/pacientes/[id]/entreno/routine-editor.tsx",
+      "line": 108,
+      "evidence": "<textarea",
+      "msg": "Input with placeholder — verify a real associated <label> exists",
+      "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
     }
   ]
 }

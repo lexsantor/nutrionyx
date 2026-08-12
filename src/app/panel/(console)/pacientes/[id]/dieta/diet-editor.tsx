@@ -96,6 +96,23 @@ export function DietEditor({
     );
   };
 
+
+  const addFoodButton = (
+    disabled: boolean,
+    onClick: () => void,
+    label: string,
+  ) => (
+    <button
+      type="button"
+      disabled={disabled}
+      onClick={onClick}
+      aria-label={label}
+      className="self-start rounded-full border border-hairline bg-surface-1 px-3 py-1 text-xs font-medium text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150 disabled:opacity-50"
+    >
+      {t("editor.addFood")}
+    </button>
+  );
+
   const rowFields = (
     dayIndex: number,
     slot: MealSlot,
@@ -215,6 +232,15 @@ export function DietEditor({
                         main: m.main.filter((_, i) => i !== rowIndex),
                       })),
                     )}
+                    {addFoodButton(
+                      meal.main.length >= ROWS_PER_GROUP_MAX,
+                      () =>
+                        editMeal(dayIndex, slot, (m) => ({
+                          ...m,
+                          main: [...m.main, blankRow()],
+                        })),
+                      t("editor.addFoodToMain"),
+                    )}
 
                     {meal.alternatives.map((rows, altIndex) => (
                       <div key={altIndex} className="flex flex-col gap-1.5">
@@ -256,23 +282,21 @@ export function DietEditor({
                               ),
                             })),
                         )}
+                        {addFoodButton(
+                          rows.length >= ROWS_PER_GROUP_MAX,
+                          () =>
+                            editMeal(dayIndex, slot, (m) => ({
+                              ...m,
+                              alternatives: m.alternatives.map((group, i) =>
+                                i === altIndex ? [...group, blankRow()] : group,
+                              ),
+                            })),
+                          t("editor.addFoodToAlternative", { n: altIndex + 1 }),
+                        )}
                       </div>
                     ))}
 
                     <div className="mt-1 flex flex-col gap-1.5">
-                      <button
-                        type="button"
-                        disabled={meal.main.length >= ROWS_PER_GROUP_MAX}
-                        onClick={() =>
-                          editMeal(dayIndex, slot, (m) => ({
-                            ...m,
-                            main: [...m.main, blankRow()],
-                          }))
-                        }
-                        className="rounded-full border border-hairline bg-surface-1 px-3 py-1.5 text-xs font-medium text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150 disabled:opacity-50"
-                      >
-                        {t("editor.addFood")}
-                      </button>
                       <button
                         type="button"
                         disabled={

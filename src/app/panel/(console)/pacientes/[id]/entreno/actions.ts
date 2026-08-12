@@ -6,10 +6,7 @@ import { resolveUserRole } from "@/lib/auth/role";
 import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { upsertRoutine } from "@/modules/training/repository";
-import {
-  DAYS_PER_WEEK,
-  normalizeRoutine,
-} from "@/modules/training/routine";
+import { normalizeRoutine, routineFromEntries } from "@/modules/training/routine";
 
 export type RoutineFormState =
   | { errorKey: string; values?: Record<string, string> }
@@ -28,12 +25,13 @@ export async function saveRoutineAction(
       .filter(([k, v]) => typeof v === "string" && k !== "patientId")
       .map(([k, v]) => [k, v as string]),
   );
-  const content = normalizeRoutine({
-    days: Array.from(
-      { length: DAYS_PER_WEEK },
-      (_, day) => (formData.get(`day-${day}`) as string) ?? "",
+  const content = normalizeRoutine(
+    routineFromEntries(
+      [...formData.entries()].filter(
+        (entry): entry is [string, string] => typeof entry[1] === "string",
+      ),
     ),
-  });
+  );
   if (!content) {
     return { errorKey: "invalidContent", values };
   }

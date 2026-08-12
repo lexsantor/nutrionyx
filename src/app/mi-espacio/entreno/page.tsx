@@ -7,8 +7,10 @@ import {
   listSessions,
 } from "@/modules/training/repository";
 import {
+  formatPrescription,
   isEmptyRoutine,
   normalizeRoutine,
+  type Exercise,
 } from "@/modules/training/routine";
 import { Topbar } from "@/components/topbar";
 import { PatientNav } from "../patient-nav";
@@ -16,6 +18,29 @@ import { SessionForm } from "./session-form";
 import { sameMadridDay, madridWeekdayIndex } from "@/modules/scheduling/time";
 
 export const dynamic = "force-dynamic";
+
+/** One day's prescription: series x reps, exercise, optional cue. */
+function ExerciseList({ exercises }: { exercises: Exercise[] }) {
+  return (
+    <ul className="flex flex-col gap-2">
+      {exercises.map((exercise, i) => (
+        <li key={i} className="flex items-baseline gap-3 text-sm">
+          {formatPrescription(exercise) ? (
+            <span className="w-16 shrink-0 tabular-nums text-ink-subtle">
+              {formatPrescription(exercise)}
+            </span>
+          ) : null}
+          <span className="flex min-w-0 flex-col">
+            <span className="leading-relaxed">{exercise.name}</span>
+            {exercise.notes ? (
+              <span className="text-xs text-ink-subtle">{exercise.notes}</span>
+            ) : null}
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default async function PatientTrainingPage() {
   const t = await getTranslations("training");
@@ -62,10 +87,8 @@ export default async function PatientTrainingPage() {
 
         <section className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-6">
           <h2 className="text-lg font-semibold">{t("patient.todayTitle")}</h2>
-          {hasRoutine && content.days[todayIndex] ? (
-            <p className="whitespace-pre-wrap text-sm leading-relaxed">
-              {content.days[todayIndex]}
-            </p>
+          {hasRoutine && content.days[todayIndex].exercises.length > 0 ? (
+            <ExerciseList exercises={content.days[todayIndex].exercises} />
           ) : hasRoutine ? (
             <p className="text-sm text-ink-subtle">{t("patient.restDay")}</p>
           ) : (
@@ -83,7 +106,9 @@ export default async function PatientTrainingPage() {
         {hasRoutine ? (
           <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-2 xl:grid-cols-3">
             {content.days.map((day, dayIndex) => {
-              if (!day || dayIndex === todayIndex) return null;
+              if (day.exercises.length === 0 || dayIndex === todayIndex) {
+                return null;
+              }
               return (
                 <section
                   key={dayIndex}
@@ -92,9 +117,7 @@ export default async function PatientTrainingPage() {
                   <h2 className="text-base font-semibold capitalize">
                     {t(`days.${dayIndex}`)}
                   </h2>
-                  <p className="whitespace-pre-wrap text-sm leading-relaxed">
-                    {day}
-                  </p>
+                  <ExerciseList exercises={day.exercises} />
                 </section>
               );
             })}
