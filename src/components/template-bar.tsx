@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Select } from "@/components/ui/select";
 
 import { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
 
@@ -73,11 +74,11 @@ export function TemplateBar({
 
         {templates.length > 0 ? (
           <div className="flex items-end gap-2">
-            <div className="flex flex-col gap-1">
+            <div className="flex w-56 flex-col gap-1">
               <label htmlFor="templateId" className="text-xs font-medium">
                 {t("loadLabel")}
               </label>
-              <select
+              <Select
                 id="templateId"
                 name="templateId"
                 value={selected}
@@ -85,7 +86,7 @@ export function TemplateBar({
                   setSelected(e.target.value);
                   setArmed(false);
                 }}
-                className="h-9 w-56 rounded-full border border-field-border bg-surface-1 px-3 text-sm text-ink"
+                className="h-9 rounded-full bg-surface-1 text-sm"
               >
                 <option value="">{t("loadPlaceholder")}</option>
                 {templates.map((template) => (
@@ -93,7 +94,7 @@ export function TemplateBar({
                     {template.name}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
             {armed ? (
               <div className="flex items-center gap-1.5">

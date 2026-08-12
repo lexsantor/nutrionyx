@@ -6,6 +6,7 @@ import {
   listEventTypes,
   listPlatformEvents,
 } from "@/modules/platform-admin/repository";
+import { Select } from "@/components/ui/select";
 
 export const metadata = { title: "Auditoría" };
 export const dynamic = "force-dynamic";
@@ -77,9 +78,6 @@ export default async function AdminAuditPage({
       ...(target > 1 ? { page: String(target) } : {}),
     }).toString()}`;
 
-  const field =
-    "h-9 rounded-full border border-field-border bg-surface-1 px-3 text-sm text-ink";
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
@@ -98,39 +96,39 @@ export default async function AdminAuditPage({
           <label htmlFor="org" className="text-xs font-medium">
             {t("audit.consulta")}
           </label>
-          <select id="org" name="org" defaultValue={org} className={field}>
+          <Select id="org" name="org" defaultValue={org} className="h-9 text-sm">
             <option value="">{t("audit.allConsultas")}</option>
             {consultas.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="tipo" className="text-xs font-medium">
             {t("audit.type")}
           </label>
-          <select id="tipo" name="tipo" defaultValue={tipo} className={field}>
+          <Select id="tipo" name="tipo" defaultValue={tipo} className="h-9 text-sm">
             <option value="">{t("audit.allTypes")}</option>
             {types.map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="flex flex-col gap-1">
           <label htmlFor="rango" className="text-xs font-medium">
             {t("audit.range")}
           </label>
-          <select id="rango" name="rango" defaultValue={range} className={field}>
+          <Select id="rango" name="rango" defaultValue={range} className="h-9 text-sm">
             {RANGES.map((r) => (
               <option key={r} value={r}>
                 {t(`audit.ranges.${r}`)}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <button
           type="submit"

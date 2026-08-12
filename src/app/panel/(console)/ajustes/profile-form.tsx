@@ -17,33 +17,38 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
 
   return (
     <form action={formAction} className="flex w-full max-w-3xl flex-col gap-6">
-      <Field
-        id="name"
-        label={t("name")}
-        defaultValue={profile.name}
-        required
-        hint={t("nameHint")}
-      />
+      {/* One grid for the whole record: rows of two and three left the
+          card two thirds empty on a desktop. The longer values span. */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <Field
+          id="name"
+          label={t("name")}
+          defaultValue={profile.name}
+          required
+          hint={t("nameHint")}
+          className="lg:col-span-2"
+        />
+        <Field id="slug" label={t("slug")} defaultValue={profile.slug} hint={t("slugHint")} />
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field id="legalName" label={t("legalName")} defaultValue={profile.legalName} />
         <Field id="taxId" label={t("taxId")} defaultValue={profile.taxId} />
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <Field id="slug" label={t("slug")} defaultValue={profile.slug} hint={t("slugHint")} />
         <Field id="hours" label={t("hours")} defaultValue={profile.hours} placeholder="L-V 9:00-14:00" />
-      </div>
 
-      <Field id="addressLine" label={t("addressLine")} defaultValue={profile.addressLine} autoComplete="street-address" />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+        <Field
+          id="addressLine"
+          label={t("addressLine")}
+          defaultValue={profile.addressLine}
+          autoComplete="street-address"
+          className="lg:col-span-2"
+        />
         <Field id="locality" label={t("locality")} defaultValue={profile.locality} autoComplete="address-level2" />
+
         <Field id="postalCode" label={t("postalCode")} defaultValue={profile.postalCode} autoComplete="postal-code" />
         <Field id="country" label={t("country")} defaultValue={profile.country ?? "ES"} autoComplete="country-name" />
       </div>
 
-      <Card className="flex flex-col gap-3">
+      <Card className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-start">
+        <div className="flex flex-col gap-3">
         <div className="flex flex-col gap-1.5">
           <label htmlFor="logo" className="text-sm font-medium">
             {t("logoFile")}
@@ -71,15 +76,21 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
           />
           <p className="text-sm text-ink-subtle">{t("logoHint")}</p>
         </div>
+        </div>
         {profile.logoUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={profile.logoUrl}
-            alt={t("logoPreview")}
-            width={96}
-            height={48}
-            className="h-12 w-auto self-start rounded-md border border-hairline bg-surface-1 object-contain p-1"
-          />
+          <figure className="flex flex-col items-center gap-1.5 sm:w-40">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={profile.logoUrl}
+              alt=""
+              width={320}
+              height={160}
+              className="h-20 w-full rounded-[10px] border border-hairline bg-surface-1 object-contain p-2"
+            />
+            <figcaption className="text-xs text-ink-subtle">
+              {t("logoPreview")}
+            </figcaption>
+          </figure>
         ) : null}
       </Card>
 
@@ -111,6 +122,7 @@ function Field({
   placeholder,
   required,
   autoComplete,
+  className = "",
 }: {
   id: string;
   label: string;
@@ -119,9 +131,11 @@ function Field({
   placeholder?: string;
   required?: boolean;
   autoComplete?: string;
+  /** Grid placement from the caller; the field owns nothing else. */
+  className?: string;
 }) {
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className={`flex flex-col gap-1.5 ${className}`}>
       <label htmlFor={id} className="text-sm font-medium">
         {label}
       </label>

@@ -20,6 +20,7 @@ import {
   findExercise,
 } from "@/modules/training/exercises";
 import { ExerciseThumb } from "@/components/exercise-thumb";
+import { Select } from "@/components/ui/select";
 import { routineFormAction, type RoutineFormState } from "./actions";
 import { TemplateBar } from "@/components/template-bar";
 
@@ -219,14 +220,14 @@ export function RoutineEditor({
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
                       />
                       <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:max-w-80 sm:flex-1">
-                        <select
+                        <Select
                           name={`${base}-key`}
                           value={exercise.key ?? ""}
                           onChange={(event) =>
                             pickExercise(dayIndex, rowIndex, event.target.value)
                           }
                           aria-label={t("editor.exerciseLabel")}
-                          className={`w-full ${cell}`}
+                          className="h-9 py-1.5 text-sm"
                         >
                           <option value="">
                             {exercise.key || !exercise.name
@@ -251,7 +252,7 @@ export function RoutineEditor({
                               ))}
                             </optgroup>
                           ))}
-                        </select>
+                        </Select>
                         {/* Keeps the row's label if its catalogue entry is
                             ever withdrawn, and carries legacy free text. */}
                         <input

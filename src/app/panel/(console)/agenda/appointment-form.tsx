@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import {
   cancelAppointmentAction,
   createAppointmentAction,
@@ -25,9 +26,6 @@ export function AppointmentForm({
     FormData
   >(createAppointmentAction, null);
 
-  const selectClass =
-    "block h-11 w-full rounded-[10px] border border-field-border bg-surface-2 px-3.5 text-base text-ink";
-
   return (
     <form action={formAction} className="flex flex-col gap-4">
       <div className="grid gap-3 sm:grid-cols-2">
@@ -35,14 +33,14 @@ export function AppointmentForm({
           <label htmlFor="patientId" className="text-sm font-medium">
             {t("patient")}
           </label>
-          <select id="patientId" name="patientId" required className={selectClass}>
+          <Select id="patientId" name="patientId" required>
             <option value="">{t("patientPlaceholder")}</option>
             {patients.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div className="flex flex-col gap-1.5">
@@ -62,33 +60,32 @@ export function AppointmentForm({
           <label htmlFor="durationMin" className="text-sm font-medium">
             {t("duration")}
           </label>
-          <select
+          <Select
             id="durationMin"
             name="durationMin"
             defaultValue="60"
-            className={selectClass}
+            
           >
             {DURATIONS.map((d) => (
               <option key={d} value={d}>
                 {t("durationMin", { min: d })}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="mode" className="text-sm font-medium">
             {t("mode")}
           </label>
-          <select
+          <Select
             id="mode"
             name="mode"
             value={mode}
             onChange={(e) => setMode(e.target.value as "IN_PERSON" | "VIDEO")}
-            className={selectClass}
-          >
+                      >
             <option value="IN_PERSON">{t("modes.IN_PERSON")}</option>
             <option value="VIDEO">{t("modes.VIDEO")}</option>
-          </select>
+          </Select>
         </div>
         {mode === "VIDEO" ? (
           <div className="flex flex-col gap-1.5 sm:col-span-2">

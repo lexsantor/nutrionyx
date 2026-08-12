@@ -31,7 +31,7 @@ export function SpecialtySettings({
         <p className="text-sm text-ink-subtle">{t("hint")}</p>
       </div>
 
-      <fieldset className="flex flex-col gap-2">
+      <fieldset className="grid gap-2 sm:grid-cols-2">
         {SPECIALTIES.map((s) => (
           <label
             key={s.value}

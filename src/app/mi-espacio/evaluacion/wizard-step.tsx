@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { submitAnswer, type WizardFormState } from "./actions";
 import { GuardrailBanner } from "./guardrail-banner";
+import { Select } from "@/components/ui/select";
 
 type StepProps = {
   field: string;
@@ -60,9 +61,6 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
       ? `${year}-${month.padStart(2, "0")}-${safeDay.padStart(2, "0")}`
       : "";
 
-  const selectClass =
-    "h-12 w-full appearance-none rounded-[10px] border border-field-border bg-surface-2 py-0 pl-3.5 pr-9 text-base text-ink transition-colors focus:border-primary bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2216%22 height=%2216%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%235c7386%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22%3E%3Cpath d=%22m6 9 6 6 6-6%22/%3E%3C/svg%3E')] bg-no-repeat bg-[position:right_0.65rem_center]";
-
   return (
     <fieldset className="flex flex-col gap-2">
       <legend className="sr-only">{t("fields.birthDate.title")}</legend>
@@ -72,12 +70,12 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
           <span className="text-xs font-medium text-ink-subtle">
             {t("dob.day")}
           </span>
-          <select
+          <Select
+            className="h-12"
             required
             value={safeDay}
             onChange={(e) => setDay(e.target.value)}
-            className={selectClass}
-          >
+                      >
             <option value="" disabled>
               {t("dob.select")}
             </option>
@@ -86,18 +84,18 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
                 {v}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-xs font-medium text-ink-subtle">
             {t("dob.month")}
           </span>
-          <select
+          <Select
+            className="h-12"
             required
             value={month}
             onChange={(e) => setMonth(e.target.value)}
-            className={selectClass}
-          >
+                      >
             <option value="" disabled>
               {t("dob.select")}
             </option>
@@ -106,18 +104,18 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
                 {t(`dob.months.${v}`)}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
         <label className="flex flex-col gap-1.5">
           <span className="text-xs font-medium text-ink-subtle">
             {t("dob.year")}
           </span>
-          <select
+          <Select
+            className="h-12"
             required
             value={year}
             onChange={(e) => setYear(e.target.value)}
-            className={selectClass}
-          >
+                      >
             <option value="" disabled>
               {t("dob.select")}
             </option>
@@ -126,7 +124,7 @@ function DateOfBirthField({ initialValue }: { initialValue: string }) {
                 {v}
               </option>
             ))}
-          </select>
+          </Select>
         </label>
       </div>
     </fieldset>

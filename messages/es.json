@@ -95,7 +95,7 @@
   "settings": {
     "title": "Ajustes de la consulta",
     "subtitle": "Datos de tu consulta. Los fiscales se usarán en las facturas.",
-    "back": "← Volver al panel",
+    "back": "Volver al panel",
     "name": "Nombre de la consulta",
     "nameHint": "Como aparece en tu panel y para tus pacientes.",
     "legalName": "Razón social",
@@ -626,7 +626,7 @@
     }
   },
   "patientDetail": {
-    "back": "← Pacientes",
+    "back": "Pacientes",
     "clinical": {
       "title": "Ficha clínica",
       "none": "El paciente aún no ha completado su evaluación.",
