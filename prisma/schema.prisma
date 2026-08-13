@@ -247,6 +247,8 @@ model TrainingSession {
 // Cancelled rows are kept (history); startsAt is a UTC instant parsed and
 // rendered as Europe/Madrid wall-clock (single-market decision).
 enum AppointmentStatus {
+  /** Asked for by the patient, not yet in the specialist's day. */
+  REQUESTED
   SCHEDULED
   CANCELLED
 }

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { madridDayStart } from "@/modules/scheduling/time";
+import { requestAppointment } from "@/modules/scheduling/repository";
 import {
   recordMetric,
   recordProtein,
@@ -190,6 +191,51 @@ export async function recordProteinAction(
     console.error("[recordProteinAction] recordProtein failed", error);
     return { errorKey: "generic" };
   }
+
+  revalidatePath("/mi-espacio");
+  return { ok: true };
+}
+
+export type RequestState = { errorKey: string } | { ok: true } | null;
+
+/**
+ * The patient asks for a cita. It lands as REQUESTED and does not touch the
+ * consulta's agenda until the specialist confirms.
+ */
+export async function requestAppointmentAction(
+  _prevState: RequestState,
+  formData: FormData,
+): Promise<RequestState> {
+  const { data: session } = await auth.getSession();
+  if (!session?.user) return { errorKey: "session" };
+  const patient = await findPatientByAuthUserId(session.user.id);
+  if (!patient) return { errorKey: "session" };
+
+  const date = String(formData.get("date") ?? "");
+  const time = String(formData.get("time") ?? "");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !/^\d{2}:\d{2}$/.test(time)) {
+    return { errorKey: "when" };
+  }
+  // Local components, not Date.parse: an ISO string with no zone is read as
+  // UTC and a 09:00 request would land at 11:00 in August.
+  const [y, m, d] = date.split("-").map(Number);
+  const [hh, mm] = time.split(":").map(Number);
+  const startsAt = new Date(y, m - 1, d, hh, mm);
+  if (Number.isNaN(startsAt.getTime())) return { errorKey: "when" };
+  if (startsAt.getTime() < Date.now()) return { errorKey: "past" };
+
+  const modeRaw = String(formData.get("mode") ?? "IN_PERSON");
+  const mode = modeRaw === "VIDEO" ? "VIDEO" : "IN_PERSON";
+  const note = String(formData.get("note") ?? "").trim().slice(0, 200);
+
+  await requestAppointment({
+    organizationId: patient.organizationId,
+    patientId: patient.id,
+    startsAt,
+    mode,
+    note: note || null,
+    createdByAuthUserId: session.user.id,
+  });
 
   revalidatePath("/mi-espacio");
   return { ok: true };

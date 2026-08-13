@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import {
   cancelAppointmentAction,
+  confirmAppointmentAction,
+  type ConfirmAppointmentState,
   createAppointmentAction,
   type AppointmentFormState,
   type CancelAppointmentState,
@@ -181,6 +183,32 @@ export function CancelButton({ appointmentId }: { appointmentId: string }) {
         className="inline-flex h-8 items-center rounded-full px-2 text-sm text-ink-subtle transition-colors hover:text-ink"
       >
         {t("keep")}
+      </button>
+    </form>
+  );
+}
+
+/**
+ * Accepts a patient's request. No arming step, unlike cancelling: confirming
+ * is the safe direction, and making the specialist tap twice for the answer
+ * they give most of the time is friction for nothing.
+ */
+export function ConfirmButton({ appointmentId }: { appointmentId: string }) {
+  const t = useTranslations("agenda.requests");
+  const [, formAction, isPending] = useActionState<
+    ConfirmAppointmentState,
+    FormData
+  >(confirmAppointmentAction, null);
+
+  return (
+    <form action={formAction}>
+      <input type="hidden" name="appointmentId" value={appointmentId} />
+      <button
+        type="submit"
+        disabled={isPending}
+        className="inline-flex h-8 items-center rounded-full bg-primary px-3 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] disabled:opacity-60"
+      >
+        {t("confirm")}
       </button>
     </form>
   );

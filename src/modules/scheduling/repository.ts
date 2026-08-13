@@ -36,7 +36,13 @@ export async function cancelAppointment(
   appointmentId: string,
 ): Promise<boolean> {
   const result = await prisma.appointment.updateMany({
-    where: { id: appointmentId, organizationId, status: "SCHEDULED" },
+    // REQUESTED too: turning a request down is the same act as cancelling
+    // a cita, from the patient's side and from the record's.
+    where: {
+      id: appointmentId,
+      organizationId,
+      status: { in: ["SCHEDULED", "REQUESTED"] },
+    },
     data: { status: "CANCELLED", cancelledAt: new Date() },
   });
   if (result.count === 0) return false;
@@ -103,5 +109,86 @@ export async function appointmentsBetween(
     },
     orderBy: { startsAt: "asc" },
     include: { patient: { select: { fullName: true, email: true } } },
+  });
+}
+
+
+/**
+ * A patient asks for a slot (docs/build/slice-31-plan.md). It does not enter
+ * the consulta's day until the specialist confirms: a clinic is not a
+ * restaurant, and a slot that depends on whether the previous review runs
+ * long is the specialist's to give. Cancelling a cita the app itself handed
+ * out is the failure this avoids.
+ */
+export async function requestAppointment(params: {
+  organizationId: string;
+  patientId: string;
+  startsAt: Date;
+  mode: AppointmentMode;
+  note: string | null;
+  createdByAuthUserId: string;
+}): Promise<Appointment> {
+  const appointment = await prisma.appointment.create({
+    data: { ...params, status: "REQUESTED", durationMin: 60 },
+  });
+  await appendEvent({
+    organizationId: params.organizationId,
+    aggregate: "Patient",
+    aggregateId: params.patientId,
+    type: "AppointmentRequested",
+    payload: { appointmentId: appointment.id },
+  });
+  return appointment;
+}
+
+/** The specialist accepts a request; only then is it on the agenda. */
+export async function confirmAppointment(
+  organizationId: string,
+  appointmentId: string,
+): Promise<boolean> {
+  const result = await prisma.appointment.updateMany({
+    where: { id: appointmentId, organizationId, status: "REQUESTED" },
+    data: { status: "SCHEDULED" },
+  });
+  if (result.count === 0) return false;
+  const row = await prisma.appointment.findUniqueOrThrow({
+    where: { id: appointmentId },
+  });
+  await appendEvent({
+    organizationId,
+    aggregate: "Patient",
+    aggregateId: row.patientId,
+    type: "AppointmentScheduled",
+    payload: { appointmentId },
+  });
+  return true;
+}
+
+/** Pending requests for the consulta, soonest first. */
+export async function listRequests(
+  organizationId: string,
+  from: Date,
+): Promise<AgendaItem[]> {
+  return prisma.appointment.findMany({
+    where: { organizationId, status: "REQUESTED", startsAt: { gte: from } },
+    orderBy: { startsAt: "asc" },
+    include: { patient: { select: { fullName: true, email: true } } },
+  });
+}
+
+/** A patient's own requests, so they can see they asked. */
+export async function listRequestsByPatient(
+  organizationId: string,
+  patientId: string,
+  from: Date,
+): Promise<Appointment[]> {
+  return prisma.appointment.findMany({
+    where: {
+      organizationId,
+      patientId,
+      status: "REQUESTED",
+      startsAt: { gte: from },
+    },
+    orderBy: { startsAt: "asc" },
   });
 }

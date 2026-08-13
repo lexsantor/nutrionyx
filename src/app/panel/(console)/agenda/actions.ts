@@ -7,6 +7,7 @@ import { ensureOrganization } from "@/modules/organization/repository";
 import { getPatientDetail } from "@/modules/patient/repository";
 import {
   cancelAppointment,
+  confirmAppointment,
   createAppointment,
 } from "@/modules/scheduling/repository";
 import { madridToUtc } from "@/modules/scheduling/time";
@@ -106,6 +107,26 @@ export async function cancelAppointmentAction(
   if (!ctx) return { errorKey: "generic" };
 
   const ok = await cancelAppointment(ctx.org.id, appointmentId);
+  if (!ok) return { errorKey: "generic" };
+
+  revalidatePath("/panel/agenda");
+  return null;
+}
+
+export type ConfirmAppointmentState = { errorKey: string } | null;
+
+/** Accepts a patient's request; only now does it enter the consulta's day. */
+export async function confirmAppointmentAction(
+  _prevState: ConfirmAppointmentState,
+  formData: FormData,
+): Promise<ConfirmAppointmentState> {
+  const appointmentId = (formData.get("appointmentId") as string) ?? "";
+  if (!appointmentId) return { errorKey: "generic" };
+
+  const ctx = await requireOrg();
+  if (!ctx) return { errorKey: "generic" };
+
+  const ok = await confirmAppointment(ctx.org.id, appointmentId);
   if (!ok) return { errorKey: "generic" };
 
   revalidatePath("/panel/agenda");

@@ -14,7 +14,11 @@ import { getPlan, listDoses } from "@/modules/medication/repository";
 import { daysUntil, nextDoseDate } from "@/modules/medication/glp1";
 import { WeightCheckIn } from "./weight-check-in";
 import { ProteinLog } from "./protein-log";
-import { listUpcomingByPatient } from "@/modules/scheduling/repository";
+import {
+  listRequestsByPatient,
+  listUpcomingByPatient,
+} from "@/modules/scheduling/repository";
+import { RequestAppointment } from "./request-appointment";
 import { ButtonLink } from "@/components/ui/button-link";
 import { sameMadridDay } from "@/modules/scheduling/time";
 
@@ -48,11 +52,20 @@ export default async function PatientHomePage() {
 
     // Every read is independent once the patient is resolved: one batch,
     // no request waterfall on the highest-frequency screen (audit 2026-08-12).
-    const [plan, lastDoses, upcomingAll, targets, proteinToday, weights] =
+    const [
+      plan,
+      lastDoses,
+      upcomingAll,
+      pendingRequests,
+      targets,
+      proteinToday,
+      weights,
+    ] =
       await Promise.all([
         getPlan(patient.organizationId, patient.id),
         listDoses(patient.organizationId, patient.id, 1),
         listUpcomingByPatient(patient.organizationId, patient.id, new Date()),
+        listRequestsByPatient(patient.organizationId, patient.id, new Date()),
         getTargets(patient.organizationId, patient.id),
         proteinOnDay(patient.organizationId, patient.id, new Date()),
         listWeights(patient.organizationId, patient.id),
@@ -193,11 +206,31 @@ export default async function PatientHomePage() {
             )}
           </section>
 
-          {upcomingAppointments.length > 0 ? (
-            <section className={`${TILE} lg:col-span-12`}>
+          <section className={`${TILE} lg:col-span-12`}>
               <h2 className="text-lg font-semibold">
                 {ta("patientCardTitle")}
               </h2>
+              {pendingRequests.length > 0 ? (
+                <ul className="flex flex-col">
+                  {pendingRequests.map((cita) => (
+                    <li
+                      key={cita.id}
+                      className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-hairline py-2.5 last:border-0"
+                    >
+                      <span className="text-sm">
+                        {format.dateTime(cita.startsAt, {
+                          dateStyle: "full",
+                          timeStyle: "short",
+                        })}
+                      </span>
+                      <span className="text-xs text-ink-subtle">
+                        {ta("request.pending")}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+              <RequestAppointment />
               <ul className="flex flex-col">
                 {upcomingAppointments.map((cita) => (
                   <li
@@ -230,7 +263,6 @@ export default async function PatientHomePage() {
                 ))}
               </ul>
             </section>
-          ) : null}
 
           </div>
         </div>

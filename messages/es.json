@@ -1339,7 +1339,26 @@
     "cancelError": "No se ha podido cancelar.",
     "emptyHint": "Crea la primera cita con el formulario de arriba.",
     "confirmCancel": "Confirmar cancelación",
-    "keep": "Mantener"
+    "keep": "Mantener",
+    "request": {
+      "open": "Pedir cita",
+      "hint": "Tu especialista tiene que confirmarla. Te avisará.",
+      "submit": "Enviar solicitud",
+      "sending": "Enviando...",
+      "sent": "Solicitud enviada. Tu especialista la confirmará.",
+      "pending": "Pendiente de confirmar",
+      "errors": {
+        "session": "Vuelve a iniciar sesión.",
+        "when": "Indica día y hora.",
+        "past": "Esa fecha ya ha pasado."
+      }
+    },
+    "requests": {
+      "title": "Solicitudes de cita",
+      "empty": "Ninguna solicitud pendiente.",
+      "confirm": "Confirmar",
+      "reject": "Rechazar"
+    }
   },
   "boundary": {
     "notFoundTitle": "Página no encontrada",
