@@ -29,13 +29,19 @@ Nothing here is a feature. All of it stops something else.
 
 ## Tier 1 - ahora (S-M, se nota a diario)
 
+**Aviso sobre esta tabla.** Se escribió desde el benchmark y desde
+`tasks/todo.md`, no desde el código, y dos de las cinco filas resultaron estar
+ya construidas. Están tachadas abajo con lo que se encontró. La lección, que
+va también a `tasks/lessons.md`: una nota de estado se comprueba contra
+`src/`, nunca contra un documento de planificación.
+
 | Cambio | Nota actual | Esfuerzo | Impacto y riesgo | Beneficio tras el cambio | Nota final |
 |---|---|---|---|---|---|
 | **Medicación opcional y compartida por el paciente** (ver abajo) | 4 | M | Hoy la sección existe siempre y el especialista lo ve todo. Afecta a privacidad y a datos ya guardados. Riesgo: migración y el especialista pierde visibilidad que hoy tiene | El paciente decide qué comparte; el 90% que no usa GLP-1 deja de ver una sección que no le toca | 9 |
-| Notas clínicas del especialista | 0 | S | No hay dónde escribir nada sobre un paciente. Los cuatro competidores lo tienen. Riesgo casi nulo: dato nuevo, sin migración | El especialista deja de usar papel o WhatsApp para lo único que no cabe aquí | 8 |
+| ~~Notas clínicas del especialista~~ **ya construido** | 8 | — | Verificado en código el 2026-08-13: `modules/notes/repository`, `addNoteAction` con guard de rol, `note-form.tsx` y la lista con fecha en la ficha. La tabla lo puntuaba con 0 porque se escribió desde el benchmark y desde un `todo.md` desfasado | — | 8 |
 | Recorrido con lector de pantalla del calendario y el listbox | 5 | S | Roles, foco y teclado medidos; VoiceOver no. Riesgo: accesibilidad afirmada sin verificar | Poder decir que es accesible con evidencia | 8 |
-| Franja donde el listbox se tapa a sí mismo | 7 | S | Un campo a media altura de pantalla en móvil. Riesgo: bajo, ya documentado con números | Un desplegable que nunca se come su propio campo | 9 |
-| Subir el logo de la consulta desde Ajustes | 3 | S | Hoy es un SVG en `public/`. Cada consulta nueva necesitaría un despliegue | Marca propia sin tocar código | 8 |
+| ~~Franja donde el listbox se tapa~~ **hecho 2026-08-13** | 9 | S | `max-block-size: min(18rem, 100%)`: con `position-area` la zona libre es el bloque contenedor, así que la lista se encoge en vez de desbordar. Medido: la franja no se reproducía en un iPhone 14, el peligro estaba sobrestimado | El desplegable nunca se come su campo | 9 |
+| ~~Subir el logo desde Ajustes~~ **ya construido** | 8 | — | Verificado en código: `LogoFileInput` en `ajustes/profile-form.tsx`, con subida de fichero y campo `logoUrl`. Mismo error de origen que la fila anterior | — | 8 |
 
 ## Tier 2 - siguiente ola (M-L)
 

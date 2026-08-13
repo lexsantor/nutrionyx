@@ -193,3 +193,21 @@ not `prefers-color-scheme`.
 **Check:** drive the toggle, then assert on `documentElement.dataset.theme`
 before capturing. Read the computed colours too — a screenshot cannot tell you
 a token resolved rather than fell back.
+
+## A status score is checked against src/, never against a plan document
+
+The tier table written on 2026-08-13 scored "specialist notes" at 0 and "logo
+upload from Ajustes" at 3, effort S each. Both were already built:
+`modules/notes/repository` with `addNoteAction`, `note-form.tsx` and the dated
+list on the patient record; `LogoFileInput` with file upload and a `logoUrl`
+field in `ajustes/profile-form.tsx`.
+
+The table had been assembled from the competitive benchmark and from
+`tasks/todo.md`, whose "next candidates" section still listed both. Two of five
+Tier 1 rows were fiction, and the owner was about to spend a session on work
+that existed.
+
+**Check:** before scoring or planning anything, grep `src/` for the feature and
+open what comes back. A planning document records what someone intended once;
+only the code records what is there. The same applies to `docs/00`'s
+[built]/[next]/[future] markers, which are equally free to drift.
