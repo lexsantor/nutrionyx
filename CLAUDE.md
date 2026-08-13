@@ -8,9 +8,10 @@ This project is governed by LPEF at the version pinned in [lpef.yml](lpef.yml). 
 2. [LPEF Governance](https://github.com/lexsantor/lpef/blob/v0.2.0/GOVERNANCE.md) - document types, quality gates, decision framework.
 3. The [LPEF handbook](https://github.com/lexsantor/lpef/tree/v0.2.0/handbook) area relevant to your task.
 4. [Stack profile 2026](https://github.com/lexsantor/lpef/blob/v0.2.0/standards/stack-2026/profile.md) - the technology set this project uses.
-5. [`tasks/todo.md`](tasks/todo.md) - **current project state / resume point**: what is built, how we work, gotchas, and what is next. Read this first to pick up where the last session left off.
-6. Project documents in `docs/`.
-7. `tasks/lessons.md` - checkable rules from past corrections in this project.
+5. [`next-steps.md`](next-steps.md) - **start here**: what is still open, what is blocked on the owner, how to wait for a deploy, and where the test data came from.
+6. [`tasks/todo.md`](tasks/todo.md) - **current project state**: what is built, how we work, gotchas, and the slice history.
+7. Project documents in `docs/`.
+8. `tasks/lessons.md` - checkable rules from past corrections in this project.
 
 ## Operating rules
 
