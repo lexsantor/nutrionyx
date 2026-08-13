@@ -200,19 +200,24 @@ export default async function Home() {
       />
 
       {/* Floating pill nav */}
-      <nav className="pointer-events-none fixed inset-x-0 top-0 z-30 flex justify-center px-4">
-        <div className="pointer-events-auto mt-5 flex w-max max-w-full items-center gap-4 whitespace-nowrap rounded-full border border-hairline bg-canvas/95 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl sm:gap-5">
+      {/* The bar spans the layout, not the width of its own contents: a pill
+          floating in the middle reads as a widget, and the page's own
+          max-w-6xl is what everything else lines up against. */}
+      <nav className="pointer-events-none fixed inset-x-0 top-0 z-30 px-4">
+        <div className="pointer-events-auto mx-auto mt-5 flex w-full max-w-6xl items-center justify-between gap-4 rounded-full border border-hairline bg-canvas/95 py-2 pl-5 pr-2 shadow-el-md backdrop-blur-xl">
           <span className="font-display text-sm font-semibold tracking-tight">
             Nutrionyx
           </span>
-          <div className="hidden sm:block">
-            <ButtonLink href="/auth/sign-in" variant="ghost" size="sm">
-              {t("hero.cta.signIn")}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="hidden sm:block">
+              <ButtonLink href="/auth/sign-in" variant="secondary" size="sm">
+                {t("hero.cta.signIn")}
+              </ButtonLink>
+            </div>
+            <ButtonLink href="/auth/sign-up" variant="primary" size="sm">
+              {t("hero.cta.signUp")}
             </ButtonLink>
           </div>
-          <ButtonLink href="/auth/sign-up" variant="primary" size="sm">
-            {t("hero.cta.signUp")}
-          </ButtonLink>
         </div>
       </nav>
 
@@ -230,8 +235,12 @@ export default async function Home() {
         />
         <div className="relative mx-auto grid w-full max-w-6xl items-center gap-16 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
           <div className="flex flex-col items-start gap-7">
-            <div className="inline-flex max-w-full items-start gap-2 rounded-2xl border border-hairline bg-surface-1 px-3 py-1.5 text-xs font-medium uppercase leading-relaxed tracking-[0.18em] text-ink-subtle shadow-el-sm sm:rounded-full">
-              <span className="mt-[0.45em] size-1.5 shrink-0 rounded-full bg-success" />
+            {/* One line at every width. The old copy wrapped to two even on a
+                laptop, and the rounded-2xl fallback existed to make the wrap
+                survivable rather than to stop it. Shorter text, tighter
+                tracking, and it is a pill again. */}
+            <div className="inline-flex items-center gap-2 whitespace-nowrap rounded-full border border-hairline bg-surface-1 px-3 py-1.5 text-[11px] font-medium uppercase tracking-[0.12em] text-ink-subtle shadow-el-sm sm:text-xs sm:tracking-[0.16em]">
+              <span className="size-1.5 shrink-0 rounded-full bg-success" />
               {t("badge")}
             </div>
             <h1 className="max-w-[24ch] text-balance font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">

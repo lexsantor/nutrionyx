@@ -41,7 +41,11 @@
   --c-error-hover: #992b00;
   --c-error-soft: #fde3d8;
   --c-on-destructive: #f5f8fa;
-  --c-info: #303e4e;
+  /* Informational blue. `--c-info` was #303e4e, a slate that reads as ink
+   * rather than as a signal, so there was no way to say "this is worth
+   * knowing" without borrowing warning's yellow. */
+  --c-info: #1a5fb4;
+  --c-info-soft: #e2ecfa;
   --c-focus-ring: #24405f;
   --c-selection-bg: #24405f;
   --c-selection-fg: #f5f8fa;
@@ -80,7 +84,8 @@
   --c-error-hover: #ff6b52;
   --c-error-soft: #2e150f;
   --c-on-destructive: #0b0f14;
-  --c-info: #d6dee6;
+  --c-info: #7cb0f0;
+  --c-info-soft: #10233d;
   --c-focus-ring: #8dbde6;
   --c-selection-bg: #8dbde6;
   --c-selection-fg: #0b0f14;
@@ -118,6 +123,7 @@
   --color-error-soft: var(--c-error-soft);
   --color-on-destructive: var(--c-on-destructive);
   --color-info: var(--c-info);
+  --color-info-soft: var(--c-info-soft);
   --color-focus-ring: var(--c-focus-ring);
   --color-accent-text: var(--c-accent-text);
 

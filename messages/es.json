@@ -139,16 +139,16 @@
     "logoNoFile": "Ningún archivo seleccionado"
   },
   "home": {
-    "badge": "Plataforma para profesionales de la nutrición · acceso con invitación",
+    "badge": "Para nutricionistas · con invitación",
     "hero": {
-      "title": "¿Cómo llevas tu consulta sin perderte entre WhatsApp, Excel y PDFs?",
-      "highlight": "Con una sola ficha.",
+      "title": "¿Tu consulta vive entre WhatsApp y Excel?",
+      "highlight": "Aquí cabe entera.",
       "cta": {
         "signUp": "Crear mi consulta",
         "signIn": "Iniciar sesión"
       },
-      "subtitle": "Sales de cada revisión con la adherencia leída y el plan publicado.",
-      "answer": "Nutrionyx reúne evaluación, dieta, entreno, medicación GLP-1, mensajes y citas de cada paciente en una ficha única. Tú prescribes y lees adherencia de un vistazo; tu paciente registra su día en menos de un minuto desde el móvil. Datos de salud tratados como exige el RGPD, con aislamiento por consulta verificado en cada despliegue.",
+      "subtitle": "Sales de cada revisión sabiendo cómo va tu paciente, con su plan ya enviado.",
+      "answer": "Nutrionyx reúne en una sola ficha la evaluación, la dieta, el entreno, la medicación, los mensajes y las citas de cada paciente. Tú prescribes y ves de un vistazo si lo está cumpliendo; tu paciente lo registra desde el móvil en menos de un minuto. Sus datos de salud viven en la UE y solo los ve su consulta.",
       "byline": "Por Alejandro · fundador de Nutrionyx",
       "updated": "Actualizado el 13 de agosto de 2026"
     },
