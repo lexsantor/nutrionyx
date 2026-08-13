@@ -11,6 +11,11 @@ import { Reveal } from "./reveal";
 
 export const dynamic = "force-dynamic";
 
+// Without this every ?utm= variant is a separate page competing with itself.
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 /*
 THESIS: an AI-SEO answer page whose proof block IS the product - question
 H1 answered in-line, 40-60 word answer above the fold, question

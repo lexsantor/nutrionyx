@@ -4,6 +4,7 @@ export const metadata = {
   title: "Política de privacidad",
   description:
     "Cómo Nutrionyx trata los datos personales y de salud: responsable, finalidades, subencargados, conservación y derechos RGPD.",
+  alternates: { canonical: "/privacidad" },
 };
 
 /**

@@ -4,6 +4,7 @@ export const metadata = {
   title: "Términos del servicio",
   description:
     "Condiciones de uso de Nutrionyx: objeto del servicio, cuentas, responsabilidad profesional, uso aceptable y ley aplicable.",
+  alternates: { canonical: "/terminos" },
 };
 
 /**
