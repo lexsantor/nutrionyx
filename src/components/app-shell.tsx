@@ -224,7 +224,10 @@ function Shell({
           })}
         </nav>
 
-        <main id="contenido" className="flex-1 overflow-y-auto [scrollbar-gutter:stable]">
+        <main
+          id="contenido"
+          className="flex-1 overflow-y-auto overscroll-contain [scrollbar-gutter:stable]"
+        >
           <div className="mx-auto w-full max-w-6xl px-6 py-10">{children}</div>
         </main>
       </div>
