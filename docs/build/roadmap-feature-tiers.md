@@ -1,58 +1,98 @@
-# Feature tiers - effort / impact / benefit (2026-08-10)
+# Feature tiers - what to change, and what it is worth (2026-08-13)
 
-Inventory sources: FitOdds reference screens (screens-ui-examples, mined in
-slice-8-plan), the target architecture (docs/00 §3 bounded contexts), and gaps
-neither covers. Effort: S (<1 slice), M (1 slice), L (2-3 slices), XL (epic).
-Impact: who feels it and how often. Benefit: strategic value beyond the user.
+Replaces the 2026-08-10 version, which listed messaging, scheduling,
+documents, progress photos, measurements, export and email notifications as
+future work. All of those shipped.
 
-Ordering rule (LPEF C2/C6): highest impact-per-effort first; compliance floors
-are not optional; anything touching AI-on-health-data or marketplace needs a
-dedicated compliance review before scoping (docs/00 §4).
+Sources: what is actually built (`tasks/todo.md`), what is open
+(`next-steps.md`), the target architecture (`docs/00` §3), and the competitive
+gaps in [benchmark-2026-08.md](../research/benchmark-2026-08.md).
 
-## Tier 1 - now (S-M effort, daily-use impact)
+**How to read the scores.** "Nota actual" is how well the product answers that
+need today; "nota final" is where it lands if the change ships as described.
+Both are my judgement on a 0-10 scale, not a measurement, and they are only
+useful next to each other. Effort: S (under a slice), M (one slice), L (two or
+three), XL (epic). Ordering rule (LPEF C2/C6): highest impact per effort
+first, compliance floors are not optional.
 
-| Feature | Effort | Impact | Benefit |
-|---|---|---|---|
-| Targets + daily checklist (slice 9, in progress) | M | Patient daily habit loop + specialist prescribes targets | Closes the first prescribe→track→review loop; base for food/training |
-| Specialist notes on patient | S | Specialist, every consultation | First editable clinical datum; near-zero risk |
-| Email notifications (invite, dose/weigh-in reminders) | M | Both, weekly | Engagement multiplier for everything already built; needs Resend (or similar) |
-| Patient shell parity (mi-espacio on console patterns) | S | Patient, every visit | UX coherence; removes legacy Topbar debt |
-| Consulta logo upload (Vercel Blob) | S | Specialist branding | Deferred since slice 4; trivial with Blob |
+## Tier 0 - blocked on the owner, or legal floors
 
-## Tier 2 - next wave (M-L)
+Nothing here is a feature. All of it stops something else.
 
-| Feature | Effort | Impact | Benefit |
-|---|---|---|---|
-| Body composition (manual: waist/hip, % fat, derived lean/fat) | M | Both, weekly | Extends Measurement pattern; FitOdds core screen, no camera needed |
-| Progress photos (Blob, private) | M | Both, monthly | High perceived value; GDPR Art. 9 storage care |
-| Export & erasure as product features | M | Compliance | Vision §4 lists as tested features - a floor, not a nice-to-have |
-| RBAC team members | L | Multi-staff consultas | Unlocks bigger customers; vision [next] |
-| Specialist reporting-lite (adherence/evolution per patient) | M | Specialist, weekly | Reuses existing data; retention driver |
-| Documents (PDFs, consents) | L | Both, monthly | Practice operations; e-sign later |
+| Cambio | Nota actual | Esfuerzo | Impacto y riesgo | Beneficio tras el cambio | Nota final |
+|---|---|---|---|---|---|
+| Verificar el dominio de envío en Resend | 3 | S (trámite) | Los recordatorios de dosis y cita se generan pero no llegan a nadie. Riesgo de no hacerlo: la landing promete algo que no ocurre | Todo lo construido alrededor del email empieza a existir de verdad | 9 |
+| Datos fiscales reales en Ajustes | 2 | S | Hoy `B00000000` y CP `08000`, elegidos para no colisionar. Salen impresos en cada plan | Documentos que un paciente puede archivar | 9 |
+| Revisión legal de privacidad y términos | 4 | S (externo) | Datos de salud, RGPD Art. 9. Riesgo: es el suelo, no una mejora | Poder cobrar sin exposición | 9 |
+| Revisión de Verifactu antes de tocar facturación | 0 | M (estudio) | La AEAT exige factura inalterable. Riesgo: dimensionar la facturación sin esto es dimensionarla mal | Saber si es integración o cumplimiento antes de gastar un slice | 7 |
+| Ilustraciones de ejercicios (4 de 41) | 3 | S por lote | Sin créditos de Pletor. Las de `imgs/` cubren parte | Catálogo coherente en pantalla y en papel | 7 |
 
-## Tier 3 - big bets (L-XL, sequenced after tiers 1-2)
+## Tier 1 - ahora (S-M, se nota a diario)
 
-| Feature | Effort | Impact | Benefit |
-|---|---|---|---|
-| Diet plan builder (meals, recipes, macros) | XL | Core clinical treatment | The product's reason to exist long-term; needs domain design first |
-| Training log + routines | L | Sports-nutritionist segment | Activates the SPORTS_NUTRITIONIST sub-role divergence |
-| Messaging patient↔specialist | L-XL | Both, daily | Engagement; needs notification infra first (Tier 1 email) |
-| Scheduling & calendar | XL | Practice operations | Whole bounded context; external calendar sync |
-| Billing (Stripe, Tier E) | L | Monetization | When converting to paid; entitlements design exists in vision |
+| Cambio | Nota actual | Esfuerzo | Impacto y riesgo | Beneficio tras el cambio | Nota final |
+|---|---|---|---|---|---|
+| **Medicación opcional y compartida por el paciente** (ver abajo) | 4 | M | Hoy la sección existe siempre y el especialista lo ve todo. Afecta a privacidad y a datos ya guardados. Riesgo: migración y el especialista pierde visibilidad que hoy tiene | El paciente decide qué comparte; el 90% que no usa GLP-1 deja de ver una sección que no le toca | 9 |
+| Notas clínicas del especialista | 0 | S | No hay dónde escribir nada sobre un paciente. Los cuatro competidores lo tienen. Riesgo casi nulo: dato nuevo, sin migración | El especialista deja de usar papel o WhatsApp para lo único que no cabe aquí | 8 |
+| Recorrido con lector de pantalla del calendario y el listbox | 5 | S | Roles, foco y teclado medidos; VoiceOver no. Riesgo: accesibilidad afirmada sin verificar | Poder decir que es accesible con evidencia | 8 |
+| Franja donde el listbox se tapa a sí mismo | 7 | S | Un campo a media altura de pantalla en móvil. Riesgo: bajo, ya documentado con números | Un desplegable que nunca se come su propio campo | 9 |
+| Subir el logo de la consulta desde Ajustes | 3 | S | Hoy es un SVG en `public/`. Cada consulta nueva necesitaría un despliegue | Marca propia sin tocar código | 8 |
 
-## Tier 4 - gated or not for web v1
+## Tier 2 - siguiente ola (M-L)
 
-| Feature | Why not now |
+| Cambio | Nota actual | Esfuerzo | Impacto y riesgo | Beneficio tras el cambio | Nota final |
+|---|---|---|---|---|---|
+| **Base de alimentos y macros por día** | 2 | XL (empezar por L) | El hueco que un dietista nota en diez minutos. Riesgo alto: fuente de composición, modelo de raciones y editor que recalcula. Empezar por una rebanada fina o no empezar | El producto pasa de coordinar a ser herramienta de nutrición | 8 |
+| Reserva de cita por el paciente | 2 | M | La agenda ya existe del lado del especialista. Depende del email de Tier 0 | Se acaban los huecos negociados por chat | 8 |
+| Informe de adherencia exportable | 5 | M | El informe existe en pantalla; no sale de ahí | El paciente se lleva su evolución; el especialista la archiva | 8 |
+| Diario de comida del paciente | 0 | L | Es el diferenciador de Healthie. Riesgo: volumen de fotos y tiempo de revisión, no código | El plan deja de prescribirse a ciegas | 7 |
+| RBAC y equipo de la consulta | 1 | L | Reservado en la navegación, sin construir. Para una consulta de una persona es YAGNI | Consultas con más de un profesional | 7 |
+| Preguntas propias en la evaluación | 4 | M | Hoy son 10 pasos fijos. Un constructor entero es desproporcionado; añadir preguntas por consulta no | Cada consulta pregunta lo suyo | 7 |
+
+## Tier 3 - apuestas grandes (L-XL)
+
+| Cambio | Nota actual | Esfuerzo | Impacto y riesgo | Beneficio tras el cambio | Nota final |
+|---|---|---|---|---|---|
+| Facturación (Stripe + Verifactu) | 0 | L tras el estudio | Monetización. Riesgo legal si se hace sin el Tier 0 | Cobrar dentro de la plataforma | 8 |
+| Recetas y lista de la compra | 0 | L | Depende de la base de alimentos | El plan llega hasta el supermercado | 7 |
+| Progresión de carga en entreno | 3 | M | Hoy series y repeticiones en texto. Activa el sub-rol deportivo | Rutinas que progresan solas | 7 |
+| Vídeos de ejercicio | 2 | M | Hoy ilustración fija. Riesgo: alojamiento y peso | Técnica sin salir de la app | 7 |
+
+## Tier 4 - no ahora, con motivo
+
+| Cambio | Por qué no |
 |---|---|
-| Marketplace | High-compliance (reviews of health professionals); far future |
-| AI (diet generators, risk detection) | Compliance review required before scoping (docs/00 §4) |
-| Camera body scan / 3D form demos | Native-app tech; web v1 substitutes manual entry |
-| Apple Health sync | Native; revisit if a mobile wrapper ever ships |
-| Streaks/gamification | Anti-reference (PRODUCT.md): no guilt mechanics |
+| Dispensarios de suplementos | Modelo de ingresos de EE. UU. que no traslada a la UE |
+| Producto de videollamada | El modo `VIDEO` con enlace ya cubre el caso |
+| Wearables | Peso y actividad ya tienen entrada manual |
+| Constructor de formularios | Genérico y caro; la versión pequeña está en Tier 2 |
+| Marketplace | Reseñas de profesionales sanitarios: alta exposición regulatoria |
+| IA generadora de dietas | Requiere revisión de cumplimiento antes de dimensionar (`docs/00` §4) |
 
-## Sequence recommendation
+## El cambio de medicación, en detalle
 
-Slice 9 (targets+checklist) → notes → email notifications → body composition
-→ shell parity + logo (filler slices) → export/erasure → reporting-lite →
-then pick the first big bet (diet plans is the strategic one; training if the
-sports segment pulls harder).
+Decisión del owner, 2026-08-13. La sección de medicación deja de ser parte del
+espacio del paciente por defecto y pasa a ser suya:
+
+1. **Opcional en el onboarding.** Si el paciente no marca que sigue una
+   medicación, la sección no aparece en `/mi-espacio` ni en su navegación.
+2. **Recordatorio personal por defecto.** Si la marca, es para él: pauta,
+   dosis, rotación de punto.
+3. **Un interruptor "compartir la información de medicación con mi
+   especialista".** Apagado por defecto.
+4. **Con el interruptor encendido**, el especialista ve exactamente lo que ve
+   hoy: pauta, adherencia y punto sugerido en la ficha.
+
+Lo que hay que resolver al construirlo, y que no está decidido:
+
+- **Los datos que ya existen.** Hay dosis registradas con el modelo actual. La
+  opción conservadora es que un paciente con medicación registrada quede como
+  "comparte", que es el estado en el que su especialista ya la veía, y
+  avisarle. La opción estricta es apagarlo para todos y que el especialista
+  pierda acceso hasta que el paciente lo encienda. Es una decisión del owner y
+  tiene lectura legal.
+- **Qué ve el especialista con el interruptor apagado.** Nada, o "el paciente
+  sigue una medicación y no la comparte". Lo segundo es más honesto
+  clínicamente y más invasivo; lo primero es más limpio.
+- **Los eventos de dominio.** `modules/events.test.ts` ya falla si un payload
+  lleva valores clínicos, pero habrá que revisar que apagar el interruptor no
+  deje rastro del fármaco en el historial de eventos.
