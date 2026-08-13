@@ -49,6 +49,11 @@ export default async function RoutinePrintPage({
   const days = (content?.days ?? [])
     .map((day, index) => ({ day, index }))
     .filter(({ day }) => day.exercises.length > 0);
+  // A three-day routine leaves two thirds of a landscape sheet empty, so
+  // the drawing takes the room rather than the paper wasting it. Past four
+  // columns the space is genuinely spoken for and it shrinks back.
+  const roomy = days.length <= 4;
+  const thumb = roomy ? "size-16" : "size-9";
 
   return (
     <PrintFrame
@@ -89,23 +94,23 @@ export default async function RoutinePrintPage({
               </h2>
               <ul className="flex flex-col divide-y divide-hairline">
                 {day.exercises.map((exercise, i) => (
-                  <li key={i} className="flex items-center gap-1.5 px-2 py-1">
-                    <ExerciseThumb
-                      exerciseKey={exercise.key}
-                      className="size-9"
-                    />
+                  <li
+                    key={i}
+                    className={`flex items-center gap-2 px-2 ${roomy ? "py-2" : "py-1"}`}
+                  >
+                    <ExerciseThumb exerciseKey={exercise.key} className={thumb} />
                     <span className="flex min-w-0 flex-1 flex-col">
-                      <span className="text-[8.5pt] font-medium leading-tight">
+                      <span className={`${roomy ? "text-[10pt]" : "text-[8.5pt]"} font-medium leading-tight`}>
                         {exercise.name}
                       </span>
                       {exercise.notes ? (
-                        <span className="text-[7pt] leading-tight text-ink-subtle">
+                        <span className={`${roomy ? "text-[8pt]" : "text-[7pt]"} leading-tight text-ink-subtle`}>
                           {exercise.notes}
                         </span>
                       ) : null}
                     </span>
                     {formatPrescription(exercise) ? (
-                      <span className="shrink-0 whitespace-nowrap rounded-full bg-primary-subtle px-1.5 py-0.5 text-[8pt] font-semibold tabular-nums text-on-primary-subtle">
+                      <span className={`shrink-0 whitespace-nowrap rounded-full bg-primary-subtle px-2 py-0.5 ${roomy ? "text-[9.5pt]" : "text-[8pt]"} font-semibold tabular-nums text-on-primary-subtle`}>
                         {formatPrescription(exercise)}
                       </span>
                     ) : null}
