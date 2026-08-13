@@ -6,6 +6,7 @@ import { getDietPlan } from "@/modules/diet/repository";
 import { getTargets } from "@/modules/targets/repository";
 import {
   MEAL_SLOTS,
+  dayTotals,
   isEmptyPlan,
   normalizeContent,
 } from "@/modules/diet/plan";
@@ -93,6 +94,20 @@ export default async function PatientDietPage() {
                         {t("patient.today")}
                       </span>
                     ) : null}
+                    {/* Only when something counts. A patient does not need to
+                        be told their plan was written in words. */}
+                    {(() => {
+                      const totals = dayTotals(day);
+                      if (totals.kcal === 0) return null;
+                      return (
+                        <span className="ml-auto text-xs tabular-nums text-ink-subtle">
+                          {t("patient.dayTotals", {
+                            kcal: totals.kcal,
+                            protein: totals.proteinG,
+                          })}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <dl className="flex flex-col gap-3">
                     {meals.map((slot) => {

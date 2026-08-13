@@ -1096,7 +1096,8 @@
       "updatedAt": "Actualizado el {date}",
       "today": "Hoy",
       "empty": "Tu nutricionista aún no ha publicado tu plan de dieta.",
-      "alternative": "Alternativa #{n}"
+      "alternative": "Alternativa #{n}",
+      "dayTotals": "{kcal} kcal · {protein} g proteína"
     },
     "templates": {
       "title": "Plantillas",

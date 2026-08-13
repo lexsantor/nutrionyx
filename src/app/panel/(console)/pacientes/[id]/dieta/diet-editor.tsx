@@ -58,8 +58,11 @@ export function DietEditor({
   patientId,
   initial,
   templates,
+  targets,
 }: {
   patientId: string;
+  /** Prescribed kcal and protein, so the day's sum has something to mean. */
+  targets: { kcal: number | null; protein: number | null } | null;
   initial: {
     title: string | null;
     notes: string | null;
@@ -331,9 +334,16 @@ export function DietEditor({
                           protein: totals.proteinG,
                         })
                       : t("editor.totals.none");
+                  const target =
+                    targets && (targets.kcal !== null || targets.protein !== null)
+                      ? ` · ${t("editor.totals.target", {
+                          kcal: targets.kcal ?? "—",
+                          protein: targets.protein ?? "—",
+                        })}`
+                      : "";
                   return totals.uncounted > 0
-                    ? `${counted} · ${t("editor.totals.uncounted", { count: totals.uncounted })}`
-                    : counted;
+                    ? `${counted} · ${t("editor.totals.uncounted", { count: totals.uncounted })}${target}`
+                    : `${counted}${target}`;
                 })()}
               </p>
             </div>

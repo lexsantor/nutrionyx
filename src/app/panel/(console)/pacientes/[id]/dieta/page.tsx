@@ -12,6 +12,7 @@ import {
 } from "@/modules/diet/plan";
 import { listDietTemplates } from "@/modules/diet/templates";
 import { DietEditor } from "./diet-editor";
+import { getTargets } from "@/modules/targets/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -32,6 +33,7 @@ export default async function DietPlanEditorPage({
   }
 
   const plan = await getDietPlan(org.id, patient.id);
+  const targets = await getTargets(org.id, patient.id);
   const templates = await listDietTemplates(org.id);
   const content: DietPlanContent =
     (plan && normalizeContent(plan.content)) || emptyContent();
@@ -60,6 +62,11 @@ export default async function DietPlanEditorPage({
 
         <DietEditor
           patientId={patient.id}
+          targets={
+            targets
+              ? { kcal: targets.kcalTarget, protein: targets.proteinTargetG }
+              : null
+          }
           initial={{
             title: plan?.title ?? null,
             notes: plan?.notes ?? null,
