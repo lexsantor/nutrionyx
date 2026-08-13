@@ -7,13 +7,11 @@ import {
   useId,
   useRef,
   useState,
-  useSyncExternalStore,
   type KeyboardEvent,
   type SelectHTMLAttributes,
 } from "react";
+import { useEnhanced } from "./enhance";
 
-/** The "is this the client yet" store never emits; the snapshots say it all. */
-const NEVER_CHANGES = () => () => {};
 
 /**
  * Themed select. The closed state was always ours; the open list used to be
@@ -86,15 +84,7 @@ export function Select({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  // False on the server and on the first client render, true after mount, so
-  // hydration always matches what the server sent. useSyncExternalStore rather
-  // than a setState-in-effect flag: same result, and it is the shape React
-  // asks for when the answer differs between server and client.
-  const enhanced = useSyncExternalStore(
-    NEVER_CHANGES,
-    () => true,
-    () => false,
-  );
+  const enhanced = useEnhanced();
 
   const [open, setOpen] = useState(false);
   const [rows, setRows] = useState<Row[]>([]);
@@ -297,16 +287,27 @@ export function Select({
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             {...({ popover: "auto" } as any)}
             role="listbox"
-            style={{
-              positionAnchor: anchor,
-              positionArea: "bottom span-right",
-              positionTryFallbacks: "flip-block",
-              width: "anchor-size(width)",
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } as any}
+            style={
+              {
+                positionAnchor: anchor,
+                positionArea: "bottom span-right",
+                positionTryFallbacks: "flip-block",
+                width: "anchor-size(width)",
+                // The fix for the band where neither side had room: with
+                // `position-area` the containing block IS the free strip, so
+                // 100% makes the list shrink and scroll instead of spilling
+                // over its own field. `flip-block` still picks the roomier
+                // side first; this only bounds the result.
+                //
+                // min() and not 100% alone: an inline max-block-size beats the
+                // max-h-72 class, and the list would grow to fill whatever
+                // room it found — 432px on a desktop viewport.
+                maxBlockSize: "min(18rem, 100%)",
+              } as React.CSSProperties
+            }
             // my-2, not m-0: 8px of air off the field. A block margin rather
             // than an offset so the gap survives `flip-block`.
-            className="mx-0 my-2 max-h-72 min-w-48 overflow-y-auto rounded-[10px] border border-hairline bg-surface-1 p-1 shadow-el-md"
+            className="mx-0 my-2 min-w-48 overflow-y-auto rounded-[10px] border border-hairline bg-surface-1 p-1 shadow-el-md"
           >
             {rows.map((row, index) => (
               <Fragment key={`${row.value}-${index}`}>
