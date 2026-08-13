@@ -150,7 +150,7 @@
       "subtitle": "Sales de cada revisión con la adherencia leída y el plan publicado.",
       "answer": "Nutrionyx reúne evaluación, dieta, entreno, medicación GLP-1, mensajes y citas de cada paciente en una ficha única. Tú prescribes y lees adherencia de un vistazo; tu paciente registra su día en menos de un minuto desde el móvil. Datos de salud tratados como exige el RGPD, con aislamiento por consulta verificado en cada despliegue.",
       "byline": "Por Alejandro · fundador de Nutrionyx",
-      "updated": "Actualizado el 10 de agosto de 2026"
+      "updated": "Actualizado el 13 de agosto de 2026"
     },
     "sample": "Datos de ejemplo",
     "record": {
@@ -230,6 +230,15 @@
         "site": "Punto sugerido: abdomen derecho",
         "annotTitle": "¿Pacientes con GLP-1?",
         "annotText": "El paciente registra la pauta de su médico y cada dosis con rotación de punto de inyección; tú ves adherencia y pauta sin tocar WhatsApp. Nutrionyx nunca sugiere dosis."
+      },
+      "library": {
+        "title": "Plantillas",
+        "one": "Volumen · fase 1",
+        "two": "Definición · 1.800 kcal",
+        "reuse": "Cargar en cualquier paciente",
+        "print": "Ver para imprimir",
+        "annotTitle": "Escribes la semana una vez",
+        "annotText": "Guarda una semana de dieta o de rutina como plantilla y cárgala en cualquier paciente de tu consulta. Y cuando alguien la quiera en papel, se imprime en una hoja con el logo y los datos fiscales de tu consulta."
       },
       "comms": {
         "title": "Mensajes y agenda",
@@ -342,7 +351,8 @@
           "current": "En cinco aplicaciones",
           "product": "En una ficha por paciente"
         }
-      }
+      },
+      "note": "Los avisos por email salen de un proceso diario y dependen de la verificación del dominio de envío, pendiente durante la fase inicial."
     },
     "footer": {
       "privacy": "Política de privacidad",

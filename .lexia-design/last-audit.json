@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-13T11:22:23.010Z",
+  "updated": "2026-08-13T13:08:20.282Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -150,6 +150,116 @@
       "evidence": "\"use client\";",
       "msg": "A four-word-plus phrase repeats three or more times",
       "fix": "Repetition reads as length, not emphasis. A section that only restates gets deleted, not reworded."
+    },
+    {
+      "id": "motion/no-reduced-motion-guard",
+      "severity": "serious",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 269,
+      "evidence": "style={{ animation: \"float 8s ease-in-out infinite\" }}",
+      "msg": "Animations declared with no reduced-motion handling in this file",
+      "fix": "Honor prefers-reduced-motion (WCAG technique C39): gentler variant, movement removed."
+    },
+    {
+      "id": "motion/long-duration",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 269,
+      "evidence": "style={{ animation: \"float 8s ease-in-out infinite\" }}",
+      "msg": "Animation/transition >= 1s",
+      "fix": "UI ceiling ~300ms; >= 1s needs narrative justification (brand surface, MOTION dial >= 6)."
+    },
+    {
+      "id": "motion/long-duration",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 283,
+      "evidence": "style={{ animation: \"float 9s ease-in-out 0.8s infinite\" }}",
+      "msg": "Animation/transition >= 1s",
+      "fix": "UI ceiling ~300ms; >= 1s needs narrative justification (brand surface, MOTION dial >= 6)."
+    },
+    {
+      "id": "motion/long-duration",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 299,
+      "evidence": "style={{ animation: \"float 7s ease-in-out 1.6s infinite\" }}",
+      "msg": "Animation/transition >= 1s",
+      "fix": "UI ceiling ~300ms; >= 1s needs narrative justification (brand surface, MOTION dial >= 6)."
+    },
+    {
+      "id": "a11y/reveal-on-essential-content",
+      "severity": "critical",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 97,
+      "evidence": "<Reveal className={flip ? \"lg:order-2\" : \"\"}>",
+      "msg": "Reveal wrapper in a file containing legal, price or contact content",
+      "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
+    },
+    {
+      "id": "a11y/reveal-on-essential-content",
+      "severity": "critical",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 105,
+      "evidence": "<Reveal delay={80} className={flip ? \"lg:order-1\" : \"\"}>",
+      "msg": "Reveal wrapper in a file containing legal, price or contact content",
+      "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
+    },
+    {
+      "id": "a11y/reveal-on-essential-content",
+      "severity": "critical",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 326,
+      "evidence": "<Reveal key={item.key} delay={i * 60}>",
+      "msg": "Reveal wrapper in a file containing legal, price or contact content",
+      "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
+    },
+    {
+      "id": "a11y/reveal-on-essential-content",
+      "severity": "critical",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 432,
+      "evidence": "<Reveal>",
+      "msg": "Reveal wrapper in a file containing legal, price or contact content",
+      "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
+    },
+    {
+      "id": "a11y/reveal-on-essential-content",
+      "severity": "critical",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 722,
+      "evidence": "<Reveal className=\"mx-auto flex w-full max-w-6xl flex-col items-center gap-6 tex",
+      "msg": "Reveal wrapper in a file containing legal, price or contact content",
+      "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
+    },
+    {
+      "id": "layout/order-with-asymmetric-tracks",
+      "severity": "serious",
+      "confidence": "certain",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 93,
+      "evidence": "? \"lg:grid-cols-[280px_minmax(0,1fr)]\"",
+      "msg": "order-* combined with asymmetric grid tracks",
+      "fix": "order moves the item, not the track width: the fixed-size element lands in the fluid track and stretches. Use symmetric tracks, or swap the track definition per breakpoint."
+    },
+    {
+      "id": "system/container-width-drift",
+      "severity": "moderate",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
+      "line": 72,
+      "evidence": "<p className=\"max-w-[36ch] text-sm leading-relaxed text-ink-subtle\">",
+      "msg": "Three or more distinct content widths in one file",
+      "fix": "One canonical content-width token, consumed by header, footer and every section. Mixed widths read as misalignment at section boundaries."
     }
   ]
 }

@@ -27,7 +27,7 @@ FORM: record-as-proof inside the 14-block answer-page pattern (owner brief).
 FINISH: gates + detector + prod check; no fabricated claims anywhere.
 */
 
-const LAST_UPDATED_ISO = "2026-08-10";
+const LAST_UPDATED_ISO = "2026-08-13";
 
 const SAMPLE_WEIGHTS = [88, 87.6, 87.1, 86.7, 86.2].map((kg, i) => ({
   recordedAt: new Date(Date.UTC(2026, 6, 8 + i * 7, 10)),
@@ -527,20 +527,81 @@ export default async function Home() {
             />
           }
         >
-          <h3 className="mb-2 text-lg font-semibold">{r("glp1.title")}</h3>
-          <p className="font-display text-xl font-semibold">{r("glp1.next")}</p>
-          <p className="mt-1 text-sm text-ink-subtle">{r("glp1.drug")}</p>
-          <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-dashed border-primary px-4 py-1.5 text-sm">
-            {r("glp1.site")}
-          </p>
+          <div className="flex items-center gap-4 sm:gap-6">
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-2 text-lg font-semibold">{r("glp1.title")}</h3>
+              <p className="font-display text-xl font-semibold">
+                {r("glp1.next")}
+              </p>
+              <p className="mt-1 text-sm text-ink-subtle">{r("glp1.drug")}</p>
+              <p className="mt-3 inline-flex items-center gap-2 rounded-full border border-dashed border-primary px-4 py-1.5 text-sm">
+                {r("glp1.site")}
+              </p>
+            </div>
+            {/* The figure the patient actually taps, not an illustration of
+                one: same render and same calibrated coordinates as
+                medicacion/dose-form.tsx, so the marker sits where the app
+                puts it. Mirrored like the app's, so "derecho" reads on the
+                right of the picture. */}
+            <div className="relative aspect-[614/1100] w-20 shrink-0 sm:w-28">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/mannequin-male-front.png"
+                alt=""
+                width={614}
+                height={1100}
+                className="h-full w-full object-contain"
+              />
+              <span
+                aria-hidden="true"
+                className="absolute size-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-dashed border-primary bg-surface-1/90 sm:size-6"
+                style={{ left: "58%", top: "42%" }}
+              />
+            </div>
+          </div>
         </RecordSection>
 
         <RecordSection
           flip
-          tilt="lg:rotate-[0.8deg]"
+          tilt="lg:rotate-[0.5deg]"
           annotation={
             <Annotation
               index={6}
+              title={r("library.annotTitle")}
+              text={r("library.annotText")}
+            />
+          }
+        >
+          <div className="mb-3 flex items-center justify-between gap-4">
+            <h3 className="text-lg font-semibold">{r("library.title")}</h3>
+            <SampleChip label={t("sample")} />
+          </div>
+          <ul className="flex flex-col gap-2">
+            {(["one", "two"] as const).map((key) => (
+              <li
+                key={key}
+                // Stacked on a phone: side by side, `truncate` was cutting
+                // "Volumen · fase 1" down to "Volumen ·...".
+                className="flex flex-col gap-0.5 rounded-xl border border-hairline px-3.5 py-2.5 text-sm sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+              >
+                <span className="font-medium">{r(`library.${key}`)}</span>
+                <span className="shrink-0 text-xs text-ink-subtle">
+                  {r("library.reuse")}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 flex items-center gap-2 border-t border-hairline pt-3 text-sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="text-ink-subtle"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+            {r("library.print")}
+          </p>
+        </RecordSection>
+
+        <RecordSection
+          tilt="lg:rotate-[0.8deg]"
+          annotation={
+            <Annotation
+              index={7}
               title={r("comms.annotTitle")}
               text={r("comms.annotText")}
             />
@@ -568,7 +629,7 @@ export default async function Home() {
           tilt="lg:-rotate-[0.7deg]"
           annotation={
             <Annotation
-              index={7}
+              index={8}
               title={r("privacy.annotTitle")}
               text={r("privacy.annotText")}
             />
@@ -628,6 +689,12 @@ export default async function Home() {
               </tbody>
             </table>
           </div>
+          {/* The reminders row promises delivery. The daily job is real; the
+              sending domain is not verified yet, so the page says which of
+              the two it is rather than letting the row imply both. */}
+          <p className="max-w-[68ch] text-sm text-ink-subtle">
+            {t("comparison.note")}
+          </p>
         </div>
       </section>
 
