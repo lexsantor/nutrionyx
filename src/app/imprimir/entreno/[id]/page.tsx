@@ -72,7 +72,7 @@ export default async function RoutinePrintPage({
                 <ul className="flex flex-col gap-2">
                   {day.exercises.map((exercise, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm">
-                      <span className="w-16 shrink-0 tabular-nums text-ink-subtle">
+                      <span className="w-24 shrink-0 whitespace-nowrap tabular-nums text-ink-subtle">
                         {formatPrescription(exercise)}
                       </span>
                       <span className="flex min-w-0 flex-1 flex-col">
