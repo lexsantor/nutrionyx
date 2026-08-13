@@ -277,7 +277,12 @@ export function Select({
             disabled={props.disabled}
             onClick={() => (open ? setOpen(false) : openList(true))}
             onKeyDown={onKeyDown}
-            className={`absolute inset-0 flex items-center rounded-[10px] border border-field-border bg-surface-2 pl-3.5 pr-10 text-left text-base text-ink disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+            // The call site's height is stripped: it belongs to the native
+            // select, which defines the box, and on an `inset-0` overlay a
+            // `h-9` wins over `bottom: 0` and leaves the visible trigger
+            // shorter than the field it covers. That is what made the audit
+            // filters sit 8px above their own submit button.
+            className={`absolute inset-0 flex items-center rounded-[10px] border border-field-border bg-surface-2 pl-3.5 pr-10 text-left text-base text-ink disabled:cursor-not-allowed disabled:opacity-60 ${className.replace(/\bh-[\w.[\]/-]+/g, "")}`}
           >
             <span className="truncate">{label}</span>
           </button>
