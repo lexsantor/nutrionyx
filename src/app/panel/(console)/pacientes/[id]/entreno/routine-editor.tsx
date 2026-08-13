@@ -67,9 +67,15 @@ export function RoutineEditor({
   const [week, setWeek] = useState<WeekDraft>(() => toDraft(initial.content));
   const [dirty, setDirty] = useState(false);
   // Render-time adjustment (not an effect): a fresh ok state clears dirty.
+  // `defaultValue` is only read when an input mounts, so echoing the
+  // submitted values back is not enough on its own: the cells have to be
+  // remounted for the echo to reach the DOM. Bumping a key on the form
+  // does that once per action, which is also when focus would move anyway.
+  const [generation, setGeneration] = useState(0);
   const [prevState, setPrevState] = useState(state);
   if (state !== prevState) {
     setPrevState(state);
+    setGeneration((n) => n + 1);
     if (state && "ok" in state && state.scope === "routine") setDirty(false);
   }
   // Loading a template rewrites the routine on the server and revalidates,
@@ -80,6 +86,7 @@ export function RoutineEditor({
   const [prevContent, setPrevContent] = useState(contentKey);
   if (contentKey !== prevContent) {
     setPrevContent(contentKey);
+    setGeneration((n) => n + 1);
     setWeek(toDraft(initial.content));
     setDirty(false);
   }
@@ -126,6 +133,7 @@ export function RoutineEditor({
 
   return (
     <form
+      key={generation}
       action={formAction}
       onInput={() => setDirty(true)}
       className="flex flex-col gap-6"
