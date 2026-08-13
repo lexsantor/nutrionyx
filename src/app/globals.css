@@ -251,29 +251,27 @@
   50% { transform: translateY(-8px) rotate(var(--tilt, 0deg)); }
 }
 
-/* Native date and time fields keep their platform popup, which no CSS can
- * reach, but the trigger icon sits inside our field and is ours to tint.
- * Left alone it renders near-black in light and stays near-black in dark,
- * where it disappears against the surface. */
+/* A native date field, which is what a touch device still gets: slice-28
+ * replaced the desktop calendar with our own and the time field with a
+ * listbox, so `time` and `datetime-local` no longer exist anywhere in the app
+ * and their rules were deleted rather than left to rot.
+ *
+ * The platform popup is still out of reach, but the trigger icon sits inside
+ * our field and is ours to tint. Left alone it renders near-black in light and
+ * stays near-black in dark, where it disappears against the surface. */
 @layer base {
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="time"]::-webkit-calendar-picker-indicator,
-  input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  input[type="date"]::-webkit-calendar-picker-indicator {
     cursor: pointer;
     opacity: 0.55;
     filter: var(--picker-icon-filter, none);
     transition: opacity 200ms var(--ease-house, ease);
   }
-  input[type="date"]::-webkit-calendar-picker-indicator:hover,
-  input[type="time"]::-webkit-calendar-picker-indicator:hover,
-  input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
     opacity: 1;
   }
   /* The indicator is a bitmap, so tinting it means inverting it: the dark
    * theme needs a light glyph and there is no colour property to set. */
-  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
-  [data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator,
-  [data-theme="dark"] input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  [data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator {
     --picker-icon-filter: invert(1);
   }
   html {
@@ -282,17 +280,12 @@
 
   /* Belt and braces for the same thing at the element level, since these
    * controls are reached through more than one wrapper. */
-  input[type="date"],
-  input[type="time"],
-  input[type="datetime-local"] {
+  input[type="date"] {
     min-width: 0;
   }
   input[type="date"]::-webkit-date-and-time-value,
-  input[type="time"]::-webkit-date-and-time-value,
   input[type="date"]::-webkit-datetime-edit,
-  input[type="time"]::-webkit-datetime-edit,
-  input[type="date"]::-webkit-datetime-edit-fields-wrapper,
-  input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  input[type="date"]::-webkit-datetime-edit-fields-wrapper {
     text-align: left;
     min-width: 0;
     padding: 0;
@@ -300,18 +293,17 @@
   }
   /* The whole control, not just its inner parts: Chrome for Android sizes
    * a date field from its rendered value ("12 Aug 2026" is longer than
-   * "dd/mm/aaaa"), and a box cannot shrink below min-content unless told. */
-  input[type="date"],
-  input[type="time"],
-  input[type="datetime-local"] {
+   * "dd/mm/aaaa"), and a box cannot shrink below min-content unless told.
+   * This is the defensive fix for the overflow report that was never
+   * reproduced, and touch is exactly where it still applies. */
+  input[type="date"] {
     max-width: 100%;
     box-sizing: border-box;
   }
 
-  /* An empty date/time field renders its dd/mm/aaaa hint in full ink,
-   * which reads as a filled value next to real placeholders. */
-  input[type="date"]:not(:focus):invalid::-webkit-datetime-edit,
-  input[type="time"]:not(:focus):invalid::-webkit-datetime-edit {
+  /* An empty date field renders its dd/mm/aaaa hint in full ink, which reads
+   * as a filled value next to real placeholders. */
+  input[type="date"]:not(:focus):invalid::-webkit-datetime-edit {
     color: var(--c-ink-subtle);
   }
 }
