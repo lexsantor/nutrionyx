@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-13T13:08:20.282Z",
+  "updated": "2026-08-13T14:15:10.958Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -122,16 +122,6 @@
       "fix": "Placeholder is an example, not a label (WCAG 3.3.2). Associate a visible label."
     },
     {
-      "id": "system/hardcoded-hex-density",
-      "severity": "minor",
-      "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/globals.css",
-      "line": 20,
-      "evidence": "50 occurrences (threshold 9)",
-      "msg": "Many distinct hardcoded hex colors",
-      "fix": "Resolve visual values to tokens; off-token values drift the system."
-    },
-    {
       "id": "content/claim-repetition",
       "severity": "minor",
       "confidence": "review",
@@ -186,7 +176,7 @@
       "severity": "minor",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
-      "line": 299,
+      "line": 320,
       "evidence": "style={{ animation: \"float 7s ease-in-out 1.6s infinite\" }}",
       "msg": "Animation/transition >= 1s",
       "fix": "UI ceiling ~300ms; >= 1s needs narrative justification (brand surface, MOTION dial >= 6)."
@@ -216,7 +206,7 @@
       "severity": "critical",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
-      "line": 326,
+      "line": 347,
       "evidence": "<Reveal key={item.key} delay={i * 60}>",
       "msg": "Reveal wrapper in a file containing legal, price or contact content",
       "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
@@ -226,7 +216,7 @@
       "severity": "critical",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
-      "line": 432,
+      "line": 453,
       "evidence": "<Reveal>",
       "msg": "Reveal wrapper in a file containing legal, price or contact content",
       "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
@@ -236,7 +226,7 @@
       "severity": "critical",
       "confidence": "review",
       "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/page.tsx",
-      "line": 722,
+      "line": 743,
       "evidence": "<Reveal className=\"mx-auto flex w-full max-w-6xl flex-col items-center gap-6 tex",
       "msg": "Reveal wrapper in a file containing legal, price or contact content",
       "fix": "Reveal wrappers start at opacity 0 and depend on JS. Legal text, prices and contact details must render unconditionally; restrict scroll motion to chrome and decorative sections."
@@ -260,6 +250,16 @@
       "evidence": "<p className=\"max-w-[36ch] text-sm leading-relaxed text-ink-subtle\">",
       "msg": "Three or more distinct content widths in one file",
       "fix": "One canonical content-width token, consumed by header, footer and every section. Mixed widths read as misalignment at section boundaries."
+    },
+    {
+      "id": "system/hardcoded-hex-density",
+      "severity": "minor",
+      "confidence": "review",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/app/globals.css",
+      "line": 20,
+      "evidence": "50 occurrences (threshold 9)",
+      "msg": "Many distinct hardcoded hex colors",
+      "fix": "Resolve visual values to tokens; off-token values drift the system."
     }
   ]
 }

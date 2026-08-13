@@ -43,3 +43,6 @@ yarn-error.log*
 
 # graphify derived output (rebuild with /graphify)
 /graphify-out/
+
+# Local animation reference material (2GB, not part of the build)
+/animmaster

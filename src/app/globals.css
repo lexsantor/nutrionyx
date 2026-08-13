@@ -131,6 +131,11 @@
   /* House motion: one signature curve; bare transition utilities default to
    * the fast tier (200ms). Slow tier (500/700) stays explicit per component. */
   --ease-house: cubic-bezier(0.32, 0.72, 0, 1);
+  /* The same curve with a little overshoot, for the landing only: a card that
+   * settles rather than stops reads as a product with a hand behind it. Kept
+   * off every clinical surface on purpose - a console that bounces is a
+   * console that is louder than the task (PRODUCT.md brand personality). */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --default-transition-timing-function: var(--ease-house);
   --default-transition-duration: 200ms;
   --animate-fade-in: fade-in 200ms var(--ease-house);

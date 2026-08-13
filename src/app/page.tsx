@@ -8,7 +8,6 @@ import { WeightChart } from "@/components/weight-chart";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Bezel } from "@/components/ui/bezel";
 import { Reveal } from "./reveal";
-import { BodySilhouette } from "@/components/body-silhouette";
 
 export const dynamic = "force-dynamic";
 
@@ -96,7 +95,7 @@ function RecordSection({
     <section className={`grid items-start gap-6 ${tracks} lg:gap-16`}>
       <Reveal className={flip ? "lg:order-2" : ""}>
         <Bezel
-          className={`transition-transform duration-500 hover:duration-700 ${EASE} ${tilt} hover:rotate-0`}
+          className={`transition-transform duration-500 hover:duration-700 ease-spring ${tilt} hover:rotate-0`}
           innerClassName="p-6"
         >
           {children}
@@ -286,12 +285,29 @@ export default async function Home() {
                 <p className="text-xs font-medium text-ink-subtle">
                   {r("weightChart.title")}
                 </p>
-                <svg viewBox="0 0 200 300" className="mx-auto mt-2 h-48 w-auto">
-                  <BodySilhouette view="front" />
-                  <line x1="58" y1="152" x2="142" y2="152" strokeWidth="2" className="stroke-primary" />
-                  <circle cx="142" cy="152" r="3.5" className="fill-primary" />
-                  <line x1="51" y1="196" x2="149" y2="196" strokeWidth="2" className="stroke-ink/40" />
-                </svg>
+                {/* The same figure the body map and the injection map use,
+                    rather than a drawing of a body: one anatomy across the
+                    product. Measure lines come from the calibrated bands in
+                    body-map-measures.tsx (viewBox 200x358), converted to
+                    percentages: waist y153 x71-129. */}
+                <div className="relative mx-auto mt-2 aspect-[614/1100] h-48">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/mannequin-male-front.png"
+                    alt=""
+                    width={614}
+                    height={1100}
+                    className="h-full w-full object-contain"
+                  />
+                  <span
+                    className="absolute h-0.5 rounded-full bg-primary"
+                    style={{ top: "42.7%", left: "35.5%", right: "35.5%" }}
+                  />
+                  <span
+                    className="absolute size-2 -translate-y-[3px] rounded-full bg-primary"
+                    style={{ top: "42.7%", left: "62.5%" }}
+                  />
+                </div>
               </div>
             </div>
             <div

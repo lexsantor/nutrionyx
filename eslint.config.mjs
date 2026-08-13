@@ -16,6 +16,10 @@ const eslintConfig = defineConfig([
     "src/generated/**",
     // Vendored lexia-design plugin (tooling, not app code).
     "lexia-design/**",
+    // Local animation reference material: 2GB of third-party demos that are
+    // gitignored and never built. Without this, `npm run lint` reports
+    // thousands of problems from code we do not own.
+    "animmaster/**",
   ]),
 ]);
 
