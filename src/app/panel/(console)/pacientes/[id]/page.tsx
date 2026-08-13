@@ -36,7 +36,7 @@ import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
 import { getDietPlan } from "@/modules/diet/repository";
-import { mealAdherence } from "@/modules/diet/meal-log";
+import { adherenceBySlot, mealAdherence } from "@/modules/diet/meal-log";
 import {
   getRoutine,
   listSessions,
@@ -70,6 +70,7 @@ export default async function PatientDetailPage({
   const t = await getTranslations("patientDetail");
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
+  const tSlots = await getTranslations("diet.slots");
   const tm = await getTranslations("medication");
   const tPhotos = await getTranslations("photos");
 
@@ -104,6 +105,7 @@ export default async function PatientDetailPage({
     allBodyRows,
     weights,
     meals,
+    mealsBySlot,
   ] = await Promise.all([
     getTargets(org.id, patient.id),
     listNotes(org.id, patient.id),
@@ -120,6 +122,7 @@ export default async function PatientDetailPage({
     listMeasurementsSince(org.id, patient.id, new Date(0)),
     listWeights(org.id, patient.id),
     mealAdherence(org.id, patient.id, since),
+    adherenceBySlot(org.id, patient.id, since),
   ]);
   const recentDoses = allDoses.slice(0, 5);
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
@@ -304,6 +307,38 @@ export default async function PatientDetailPage({
                     expected: sessionReport.expected,
                   })}
                 />
+              ) : null}
+              {mealsBySlot.length > 0 ? (
+                <div className="flex flex-col gap-1 border-b border-hairline py-2.5">
+                  <span className="text-sm text-ink-subtle">
+                    {t("report.bySlot")}
+                  </span>
+                  <ul className="flex flex-wrap gap-x-4 gap-y-1">
+                    {mealsBySlot.map((entry) => {
+                      // Below two thirds is where a meal stops being noise and
+                      // starts being the thing to change in the plan.
+                      const weak = entry.done / entry.marked < 0.67;
+                      return (
+                        <li
+                          key={entry.slot}
+                          className="flex items-baseline gap-1.5 text-sm"
+                        >
+                          <span className="text-ink-subtle">
+                            {tSlots(entry.slot)}
+                          </span>
+                          <span
+                            className={`font-medium tabular-nums ${weak ? "text-error" : ""}`}
+                          >
+                            {t("report.bySlotValue", {
+                              done: entry.done,
+                              marked: entry.marked,
+                            })}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
               ) : null}
               {meals.marked > 0 ? (
                 <Row

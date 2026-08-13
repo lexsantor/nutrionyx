@@ -4,7 +4,12 @@ import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { getDietPlan } from "@/modules/diet/repository";
 import { getOrgProfile } from "@/modules/organization/repository";
-import { MEAL_SLOTS, isEmptyPlan, normalizeContent } from "@/modules/diet/plan";
+import {
+  MEAL_SLOTS,
+  dayTotals,
+  isEmptyPlan,
+  normalizeContent,
+} from "@/modules/diet/plan";
 import { PrintFrame } from "../../print-frame";
 
 export const metadata = { title: "Plan de dieta" };
@@ -150,6 +155,32 @@ export default async function DietPrintPage({
                   })}
                 </tr>
               ))}
+              {/* Totals on the sheet the patient takes to the kitchen, which
+                  is where they would look. Only when something counts, and
+                  only for the days that count something. */}
+              {days.some(({ day }) => dayTotals(day).kcal > 0) ? (
+                <tr>
+                  <th className="border border-hairline bg-surface-3 p-1 text-left align-top text-[7.5pt] font-semibold">
+                    {tp("totals")}
+                  </th>
+                  {days.map(({ day, index }) => {
+                    const totals = dayTotals(day);
+                    return (
+                      <td
+                        key={index}
+                        className="border border-hairline p-1 align-top text-[8pt] tabular-nums"
+                      >
+                        {totals.kcal > 0
+                          ? tp("totalsValue", {
+                              kcal: totals.kcal,
+                              protein: totals.proteinG,
+                            })
+                          : ""}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>

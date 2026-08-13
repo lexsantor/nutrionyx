@@ -135,3 +135,48 @@ export async function mealAdherence(
     daysWithMarks: days.size,
   };
 }
+
+
+export type SlotAdherence = {
+  slot: MealSlot;
+  done: number;
+  marked: number;
+};
+
+/**
+ * The same window, split by meal. A single percentage says a patient follows
+ * 70% of their plan; this says they skip the merienda, which is a problem
+ * with the merienda and not with the patient.
+ *
+ * Slots the patient never marked are left out: a meal that is not in the
+ * plan should not appear as a meal they failed.
+ */
+export async function adherenceBySlot(
+  organizationId: string,
+  patientId: string,
+  since: Date,
+): Promise<SlotAdherence[]> {
+  const rows = await prisma.mealLog.groupBy({
+    by: ["slot", "status"],
+    where: { organizationId, patientId, day: { gte: dayKey(since) } },
+    _count: { _all: true },
+  });
+
+  const tally = new Map<MealSlot, { done: number; marked: number }>();
+  for (const row of rows) {
+    if (!(MEAL_SLOTS as readonly string[]).includes(row.slot)) continue;
+    const slot = row.slot as MealSlot;
+    const entry = tally.get(slot) ?? { done: 0, marked: 0 };
+    entry.marked += row._count._all;
+    if (row.status === "DONE") entry.done += row._count._all;
+    tally.set(slot, entry);
+  }
+
+  // MEAL_SLOTS order, not database order: a specialist reads a day top to
+  // bottom, and breakfast before dinner is the only order that means
+  // anything.
+  return MEAL_SLOTS.flatMap((slot) => {
+    const entry = tally.get(slot);
+    return entry ? [{ slot, ...entry }] : [];
+  });
+}

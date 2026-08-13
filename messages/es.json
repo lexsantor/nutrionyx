@@ -720,7 +720,9 @@
       "training": "Entrenamiento",
       "trainingValue": "{logged} de {expected} sesiones",
       "meals": "Plan de comidas",
-      "mealsValue": "{done} de {marked} comidas seguidas · {days, plural, one {# día} other {# días}} con registro"
+      "mealsValue": "{done} de {marked} comidas seguidas · {days, plural, one {# día} other {# días}} con registro",
+      "bySlot": "Por comida",
+      "bySlotValue": "{done} de {marked}"
     },
     "documents": {
       "title": "Documentos",
@@ -1100,7 +1102,8 @@
       "today": "Hoy",
       "empty": "Tu nutricionista aún no ha publicado tu plan de dieta.",
       "alternative": "Alternativa #{n}",
-      "dayTotals": "{kcal} kcal · {protein} g proteína"
+      "dayTotals": "{kcal} kcal · {protein} g proteína",
+      "uncounted": "{count, plural, one {# sin contar} other {# sin contar}}"
     },
     "templates": {
       "title": "Plantillas",
@@ -1422,6 +1425,8 @@
     "openDiet": "Ver para imprimir",
     "openRoutine": "Ver para imprimir",
     "notes": "Indicaciones",
-    "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}"
+    "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}",
+    "totals": "Total",
+    "totalsValue": "{kcal} kcal · {protein} g prot."
   }
 }

@@ -113,6 +113,11 @@ export default async function PatientDietPage() {
                             kcal: totals.kcal,
                             protein: totals.proteinG,
                           })}
+                          {/* Without this a patient reads 330 kcal on a day
+                              that also has ten foods nobody weighed. */}
+                          {totals.uncounted > 0
+                            ? ` · ${t("patient.uncounted", { count: totals.uncounted })}`
+                            : ""}
                         </span>
                       );
                     })()}
