@@ -53,6 +53,42 @@ in this codebase that was only reasoned about turned out wrong at least
 once: drive it through the browser with Playwright, look at the capture,
 and measure element rectangles rather than `documentElement.scrollWidth`.
 
+## Where the session of 2026-08-13 left it
+
+Everything below the line was written earlier that day. What happened after:
+the widgets slice shipped and was reversed on mobile after real photographs
+(`docs/build/slice-28-plan.md`), medication became opt-in and patient-shared
+(`d8f0095`), the landing was brought level with what exists, and Tier 2's
+first row landed: a food catalogue with per-day totals against the target
+(`docs/build/slice-29-plan.md`).
+
+Tier tables and the competitive benchmark now live in
+[docs/build/roadmap-feature-tiers.md](docs/build/roadmap-feature-tiers.md) and
+[docs/research/benchmark-2026-08.md](docs/research/benchmark-2026-08.md). Read
+those before planning: the tier table already had two rows that were fiction
+because it was written from a plan document rather than from `src/`.
+
+**Open, and needing nobody but the next session:**
+
+- The adherence report has no export. `/imprimir/dieta` and `/imprimir/entreno`
+  are the pattern to copy.
+- The food catalogue's values are hand-typed reference figures. Either a
+  nutritionist reviews them or they are replaced by an import; the licence
+  work is already done in the slice-29 plan (USDA public domain, CIQUAL with
+  attribution, Open Food Facts share-alike and to be avoided, BEDCA's terms
+  unconfirmed).
+- The patient's plan shows a day's total but never says how many of its rows
+  are uncounted; the specialist's editor does. Deliberate, worth revisiting.
+
+**Open, and needing the owner:**
+
+- The screen-reader walk of the calendar and the listbox. Roles, focus and
+  keyboard were measured; VoiceOver was never run.
+- Everything in Tier 0 of the roadmap: Resend's sending domain, real fiscal
+  data, the legal review, and a Verifactu study before billing is scoped.
+- The exercise illustrations dropped in `imgs/`: two of them are triceps and
+  the catalogue has one key, so the mapping is a decision.
+
 ## Next, in order
 
 ### 1. Custom Select, DatePicker and TimePicker - built 2026-08-13
