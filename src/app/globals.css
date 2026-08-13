@@ -315,3 +315,38 @@
     color: var(--c-ink-subtle);
   }
 }
+
+/* Printable documents (/imprimir/*). The page is a sheet, not a screen:
+ * fixed margins, black ink on white regardless of the viewer's theme, and
+ * day blocks that do not split across a page break. */
+@page {
+  size: A4;
+  margin: 14mm;
+}
+
+@media print {
+  :root {
+    --c-canvas: #ffffff;
+    --c-surface-1: #ffffff;
+    --c-surface-2: #ffffff;
+    --c-ink: #000000;
+    --c-ink-muted: #1a1a1a;
+    --c-ink-subtle: #444444;
+    --c-hairline: #cccccc;
+  }
+  html,
+  body {
+    height: auto;
+    background: #ffffff;
+    overflow: visible;
+  }
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  /* A printed sheet keeps no shadows and no rounded cards: they cost ink
+   * and say nothing on paper. */
+  * {
+    box-shadow: none !important;
+  }
+}

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { ButtonLink } from "@/components/ui/button-link";
 import { notFound } from "next/navigation";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
@@ -20,6 +21,7 @@ export default async function RoutineEditorPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const tp = await getTranslations("print");
   const t = await getTranslations("training");
 
   const { org } = await requireSpecialistOrg();
@@ -47,6 +49,13 @@ export default async function RoutineEditorPage({
           </Link>
           <h1 className="text-2xl font-semibold">{t("editor.heading")}</h1>
           <p className="text-sm text-ink-subtle">{t("editor.hint")}</p>
+          <ButtonLink
+            href={`/imprimir/entreno/${patient.id}`}
+            size="sm"
+            className="w-fit"
+          >
+            {tp("openDiet")}
+          </ButtonLink>
         </div>
 
         <RoutineEditor

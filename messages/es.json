@@ -1335,5 +1335,14 @@
       "erasureHint": "Tu historial clínico lo custodia {consulta}, así que el borrado lo tramitan ellos. Pídeselo y están obligados a atenderlo.",
       "erasureCta": "Escribir a mi especialista"
     }
+  },
+  "print": {
+    "print": "Imprimir o guardar en PDF",
+    "back": "Volver al editor",
+    "updatedAt": "Actualizado el {date}",
+    "emptyDiet": "Este plan todavía no tiene comidas.",
+    "emptyRoutine": "Esta rutina todavía no tiene ejercicios.",
+    "openDiet": "Ver para imprimir",
+    "openRoutine": "Ver para imprimir"
   }
 }

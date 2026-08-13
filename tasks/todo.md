@@ -288,6 +288,20 @@ patient home, (6) admin shell with consulta detail, (7) `/admin/auditoria`
 so `DomainEvent` becomes readable. Rule adopted: no nav entry without a
 screen behind it.
 
+### Backlog - waiting on the owner
+
+- **Exercise illustrations**: 4 of 41 drawn (press-banca, sentadilla,
+  press-militar, dominadas). Peso muerto and curl de bíceps were generated
+  wrong and never redone. **No credits** (4 left, ~9 per exercise), so this
+  is parked until the balance is topped up. Recipe and `ILLUSTRATED` gate are
+  in `modules/training/exercises.ts`.
+- **Custom Select / DatePicker / TimePicker** (owner: important for visual
+  cohesion, agreed to build). A native control's popup is drawn by the OS and
+  no CSS reaches it, so this means owning a listbox and a date picker:
+  keyboard, typeahead, focus return, screen-reader semantics, and replacing
+  the mobile wheel iOS and Android give away. Its own slice, with a plan
+  first.
+
 ### Remaining
 
 RBAC team members (deferred until a multi-staff consulta exists - YAGNI).
