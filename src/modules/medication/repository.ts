@@ -61,6 +61,70 @@ export async function getPlan(
   });
 }
 
+/**
+ * The specialist's view of the plan, which exists only while the patient
+ * shares it (owner decision 2026-08-13). The filter lives here rather than in
+ * the page so every future caller inherits it: a console screen that forgets
+ * to check the flag would leak the drug name, which is the sensitive part.
+ *
+ * Returns null, never a "shares nothing" marker. Telling a specialist that a
+ * patient follows an undisclosed medication discloses the medication.
+ */
+export async function getPlanForSpecialist(
+  organizationId: string,
+  patientId: string,
+): Promise<MedicationPlan | null> {
+  return prisma.medicationPlan.findFirst({
+    where: {
+      organizationId,
+      patientId,
+      active: true,
+      sharedWithSpecialist: true,
+    },
+  });
+}
+
+/** Doses only while the plan behind them is shared. Same reasoning. */
+export async function listDosesForSpecialist(
+  organizationId: string,
+  patientId: string,
+  take?: number,
+): Promise<MedicationDose[]> {
+  const shared = await prisma.medicationPlan.findFirst({
+    where: { organizationId, patientId, sharedWithSpecialist: true },
+    select: { id: true },
+  });
+  if (!shared) return [];
+  return listDoses(organizationId, patientId, take);
+}
+
+/**
+ * The patient turns sharing on or off. The event carries the plan id and the
+ * new state, never the drug: `modules/events.test.ts` fails otherwise.
+ */
+export async function setSharing(
+  organizationId: string,
+  patientId: string,
+  shared: boolean,
+): Promise<void> {
+  const plan = await prisma.medicationPlan.findFirst({
+    where: { organizationId, patientId },
+    select: { id: true },
+  });
+  if (!plan) return;
+  await prisma.medicationPlan.update({
+    where: { id: plan.id },
+    data: { sharedWithSpecialist: shared },
+  });
+  await appendEvent({
+    organizationId,
+    aggregate: "Patient",
+    aggregateId: patientId,
+    type: shared ? "MedicationSharingEnabled" : "MedicationSharingDisabled",
+    payload: { planId: plan.id },
+  });
+}
+
 export async function logDose(params: {
   organizationId: string;
   patientId: string;

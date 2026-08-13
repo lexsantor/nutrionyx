@@ -414,6 +414,16 @@ model MedicationPlan {
   // 0 (Sunday) - 6 (Saturday); null for DAILY plans.
   shotDay        Int?
   active         Boolean             @default(true)
+  // The patient's own reminder by default (owner decision 2026-08-13). Only
+  // with this on does the specialist see the plan, the doses or the site
+  // rotation; with it off the record shows nothing at all, because "follows a
+  // medication and does not share it" leaks the sensitive part.
+  //
+  // Plans that existed before this column was added were set to true by the
+  // migration: the consulta is the data controller and already holds that
+  // history, so switching it off retroactively would leave a hole in a record
+  // it answers for without unseeing anything.
+  sharedWithSpecialist Boolean        @default(false)
   createdAt      DateTime            @default(now())
   updatedAt      DateTime            @updatedAt
 

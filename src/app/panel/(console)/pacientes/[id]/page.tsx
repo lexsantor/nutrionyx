@@ -26,7 +26,10 @@ import {
   BODY_ZONES,
 } from "@/modules/measurement/body";
 import { BodyMapMeasures } from "@/components/body-map-measures";
-import { getPlan, listDoses } from "@/modules/medication/repository";
+import {
+  getPlanForSpecialist,
+  listDosesForSpecialist,
+} from "@/modules/medication/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
@@ -107,8 +110,8 @@ export default async function PatientDetailPage({
     getRoutine(org.id, patient.id),
     listSessions(org.id, patient.id),
     unreadCount(org.id, patient.id, "SPECIALIST"),
-    getPlan(org.id, patient.id),
-    listDoses(org.id, patient.id),
+    getPlanForSpecialist(org.id, patient.id),
+    listDosesForSpecialist(org.id, patient.id),
     listMeasurementsSince(org.id, patient.id, since),
     bodyComposition(org.id, patient.id),
     listMeasurementsSince(org.id, patient.id, new Date(0)),
@@ -492,6 +495,11 @@ export default async function PatientDetailPage({
         </Card>
 
 
+        {/* No card at all when the patient does not share: the empty state read
+            "el paciente no ha registrado pauta", which is a false statement
+            rather than an absence, and the decision was that a specialist sees
+            nothing — including the fact that there is something to see. */}
+        {medicationPlan === null ? null : (
         <Card className="lg:col-span-5">
           <div className="flex flex-col gap-3">
             <h2 className="text-lg font-semibold">
@@ -553,11 +561,10 @@ export default async function PatientDetailPage({
                   </p>
                 )}
               </>
-            ) : (
-              <p className="text-sm text-ink-subtle">{t("medication.empty")}</p>
-            )}
+            ) : null}
           </div>
         </Card>
+        )}
 
         <Card className="lg:col-span-7">
           <div className="flex flex-col gap-4">

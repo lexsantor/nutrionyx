@@ -7,6 +7,7 @@ import { bmiCategory } from "@/modules/assessment/computed";
 import { ASSESSMENT_STEPS } from "@/modules/assessment/definition";
 import { listDocuments } from "@/modules/documents/repository";
 import { getOrgProfile } from "@/modules/organization/repository";
+import { getPlan } from "@/modules/medication/repository";
 import { signOut } from "@/lib/auth/sign-out";
 
 export const metadata = { title: "Mi perfil" };
@@ -28,10 +29,11 @@ export default async function PatientProfilePage() {
   const format = await getFormatter();
   const { name, patient } = await requirePatient();
 
-  const [assessment, documents, org] = await Promise.all([
+  const [assessment, documents, org, medicationPlan] = await Promise.all([
     findLatestAssessment(patient.id),
     listDocuments(patient.organizationId, patient.id),
     getOrgProfile(patient.organizationId),
+    getPlan(patient.organizationId, patient.id),
   ]);
   const completed = assessment?.status === "COMPLETED";
   const bmiValue = completed ? Number(assessment.bmi) : null;
@@ -225,6 +227,22 @@ export default async function PatientProfilePage() {
             </Link>
           </div>
         </section>
+
+        {medicationPlan === null ? (
+          /* The only door to medication for a patient who has none: the nav
+             entry appears once a plan exists, so without this the feature
+             would be unreachable. */
+          <section className={TILE}>
+            <h2 className="text-lg font-semibold">{t("medication.title")}</h2>
+            <p className="text-sm text-ink-subtle">{t("medication.text")}</p>
+            <Link
+              href="/mi-espacio/medicacion"
+              className="w-fit text-sm text-accent-text"
+            >
+              {t("medication.cta")}
+            </Link>
+          </section>
+        ) : null}
 
         <form action={signOut}>
           <Button type="submit" variant="secondary">

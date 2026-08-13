@@ -868,6 +868,19 @@
       "invalidDate": "La fecha no es válida.",
       "noPlan": "Configura primero tu pauta.",
       "generic": "No se ha podido guardar. Inténtalo de nuevo."
+    },
+    "sharing": {
+      "title": "Quién ve esta información",
+      "onTitle": "Tu especialista ve tu medicación",
+      "onText": "Ve la pauta, las dosis que registras y el punto de inyección sugerido. Puedes dejar de compartirla cuando quieras, y lo que ya haya leído no desaparece de su historia clínica.",
+      "offTitle": "Esta sección es solo tuya",
+      "offText": "Tu especialista no ve esta sección: ni la pauta, ni las dosis, ni el punto de inyección. Si escribiste tu medicación en la evaluación inicial, eso sigue en tu ficha clínica: esto no lo borra.",
+      "start": "Compartir con mi especialista",
+      "stop": "Dejar de compartir",
+      "saving": "Guardando...",
+      "errors": {
+        "session": "Vuelve a iniciar sesión para cambiar esto."
+      }
     }
   },
   "targets": {
@@ -1344,6 +1357,11 @@
       "erasureTitle": "Borrar mis datos",
       "erasureHint": "Tu historial clínico lo custodia {consulta}, así que el borrado lo tramitan ellos. Pídeselo y están obligados a atenderlo.",
       "erasureCta": "Escribir a mi especialista"
+    },
+    "medication": {
+      "title": "Medicación",
+      "text": "Si sigues una medicación (por ejemplo un GLP-1), puedes llevar aquí la pauta de tu prescriptor y registrar cada dosis. Es tuyo: tu especialista no lo ve salvo que decidas compartirlo.",
+      "cta": "Activar el seguimiento de medicación"
     }
   },
   "print": {

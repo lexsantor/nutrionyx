@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { getPlan, listDoses } from "@/modules/medication/repository";
+import { SharingForm } from "./sharing-form";
 import { findLatestAssessment } from "@/modules/assessment/repository";
 import {
   daysUntil,
@@ -141,6 +142,17 @@ export default async function MedicationPage() {
                 />
               </div>
             </details>
+
+            {/* Who else sees this. Last, and its own card: it is a decision
+                about the record rather than part of logging a dose. */}
+            <Card className="lg:col-span-12">
+              <div className="flex flex-col gap-4">
+                <h2 className="text-lg font-semibold">
+                  {t("sharing.title")}
+                </h2>
+                <SharingForm shared={plan.sharedWithSpecialist} />
+              </div>
+            </Card>
           </div>
         ) : (
           <Card>

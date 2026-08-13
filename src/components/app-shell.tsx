@@ -261,10 +261,24 @@ export function AdminShell({ children }: { children: ReactNode }) {
   );
 }
 
-export function PatientShell({ children }: { children: ReactNode }) {
+export function PatientShell({
+  children,
+  showMedication = false,
+}: {
+  children: ReactNode;
+  /**
+   * Medication is opt-in (owner decision 2026-08-13): a patient who does not
+   * follow one never sees the entry. The layout derives it from whether a
+   * plan exists, so there is no second flag to keep in step with the first.
+   */
+  showMedication?: boolean;
+}) {
+  const primary = showMedication
+    ? PATIENT_NAV
+    : PATIENT_NAV.filter((item) => item.key !== "medication");
   return (
     <Shell
-      primary={PATIENT_NAV}
+      primary={primary}
       account={PATIENT_ACCOUNT}
       labelNamespace="patientNav"
       root="/mi-espacio"

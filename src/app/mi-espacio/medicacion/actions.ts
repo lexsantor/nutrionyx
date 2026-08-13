@@ -6,6 +6,7 @@ import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import {
   getPlan,
   logDose,
+  setSharing,
   upsertPlan,
 } from "@/modules/medication/repository";
 import { GLP1_PRESETS, SITE_ROTATION } from "@/modules/medication/glp1";
@@ -15,6 +16,8 @@ export type MedicationFormState =
   | { errorKey: string }
   | { ok: true }
   | null;
+
+export type SharingState = { errorKey: string } | { ok: true } | null;
 
 function parseDose(formData: FormData): number | null {
   const raw = ((formData.get("doseMg") as string) ?? "").trim().replace(",", ".");
@@ -137,5 +140,25 @@ export async function logDoseAction(
 
   revalidatePath("/mi-espacio");
   revalidatePath("/mi-espacio/medicacion");
+  return { ok: true };
+}
+
+
+/**
+ * The patient turns sharing with their specialist on or off. Only the patient
+ * can: there is no console path to this, by design.
+ */
+export async function setSharingAction(
+  _prevState: SharingState,
+  formData: FormData,
+): Promise<SharingState> {
+  const patient = await requirePatient();
+  if (!patient) return { errorKey: "errors.session" };
+
+  const shared = formData.get("shared") === "on";
+  await setSharing(patient.organizationId, patient.id, shared);
+
+  revalidatePath("/mi-espacio/medicacion");
+  revalidatePath("/mi-espacio");
   return { ok: true };
 }
