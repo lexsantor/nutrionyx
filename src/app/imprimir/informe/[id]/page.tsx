@@ -6,6 +6,7 @@ import { getOrgProfile } from "@/modules/organization/repository";
 import { getTargets } from "@/modules/targets/repository";
 import { listMeasurementsSince } from "@/modules/measurement/repository";
 import { listSessions } from "@/modules/training/repository";
+import { mealAdherence } from "@/modules/diet/meal-log";
 import {
   getPlanForSpecialist,
   listDosesForSpecialist,
@@ -59,6 +60,7 @@ export default async function ReportPrintPage({
     allSessions,
     medicationPlan,
     allDoses,
+    meals,
   ] = await Promise.all([
     getOrgProfile(org.id),
     getTargets(org.id, patient.id),
@@ -66,6 +68,7 @@ export default async function ReportPrintPage({
     listSessions(org.id, patient.id),
     getPlanForSpecialist(org.id, patient.id),
     listDosesForSpecialist(org.id, patient.id),
+    mealAdherence(org.id, patient.id, since),
   ]);
 
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
@@ -143,6 +146,18 @@ export default async function ReportPrintPage({
             value: t("report.trainingValue", {
               logged: sessions.logged,
               expected: sessions.expected,
+            }),
+          },
+        ]
+      : []),
+    ...(meals.marked > 0
+      ? [
+          {
+            label: t("report.meals"),
+            value: t("report.mealsValue", {
+              done: meals.done,
+              marked: meals.marked,
+              days: meals.daysWithMarks,
             }),
           },
         ]

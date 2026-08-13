@@ -64,6 +64,7 @@ model Patient {
   medicationDoses MedicationDose[]
   target          PatientTarget?
   notes           PatientNote[]
+  mealLogs        MealLog[]
   photos          PatientPhoto[]
   documents       PatientDocument[]
   dietPlan        DietPlan?
@@ -318,6 +319,34 @@ model PatientDocument {
 // Specialist-private clinical notes (docs/build/slice-10-plan.md).
 // Append-only (PRD_03 rules 5-6): a correction is a new note. Never shown
 // to the patient; never visible to the platform admin (operator-blindness).
+// How a prescribed meal actually went (docs/build/slice-30-plan.md). Not a
+// measurement: it is the state of one meal on one day, so a correction is an
+// update rather than a new row, and (patient, date, slot) is unique. The
+// append-only rule in PRD_03 rules 5-6 is about facts that accumulate; a tick
+// the patient can untick is not one.
+enum MealStatus {
+  DONE
+  CHANGED
+  SKIPPED
+}
+
+model MealLog {
+  id             String     @id @default(cuid())
+  organizationId String
+  patientId      String
+  patient        Patient    @relation(fields: [patientId], references: [id])
+  /** Madrid calendar day, at midnight, so a day is a day and not an instant. */
+  day            DateTime   @db.Date
+  slot           String
+  status         MealStatus
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@unique([patientId, day, slot])
+  @@index([organizationId, patientId, day])
+  @@map("meal_logs")
+}
+
 model PatientNote {
   id               String   @id @default(cuid())
   organizationId   String

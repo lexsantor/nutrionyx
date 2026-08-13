@@ -718,7 +718,9 @@
       "activity": "Actividad",
       "activityValue": "{days} de {total} días con registro",
       "training": "Entrenamiento",
-      "trainingValue": "{logged} de {expected} sesiones"
+      "trainingValue": "{logged} de {expected} sesiones",
+      "meals": "Plan de comidas",
+      "mealsValue": "{done} de {marked} comidas seguidas · {days, plural, one {# día} other {# días}} con registro"
     },
     "documents": {
       "title": "Documentos",
@@ -1132,6 +1134,13 @@
       "DAIRY": "Lácteos",
       "FAT": "Grasas",
       "OTHER": "Otros"
+    },
+    "log": {
+      "status": {
+        "DONE": "Hecha",
+        "CHANGED": "La cambié",
+        "SKIPPED": "Me la salté"
+      }
     }
   },
   "inbox": {

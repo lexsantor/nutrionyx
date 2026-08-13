@@ -36,6 +36,7 @@ import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
 import { getDietPlan } from "@/modules/diet/repository";
+import { mealAdherence } from "@/modules/diet/meal-log";
 import {
   getRoutine,
   listSessions,
@@ -102,6 +103,7 @@ export default async function PatientDetailPage({
     body,
     allBodyRows,
     weights,
+    meals,
   ] = await Promise.all([
     getTargets(org.id, patient.id),
     listNotes(org.id, patient.id),
@@ -117,6 +119,7 @@ export default async function PatientDetailPage({
     bodyComposition(org.id, patient.id),
     listMeasurementsSince(org.id, patient.id, new Date(0)),
     listWeights(org.id, patient.id),
+    mealAdherence(org.id, patient.id, since),
   ]);
   const recentDoses = allDoses.slice(0, 5);
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
@@ -299,6 +302,16 @@ export default async function PatientDetailPage({
                   value={t("report.trainingValue", {
                     logged: sessionReport.logged,
                     expected: sessionReport.expected,
+                  })}
+                />
+              ) : null}
+              {meals.marked > 0 ? (
+                <Row
+                  label={t("report.meals")}
+                  value={t("report.mealsValue", {
+                    done: meals.done,
+                    marked: meals.marked,
+                    days: meals.daysWithMarks,
                   })}
                 />
               ) : null}

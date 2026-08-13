@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
 import { getDietPlan } from "@/modules/diet/repository";
+import { getDayLog } from "@/modules/diet/meal-log";
+import { MealMark } from "./meal-mark";
 import { getTargets } from "@/modules/targets/repository";
 import {
   MEAL_SLOTS,
@@ -33,6 +35,12 @@ export default async function PatientDietPage() {
   const hasPlan = plan != null && content != null && !isEmptyPlan(content);
 
   const targets = await getTargets(patient.organizationId, patient.id);
+  // Only today's marks are read: the controls only render on today.
+  const todayLog = await getDayLog(
+    patient.organizationId,
+    patient.id,
+    new Date(),
+  );
   const planParts = targets
     ? [
         targets.kcalTarget != null
@@ -118,6 +126,9 @@ export default async function PatientDietPage() {
                             {t(`slots.${slot}`)}
                           </dt>
                           <dd className="flex flex-col gap-1.5 text-sm leading-relaxed">
+                            {isToday ? (
+                              <MealMark slot={slot} current={todayLog[slot]} />
+                            ) : null}
                             <ul className="flex flex-col gap-0.5">
                               {meal.main.map((row, i) => (
                                 <li key={i} className="flex gap-2">
