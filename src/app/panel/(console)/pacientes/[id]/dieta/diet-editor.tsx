@@ -2,6 +2,8 @@
 
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Select } from "@/components/ui/select";
+import { FOODS_BY_GROUP, findFood } from "@/modules/diet/foods";
 import { Button } from "@/components/ui/button";
 import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 import { Input } from "@/components/ui/input";
@@ -14,6 +16,7 @@ import {
   type DietPlanContent,
   type FoodRow,
   type MealSlot,
+  dayTotals,
 } from "@/modules/diet/plan";
 import { dietFormAction, type DietPlanFormState } from "./actions";
 import { TemplateBar } from "@/components/template-bar";
@@ -26,6 +29,8 @@ import { TemplateBar } from "@/components/template-bar";
  * Field names encode their address:
  *   meal-{day}-{slot}-{group}-{row}-amount   group = "main" | "alt{n}"
  *   meal-{day}-{slot}-{group}-{row}-food
+ *   meal-{day}-{slot}-{group}-{row}-foodKey   optional, catalogue key
+ *   meal-{day}-{slot}-{group}-{row}-grams     optional, only with a key
  */
 
 type MealDraft = { main: FoodRow[]; alternatives: FoodRow[][] };
@@ -119,6 +124,40 @@ export function DietEditor({
   };
 
 
+  /**
+   * Choosing from the catalogue fills the free-text name too, so the row
+   * still reads as a sentence in the printed plan and in the patient's app.
+   * Clearing the pick drops the grams with it: grams without a food count
+   * nothing and would sit there looking meaningful.
+   */
+  const pickFood = (
+    dayIndex: number,
+    slot: MealSlot,
+    group: string,
+    rowIndex: number,
+    key: string,
+  ) => {
+    const food = findFood(key);
+    editMeal(dayIndex, slot, (meal) => {
+      const apply = (rows: FoodRow[]) =>
+        rows.map((row, i) =>
+          i === rowIndex
+            ? food
+              ? { ...row, foodKey: food.key, food: food.name }
+              : { amount: row.amount, food: row.food }
+            : row,
+        );
+      if (group === "main") return { ...meal, main: apply(meal.main) };
+      const altIndex = Number(group.slice(3));
+      return {
+        ...meal,
+        alternatives: meal.alternatives.map((rows, i) =>
+          i === altIndex ? apply(rows) : rows,
+        ),
+      };
+    });
+  };
+
   const addFoodButton = (
     disabled: boolean,
     onClick: () => void,
@@ -146,7 +185,7 @@ export function DietEditor({
       {rows.map((row, rowIndex) => {
         const base = `meal-${dayIndex}-${slot}-${group}-${rowIndex}`;
         return (
-          <div key={rowIndex} className="flex items-center gap-1.5">
+          <div key={rowIndex} className="flex flex-wrap items-center gap-1.5">
             <input
               name={`${base}-amount`}
               type="text"
@@ -163,6 +202,44 @@ export function DietEditor({
               aria-label={t("editor.foodLabel")}
               className="min-w-0 flex-1 rounded-[10px] border border-field-border bg-surface-2 px-2 py-1.5 text-sm text-ink"
             />
+            {/* Optional, and that is the whole design: picking a catalogue
+                food makes the row countable, leaving it alone keeps the plan
+                writable in the words a specialist already uses. */}
+            <div className="order-last flex w-full items-center gap-1.5">
+              <div className="min-w-0 flex-1">
+              <Select
+                name={`${base}-foodKey`}
+                value={row.foodKey ?? ""}
+                onChange={(event) =>
+                  pickFood(dayIndex, slot, group, rowIndex, event.target.value)
+                }
+                aria-label={t("editor.catalogueLabel")}
+                className="h-9 py-1.5 text-sm"
+              >
+                <option value="">{t("editor.catalogueNone")}</option>
+                {FOODS_BY_GROUP.map(({ group: foodGroup, foods }) => (
+                  <optgroup key={foodGroup} label={t(`groups.${foodGroup}`)}>
+                    {foods.map((food) => (
+                      <option key={food.key} value={food.key}>
+                        {food.name}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </Select>
+              </div>
+            <input
+              name={`${base}-grams`}
+              type="text"
+              inputMode="numeric"
+              maxLength={5}
+              defaultValue={v(`${base}-grams`, row.grams ? String(row.grams) : "")}
+              aria-label={t("editor.gramsLabel")}
+              placeholder="g"
+              disabled={!row.foodKey}
+              className="w-16 shrink-0 rounded-[10px] border border-field-border bg-surface-2 px-2 py-1.5 text-sm tabular-nums text-ink disabled:opacity-40"
+            />
+            </div>
             {onRemove && rows.length > 1 ? (
               <button
                 type="button"
@@ -237,9 +314,29 @@ export function DietEditor({
             key={dayIndex}
             className="flex flex-col gap-3 rounded-xl border border-hairline bg-surface-1 p-5"
           >
-            <h2 className="text-base font-semibold capitalize">
-              {t(`days.${dayIndex}`)}
-            </h2>
+            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h2 className="text-base font-semibold capitalize">
+                {t(`days.${dayIndex}`)}
+              </h2>
+              {/* The count of rows outside the catalogue sits next to the
+                  total, always. A sum that quietly ignores half a meal reads
+                  as a complete day and is worse than no sum at all. */}
+              <p className="text-xs text-ink-subtle">
+                {(() => {
+                  const totals = dayTotals(day);
+                  const counted =
+                    totals.kcal > 0
+                      ? t("editor.totals.value", {
+                          kcal: totals.kcal,
+                          protein: totals.proteinG,
+                        })
+                      : t("editor.totals.none");
+                  return totals.uncounted > 0
+                    ? `${counted} · ${t("editor.totals.uncounted", { count: totals.uncounted })}`
+                    : counted;
+                })()}
+              </p>
+            </div>
             <div className="grid items-start gap-3 md:grid-cols-2 xl:grid-cols-3">
               {MEAL_SLOTS.map((slot) => {
                 const meal = day[slot] ?? {

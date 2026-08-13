@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   ALTERNATIVES_PER_MEAL_MAX,
   contentFromEntries,
+  dayTotals,
   AMOUNT_MAX,
   DAYS_PER_WEEK,
   FOOD_MAX,
@@ -259,5 +260,61 @@ describe("contentFromEntries", () => {
       ]),
     );
     expect(reposted).toEqual(first);
+  });
+});
+
+describe("day totals (slice-29)", () => {
+  it("sums only rows that carry a catalogue food and grams", () => {
+    const day = {
+      BREAKFAST: {
+        main: [
+          { amount: "60 g", food: "Avena", foodKey: "avena", grams: 60 },
+          { amount: "1 ud", food: "Plátano", foodKey: "platano", grams: 120 },
+          { amount: "al gusto", food: "Canela" },
+        ],
+        alternatives: [],
+      },
+      LUNCH: {
+        main: [
+          { amount: "150 g", food: "Pollo", foodKey: "pechuga-pollo", grams: 150 },
+        ],
+        // An alternative is a substitute for the meal, never an addition.
+        alternatives: [
+          [{ amount: "150 g", food: "Merluza", foodKey: "merluza", grams: 150 }],
+        ],
+      },
+    };
+    const totals = dayTotals(day);
+    // 379*0.6 + 89*1.2 + 165*1.5 = 227 + 107 + 248
+    expect(totals.kcal).toBe(582);
+    expect(totals.proteinG).toBeCloseTo(7.8 + 1.3 + 46.5, 1);
+    expect(totals.uncounted).toBe(1);
+  });
+
+  it("counts nothing, and says so, for a plan written as free text", () => {
+    const day = {
+      DINNER: {
+        main: [{ amount: "un plato", food: "Lentejas de la abuela" }],
+        alternatives: [],
+      },
+    };
+    expect(dayTotals(day)).toEqual({ kcal: 0, proteinG: 0, uncounted: 1 });
+  });
+
+  it("drops a key the catalogue no longer has, keeping the text", () => {
+    const days = Array.from({ length: DAYS_PER_WEEK }, () => ({}) as object);
+    days[0] = {
+      LUNCH: {
+        main: [
+          { amount: "150 g", food: "Algo retirado", foodKey: "no-existe", grams: 150 },
+        ],
+        alternatives: [],
+      },
+    };
+    const content = normalizeContent({ version: 2, days });
+    const row = content!.days[0].LUNCH!.main[0];
+    expect(row.food).toBe("Algo retirado");
+    expect(row.foodKey).toBeUndefined();
+    expect(row.grams).toBeUndefined();
   });
 });

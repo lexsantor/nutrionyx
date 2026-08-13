@@ -9,6 +9,8 @@
  * it into a single row, so plans written before this slice keep rendering
  * and upgrade the first time they are saved.
  */
+import { findFood, macrosFor } from "./foods";
+
 export const MEAL_SLOTS = [
   "BREAKFAST",
   "MID_MORNING",
@@ -20,11 +22,22 @@ export const MEAL_SLOTS = [
 export type MealSlot = (typeof MEAL_SLOTS)[number];
 
 /**
- * `amount` is free text ("150 g", "1 ud", "2 cucharadas"): plans are not
- * summed anywhere, and forcing grams would exclude foods measured in
- * pieces. Revisit if macro totals ever land (slice-21-plan D1).
+ * `amount` stays free text ("150 g", "1 ud", "2 cucharadas"): forcing grams
+ * would exclude foods measured in pieces, and every plan written before
+ * slice-29 has one.
+ *
+ * `foodKey` and `grams` are what make a row countable (slice-29). Both
+ * optional on purpose: a row with neither still renders and still saves, so
+ * no existing plan became invalid and no specialist is forced to weigh a
+ * salad to write one. Only rows that carry both reach the day's totals, and
+ * the editor says how many did not.
  */
-export type FoodRow = { amount: string; food: string };
+export type FoodRow = {
+  amount: string;
+  food: string;
+  foodKey?: string;
+  grams?: number;
+};
 
 /** A meal: the main list, plus zero or more alternative versions of it. */
 export type Meal = { main: FoodRow[]; alternatives: FoodRow[][] };
@@ -38,6 +51,8 @@ export const AMOUNT_MAX = 16;
 export const FOOD_MAX = 200;
 export const ROWS_PER_GROUP_MAX = 20;
 export const ALTERNATIVES_PER_MEAL_MAX = 5;
+/** A single row above this is a typo, not a portion. */
+export const GRAMS_MAX = 5000;
 
 export function emptyContent(): DietPlanContent {
   return {
@@ -71,7 +86,24 @@ function normalizeRows(input: unknown): FoodRow[] | null {
     // A quantity with no food names nothing: the food is what carries the
     // row. Drop rows the specialist left blank.
     if (!food) continue;
-    rows.push({ amount, food });
+
+    // A key is only kept when the catalogue still has it: a food withdrawn
+    // from the table must not leave a row counting phantom calories. The
+    // free text stays either way, so the row still reads.
+    const rawKey = (row as Record<string, unknown>).foodKey;
+    const rawGrams = (row as Record<string, unknown>).grams;
+    const foodKey =
+      typeof rawKey === "string" && findFood(rawKey) ? rawKey : undefined;
+    const grams =
+      typeof rawGrams === "number" && Number.isFinite(rawGrams) && rawGrams > 0
+        ? Math.min(Math.round(rawGrams), GRAMS_MAX)
+        : undefined;
+    rows.push({
+      amount,
+      food,
+      ...(foodKey ? { foodKey } : {}),
+      ...(foodKey && grams ? { grams } : {}),
+    });
   }
   return rows;
 }
@@ -162,7 +194,8 @@ export function summarizeRows(rows: FoodRow[]): string {
  * dynamic, so the shape is recovered from field names rather than a fixed
  * loop:
  *
- *   meal-{day}-{slot}-{group}-{row}-{amount|food}   group = main | alt{n}
+ *   meal-{day}-{slot}-{group}-{row}-{amount|food|foodKey|grams}
+ *   group = main | alt{n}
  *
  * Returns raw (un-normalized) content: pass it through normalizeContent,
  * which enforces every cap and drops blanks.
@@ -170,8 +203,15 @@ export function summarizeRows(rows: FoodRow[]): string {
 export function contentFromEntries(
   entries: Iterable<[string, string]>,
 ): unknown {
-  const FIELD = /^meal-(\d+)-([A-Z_]+)-(main|alt\d+)-(\d+)-(amount|food)$/;
-  const cells = new Map<string, { amount?: string; food?: string }>();
+  const FIELD =
+    /^meal-(\d+)-([A-Z_]+)-(main|alt\d+)-(\d+)-(amount|food|foodKey|grams)$/;
+  type Cell = {
+    amount?: string;
+    food?: string;
+    foodKey?: string;
+    grams?: number;
+  };
+  const cells = new Map<string, Cell>();
 
   for (const [key, value] of entries) {
     const match = key.match(FIELD);
@@ -179,7 +219,14 @@ export function contentFromEntries(
     const [, day, slot, group, row, field] = match;
     const id = `${day}|${slot}|${group}|${row}`;
     const cell = cells.get(id) ?? {};
-    cell[field as "amount" | "food"] = value;
+    if (field === "grams") {
+      // The field is a text input, so an empty or unparseable value simply
+      // means "not weighed" and the row falls back to free text.
+      const grams = Number(value.replace(",", "."));
+      if (Number.isFinite(grams) && grams > 0) cell.grams = grams;
+    } else {
+      cell[field as "amount" | "food" | "foodKey"] = value;
+    }
     cells.set(id, cell);
   }
 
@@ -204,7 +251,12 @@ export function contentFromEntries(
     if (!(MEAL_SLOTS as readonly string[]).includes(slot)) continue;
 
     const meal = (days[day][slot] ??= { main: [], alternatives: [] });
-    const row: FoodRow = { amount: cell.amount ?? "", food: cell.food ?? "" };
+    const row: FoodRow = {
+      amount: cell.amount ?? "",
+      food: cell.food ?? "",
+      ...(cell.foodKey ? { foodKey: cell.foodKey } : {}),
+      ...(cell.grams ? { grams: cell.grams } : {}),
+    };
     if (group === "main") {
       meal.main.push(row);
       continue;
@@ -223,4 +275,40 @@ export function contentFromEntries(
   }
 
   return { days };
+}
+
+
+export type DayTotals = {
+  kcal: number;
+  proteinG: number;
+  /** Rows in the day's main meals with no catalogue food behind them. */
+  uncounted: number;
+};
+
+/**
+ * What a day adds up to, from the main version of each meal only:
+ * alternatives are substitutes, and counting them would double the day.
+ *
+ * `uncounted` is part of the answer, not a detail. A total that silently
+ * ignores half a meal is worse than no total, so every caller can say how
+ * complete it is.
+ */
+export function dayTotals(day: DayPlan): DayTotals {
+  let kcal = 0;
+  let proteinG = 0;
+  let uncounted = 0;
+
+  for (const slot of MEAL_SLOTS) {
+    for (const row of day[slot]?.main ?? []) {
+      if (!row.foodKey || !row.grams) {
+        uncounted += 1;
+        continue;
+      }
+      const macros = macrosFor(row.foodKey, row.grams);
+      kcal += macros.kcal;
+      proteinG += macros.proteinG;
+    }
+  }
+
+  return { kcal, proteinG: Math.round(proteinG * 10) / 10, uncounted };
 }

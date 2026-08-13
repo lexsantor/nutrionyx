@@ -1079,7 +1079,17 @@
       "removeRow": "Quitar alimento",
       "removeAlternative": "Quitar alternativa #{n}",
       "addFoodToMain": "Añadir otro alimento a la comida principal",
-      "addFoodToAlternative": "Añadir otro alimento a la alternativa #{n}"
+      "addFoodToAlternative": "Añadir otro alimento a la alternativa #{n}",
+      "catalogueLabel": "Contar como (opcional)",
+      "catalogueNone": "Sin contar",
+      "gramsLabel": "Gramos",
+      "totals": {
+        "label": "Total del día",
+        "value": "{kcal} kcal · {protein} g proteína",
+        "uncounted": "{count, plural, one {# línea sin contar} other {# líneas sin contar}}",
+        "none": "Ninguna línea cuenta todavía",
+        "target": "objetivo {kcal} kcal · {protein} g"
+      }
     },
     "patient": {
       "heading": "Mi plan de dieta",
@@ -1111,6 +1121,15 @@
         "notFound": "Esa plantilla ya no existe.",
         "generic": "No se ha podido completar. Inténtalo de nuevo."
       }
+    },
+    "groups": {
+      "PROTEIN": "Proteína",
+      "CARB": "Hidratos",
+      "VEGETABLE": "Verduras",
+      "FRUIT": "Fruta",
+      "DAIRY": "Lácteos",
+      "FAT": "Grasas",
+      "OTHER": "Otros"
     }
   },
   "inbox": {
