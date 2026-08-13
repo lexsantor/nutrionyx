@@ -136,7 +136,8 @@
     "logoFile": "Subir logo",
     "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL.",
     "logoChoose": "Elegir archivo",
-    "logoNoFile": "Ningún archivo seleccionado"
+    "logoNoFile": "Ningún archivo seleccionado",
+    "logoAlt": "Logo actual de tu consulta"
   },
   "home": {
     "badge": "Para nutricionistas · con invitación",

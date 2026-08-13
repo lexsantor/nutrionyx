@@ -86,8 +86,12 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
           <figure className="flex flex-col items-center gap-1.5 sm:w-40">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
+              // Not decorative: this is the preview of the file just
+              // uploaded, and "is my logo actually there" is the question the
+              // element exists to answer. The other empty alts in this
+              // codebase sit beside text that already names them.
               src={profile.logoUrl}
-              alt=""
+              alt={t("logoAlt")}
               width={320}
               height={160}
               className="h-20 w-full rounded-[10px] border border-hairline bg-surface-1 object-contain p-2"

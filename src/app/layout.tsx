@@ -44,6 +44,17 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
+        {/* Vercel Web Analytics, as the script rather than @vercel/analytics.
+            Installing the package rewrote package-lock.json and dropped the
+            next-intl/@swc/helpers entry that CI's `npm ci` needs — the exact
+            failure tasks/todo.md warns about — and the package's only real
+            advantage here is counting client-side route changes, which a
+            single-page landing does not have.
+
+            No cookies, so it adds no consent obligation. It only reports once
+            Web Analytics is enabled on the Vercel project; until then the
+            script 404s silently and nothing else breaks. */}
+        <script defer src="/_vercel/insights/script.js" />
       </body>
     </html>
   );
