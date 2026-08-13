@@ -12,6 +12,7 @@ import { ProfileForm } from "./profile-form";
 import { SpecialtySettings } from "./specialty-settings";
 import { acceptConsentAction } from "./actions";
 
+export const metadata = { title: "Ajustes" };
 export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {

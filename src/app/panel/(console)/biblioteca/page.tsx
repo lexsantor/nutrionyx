@@ -21,6 +21,7 @@ import {
 import { TemplateActions } from "./template-actions";
 import type { TemplateKind } from "./actions";
 
+export const metadata = { title: "Biblioteca" };
 export const dynamic = "force-dynamic";
 
 /**

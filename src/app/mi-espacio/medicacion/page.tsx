@@ -16,6 +16,7 @@ import { PlanForm } from "./plan-form";
 import { DoseForm } from "./dose-form";
 import { madridToday } from "@/modules/scheduling/time";
 
+export const metadata = { title: "Mi medicación" };
 export const dynamic = "force-dynamic";
 
 export default async function MedicationPage() {

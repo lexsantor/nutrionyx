@@ -14,6 +14,7 @@ import { listDietTemplates } from "@/modules/diet/templates";
 import { DietEditor } from "./diet-editor";
 import { getTargets } from "@/modules/targets/repository";
 
+export const metadata = { title: "Plan de dieta" };
 export const dynamic = "force-dynamic";
 
 export default async function DietPlanEditorPage({

@@ -5,6 +5,7 @@ import { listPatients } from "@/modules/patient/repository";
 import { listInbox } from "@/modules/messaging/repository";
 import { sameMadridDay } from "@/modules/scheduling/time";
 
+export const metadata = { title: "Mensajes" };
 export const dynamic = "force-dynamic";
 
 /**

@@ -16,6 +16,7 @@ import { WizardStep } from "./wizard-step";
 import { Review, type ReviewEntry } from "./review";
 import type { Assessment } from "@/generated/prisma/client";
 
+export const metadata = { title: "Mi evaluación" };
 export const dynamic = "force-dynamic";
 
 function answersOf(assessment: Assessment) {

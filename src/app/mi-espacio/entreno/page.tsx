@@ -16,6 +16,7 @@ import { ExerciseThumb } from "@/components/exercise-thumb";
 import { SessionForm } from "./session-form";
 import { sameMadridDay, madridWeekdayIndex } from "@/modules/scheduling/time";
 
+export const metadata = { title: "Mi entreno" };
 export const dynamic = "force-dynamic";
 
 /**

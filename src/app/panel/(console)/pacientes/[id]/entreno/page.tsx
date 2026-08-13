@@ -13,6 +13,7 @@ import {
 import { listTrainingTemplates } from "@/modules/training/templates";
 import { RoutineEditor } from "./routine-editor";
 
+export const metadata = { title: "Rutina de entrenamiento" };
 export const dynamic = "force-dynamic";
 
 export default async function RoutineEditorPage({

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ButtonLink } from "@/components/ui/button-link";
 
+export const metadata = { title: "Pacientes" };
 export const dynamic = "force-dynamic";
 
 const PAGE_SIZE = 20;

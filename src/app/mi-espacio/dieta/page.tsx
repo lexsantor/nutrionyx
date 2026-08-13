@@ -14,6 +14,7 @@ import {
 } from "@/modules/diet/plan";
 import { madridWeekdayIndex } from "@/modules/scheduling/time";
 
+export const metadata = { title: "Mi dieta" };
 export const dynamic = "force-dynamic";
 
 export default async function PatientDietPage() {

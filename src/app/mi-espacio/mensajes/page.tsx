@@ -9,6 +9,7 @@ import {
 import { MessageThread } from "@/components/message-thread";
 import { Composer } from "./composer";
 
+export const metadata = { title: "Mis mensajes" };
 export const dynamic = "force-dynamic";
 
 export default async function PatientMessagesPage() {

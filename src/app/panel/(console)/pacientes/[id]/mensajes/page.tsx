@@ -10,6 +10,7 @@ import {
 import { MessageThread } from "@/components/message-thread";
 import { Composer } from "./composer";
 
+export const metadata = { title: "Mensajes del paciente" };
 export const dynamic = "force-dynamic";
 
 export default async function SpecialistMessagesPage({

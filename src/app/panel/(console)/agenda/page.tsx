@@ -12,6 +12,7 @@ import {
   ConfirmButton,
 } from "./appointment-form";
 
+export const metadata = { title: "Agenda" };
 export const dynamic = "force-dynamic";
 
 export default async function AgendaPage() {

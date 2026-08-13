@@ -50,6 +50,7 @@ import { EraseForm } from "./erase-form";
 import { Card } from "@/components/ui/card";
 import { WeightChart } from "@/components/weight-chart";
 
+export const metadata = { title: "Ficha del paciente" };
 export const dynamic = "force-dynamic";
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
