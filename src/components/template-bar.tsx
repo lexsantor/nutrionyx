@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
+import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 
 import { TEMPLATE_NAME_MAX } from "@/modules/templates/constants";
@@ -47,8 +48,8 @@ export function TemplateBar({
       </div>
 
       <div className="flex flex-wrap items-end gap-4">
-        <div className="flex items-end gap-2">
-          <div className="flex flex-col gap-1">
+        <div className="flex w-full flex-wrap items-end gap-2 sm:w-auto">
+          <div className="flex min-w-0 flex-1 flex-col gap-1 sm:flex-none">
             <label htmlFor="templateName" className="text-xs font-medium">
               {t("nameLabel")}
             </label>
@@ -58,23 +59,23 @@ export function TemplateBar({
               type="text"
               maxLength={TEMPLATE_NAME_MAX}
               placeholder={t("namePlaceholder")}
-              className="h-9 w-56 rounded-full border border-field-border bg-surface-1 px-3.5 text-sm text-ink placeholder:text-ink-subtle"
+              className="h-9 w-full rounded-full border border-field-border bg-surface-1 px-3.5 text-sm text-ink placeholder:text-ink-subtle sm:w-56"
             />
           </div>
-          <button
+          <Button
             type="submit"
             name="intent"
             value="template-save"
+            variant="secondary"
             disabled={pending}
-            className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150 disabled:opacity-60"
           >
             {t("save")}
-          </button>
+          </Button>
         </div>
 
         {templates.length > 0 ? (
-          <div className="flex items-end gap-2">
-            <div className="flex w-56 flex-col gap-1">
+          <div className="flex w-full flex-wrap items-end gap-2 sm:w-auto">
+            <div className="flex min-w-0 flex-1 flex-col gap-1 sm:w-56 sm:flex-none">
               <label htmlFor="templateId" className="text-xs font-medium">
                 {t("loadLabel")}
               </label>
@@ -97,33 +98,32 @@ export function TemplateBar({
               </Select>
             </div>
             {armed ? (
-              <div className="flex items-center gap-1.5">
-                <button
+              <div className="flex w-full flex-wrap items-center gap-1.5 sm:w-auto">
+                <Button
                   type="submit"
                   name="intent"
                   value="template-load"
                   disabled={pending}
-                  className="inline-flex h-9 items-center rounded-full bg-primary px-4 text-sm font-semibold text-on-primary transition-[transform,background-color] hover:bg-primary-hover active:scale-[0.98] active:duration-150 disabled:opacity-60"
                 >
                   {pending ? t("loading") : t("confirmLoad")}
-                </button>
-                <button
+                </Button>
+                <Button
                   type="button"
+                  variant="ghost"
                   onClick={() => setArmed(false)}
-                  className="inline-flex h-9 items-center rounded-full px-3 text-sm text-ink-subtle transition-colors hover:text-ink"
                 >
                   {t("cancelLoad")}
-                </button>
+                </Button>
               </div>
             ) : (
-              <button
+              <Button
                 type="button"
+                variant="secondary"
                 disabled={!selected}
                 onClick={() => setArmed(true)}
-                className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150 disabled:opacity-50"
               >
                 {t("load")}
-              </button>
+              </Button>
             )}
           </div>
         ) : null}

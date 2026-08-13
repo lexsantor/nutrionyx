@@ -227,7 +227,24 @@ export function RoutineEditor({
                         aria-label={t("editor.repsLabel")}
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
                       />
-                      <div className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:max-w-80 sm:flex-1">
+                      {/* On a phone the row wraps and the exercise column
+                          takes a line of its own, so the remove control
+                          rides with sets and reps; from sm up the orders
+                          below put it back between the column and the
+                          illustration. Alone on a line it read as a stray. */}
+                      <button
+                        type="button"
+                        onClick={() =>
+                          editDay(dayIndex, (list) =>
+                            list.filter((_, i) => i !== rowIndex),
+                          )
+                        }
+                        aria-label={t("editor.removeExercise")}
+                        className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-surface-3 hover:text-error sm:order-2"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+                      </button>
+                      <div className="flex w-full min-w-0 flex-col gap-1 sm:order-1 sm:w-auto sm:max-w-80 sm:flex-1">
                         <Select
                           name={`${base}-key`}
                           value={exercise.key ?? ""}
@@ -278,25 +295,9 @@ export function RoutineEditor({
                           className={`w-full ${cell} text-xs placeholder:text-ink-subtle`}
                         />
                       </div>
-                      {/* Before the illustration, not after: the image slot
-                          collapses on an unpicked row, and a control that
-                          slides sideways depending on its neighbour is a
-                          control you have to hunt for. */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          editDay(dayIndex, (list) =>
-                            list.filter((_, i) => i !== rowIndex),
-                          )
-                        }
-                        aria-label={t("editor.removeExercise")}
-                        className="flex size-8 shrink-0 items-center justify-center rounded-full text-ink-subtle transition-colors hover:bg-surface-3 hover:text-error"
-                      >
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
-                      </button>
                       <ExerciseThumb
                         exerciseKey={exercise.key}
-                        className="size-28"
+                        className="size-28 sm:order-3"
                       />
                     </div>
                   );

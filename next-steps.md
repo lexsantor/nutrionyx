@@ -86,15 +86,20 @@ need a real device before they can be called done:
   `overscroll-contain` on the shell scroller and `overscroll-behavior:none`
   on `html`. Reproduced as a behaviour, not as a layout gap.
 
-### 3. Small, real, unglamorous
+### 3. Small, real, unglamorous - done 2026-08-13
 
-- `Cerrar sesión` in `/mi-espacio/perfil` and `Guardar semana` in the
-  template bar are raw buttons, not the `Button` primitive, so they stay
-  narrow on a phone while every other action goes full width.
-- On an exercise row with nothing picked, the remove control sits alone on
-  its own line, because the illustration slot beside it collapses.
-- The consulta's slug came out `corporesano-z3gn`: `modules/organization/slug.ts`
-  appends a suffix. Worth checking whether that is intended for a free slug.
+All three are closed; kept here for the next reader.
+
+- `Cerrar sesión` in `/mi-espacio/perfil` and the four template-bar controls
+  are the `Button` primitive now, so they go full width on a phone like every
+  other action. The template bar was also overflowing its card: a fixed `w-56`
+  name field beside a non-wrapping button pushed `Guardar semana` past the
+  right edge.
+- The remove control on an exercise row rides with sets and reps on a phone,
+  and `sm:order-*` puts it back between the exercise column and the
+  illustration from sm up. Desktop is unchanged to the pixel.
+- The slug is not a bug. `orgSlug()` appends a 4-char suffix on purpose, to
+  avoid an availability round-trip, so `corporesano-z3gn` is expected.
 
 ## Blocked on the owner
 

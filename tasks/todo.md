@@ -300,6 +300,22 @@ screen behind it.
   enough because `defaultValue` is read once at mount, so the form now carries
   a generation key that remounts the cells per action.
 
+- **Slice 27 - Phone-width actions** (2026-08-13): the three unglamorous items
+  left in next-steps.md, all measured in the browser at 390px before and after
+  rather than reasoned about. `Cerrar sesión` in `/mi-espacio/perfil` and the
+  four template-bar controls were raw buttons with their own 36px pill classes,
+  so they stayed narrow while every other action went full width; they are the
+  `Button` primitive now. The template bar was worse than narrow: a fixed
+  `w-56` name field beside a non-wrapping button pushed `Guardar semana` past
+  the card's right edge. The field is `w-full sm:w-56` inside a wrapping row.
+  On an exercise row the remove control landed alone on its own line, because
+  the exercise column takes the full width on a phone and the illustration
+  beside it collapses on an unpicked row. It rides with sets and reps now, and
+  `sm:order-*` puts it back between the column and the illustration from sm up,
+  so the desktop row is unchanged to the pixel.
+  **The consulta's slug is not a bug**: `orgSlug()` appends a 4-char suffix on
+  purpose, to avoid an availability round-trip. `corporesano-z3gn` is expected.
+
 ### Backlog - waiting on the owner
 
 - **Exercise illustrations**: 4 of 41 drawn (press-banca, sentadilla,

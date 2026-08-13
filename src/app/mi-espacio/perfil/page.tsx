@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { Button } from "@/components/ui/button";
 import { requirePatient } from "@/lib/auth/patient";
 import { findLatestAssessment } from "@/modules/assessment/repository";
 import { bmiCategory } from "@/modules/assessment/computed";
@@ -226,12 +227,9 @@ export default async function PatientProfilePage() {
         </section>
 
         <form action={signOut}>
-          <button
-            type="submit"
-            className="inline-flex h-9 items-center rounded-full border border-hairline bg-surface-1 px-4 text-sm font-semibold text-ink transition-[transform,background-color,border-color] hover:border-hairline-strong hover:bg-surface-2 active:scale-[0.98] active:duration-150"
-          >
+          <Button type="submit" variant="secondary">
             {t("signOut")}
-          </button>
+          </Button>
         </form>
       </div>
     </>
