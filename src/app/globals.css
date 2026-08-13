@@ -319,6 +319,15 @@
 /* Printable documents (/imprimir/*). The page is a sheet, not a screen:
  * fixed margins, black ink on white regardless of the viewer's theme, and
  * day blocks that do not split across a page break. */
+/* The printable documents are landscape and want their margins tight: a
+ * week is seven columns, and every millimetre of margin is a millimetre
+ * the food names do not have. A named page keeps this off every other
+ * route, which stays portrait. */
+@page sheet {
+  size: A4 landscape;
+  margin: 10mm;
+}
+
 @page {
   size: A4;
   margin: 14mm;
@@ -351,6 +360,9 @@
   /* Browsers drop background fills when printing unless told otherwise,
    * which would erase the day headers, the masthead band and the
    * prescription chips: the structure of the sheet lives in them. */
+  .doc {
+    page: sheet;
+  }
   .doc,
   .doc * {
     -webkit-print-color-adjust: exact;

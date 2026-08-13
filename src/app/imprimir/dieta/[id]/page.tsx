@@ -4,23 +4,22 @@ import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
 import { getDietPlan } from "@/modules/diet/repository";
 import { getOrgProfile } from "@/modules/organization/repository";
-import {
-  MEAL_SLOTS,
-  isEmptyPlan,
-  normalizeContent,
-} from "@/modules/diet/plan";
+import { MEAL_SLOTS, isEmptyPlan, normalizeContent } from "@/modules/diet/plan";
 import { PrintFrame } from "../../print-frame";
 
 export const metadata = { title: "Plan de dieta" };
 export const dynamic = "force-dynamic";
 
 /**
- * The week as a document. Days are cards in two columns rather than one
- * long list: a week is seven comparable things, and a column of paragraphs
- * makes the reader count to find Thursday.
+ * The week as a grid: meals down the side, days across the top.
  *
- * Days with no food are skipped, so a four-day plan is four cards and not
- * seven with three saying nothing.
+ * Stacking days made a seven-day plan four pages, and a plan a patient has
+ * to leaf through on a kitchen counter is a plan they stop reading. A week
+ * is seven comparable things, so they are columns; the five meals are the
+ * rows they are compared on. That is also how a printed meal plan has
+ * always been laid out, which is a good sign rather than a boring one.
+ *
+ * Landscape, because seven columns want width. One page is the brief.
  */
 export default async function DietPrintPage({
   params,
@@ -41,6 +40,17 @@ export default async function DietPrintPage({
     getOrgProfile(org.id),
   ]);
   const content = plan ? normalizeContent(plan.content) : null;
+
+  // Only the days that carry food, so a four-day plan gets four wider
+  // columns instead of three empty ones.
+  const days = (content?.days ?? [])
+    .map((day, index) => ({ day, index }))
+    .filter(({ day }) => MEAL_SLOTS.some((slot) => day[slot]));
+  // Only the meals someone actually prescribes: no empty "merienda" row
+  // across the whole week.
+  const slots = MEAL_SLOTS.filter((slot) =>
+    days.some(({ day }) => day[slot]),
+  );
 
   return (
     <PrintFrame
@@ -65,67 +75,76 @@ export default async function DietPrintPage({
       {!content || isEmptyPlan(content) ? (
         <p className="text-sm text-ink-subtle">{tp("emptyDiet")}</p>
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {content.days.map((day, dayIndex) => {
-            const meals = MEAL_SLOTS.filter((slot) => day[slot]);
-            if (meals.length === 0) return null;
-            return (
-              <section
-                key={dayIndex}
-                className="flex break-inside-avoid flex-col overflow-hidden rounded-[10px] border border-hairline"
-              >
-                <h2 className="bg-surface-3 px-3 py-1.5 font-display text-sm font-semibold capitalize tracking-tight">
-                  {t(`days.${dayIndex}`)}
-                </h2>
-                <dl className="flex flex-col gap-2 px-3 py-2.5">
-                  {meals.map((slot) => {
-                    const meal = day[slot]!;
+        <div className="overflow-x-auto">
+          <table className="w-full table-fixed border-collapse text-[8.5pt] leading-[1.25]">
+            <thead>
+              <tr>
+                <th className="w-[7%] border border-hairline bg-surface-3 p-1" />
+                {days.map(({ index }) => (
+                  <th
+                    key={index}
+                    scope="col"
+                    className="border border-hairline bg-surface-3 px-1.5 py-1 text-left font-display text-[9pt] font-semibold capitalize"
+                  >
+                    {t(`days.${index}`)}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {slots.map((slot) => (
+                <tr key={slot} className="break-inside-avoid">
+                  <th
+                    scope="row"
+                    className="border border-hairline bg-surface-2 px-1.5 py-1 text-left align-top text-[7.5pt] font-semibold uppercase leading-tight tracking-[0.04em] text-accent-text"
+                  >
+                    {t(`slots.${slot}`)}
+                  </th>
+                  {days.map(({ day, index }) => {
+                    const meal = day[slot];
                     return (
-                      <div key={slot} className="flex flex-col gap-0.5">
-                        <dt className="text-[10px] font-semibold uppercase tracking-[0.1em] text-accent-text">
-                          {t(`slots.${slot}`)}
-                        </dt>
-                        <dd className="text-[13px] leading-snug">
-                          <ul className="flex flex-col">
-                            {meal.main.map((row, i) => (
-                              <li key={i} className="flex gap-2">
-                                <span className="w-14 shrink-0 tabular-nums text-ink-subtle">
-                                  {row.amount}
-                                </span>
-                                <span className="min-w-0">{row.food}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </dd>
-                        {/* Alternatives sit under their meal, set back and
-                            quieter: they are the same meal, not another. */}
-                        {meal.alternatives.map((rows, i) => (
-                          <dd
-                            key={i}
-                            className="ml-1 border-l-2 border-hairline pl-2 text-[12px] leading-snug text-ink-subtle"
-                          >
-                            <span className="font-semibold">
-                              {t("editor.alternative", { n: i + 1 })}
-                            </span>
+                      <td
+                        key={index}
+                        className="border border-hairline px-1.5 py-1 align-top"
+                      >
+                        {meal ? (
+                          <>
                             <ul className="flex flex-col">
-                              {rows.map((row, j) => (
-                                <li key={j} className="flex gap-2">
-                                  <span className="w-12 shrink-0 tabular-nums">
+                              {meal.main.map((row, i) => (
+                                <li key={i}>
+                                  <span className="font-semibold tabular-nums">
                                     {row.amount}
-                                  </span>
-                                  <span className="min-w-0">{row.food}</span>
+                                  </span>{" "}
+                                  {row.food}
                                 </li>
                               ))}
                             </ul>
-                          </dd>
-                        ))}
-                      </div>
+                            {/* Alternatives stay in their cell, quieter and
+                                behind a rule: the same meal, not another. */}
+                            {meal.alternatives.map((rows, i) => (
+                              <ul
+                                key={i}
+                                className="mt-1 border-t border-dashed border-hairline pt-1 text-ink-subtle"
+                              >
+                                {rows.map((row, j) => (
+                                  <li key={j}>
+                                    <span className="tabular-nums">
+                                      {row.amount}
+                                    </span>{" "}
+                                    {row.food}
+                                  </li>
+                                ))}
+                              </ul>
+                            ))}
+                          </>
+                        ) : null}
+                      </td>
                     );
                   })}
-                </dl>
-              </section>
-            );
-          })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </PrintFrame>

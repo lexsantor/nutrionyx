@@ -46,7 +46,7 @@ export function PrintFrame({
   children: ReactNode;
 }) {
   return (
-    <div className="mx-auto w-full max-w-[860px] px-6 py-8 print:max-w-none print:px-0 print:py-0">
+    <div className="mx-auto w-full max-w-[1120px] px-6 py-8 print:max-w-none print:px-0 print:py-0">
       {/* Screen-only controls: a printed page with a button on it is a
           page someone tries to press. */}
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3 print:hidden">

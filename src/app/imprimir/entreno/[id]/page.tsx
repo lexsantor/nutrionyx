@@ -16,12 +16,15 @@ export const metadata = { title: "Rutina de entrenamiento" };
 export const dynamic = "force-dynamic";
 
 /**
- * One card per training day. Single column rather than two: a routine has
- * three or four days, each row carries an illustration, and squeezing that
- * into half a page would shrink the one thing worth looking at.
+ * Training days across, exercises down.
  *
- * Rest days are omitted: a printed sheet of "nothing today" is paper spent
- * on absence.
+ * Stacked, one day took a third of a page and the sheet grew every time an
+ * exercise gained an illustration, which is the wrong direction: drawings
+ * are supposed to make it easier to read, not longer. As columns the day
+ * count sets the width and the illustration rides along at a size a
+ * patient can still recognise.
+ *
+ * Landscape and one page, same as the diet sheet, so the pair matches.
  */
 export default async function RoutinePrintPage({
   params,
@@ -43,6 +46,10 @@ export default async function RoutinePrintPage({
   ]);
   const content = routine ? normalizeRoutine(routine.content) : null;
 
+  const days = (content?.days ?? [])
+    .map((day, index) => ({ day, index }))
+    .filter(({ day }) => day.exercises.length > 0);
+
   return (
     <PrintFrame
       consulta={profile?.name ?? org.name}
@@ -63,58 +70,50 @@ export default async function RoutinePrintPage({
       notesLabel={tp("notes")}
       footer={routine?.notes ?? null}
     >
-      {!content || isEmptyRoutine(content) ? (
+      {!content || isEmptyRoutine(content) || days.length === 0 ? (
         <p className="text-sm text-ink-subtle">{tp("emptyRoutine")}</p>
       ) : (
-        <div className="flex flex-col gap-3">
-          {content.days.map((day, dayIndex) => {
-            if (day.exercises.length === 0) return null;
-            return (
-              <section
-                key={dayIndex}
-                className="flex break-inside-avoid flex-col overflow-hidden rounded-[10px] border border-hairline"
-              >
-                <h2 className="flex items-baseline justify-between gap-3 bg-surface-3 px-4 py-1.5">
-                  <span className="font-display text-sm font-semibold capitalize tracking-tight">
-                    {t(`days.${dayIndex}`)}
-                  </span>
-                  <span className="text-[11px] text-ink-subtle">
-                    {tp("exerciseCount", { count: day.exercises.length })}
-                  </span>
-                </h2>
-                <ul className="flex flex-col divide-y divide-hairline">
-                  {day.exercises.map((exercise, i) => (
-                    <li
-                      key={i}
-                      className="flex items-center gap-3 px-4 py-2"
-                    >
-                      <ExerciseThumb
-                        exerciseKey={exercise.key}
-                        className="size-14"
-                      />
-                      <span className="flex min-w-0 flex-1 flex-col">
-                        <span className="text-sm font-medium leading-snug">
-                          {exercise.name}
-                        </span>
-                        {exercise.notes ? (
-                          <span className="text-xs leading-snug text-ink-subtle">
-                            {exercise.notes}
-                          </span>
-                        ) : null}
+        <div
+          className="grid gap-2"
+          style={{
+            gridTemplateColumns: `repeat(${days.length}, minmax(0, 1fr))`,
+          }}
+        >
+          {days.map(({ day, index }) => (
+            <section
+              key={index}
+              className="flex break-inside-avoid flex-col overflow-hidden rounded-[8px] border border-hairline"
+            >
+              <h2 className="bg-surface-3 px-2 py-1 font-display text-[9pt] font-semibold capitalize tracking-tight">
+                {t(`days.${index}`)}
+              </h2>
+              <ul className="flex flex-col divide-y divide-hairline">
+                {day.exercises.map((exercise, i) => (
+                  <li key={i} className="flex items-center gap-1.5 px-2 py-1">
+                    <ExerciseThumb
+                      exerciseKey={exercise.key}
+                      className="size-9"
+                    />
+                    <span className="flex min-w-0 flex-1 flex-col">
+                      <span className="text-[8.5pt] font-medium leading-tight">
+                        {exercise.name}
                       </span>
-                      {/* The prescription is what the patient checks between
-                          sets, so it reads as a value, not as a caption. */}
-                      {formatPrescription(exercise) ? (
-                        <span className="shrink-0 whitespace-nowrap rounded-full bg-primary-subtle px-2.5 py-1 text-sm font-semibold tabular-nums text-on-primary-subtle">
-                          {formatPrescription(exercise)}
+                      {exercise.notes ? (
+                        <span className="text-[7pt] leading-tight text-ink-subtle">
+                          {exercise.notes}
                         </span>
                       ) : null}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            );
-          })}
+                    </span>
+                    {formatPrescription(exercise) ? (
+                      <span className="shrink-0 whitespace-nowrap rounded-full bg-primary-subtle px-1.5 py-0.5 text-[8pt] font-semibold tabular-nums text-on-primary-subtle">
+                        {formatPrescription(exercise)}
+                      </span>
+                    ) : null}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))}
         </div>
       )}
     </PrintFrame>
