@@ -272,8 +272,9 @@ data only, never patient clinical data. A specialist also has a **sub-role**
   operator-blindness forbids this area seeing them.
   **Not built, on purpose**: suspending a consulta (needs a status column and
   a migration, for one consulta) and a separate user-lookup page.
-  **Unverified**: the browser walk. `superadmin.email` is empty in the
-  credentials file, so there is no way to sign in as platform-admin.
+  **Unverified at the time**: the browser walk. `superadmin.email` was empty in
+  the credentials file. It has since been filled in, and `/admin/auditoria` was
+  walked as platform-admin during slice 28.
   **Open decision**: events should probably stop storing values at all.
   `modules/events` says payloads carry ids; several call sites disagree.
   Changing them forward is easy; the stored history is a separate question.

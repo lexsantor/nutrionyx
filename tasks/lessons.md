@@ -142,3 +142,54 @@ came out with all seven days and the plan came out empty.
 the submitted values on every outcome that leaves the user where they were,
 and deliberately do not echo on the one that replaces their content (loading
 a template). "Only on error" is the wrong condition.
+
+## A programmatic value on a native control is invisible to React
+
+The custom listbox (slice-28) sets the value of the real `<select>` it wraps.
+Assigning `select.value = v` directly changes the DOM and changes nothing in
+React: a controlled call site keeps its old state and re-renders the old
+value straight back over it.
+
+**Check:** go through the prototype's own setter, then dispatch a bubbling
+`change`, and the pick becomes indistinguishable from a user's:
+
+    const setter = Object.getOwnPropertyDescriptor(
+      HTMLSelectElement.prototype, "value")?.set;
+    setter?.call(select, value);
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+
+Same rule for `HTMLInputElement`. If a call site is uncontrolled it works
+either way, which is exactly why this is easy to miss until a controlled one
+appears.
+
+## A form control hidden with display:none breaks native validation
+
+Slice-28 hides the real `<select>` once the listbox takes over. With
+`display:none` (or `visibility:hidden`) the browser refuses to focus it, and a
+`required` one makes form submission fail with "An invalid form control with
+name='x' is not focusable" — the form silently does nothing.
+
+**Check:** hide a control that still has to validate with `opacity: 0` plus
+`pointer-events: none`, keeping it in the layout. It stays focusable, so the
+validation bubble lands over the visible trigger that replaced it.
+
+## setState in an effect is a lint error, and the mount flag has a real shape
+
+`useEffect(() => setEnhanced(true), [])` is the usual "am I on the client yet"
+flag and this repo's eslint rejects it: `react-hooks/set-state-in-effect`.
+
+**Check:** the answer differs between server and client, which is what
+`useSyncExternalStore` is for. Shorter than the effect, and no cascading
+render:
+
+    const enhanced = useSyncExternalStore(() => () => {}, () => true, () => false);
+
+## Playwright's colorScheme does not test this app's theme
+
+A capture taken with `colorScheme: "dark"` came back in light and proved
+nothing. The theme here is `data-theme` on the root, set by the ThemeToggle,
+not `prefers-color-scheme`.
+
+**Check:** drive the toggle, then assert on `documentElement.dataset.theme`
+before capturing. Read the computed colours too — a screenshot cannot tell you
+a token resolved rather than fell back.

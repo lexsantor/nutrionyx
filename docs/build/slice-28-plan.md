@@ -156,7 +156,19 @@ browser walk, measured with element rectangles rather than `documentElement`.
 
 1. ~~Prove D2 in a throwaway page.~~ **Done 2026-08-13**, measured against the
    real shell rather than a mock. Result above.
-2. `useEnhanced()` + `Listbox`, wired into `Select`. Walk all five call sites.
+2. ~~`useEnhanced()` + `Listbox`, wired into `Select`.~~ **Done 2026-08-13.**
+   Walked in the browser: the trigger is what the call site's `<label>` names,
+   the popup is anchored and flips, arrows/Enter/Escape/typeahead work, focus
+   returns to the trigger, `required` still fails the form through the hidden
+   native select, and picking in the controlled routine editor re-renders React
+   (the illustration for the old exercise disappears). Dark theme asserted on
+   computed colours, not on a screenshot. `admin/auditoria` confirmed: three
+   triggers, three labels pointing at them, options read from a
+   server-rendered `<select>`.
+   Two design notes worth keeping: the rows are read from the live `<select>`
+   rather than from React children, which removed the server-component risk
+   this plan flagged; and `useEnhanced` became a `useSyncExternalStore` call
+   because setState-in-effect is a lint error here.
 3. `Calendar` behind the `pointer: fine` gate. Walk the four date fields, and
    confirm on a real phone that nothing changed there.
 
