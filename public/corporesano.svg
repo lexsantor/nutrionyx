@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="CorporeSano">
+  <!-- Monogram, not a lockup: the consulta's name is set beside it wherever
+       this appears, so a mark carrying the name too would print it twice.
+       A single navy fill, so a black-and-white printer loses nothing and a
+       letterhead costs one ink.
+
+       Two shapes were tried and thrown away: an open C with a leaf at the
+       gap read as a refresh icon, and a filled leaf with a centre vein
+       collapsed into a coffee bean below about 30px. The leaf is the
+       counter here, so the silhouette stays a confident disc at any size
+       and the shape inside is what changes. -->
+  <title>CorporeSano</title>
+  <path
+    fill="#24405f"
+    fill-rule="evenodd"
+    d="M32 2a30 30 0 1 0 0 60 30 30 0 0 0 0-60Zm0 14.5c8.9 5.2 13.1 11.5 13.1 15.5S40.9 42.3 32 47.5C23.1 42.3 18.9 36 18.9 32S23.1 21.7 32 16.5Z"
+  />
+</svg>

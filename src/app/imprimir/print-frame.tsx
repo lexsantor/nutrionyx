@@ -29,6 +29,7 @@ export function PrintFrame({
   backLabel,
   notesLabel,
   footer,
+  fiscal,
   children,
 }: {
   consulta: string;
@@ -43,6 +44,8 @@ export function PrintFrame({
   backLabel: string;
   notesLabel: string;
   footer: string | null;
+  /** The consulta's registered details, already filtered of blanks. */
+  fiscal: string[];
   children: ReactNode;
 }) {
   return (
@@ -112,6 +115,15 @@ export function PrintFrame({
             </p>
             <p className="text-sm leading-relaxed text-ink-muted">{footer}</p>
           </aside>
+        ) : null}
+
+        {/* The consulta's own details close the sheet, the way a letterhead
+            does. Blank fields are dropped upstream rather than printed as
+            empty labels. */}
+        {fiscal.length > 0 ? (
+          <p className="break-inside-avoid border-t border-hairline pt-2 text-[7.5pt] leading-relaxed text-ink-subtle">
+            {fiscal.join(" · ")}
+          </p>
         ) : null}
       </article>
     </div>

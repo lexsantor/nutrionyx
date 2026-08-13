@@ -73,6 +73,13 @@ export default async function RoutinePrintPage({
       backHref={`/panel/pacientes/${patient.id}/entreno`}
       backLabel={tp("back")}
       notesLabel={tp("notes")}
+      fiscal={[
+        profile?.legalName,
+        profile?.taxId,
+        profile?.addressLine,
+        [profile?.postalCode, profile?.locality].filter(Boolean).join(" ") || null,
+        profile?.hours,
+      ].filter((part): part is string => Boolean(part && part.trim()))}
       footer={routine?.notes ?? null}
     >
       {!content || isEmptyRoutine(content) || days.length === 0 ? (
