@@ -64,18 +64,43 @@ client JS (`app/logout-button.tsx` is a form bound to a server action). A select
 that only works once a bundle lands would be a step down from that, and it is
 the only option that leaves `required` alone.
 
-**D2 — Where the popup is drawn.** The app shell clips: `overscroll-contain`
-on the shell scroller, and an earlier session already learned that an overflow
-check against `documentElement` is blind inside it (lessons.md). An
-`position: absolute` popup inside that scroller will be cut off.
+**D2 — Where the popup is drawn. SETTLED 2026-08-13, by measurement.**
 
-The modern answer is the Popover API (`popover` attribute, promotes to the top
-layer, escapes any `overflow`) anchored with CSS anchor positioning. **I have
-not verified the current Firefox support for CSS anchor positioning and will not
-claim it.** First build step is a throwaway page that proves the combination in
-Chrome, Safari and Firefox at both themes; if anchor positioning is not there
-yet, the fallback is a portal to `body` plus a `getBoundingClientRect` measured
-on open and on scroll — more code, no dependency either way.
+Measured in Chromium against the real shell on `/panel/pacientes/[id]/entreno`,
+not against a mock. The shell nests `div.h-dvh.overflow-hidden` around
+`main.overflow-y-auto.overscroll-contain`, and the routine editor has a sticky
+action bar at `z-index: 10`.
+
+What the run showed:
+
+- Every primitive is supported: `anchor-name`, `position-anchor`,
+  `position-area`, `position-try-fallbacks`, `showPopover`.
+- A popover in the top layer is **not clipped** by the shell and **wins against
+  the sticky action bar** — probing a point over the bar returns the panel.
+- `position-anchor` + `position-area: bottom span-right` places the panel
+  against the field with no hand-measuring: left aligned to within 2px, below
+  the field.
+- The case that decides it: with the field parked low, a plain
+  `position: absolute` panel lands at top 960 in a 900px viewport, entirely off
+  screen, while `position-try-fallbacks: flip-block` flips the anchored panel
+  above the field. The browser solves the edge case the hand-rolled version
+  would have to.
+- A surprise worth recording: an `absolute` panel did **not** grow the
+  scroller's `scrollHeight` (2527 either way). The clipping fear was
+  half-founded — the shell does not cut the panel off, it just cannot flip it.
+
+Support, as of August 2026: Baseline. Chrome 125+, Safari 18.2+, Firefox
+shipped it by default (sources disagree on whether that was 132 or 147, and the
+distinction does not change the decision). One caveat that does matter:
+**Safari needed 18.4+ for the `@position-try` flip**, so the core landed before
+the fallback did.
+
+**Decision: Popover API in the top layer, positioned with anchor positioning,
+no positioning library.** Known limit, accepted rather than pre-solved: on an
+engine that supports anchoring but not `position-try-fallbacks`, the panel
+always opens downwards and can run off the bottom edge for a field near the
+end of a long form. It degrades, it does not break. If that shows up on a real
+device, the fix is a measured fallback at that point and not before.
 
 **D3 — Does a TimePicker exist at all?** Recommendation: **no.** An appointment
 time is a choice from a list of slots, so it is the listbox from D1 with options
@@ -129,10 +154,12 @@ browser walk, measured with element rectangles rather than `documentElement`.
 
 ## Sequence
 
-1. Prove D2 in a throwaway page. Report which combination holds.
+1. ~~Prove D2 in a throwaway page.~~ **Done 2026-08-13**, measured against the
+   real shell rather than a mock. Result above.
 2. `useEnhanced()` + `Listbox`, wired into `Select`. Walk all five call sites.
 3. `Calendar` behind the `pointer: fine` gate. Walk the four date fields, and
    confirm on a real phone that nothing changed there.
 
-Step 1 is cheap and decides the shape of step 2, so it goes first and its result
-comes back to the owner before any component is written.
+Owner decisions taken 2026-08-13: D1 = (a), keep the native `<select>` and
+enhance after mount. D3 = no TimePicker, an appointment time is the listbox
+with 15-minute options. D4 = birth date stays three listboxes.
