@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { put } from "@vercel/blob";
 import { auth } from "@/lib/auth/server";
 import { resolveUserRole } from "@/lib/auth/role";
+import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import {
-  ensureOrganization,
   isSlugTaken,
   updateOrgProfile,
   updateSpecialtyType,
@@ -18,7 +18,23 @@ import { SPECIALTY_TYPES } from "@/modules/specialty/config";
 import { orgSlug } from "@/modules/organization/slug";
 import type { SpecialtyType } from "@/generated/prisma/client";
 
-export type ProfileFormState = { errorKey: string } | { ok: true } | null;
+export type ProfileFormState =
+  | { errorKey: string; values?: Record<string, string> }
+  | { ok: true }
+  | null;
+
+/**
+ * React 19 resets the form once the action resolves, so without echoing
+ * the submitted values a rejected save empties every field the specialist
+ * had just filled in. Same rule as the week editors.
+ */
+function echo(formData: FormData): Record<string, string> {
+  return Object.fromEntries(
+    [...formData.entries()]
+      .filter(([, v]) => typeof v === "string")
+      .map(([k, v]) => [k, v as string]),
+  );
+}
 
 function field(formData: FormData, key: string): string | null {
   const value = ((formData.get(key) as string) ?? "").trim();
@@ -31,33 +47,28 @@ export async function updateProfileAction(
 ): Promise<ProfileFormState> {
   const { data: session } = await auth.getSession();
   if (!session?.user) {
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values: echo(formData) };
   }
   // Only the owning specialist edits their consulta.
   if ((await resolveUserRole(session.user.id)) !== "nutritionist") {
     console.error("[updateProfileAction] non-nutritionist attempted", {
       userId: session.user.id,
     });
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values: echo(formData) };
   }
 
-  const { data: activeOrg, error } = await auth.organization.getFullOrganization();
-  if (!activeOrg) {
-    console.error("[updateProfileAction] no active organization", error);
-    return { errorKey: "noOrganization" };
-  }
-  const org = await ensureOrganization(activeOrg.id, activeOrg.name);
+  const { org } = await requireSpecialistOrg();
 
   const name = field(formData, "name");
   if (!name) {
-    return { errorKey: "nameRequired" };
+    return { errorKey: "nameRequired", values: echo(formData) };
   }
 
   // Slug: normalize; default from the new name; reject a taken one.
   const rawSlug = field(formData, "slug");
   const slug = orgSlug(rawSlug ?? name);
   if (slug && (await isSlugTaken(slug, org.id))) {
-    return { errorKey: "slugTaken" };
+    return { errorKey: "slugTaken", values: echo(formData) };
   }
 
   // Logo upload (docs/build/slice-10-plan.md): branding asset, public Blob.
@@ -97,7 +108,7 @@ export async function updateProfileAction(
     });
   } catch (err) {
     console.error("[updateProfileAction] updateOrgProfile failed", err);
-    return { errorKey: "generic" };
+    return { errorKey: "generic", values: echo(formData) };
   }
 
   revalidatePath("/panel/ajustes");
@@ -122,17 +133,12 @@ export async function updateSpecialtyAction(
     });
     return { errorKey: "generic" };
   }
-  const { data: activeOrg, error } =
-    await auth.organization.getFullOrganization();
-  if (!activeOrg) {
-    console.error("[updateSpecialtyAction] no active organization", error);
-    return { errorKey: "noOrganization" };
-  }
+
   const raw = (formData.get("specialtyType") as string)?.trim();
   if (!SPECIALTY_TYPES.includes(raw as SpecialtyType)) {
     return { errorKey: "generic" };
   }
-  const org = await ensureOrganization(activeOrg.id, activeOrg.name);
+  const { org } = await requireSpecialistOrg();
   await updateSpecialtyType(org.id, raw as SpecialtyType);
 
   revalidatePath("/panel/ajustes");
@@ -153,9 +159,7 @@ export async function acceptConsentAction(): Promise<void> {
     });
     return;
   }
-  const { data: activeOrg } = await auth.organization.getFullOrganization();
-  if (!activeOrg) return;
-  const org = await ensureOrganization(activeOrg.id, activeOrg.name);
+  const { org } = await requireSpecialistOrg();
   await recordConsent({
     organizationId: org.id,
     termsVersion: CURRENT_DPA_VERSION,

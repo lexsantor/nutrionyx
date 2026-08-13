@@ -14,36 +14,47 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
     ProfileFormState,
     FormData
   >(updateProfileAction, null);
+  // Same pair as the week editors: echo the values back, and remount so
+  // `defaultValue` is read again, since it is only consulted on mount.
+  const [generation, setGeneration] = useState(0);
+  const [prevState, setPrevState] = useState(state);
+  if (state !== prevState) {
+    setPrevState(state);
+    setGeneration((n) => n + 1);
+  }
+  const echoed = state && "errorKey" in state ? state.values : undefined;
+  const v = (name: string, fallback: string | null) =>
+    echoed?.[name] ?? fallback ?? "";
 
   return (
-    <form action={formAction} className="flex w-full flex-col gap-6">
+    <form key={generation} action={formAction} className="flex w-full flex-col gap-6">
       {/* One grid for the whole record: rows of two and three left the
           card two thirds empty on a desktop. The longer values span. */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Field
           id="name"
           label={t("name")}
-          defaultValue={profile.name}
+          defaultValue={v("name", profile.name)}
           required
           hint={t("nameHint")}
           className="lg:col-span-2"
         />
-        <Field id="slug" label={t("slug")} defaultValue={profile.slug} hint={t("slugHint")} />
+        <Field id="slug" label={t("slug")} defaultValue={v("slug", profile.slug)} hint={t("slugHint")} />
 
-        <Field id="legalName" label={t("legalName")} defaultValue={profile.legalName} />
-        <Field id="taxId" label={t("taxId")} defaultValue={profile.taxId} />
-        <Field id="hours" label={t("hours")} defaultValue={profile.hours} placeholder="L-V 9:00-14:00" />
+        <Field id="legalName" label={t("legalName")} defaultValue={v("legalName", profile.legalName)} />
+        <Field id="taxId" label={t("taxId")} defaultValue={v("taxId", profile.taxId)} />
+        <Field id="hours" label={t("hours")} defaultValue={v("hours", profile.hours)} placeholder="L-V 9:00-14:00" />
 
         <Field
           id="addressLine"
           label={t("addressLine")}
-          defaultValue={profile.addressLine}
+          defaultValue={v("addressLine", profile.addressLine)}
           autoComplete="street-address"
           className="lg:col-span-2"
         />
-        <Field id="locality" label={t("locality")} defaultValue={profile.locality} autoComplete="address-level2" />
+        <Field id="locality" label={t("locality")} defaultValue={v("locality", profile.locality)} autoComplete="address-level2" />
 
-        <Field id="postalCode" label={t("postalCode")} defaultValue={profile.postalCode} autoComplete="postal-code" />
+        <Field id="postalCode" label={t("postalCode")} defaultValue={v("postalCode", profile.postalCode)} autoComplete="postal-code" />
         <Field id="country" label={t("country")} defaultValue={profile.country ?? "ES"} autoComplete="country-name" />
       </div>
 
@@ -64,7 +75,7 @@ export function ProfileForm({ profile }: { profile: OrgProfile }) {
             id="logoUrl"
             name="logoUrl"
             type="url"
-            defaultValue={profile.logoUrl ?? ""}
+            defaultValue={v("logoUrl", profile.logoUrl)}
             placeholder="https://..."
             maxLength={500}
           />
