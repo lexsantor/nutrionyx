@@ -44,17 +44,22 @@ export async function setMealStatus(params: {
     },
   };
 
+  let mealLogId: string;
   if (params.status === null) {
-    await prisma.mealLog.deleteMany({
+    const existing = await prisma.mealLog.findFirst({
       where: {
         organizationId: params.organizationId,
         patientId: params.patientId,
         day,
         slot: params.slot,
       },
+      select: { id: true },
     });
+    if (!existing) return;
+    mealLogId = existing.id;
+    await prisma.mealLog.delete({ where: { id: existing.id } });
   } else {
-    await prisma.mealLog.upsert({
+    const row = await prisma.mealLog.upsert({
       where,
       create: {
         organizationId: params.organizationId,
@@ -64,17 +69,21 @@ export async function setMealStatus(params: {
         status: params.status,
       },
       update: { status: params.status },
+      select: { id: true },
     });
+    mealLogId = row.id;
   }
 
-  // The payload carries the slot and the state, never what was eaten: the
-  // event log is identifiers only (modules/events.test.ts enforces it).
+  // Identifiers only. The first version put `slot` and `status` in here, and
+  // modules/events.test.ts was right to reject it: "DINNER / SKIPPED" tells
+  // the platform operator that this patient skipped dinner, which is exactly
+  // the clinical fact operator-blindness exists to keep from them (adr/0004).
   await appendEvent({
     organizationId: params.organizationId,
     aggregate: "Patient",
     aggregateId: params.patientId,
     type: "MealLogged",
-    payload: { slot: params.slot, status: params.status ?? "CLEARED" },
+    payload: { mealLogId },
   });
 }
 

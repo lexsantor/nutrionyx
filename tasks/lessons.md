@@ -211,3 +211,20 @@ that existed.
 open what comes back. A planning document records what someone intended once;
 only the code records what is there. The same applies to `docs/00`'s
 [built]/[next]/[future] markers, which are equally free to drift.
+
+## `tail -3` on a test run hides whether it passed
+
+A commit went to CI red with `events.test.ts` failing. Locally the suite had
+been run with `npx vitest run 2>&1 | tail -3`, which prints the duration line
+and nothing else: the failure count sits three lines further up, so a red run
+and a green run look identical.
+
+The failure it hid was worth catching. A `MealLogged` payload carried `slot`
+and `status`, and "DINNER / SKIPPED" tells the platform operator that this
+patient skipped dinner — the clinical fact operator-blindness exists to keep
+from them (adr/0004). The rule was right; the payload was wrong.
+
+**Check:** grep the outcome, never the tail. `| grep -E "Test Files|Tests|FAIL"`
+prints the counts and any failing file, and an empty result is itself a
+signal. The same applies to `npm run build | tail`: match on "Compiled" or
+"error", not on position.
