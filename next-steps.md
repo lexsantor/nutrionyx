@@ -55,24 +55,30 @@ and measure element rectangles rather than `documentElement.scrollWidth`.
 
 ## Next, in order
 
-### 1. Custom Select, DatePicker and TimePicker
+### 1. Custom Select, DatePicker and TimePicker - built 2026-08-13
 
-The owner asked for this explicitly and it is the largest open item.
-Native controls are themed as far as CSS reaches: `components/ui/select.tsx`
-owns the closed state, `globals.css` tints the date and time trigger icons.
-The *popups* are drawn by the operating system and no CSS reaches them, so
-the only way to theme them is to own the widgets.
+Shipped as slice 28; the plan and every decision behind it are in
+[docs/build/slice-28-plan.md](docs/build/slice-28-plan.md). In short: the
+native control stays in the DOM and the custom widget is drawn over it after
+mount, so `required`, `defaultValue` and submitting without client JS are
+still the browser's job. The popup is a top-layer popover with CSS anchor
+positioning and no positioning library. No call site changed, because both
+`Select` and `Input` kept their public API.
 
-That means keyboard navigation, typeahead, focus return, screen-reader
-semantics, and a deliberate answer for mobile, where iOS and Android give
-away a wheel picker that is better than anything hand-rolled. Write a plan
-in `docs/build/` before writing a component, and decide the mobile question
-first: a custom listbox that is worse on a phone is a downgrade for the
-audience that uses the patient space most.
+Mobile was answered deliberately: the listbox is everywhere, the calendar
+only under `pointer: fine`, and a time is a listbox of 15-minute slots
+rather than a third widget.
 
-Call sites to migrate, all currently `components/ui/select.tsx`: the agenda
-form, the audit filters, the exercise picker, the template bar, and the
-assessment wizard's birth-date selects.
+**What is left here is the screen-reader walk.** Roles, focus order, keyboard
+and the touch gate were measured in a browser and again against production.
+VoiceOver was not run, and this file's own rule says a UI that was only
+reasoned about turns out wrong at least once. Start there before trusting the
+accessibility of any of the three.
+
+One judgement call worth a second opinion: an appointment time can no longer
+be typed, only picked from 07:00-21:45 in quarters. Better for booking, a
+real loss otherwise, and the range is an assumption about a consulta's day
+that nothing in the domain enforces.
 
 ### 2. Whatever the owner reports next
 

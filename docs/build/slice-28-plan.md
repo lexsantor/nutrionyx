@@ -169,8 +169,23 @@ browser walk, measured with element rectangles rather than `documentElement`.
    rather than from React children, which removed the server-component risk
    this plan flagged; and `useEnhanced` became a `useSyncExternalStore` call
    because setState-in-effect is a lint error here.
-3. `Calendar` behind the `pointer: fine` gate. Walk the four date fields, and
-   confirm on a real phone that nothing changed there.
+3. ~~`Calendar` behind the `pointer: fine` gate.~~ **Done 2026-08-13.**
+   Reached through the `Input` primitive, so no call site changed. Walked on
+   desktop and in a Pixel 7 context: the touch side gets no trigger at all and
+   a usable native field, the desktop side anchors, flips, moves by arrows
+   across weeks, writes ISO into the native input and shows "21 de agosto de
+   2026" on the trigger. `max` disables 24 of 42 cells with today the last one
+   live. Verified again against production after deploy.
+   Two things this step changed beyond the plan: time became a listbox of
+   15-minute slots (D3), so `input[type="time"]` no longer exists anywhere and
+   its CSS was deleted along with `datetime-local`'s; and the slot range
+   (07:00-21:45) is an assumption about a consulta's day that nothing else in
+   the domain enforces. The constants in `time-field.tsx` say so.
+
+**Still open, and not something I can close:** the screen-reader walk. Roles,
+focus order and keyboard were measured; VoiceOver announcing a calendar month
+by month is a different question, and this repo's own rule is that reasoning
+about a UI is wrong at least once.
 
 Owner decisions taken 2026-08-13: D1 = (a), keep the native `<select>` and
 enhance after mount. D3 = no TimePicker, an appointment time is the listbox

@@ -317,6 +317,29 @@ screen behind it.
   **The consulta's slug is not a bug**: `orgSlug()` appends a 4-char suffix on
   purpose, to avoid an availability round-trip. `corporesano-z3gn` is expected.
 
+- **Slice 28 - Widgets of our own** (2026-08-13): the largest item the owner
+  had asked for. Plan and decisions in
+  [docs/build/slice-28-plan.md](../docs/build/slice-28-plan.md).
+  The shape that made it cheap: the native control never leaves the DOM, and
+  the custom widget is drawn over it *after mount*. Before hydration, and
+  forever if the bundle fails, the page is what it always was, which matters
+  because three of the five `Select` call sites submit without client JS.
+  `required`, `min`, `max` and form reset stay the browser's.
+  The popup is a top-layer popover placed with CSS anchor positioning. That
+  was chosen by measuring this app's shell rather than assuming it clips: it
+  does not, and `position-try-fallbacks: flip-block` handles the bottom edge
+  that a hand-positioned panel would have had to solve.
+  Rows are read from the live `<select>`, not from React children, which is
+  why a server component (`admin/auditoria`) needed no special case.
+  No call site changed: `Select` and `Input` kept their public API, and
+  `Input` routes `type="date"` and `type="time"` to their own components.
+  **Scope changes worth remembering**: there is no TimePicker, because an
+  appointment time is a choice from a list and that is the listbox we already
+  had; and `input[type="time"]` and `datetime-local` stopped existing, so
+  their CSS went with them.
+  **Not done**: the screen-reader walk. Roles, focus and keyboard were
+  measured; VoiceOver was not run.
+
 ### Backlog - waiting on the owner
 
 - **Exercise illustrations**: 4 of 41 drawn (press-banca, sentadilla,
