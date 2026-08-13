@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordMeter } from "./password-meter";
 import { Bezel } from "@/components/ui/bezel";
 import { signUpWithEmail } from "./actions";
 
@@ -57,20 +58,7 @@ export function SignUpForm({ redirectTo }: { redirectTo?: string }) {
               />
             </div>
 
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="password" className="text-sm font-medium text-ink">
-                {t("password")}
-              </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="new-password"
-                required
-                minLength={8}
-                placeholder="Mínimo 8 caracteres"
-              />
-            </div>
+            <PasswordMeter />
 
             {state?.errorKey ? (
               <p role="alert" className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error">
