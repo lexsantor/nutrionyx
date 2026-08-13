@@ -281,7 +281,10 @@ export function DateField({
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } as any
             }
-            className="m-0 w-[19rem] rounded-[10px] border border-hairline bg-surface-1 p-3 shadow-el-md"
+            // my-2, not m-0: 8px of air off the field. A block margin rather
+            // than an offset so the gap survives `flip-block` — above the
+            // field it reads the same as below.
+            className="mx-0 my-2 w-[19rem] rounded-[10px] border border-hairline bg-surface-1 p-3 shadow-el-md"
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <button

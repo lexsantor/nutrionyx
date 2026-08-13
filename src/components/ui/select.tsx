@@ -304,7 +304,9 @@ export function Select({
               width: "anchor-size(width)",
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } as any}
-            className="m-0 max-h-72 min-w-48 overflow-y-auto rounded-[10px] border border-hairline bg-surface-1 p-1 shadow-el-md"
+            // my-2, not m-0: 8px of air off the field. A block margin rather
+            // than an offset so the gap survives `flip-block`.
+            className="mx-0 my-2 max-h-72 min-w-48 overflow-y-auto rounded-[10px] border border-hairline bg-surface-1 p-1 shadow-el-md"
           >
             {rows.map((row, index) => (
               <Fragment key={`${row.value}-${index}`}>
