@@ -120,6 +120,12 @@ commit, which `vercel ls --json` carries:
 Once true it stays true. The same rule applies to any wait: if the predicate
 can go from false to true to false, it is the wrong predicate.
 
+**Second half of the same lesson, learned separately:** matching the commit is
+not enough either. `deployments[0]` is the newest *created* deployment, so the
+sha matches while it is still BUILDING, and a capture taken then photographs
+the previous build. Filter on `state === "READY"` and `target ===
+"production"` as well, then compare the sha of that one.
+
 ## React 19 resets the form on success too, not only on error
 
 Both week editors echoed the submitted values back and re-hydrated from them
