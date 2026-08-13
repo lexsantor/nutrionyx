@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useActionState, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
@@ -69,8 +70,7 @@ function BodyMap({
 
   return (
     <div className="relative mx-auto aspect-[614/1100] w-56">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={`/mannequin-${figure.toLowerCase()}-front.png`}
         alt=""
         width={614}

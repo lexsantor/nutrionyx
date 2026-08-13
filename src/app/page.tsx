@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { getTranslations } from "next-intl/server";
@@ -8,6 +9,7 @@ import { WeightChart } from "@/components/weight-chart";
 import { ButtonLink } from "@/components/ui/button-link";
 import { Bezel } from "@/components/ui/bezel";
 import { Reveal } from "./reveal";
+import { StickyCta } from "./sticky-cta";
 
 export const dynamic = "force-dynamic";
 
@@ -258,7 +260,7 @@ export default async function Home() {
             <p className="max-w-[62ch] text-pretty leading-relaxed text-ink-subtle">
               {t("hero.answer")}
             </p>
-            <div className="flex flex-wrap items-center gap-4">
+            <div id="hero-cta" className="flex flex-wrap items-center gap-4">
               <CtaButton href="/auth/sign-up">{t("hero.cta.signUp")}</CtaButton>
               <ButtonLink
                 href="/auth/sign-in"
@@ -305,8 +307,7 @@ export default async function Home() {
                     body-map-measures.tsx (viewBox 200x358), converted to
                     percentages: waist y153 x71-129. */}
                 <div className="relative mx-auto mt-2 aspect-[614/1100] h-48">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
+                  <Image
                     src="/mannequin-male-front.png"
                     alt=""
                     width={614}
@@ -574,8 +575,7 @@ export default async function Home() {
                 puts it. Mirrored like the app's, so "derecho" reads on the
                 right of the picture. */}
             <div className="relative aspect-[614/1100] w-20 shrink-0 sm:w-28">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/mannequin-male-front.png"
                 alt=""
                 width={614}
@@ -790,6 +790,7 @@ export default async function Home() {
         <span>&copy; {new Date().getFullYear()} Nutrionyx</span>
         <time dateTime={LAST_UPDATED_ISO}>{t("hero.updated")}</time>
       </footer>
+      <StickyCta label={t("hero.cta.signUp")} anchorId="hero-cta" />
     </main>
   );
 }

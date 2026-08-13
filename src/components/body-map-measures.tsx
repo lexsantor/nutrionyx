@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import {
@@ -133,8 +134,7 @@ export function BodyMapMeasures({
               when the toggle flips; a fade over an unloaded image asserts
               a readiness that is not there. */}
           {(["front", "back"] as const).map((v) => (
-            /* eslint-disable-next-line @next/next/no-img-element */
-            <img
+            <Image
               key={v}
               src={`/mannequin-${figure.toLowerCase()}-${v}.png`}
               alt=""

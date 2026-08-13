@@ -1,0 +1,55 @@
+# Nutrionyx
+
+> Plataforma clínica para nutricionistas y sus pacientes: una ficha única por
+> paciente con evaluación, dieta, entrenamiento, medicación, mensajes y citas.
+> UI en español, datos alojados en la UE, RGPD por diseño.
+
+Nutrionyx es un SaaS multi-consulta. Cada consulta (organización) gestiona
+solo a sus pacientes; el operador de la plataforma nunca ve datos clínicos.
+
+## Qué hace hoy
+
+- Evaluación clínica de 10 pasos que el paciente rellena desde el móvil, con
+  IMC y ratio de objetivo calculados. Inmutable al completarse.
+- Plan de dieta semanal de 7 días por 5 comidas, con alternativas por comida.
+  Cada línea puede enlazarse a un catálogo de alimentos, y el día suma kcal y
+  proteína contra el objetivo prescrito.
+- Rutina de entrenamiento con catálogo de ejercicios e ilustraciones.
+- Medicación (GLP-1): pauta del prescriptor, registro de dosis y rotación del
+  punto de inyección. Es opcional y privada: el especialista solo la ve si el
+  paciente lo activa.
+- Registro del paciente: peso, medidas corporales, fotos de progreso,
+  proteína, sesiones de entreno, y cómo fue cada comida del plan.
+- Informe de adherencia de 28 días, en pantalla y en papel.
+- Mensajería paciente-consulta, agenda con solicitud de cita por el paciente,
+  documentos, y plantillas de dieta y rutina reutilizables.
+- Impresión en A4 del plan, la rutina y el informe, con la marca de la
+  consulta.
+
+## Qué NO hace
+
+- No sugiere ni ajusta dosis de medicación. Nunca.
+- No genera dietas con IA.
+- No es un marketplace: el acceso es por invitación.
+- No factura todavía.
+
+## Para quién
+
+- Dietistas-nutricionistas y nutricionistas deportivos con consulta propia.
+- Sus pacientes, que usan la app en el móvil en sesiones de menos de un
+  minuto.
+
+## Privacidad
+
+Datos de salud tratados como categoría especial del RGPD (Art. 9). La
+consulta es la responsable del tratamiento. Aislamiento entre consultas
+verificado con tests de integración en cada despliegue. El paciente puede
+exportar sus datos en JSON.
+
+## Enlaces
+
+- Inicio: https://nutrionyx.vercel.app
+- Privacidad: https://nutrionyx.vercel.app/privacidad
+- Términos: https://nutrionyx.vercel.app/terminos
+
+Actualizado: 2026-08-13
