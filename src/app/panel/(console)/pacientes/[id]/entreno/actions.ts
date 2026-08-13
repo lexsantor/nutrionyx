@@ -30,7 +30,7 @@ import type { Organization } from "@/generated/prisma/client";
  */
 export type RoutineFormState =
   | { errorKey: string; scope: Scope; values?: Record<string, string> }
-  | { ok: true; scope: Scope; kind?: "saved" | "loaded" }
+  | { ok: true; scope: Scope; kind?: "saved" | "loaded"; values?: Record<string, string> }
   | null;
 
 type Scope = "routine" | "template";
@@ -54,6 +54,23 @@ async function specialistContext(): Promise<
     userId: session.user.id,
     org: await ensureOrganization(active.id, active.name),
   };
+}
+
+/**
+ * The submitted text, echoed back to the editor.
+ *
+ * React 19 resets the form once an action resolves, and the editors keep
+ * their cells as uncontrolled inputs, so without this every typed amount,
+ * food, series and repetition is blanked on screen the moment any action
+ * succeeds. Saving a week as a template then left the editor looking empty
+ * and the next "guardar" wrote that emptiness over the real plan.
+ */
+function echo(formData: FormData): Record<string, string> {
+  return Object.fromEntries(
+    [...formData.entries()]
+      .filter(([k, v]) => typeof v === "string" && k !== "patientId")
+      .map(([k, v]) => [k, v as string]),
+  );
 }
 
 function weekFrom(formData: FormData) {
@@ -85,12 +102,7 @@ async function saveRoutine(formData: FormData): Promise<RoutineFormState> {
   const scope = "routine" as const;
   const title = ((formData.get("title") as string) ?? "").trim().slice(0, 120);
   const notes = ((formData.get("notes") as string) ?? "").trim().slice(0, 2000);
-  // Echo submitted values so the editor re-hydrates after React's reset.
-  const values = Object.fromEntries(
-    [...formData.entries()]
-      .filter(([k, v]) => typeof v === "string" && k !== "patientId")
-      .map(([k, v]) => [k, v as string]),
-  );
+  const values = echo(formData);
 
   const content = weekFrom(formData);
   if (!content) return { errorKey: "invalidContent", scope, values };
@@ -118,7 +130,7 @@ async function saveRoutine(formData: FormData): Promise<RoutineFormState> {
 
   revalidatePath(`/panel/pacientes/${patient.id}`);
   revalidatePath(`/panel/pacientes/${patient.id}/entreno`);
-  return { ok: true, scope };
+  return { ok: true, scope, values };
 }
 
 /** Save the week currently in the editor as a reusable template. */
@@ -153,7 +165,7 @@ async function saveTemplate(formData: FormData): Promise<RoutineFormState> {
   const patientId = (formData.get("patientId") as string) ?? "";
   revalidatePath(`/panel/pacientes/${patientId}/entreno`);
   revalidatePath("/panel/biblioteca");
-  return { ok: true, scope, kind: "saved" };
+  return { ok: true, scope, kind: "saved", values: echo(formData) };
 }
 
 /** Load a template into the patient's routine, overwriting the week. */

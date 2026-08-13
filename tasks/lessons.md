@@ -119,3 +119,20 @@ commit, which `vercel ls --json` carries:
 
 Once true it stays true. The same rule applies to any wait: if the predicate
 can go from false to true to false, it is the wrong predicate.
+
+## React 19 resets the form on success too, not only on error
+
+Both week editors echoed the submitted values back and re-hydrated from them
+`when "errorKey" in state`. React 19 resets an action's form whenever the
+action resolves, success included, and the editors keep their cells as
+uncontrolled inputs. So "guardar semana como plantilla" blanked every amount,
+food, series and repetition on screen, plus the title and the notes, and the
+next "guardar plan" wrote that emptiness over the real plan.
+
+Found by seeding a real week through the UI for the print slice: the template
+came out with all seven days and the plan came out empty.
+
+**Check:** if a form has uncontrolled inputs and more than one action, echo
+the submitted values on every outcome that leaves the user where they were,
+and deliberately do not echo on the one that replaces their content (loading
+a template). "Only on error" is the wrong condition.

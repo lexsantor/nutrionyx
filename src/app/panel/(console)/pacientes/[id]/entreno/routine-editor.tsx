@@ -85,12 +85,12 @@ export function RoutineEditor({
   }
   useUnsavedGuard(dirty, t("editor.unsaved"));
 
-  // After an error the browser form has been reset (React 19): fall back
-  // to the echoed submitted values so nothing the user typed is lost.
+  // React 19 resets the form after every action, success included, and
+  // these cells are uncontrolled. Re-hydrate from whatever the action
+  // echoed back. Loading a template deliberately echoes nothing, so the
+  // loaded week wins over what was on screen.
   const v = (name: string, fallback: string) =>
-    state && "errorKey" in state && state.values
-      ? (state.values[name] ?? fallback)
-      : fallback;
+    state?.values ? (state.values[name] ?? fallback) : fallback;
 
   const editDay = (
     dayIndex: number,
