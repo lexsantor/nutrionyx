@@ -68,9 +68,31 @@ Tier tables and the competitive benchmark now live in
 those before planning: the tier table already had two rows that were fiction
 because it was written from a plan document rather than from `src/`.
 
+### Later that day (2026-08-13, evening)
+
+Tier 1 and Tier 2 of the roadmap are done, plus a 31-point launch audit
+(`docs/build/roadmap-feature-tiers.md` holds the tiers). What landed: food
+catalogue with per-day totals against the target, meal-by-meal adherence,
+printable adherence report, patient-requested appointments with specialist
+confirmation, medication sharing, sitemap, canonical, per-page descriptions
+and titles, llms.txt, next/image, sticky mobile CTA, password meter, and
+Vercel analytics as a script tag.
+
+**The one thing left from that audit:** a thank-you page after sign-up. Not
+started. It is small, depends on nothing, and is where sign-up conversion
+would be measured.
+
+**Needs the owner, unrelated to code:** enable Web Analytics on the Vercel
+project, or the script 404s quietly and reports nothing.
+
+**Two traps re-confirmed today, both already in tasks/lessons.md:** `npm
+install` still drops the `next-intl/@swc/helpers` entry from the lockfile and
+breaks CI's `npm ci`; and a status number checked against a document rather
+than against `src/` was wrong three separate times.
+
 **Open, and needing nobody but the next session:**
 
-- The adherence report has no export. `/imprimir/dieta` and `/imprimir/entreno`
+- ~~The adherence report has no export.~~ Done 2026-08-13. `/imprimir/dieta` and `/imprimir/entreno`
   are the pattern to copy.
 - The food catalogue's values are hand-typed reference figures. Either a
   nutritionist reviews them or they are replaced by an import; the licence
