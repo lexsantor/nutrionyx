@@ -228,3 +228,37 @@ from them (adr/0004). The rule was right; the payload was wrong.
 prints the counts and any failing file, and an empty result is itself a
 signal. The same applies to `npm run build | tail`: match on "Compiled" or
 "error", not on position.
+
+## `[role="alert"]` in a Playwright walk also matches Next's route announcer
+
+Verifying that an invalid access code is rejected, the assertion read
+`page.locator('[role="alert"]').innerText()` and got back
+`"Crea tu consulta · Nutrionyx"` - the page title, not an error. Next.js
+renders a route announcer for screen readers, a `<p role="alert">` outside
+`main` that holds the current document title after a navigation. It is
+transient, so the same script passes or fails depending on how fast the form
+was filled: the first run caught it, the diagnostic re-run found the announcer
+already empty and only the real error present.
+
+Two runs were spent deciding whether the product or the test was broken. It
+was the test, but nothing in the first failure said so, and "the invalid code
+is not being rejected" is exactly the kind of conclusion worth being wrong
+about loudly.
+
+**Check:** scope every role-based locator to the region under test -
+`main [role="alert"]`, not `[role="alert"]`. The same trap applies to
+`role=status` and to any `waitForSelector` on an ARIA role: the framework
+renders its own live regions and they are not part of your page.
+
+## A redirect chain read at the first hop looks like a bug
+
+The walk asserted that sign-up lands on `/panel/nueva-organizacion` using
+`waitForURL(u => !u.pathname.startsWith("/auth/sign-up"))`. That resolves at
+`/`, the first hop of a three-hop server chain (`/` -> `/panel` ->
+`/panel/nueva-organizacion`), so the assertion reported the landing page as
+`/` while the very next assertions passed against the real destination.
+
+**Check:** wait for the destination, not for "no longer on the origin".
+`waitForURL("**/panel/nueva-organizacion")` followed by
+`waitForLoadState("networkidle")`. Any flow that redirects by role or by
+domain state has more hops than the code at the call site suggests.

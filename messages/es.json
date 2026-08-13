@@ -598,6 +598,8 @@
   },
   "org": {
     "create": {
+      "accountReady": "Tu cuenta está lista. Queda un paso.",
+      "accountReadyNamed": "Tu cuenta está lista, {name}. Queda un paso.",
       "title": "Crea tu consulta",
       "subtitle": "El espacio de trabajo de tu consulta. Podrás invitar pacientes a ella.",
       "name": "Nombre de la consulta",
@@ -613,7 +615,7 @@
         }
       },
       "code": "Código de acceso",
-      "codeHint": "Necesitas un código de especialista emitido por Nutrionyx. Solicítalo al equipo si no tienes uno.",
+      "codeHint": "Necesitas un código de especialista emitido por Nutrionyx. <contact>Escríbenos</contact> si no tienes uno.",
       "consent": {
         "label": "Acepto el acuerdo de tratamiento de datos (DPA) y trataré los datos de mis pacientes conforme al RGPD. (Texto provisional; la versión legal definitiva se publicará antes del lanzamiento.)"
       },

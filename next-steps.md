@@ -78,9 +78,30 @@ confirmation, medication sharing, sitemap, canonical, per-page descriptions
 and titles, llms.txt, next/image, sticky mobile CTA, password meter, and
 Vercel analytics as a script tag.
 
-**The one thing left from that audit:** a thank-you page after sign-up. Not
-started. It is small, depends on nothing, and is where sign-up conversion
-would be measured.
+**~~The one thing left from that audit:~~ a thank-you page after sign-up.**
+Closed 2026-08-14 by not building it. The audit item's premise was wrong:
+sign-up was never a dead end. `signUpWithEmail` redirects through
+`safeRedirect`, and both callers already land somewhere real. A patient comes
+from `/auth/accept-invitation`, which passes a `redirectTo`, so they go back to
+accept the invitation and on to `/mi-espacio`; interposing a thank-you there
+would have taxed the one flow with real drop-off risk. A specialist has no
+`redirectTo`, so the fallback `/` sends them through `roleHome` to `/panel`
+and `requireSpecialistOrg` on to `/panel/nueva-organizacion`.
+
+What was actually missing on that landing page, and is now there: an
+acknowledgment that the account exists, and a session guard. The page was
+`"use client"` with no guard and no `layout.tsx` above it, so an anonymous
+visitor could render the form and only learn it was pointless after
+submitting. It now redirects anonymous to sign-in, a patient to `/mi-espacio`,
+and a specialist who already has a consulta to `/panel` instead of letting
+them create a second org the console would never show. `codeHint` also gained
+a mailto, because "solicítalo al equipo" named nobody.
+
+The conversion argument does not survive contact with the domain either:
+access is a single-use code redeemed at org creation, not at sign-up, so the
+funnel that matters is code issued -> consulta created, which
+`redeemAccessCode` already marks. A `/gracias` pageview would have counted
+auth accounts. Web Analytics is still off on the project regardless.
 
 **Needs the owner, unrelated to code:** enable Web Analytics on the Vercel
 project, or the script 404s quietly and reports nothing.
@@ -209,6 +230,12 @@ Written this session, all through the UI. Nothing here is real:
 - Three messages in the patient's thread, two of which are the string
   "Prueba bandeja 21h" from verifying the inbox. Left in place on purpose:
   `modules/messaging/repository.ts` states that messages are never deleted.
+- **Two orphan auth accounts**, `prueba-alta-1786660179152@example.com` and
+  `prueba-alta-1786660277892@example.com`, both created 2026-08-14 by the
+  browser walk that verified the sign-up landing. Neither has a consulta, so
+  neither appears anywhere in the product. They stay because nothing deletes a
+  user: the admin user-lookup page is one of the things deliberately not built.
+  Sweep them the day that page exists.
 - 58 domain events. The 13 that carried clinical values were redacted with
   the owner's agreement; every event since carries identifiers only, and
   `modules/events.test.ts` fails if a new payload breaks that.
