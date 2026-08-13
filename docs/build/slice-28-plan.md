@@ -200,8 +200,15 @@ things had to change with it:
   and the measurement says why: a 354px calendar, a field at 361px, a 664px
   viewport. 259px of room below, 361px above, so it fits neither way and the
   browser resolves that by covering the field — the exact complaint the owner
-  photographed against the *native* one. Below `sm` it is a sheet on the bottom
-  edge instead, which always fits.
+  photographed against the *native* one. Below `sm` the calendar is pinned to
+  the bottom of the viewport instead, which always fits.
+  It is not edge to edge: the anchor still sets the left edge and the width, so
+  the panel matches the field it belongs to and keeps 1rem off the bottom. On
+  `/mi-espacio` and `/mi-espacio/medicacion` that is 49..333 either way, to the
+  pixel. `min-width: 17rem` is the guard for a narrow field — the agenda puts
+  its date in half a column, 136px, where seven columns would be unusable — and
+  `max-width: calc(100vw - 2rem)` keeps that guard from pushing the panel off
+  screen. Measured: the agenda's sheet lands at 49..321 inside a 390px screen.
 
 **Known limit, measured rather than guessed:** the `Select` listbox keeps the
 anchored-panel treatment at every width. On a phone it is 288px tall and flips

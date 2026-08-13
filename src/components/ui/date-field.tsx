@@ -284,25 +284,39 @@ export function DateField({
             role="dialog"
             aria-label={MONTH_YEAR.format(month)}
             style={
-              wide
-                ? ({
+              (wide
+                ? {
                     positionAnchor: anchor,
                     positionArea: "bottom span-right",
                     positionTryFallbacks: "flip-block",
-                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  } as any)
-                : undefined
+                  }
+                : {
+                    // A sheet, but not edge to edge: it lines up with the
+                    // field and keeps 1rem off the bottom. `min-width` is the
+                    // guard for a narrow field — the agenda puts its date in
+                    // half a column, and seven columns inside 140px would be
+                    // unusable — and `max-width` keeps the guard from pushing
+                    // it off screen.
+                    positionAnchor: anchor,
+                    left: "anchor(left)",
+                    bottom: "1rem",
+                    width: "anchor-size(width)",
+                    minWidth: "17rem",
+                    maxWidth: "calc(100vw - 2rem)",
+                  }) as React.CSSProperties
             }
             // Wide: anchored under the field, my-2 for 8px of air, and the
             // block margin means the gap survives `flip-block`.
-            // Narrow: a sheet on the bottom edge. Measured on an iPhone 14,
-            // an anchored 354px calendar fits neither above nor below a field
-            // at 361px in a 664px viewport, and the browser resolves that by
-            // covering the field. A sheet always fits.
+            // Narrow: pinned to the bottom of the viewport rather than to
+            // the field. Measured on an iPhone 14, an anchored 354px calendar
+            // fits neither above nor below a field at 361px in a 664px
+            // viewport, and the browser resolves that by covering the field.
+            // Pinning to the bottom always fits; the anchor still decides the
+            // horizontal edge and the width.
             className={
               wide
                 ? "mx-0 my-2 w-[19rem] max-w-[calc(100vw-2rem)] rounded-[10px] border border-hairline bg-surface-1 p-3 shadow-el-md"
-                : "fixed inset-x-0 bottom-0 top-auto m-0 w-full max-w-none rounded-b-none rounded-t-2xl border border-hairline bg-surface-1 p-4 pb-6 shadow-el-md"
+                : "fixed top-auto m-0 rounded-2xl border border-hairline bg-surface-1 p-3 shadow-el-md"
             }
           >
             <div className="mb-2 flex items-center justify-between gap-2">
