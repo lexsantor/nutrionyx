@@ -8,16 +8,20 @@ import {
   MEAL_SLOTS,
   isEmptyPlan,
   normalizeContent,
-  summarizeRows,
 } from "@/modules/diet/plan";
 import { PrintFrame } from "../../print-frame";
 
 export const metadata = { title: "Plan de dieta" };
 export const dynamic = "force-dynamic";
 
-/** The week as a document: one block per day, meals in order, alternatives
- *  under their meal. Days without food are skipped rather than printed
- *  empty, so a four-day plan is four blocks and not seven. */
+/**
+ * The week as a document. Days are cards in two columns rather than one
+ * long list: a week is seven comparable things, and a column of paragraphs
+ * makes the reader count to find Thursday.
+ *
+ * Days with no food are skipped, so a four-day plan is four cards and not
+ * seven with three saying nothing.
+ */
 export default async function DietPrintPage({
   params,
 }: {
@@ -42,6 +46,7 @@ export default async function DietPrintPage({
     <PrintFrame
       consulta={profile?.name ?? org.name}
       logoUrl={profile?.logoUrl ?? null}
+      kind={t("editor.heading")}
       patientName={patient.fullName ?? patient.email}
       title={plan?.title || t("editor.heading")}
       subtitle={
@@ -54,43 +59,64 @@ export default async function DietPrintPage({
       printLabel={tp("print")}
       backHref={`/panel/pacientes/${patient.id}/dieta`}
       backLabel={tp("back")}
+      notesLabel={tp("notes")}
       footer={plan?.notes ?? null}
     >
       {!content || isEmptyPlan(content) ? (
         <p className="text-sm text-ink-subtle">{tp("emptyDiet")}</p>
       ) : (
-        <div className="flex flex-col gap-5">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {content.days.map((day, dayIndex) => {
             const meals = MEAL_SLOTS.filter((slot) => day[slot]);
             if (meals.length === 0) return null;
             return (
               <section
                 key={dayIndex}
-                className="flex break-inside-avoid flex-col gap-2"
+                className="flex break-inside-avoid flex-col overflow-hidden rounded-[10px] border border-hairline"
               >
-                <h2 className="border-b border-hairline pb-1 font-display text-base font-semibold capitalize">
+                <h2 className="bg-surface-3 px-3 py-1.5 font-display text-sm font-semibold capitalize tracking-tight">
                   {t(`days.${dayIndex}`)}
                 </h2>
-                <dl className="flex flex-col gap-2">
+                <dl className="flex flex-col gap-2 px-3 py-2.5">
                   {meals.map((slot) => {
                     const meal = day[slot]!;
                     return (
                       <div key={slot} className="flex flex-col gap-0.5">
-                        <dt className="text-xs font-semibold uppercase tracking-wide text-ink-subtle">
+                        <dt className="text-[10px] font-semibold uppercase tracking-[0.1em] text-accent-text">
                           {t(`slots.${slot}`)}
                         </dt>
-                        <dd className="text-sm leading-relaxed">
-                          {summarizeRows(meal.main)}
+                        <dd className="text-[13px] leading-snug">
+                          <ul className="flex flex-col">
+                            {meal.main.map((row, i) => (
+                              <li key={i} className="flex gap-2">
+                                <span className="w-14 shrink-0 tabular-nums text-ink-subtle">
+                                  {row.amount}
+                                </span>
+                                <span className="min-w-0">{row.food}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </dd>
+                        {/* Alternatives sit under their meal, set back and
+                            quieter: they are the same meal, not another. */}
                         {meal.alternatives.map((rows, i) => (
                           <dd
                             key={i}
-                            className="text-sm leading-relaxed text-ink-subtle"
+                            className="ml-1 border-l-2 border-hairline pl-2 text-[12px] leading-snug text-ink-subtle"
                           >
-                            <span className="font-medium">
-                              {t("editor.alternative", { n: i + 1 })}:
-                            </span>{" "}
-                            {summarizeRows(rows)}
+                            <span className="font-semibold">
+                              {t("editor.alternative", { n: i + 1 })}
+                            </span>
+                            <ul className="flex flex-col">
+                              {rows.map((row, j) => (
+                                <li key={j} className="flex gap-2">
+                                  <span className="w-12 shrink-0 tabular-nums">
+                                    {row.amount}
+                                  </span>
+                                  <span className="min-w-0">{row.food}</span>
+                                </li>
+                              ))}
+                            </ul>
                           </dd>
                         ))}
                       </div>

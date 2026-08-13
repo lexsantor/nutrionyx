@@ -328,7 +328,11 @@
   :root {
     --c-canvas: #ffffff;
     --c-surface-1: #ffffff;
-    --c-surface-2: #ffffff;
+    --c-surface-2: #f7f9fb;
+    --c-surface-3: #eef2f6;
+    --c-primary-subtle: #e4ebf2;
+    --c-on-primary-subtle: #24405f;
+    --c-accent-text: #2f4a66;
     --c-ink: #000000;
     --c-ink-muted: #1a1a1a;
     --c-ink-subtle: #444444;
@@ -344,8 +348,15 @@
     break-inside: avoid;
     page-break-inside: avoid;
   }
-  /* A printed sheet keeps no shadows and no rounded cards: they cost ink
-   * and say nothing on paper. */
+  /* Browsers drop background fills when printing unless told otherwise,
+   * which would erase the day headers, the masthead band and the
+   * prescription chips: the structure of the sheet lives in them. */
+  .doc,
+  .doc * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  /* Shadows cost ink and say nothing on paper; the borders carry it. */
   * {
     box-shadow: none !important;
   }

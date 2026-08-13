@@ -1343,6 +1343,8 @@
     "emptyDiet": "Este plan todavía no tiene comidas.",
     "emptyRoutine": "Esta rutina todavía no tiene ejercicios.",
     "openDiet": "Ver para imprimir",
-    "openRoutine": "Ver para imprimir"
+    "openRoutine": "Ver para imprimir",
+    "notes": "Indicaciones",
+    "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}"
   }
 }
