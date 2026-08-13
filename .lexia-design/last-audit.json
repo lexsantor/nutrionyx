@@ -1,5 +1,5 @@
 {
-  "updated": "2026-08-13T11:15:08.967Z",
+  "updated": "2026-08-13T11:22:23.010Z",
   "findings": [
     {
       "id": "content/claim-repetition",
@@ -135,7 +135,7 @@
       "id": "content/claim-repetition",
       "severity": "minor",
       "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/components/ui/date-field.tsx",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/components/ui/select.tsx",
       "line": 1,
       "evidence": "\"use client\";",
       "msg": "A four-word-plus phrase repeats three or more times",
@@ -145,7 +145,7 @@
       "id": "content/claim-repetition",
       "severity": "minor",
       "confidence": "review",
-      "file": "/Users/lexsantor/Desktop/nutrionyx/src/components/ui/select.tsx",
+      "file": "/Users/lexsantor/Desktop/nutrionyx/src/components/ui/date-field.tsx",
       "line": 1,
       "evidence": "\"use client\";",
       "msg": "A four-word-plus phrase repeats three or more times",

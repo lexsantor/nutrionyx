@@ -182,6 +182,35 @@ browser walk, measured with element rectangles rather than `documentElement`.
    (07:00-21:45) is an assumption about a consulta's day that nothing else in
    the domain enforces. The constants in `time-field.tsx` say so.
 
+### Reversed 2026-08-13, by photographs from a real iPhone
+
+The hybrid decision rested on "iOS and Android give away a wheel better than
+anything hand-rolled". For `type="date"` that is false on modern iOS: there is
+no wheel, there is a calendar panel that runs off the right edge of a 390px
+screen and cannot be positioned from the page. The owner's phone also showed it
+in English inside a Spanish app, which is correct behaviour for a native
+control and not a reason on its own.
+
+So the `pointer: fine` gate is gone and the calendar is ours everywhere. Two
+things had to change with it:
+
+- **Touch targets.** 36px circles became 44px-tall cells sharing the width of a
+  7-column grid: 40px wide on a 390px screen, 51px in the sheet.
+- **Presentation below `sm`.** Anchoring to the field does not work on a phone
+  and the measurement says why: a 354px calendar, a field at 361px, a 664px
+  viewport. 259px of room below, 361px above, so it fits neither way and the
+  browser resolves that by covering the field — the exact complaint the owner
+  photographed against the *native* one. Below `sm` it is a sheet on the bottom
+  edge instead, which always fits.
+
+**Known limit, measured rather than guessed:** the `Select` listbox keeps the
+anchored-panel treatment at every width. On a phone it is 288px tall and flips
+above a low field correctly, verified. There is a narrow band — a field roughly
+between 296px and 368px down a 664px viewport — where neither direction fits
+and it would cover its own field the same way. Not fixed, because fixing it
+means either a second presentation mode for the listbox or a `max-height` trick
+I could not verify in that band.
+
 **Still open, and not something I can close:** the screen-reader walk. Roles,
 focus order and keyboard were measured; VoiceOver announcing a calendar month
 by month is a different question, and this repo's own rule is that reasoning

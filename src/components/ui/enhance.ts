@@ -24,27 +24,30 @@ export function useEnhanced(): boolean {
   );
 }
 
-const FINE = "(pointer: fine)";
+// A `usePointerFine` hook lived here to gate the calendar behind a mouse. A
+// real iPhone showed the premise was wrong — iOS draws a calendar panel for
+// type="date", not a wheel, and it overflows a 390px screen — so the gate went
+// and the hook with it.
 
 /**
- * True only where the primary pointer is a mouse or trackpad.
+ * A media query as a boolean, false during SSR.
  *
- * The date field is enhanced behind this and the native one is left alone on
- * touch (slice-28, owner decision): iOS and Android give away a wheel picker
- * that is better than anything hand-rolled, and the patient space is used
- * mostly on a phone. Subscribing rather than reading once means a tablet that
- * gains or loses a mouse is handled for free.
- *
- * False during SSR, so it doubles as the mount gate.
+ * Used to decide how a popup is presented, not whether it exists: a panel
+ * anchored to its field is right on a wide screen and impossible on a phone,
+ * where a 354px calendar fits neither above nor below a field in the middle of
+ * a 664px viewport and the browser ends up covering the field with it.
  */
-export function usePointerFine(): boolean {
+export function useMediaQuery(query: string): boolean {
   return useSyncExternalStore(
     (onChange) => {
-      const query = window.matchMedia(FINE);
-      query.addEventListener("change", onChange);
-      return () => query.removeEventListener("change", onChange);
+      const media = window.matchMedia(query);
+      media.addEventListener("change", onChange);
+      return () => media.removeEventListener("change", onChange);
     },
-    () => window.matchMedia(FINE).matches,
+    () => window.matchMedia(query).matches,
     () => false,
   );
 }
+
+/** Tailwind's `sm`. Below it, popups are sheets rather than anchored panels. */
+export const WIDE = "(min-width: 640px)";

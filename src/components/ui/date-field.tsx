@@ -9,13 +9,21 @@ import {
   type InputHTMLAttributes,
   type KeyboardEvent,
 } from "react";
-import { usePointerFine } from "./enhance";
+import { WIDE, useEnhanced, useMediaQuery } from "./enhance";
 
 /**
- * A date field whose calendar we own — but only where the pointer is fine
- * (slice-28, owner decision). On a phone the native input is left completely
- * alone: iOS and Android give away a wheel that beats anything hand-rolled,
- * and the patient space is used mostly on a phone.
+ * A date field whose calendar we own, at every width.
+ *
+ * It was gated behind `pointer: fine` at first, on the premise that iOS and
+ * Android give away a wheel better than anything hand-rolled. Photographs from
+ * a real iPhone killed that premise: `type="date"` on modern iOS is not a
+ * wheel, it is a calendar panel that overflows the right edge of a 390px
+ * screen and cannot be positioned from the page. Ours measures 304px at that
+ * width with 37px to spare, and flips above the field when there is no room
+ * below.
+ *
+ * (It also renders in the system's language rather than the page's, which is
+ * correct behaviour for a native control and not a reason on its own.)
  *
  * The real <input type="date"> always stays in the DOM and remains the value:
  * `required`, `min`, `max`, form reset and submission are the browser's job.
@@ -100,7 +108,9 @@ export function DateField({
   id,
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) {
-  const fine = usePointerFine();
+  const enhanced = useEnhanced();
+  // Anchored panel on a wide screen, sheet from the bottom edge on a phone.
+  const wide = useMediaQuery(WIDE);
   const inputRef = useRef<HTMLInputElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const popRef = useRef<HTMLDivElement>(null);
@@ -136,7 +146,7 @@ export function DateField({
 
   useEffect(() => {
     triggerRef.current?.style.setProperty("anchor-name", anchor);
-  }, [anchor, fine]);
+  }, [anchor, enhanced]);
 
   useEffect(() => {
     const pop = popRef.current;
@@ -241,14 +251,14 @@ export function DateField({
         // Same reason as Select: kept in the layout with opacity rather than
         // display:none, so a required field is still focusable and the
         // validation bubble lands over the trigger.
-        id={fine ? undefined : id}
-        className={`${FIELD} ${fine ? "pointer-events-none opacity-0" : ""} ${className}`}
-        aria-hidden={fine || undefined}
-        tabIndex={fine ? -1 : undefined}
+        id={enhanced ? undefined : id}
+        className={`${FIELD} ${enhanced ? "pointer-events-none opacity-0" : ""} ${className}`}
+        aria-hidden={enhanced || undefined}
+        tabIndex={enhanced ? -1 : undefined}
         {...props}
       />
 
-      {fine ? (
+      {enhanced ? (
         <>
           <button
             ref={triggerRef}
@@ -274,17 +284,26 @@ export function DateField({
             role="dialog"
             aria-label={MONTH_YEAR.format(month)}
             style={
-              {
-                positionAnchor: anchor,
-                positionArea: "bottom span-right",
-                positionTryFallbacks: "flip-block",
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              } as any
+              wide
+                ? ({
+                    positionAnchor: anchor,
+                    positionArea: "bottom span-right",
+                    positionTryFallbacks: "flip-block",
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  } as any)
+                : undefined
             }
-            // my-2, not m-0: 8px of air off the field. A block margin rather
-            // than an offset so the gap survives `flip-block` — above the
-            // field it reads the same as below.
-            className="mx-0 my-2 w-[19rem] rounded-[10px] border border-hairline bg-surface-1 p-3 shadow-el-md"
+            // Wide: anchored under the field, my-2 for 8px of air, and the
+            // block margin means the gap survives `flip-block`.
+            // Narrow: a sheet on the bottom edge. Measured on an iPhone 14,
+            // an anchored 354px calendar fits neither above nor below a field
+            // at 361px in a 664px viewport, and the browser resolves that by
+            // covering the field. A sheet always fits.
+            className={
+              wide
+                ? "mx-0 my-2 w-[19rem] max-w-[calc(100vw-2rem)] rounded-[10px] border border-hairline bg-surface-1 p-3 shadow-el-md"
+                : "fixed inset-x-0 bottom-0 top-auto m-0 w-full max-w-none rounded-b-none rounded-t-2xl border border-hairline bg-surface-1 p-4 pb-6 shadow-el-md"
+            }
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <button
@@ -348,7 +367,7 @@ export function DateField({
                         }
                         disabled={disabled}
                         onClick={() => choose(date)}
-                        className={`m-0.5 flex size-9 items-center justify-center rounded-full text-sm tabular-nums transition-colors ${
+                        className={`flex h-11 w-full items-center justify-center rounded-lg text-sm tabular-nums transition-colors ${
                           isSelected
                             ? "bg-primary font-semibold text-on-primary"
                             : otherMonth
@@ -374,7 +393,7 @@ export function DateField({
       <svg
         aria-hidden="true"
         viewBox="0 0 24 24"
-        className={`pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-subtle ${fine ? "" : "hidden"}`}
+        className={`pointer-events-none absolute right-3.5 top-1/2 size-4 -translate-y-1/2 text-ink-subtle ${enhanced ? "" : "hidden"}`}
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
