@@ -288,6 +288,18 @@ patient home, (6) admin shell with consulta detail, (7) `/admin/auditoria`
 so `DomainEvent` becomes readable. Rule adopted: no nav entry without a
 screen behind it.
 
+- **Slice 26 - Print / PDF** (slice-21-plan slice E, the last of the original
+  ask): `/imprimir/dieta/[id]` and `/imprimir/entreno/[id]`, outside /panel so
+  the console shell is not in the document. No PDF dependency: `@page` plus a
+  print media block (black on white, no shadows, day blocks unbreakable) and
+  the browser's own "Save as PDF". Rest days and empty days are skipped. The
+  routine sheet carries the exercise illustrations.
+  **Two bugs it surfaced**, both fixed: saving a week as a template blanked
+  every uncontrolled cell (React 19 resets the form on success too, and the
+  editors only re-hydrated on error), and echoing the values back was not
+  enough because `defaultValue` is read once at mount, so the form now carries
+  a generation key that remounts the cells per action.
+
 ### Backlog - waiting on the owner
 
 - **Exercise illustrations**: 4 of 41 drawn (press-banca, sentadilla,
