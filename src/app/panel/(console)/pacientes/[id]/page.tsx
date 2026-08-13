@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { madridDayStart } from "@/modules/scheduling/time";
 import { getPatientDetail } from "@/modules/patient/repository";
+import { ButtonLink } from "@/components/ui/button-link";
 import { ageInYears } from "@/modules/patient/age";
 import {
   bodyComposition,
@@ -248,9 +249,18 @@ export default async function PatientDetailPage({
               <h2 className="font-display text-xl font-semibold tracking-tight">
                 {t("report.title")}
               </h2>
-              <span className="text-sm text-ink-subtle">
+              <div className="flex items-center gap-3">
+                <ButtonLink
+                  href={`/imprimir/informe/${patient.id}`}
+                  variant="secondary"
+                  size="sm"
+                >
+                  {tp("openReport")}
+                </ButtonLink>
+                <span className="text-sm text-ink-subtle">
                 {t("report.window", { days: REPORT_WINDOW_DAYS })}
-              </span>
+                </span>
+              </div>
             </div>
             <dl className="flex flex-col text-sm">
               <Row

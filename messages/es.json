@@ -400,7 +400,8 @@
       "paginationLabel": "Paginación de pacientes",
       "prevPage": "Anterior",
       "nextPage": "Siguiente",
-      "pageOf": "Página {page} de {total}"
+      "pageOf": "Página {page} de {total}",
+      "openReport": "Ver para imprimir"
     },
     "invite": {
       "title": "Invitar paciente",
