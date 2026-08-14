@@ -44,6 +44,7 @@ import {
 import { unreadCount } from "@/modules/messaging/repository";
 import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
+import { estimateEnergy } from "@/modules/targets/energy";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
 import { EraseForm } from "./erase-form";
@@ -204,6 +205,17 @@ export default async function PatientDetailPage({
   const targetKg = num(assessment?.targetWeightKg);
   const age =
     assessment?.birthDate != null ? ageInYears(assessment.birthDate) : null;
+
+  // A starting figure for the kcal target, which was typed from nothing. The
+  // latest weight beats the one frozen into the assessment at completion.
+  const energy = estimateEnergy({
+    sex: assessment?.sex ?? null,
+    weightKg: body.weightKg ?? num(assessment?.weightKg),
+    heightCm: num(assessment?.heightCm),
+    ageYears: age,
+    activityLevel: assessment?.activityLevel ?? null,
+    leanMassKg: bodyLeanKg,
+  });
 
   const assessmentLabel =
     assessment?.status === "COMPLETED"
@@ -470,6 +482,7 @@ export default async function PatientDetailPage({
                     }
                   : null
               }
+              energy={energy}
             />
           </div>
         </Card>

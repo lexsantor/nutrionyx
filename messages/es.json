@@ -924,6 +924,12 @@
       "errors": {
         "invalidValue": "Revisa los valores: kcal 500-6000, proteína 20-400 g, entrenos 0-14.",
         "generic": "No se ha podido guardar. Inténtalo de nuevo."
+      },
+      "suggestion": {
+        "mifflin": "Mantenimiento estimado: {kcal, number} kcal/día. Mifflin-St Jeor: {bmr, number} kcal basales × {factor, number} de actividad.",
+        "katch": "Mantenimiento estimado: {kcal, number} kcal/día. Katch-McArdle sobre masa magra: {bmr, number} kcal basales × {factor, number} de actividad.",
+        "use": "Usar",
+        "caveat": "Es el gasto a peso estable. El déficit o el superávit los decides tú."
       }
     },
     "today": {
