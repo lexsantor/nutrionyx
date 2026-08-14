@@ -61,11 +61,6 @@ export function emptyContent(): DietPlanContent {
   };
 }
 
-/** A meal with one blank row, which is what the editor opens with. */
-export function emptyMeal(): Meal {
-  return { main: [{ amount: "", food: "" }], alternatives: [] };
-}
-
 /**
  * Normalize one group of rows. Blank rows are dropped (the editor always
  * renders at least one). Returns null when a cap is exceeded — callers

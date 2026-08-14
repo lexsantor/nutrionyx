@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import "@fontsource-variable/syne";
@@ -57,17 +58,20 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider locale={locale}>{children}</NextIntlClientProvider>
-        {/* Vercel Web Analytics, as the script rather than @vercel/analytics.
-            Installing the package rewrote package-lock.json and dropped the
-            next-intl/@swc/helpers entry that CI's `npm ci` needs — the exact
-            failure tasks/todo.md warns about — and the package's only real
-            advantage here is counting client-side route changes, which a
-            single-page landing does not have.
+        {/* Vercel Web Analytics. This was a bare <script src="/_vercel/
+            insights/script.js"> for a while, to dodge the lockfile trap in
+            tasks/lessons.md — installing the package rewrote package-lock.json
+            and CI's `npm ci` failed. The dodge never worked: that path 404s
+            even with Analytics switched on for the project, and served the
+            app's own HTML, so every page loaded a document as JavaScript.
 
-            No cookies, so it adds no consent obligation. It only reports once
-            Web Analytics is enabled on the Vercel project; until then the
-            script 404s silently and nothing else breaks. */}
-        <script defer src="/_vercel/insights/script.js" />
+            The trap turned out to be stale. It came from next-intl declaring
+            @swc/helpers and npm nesting a second copy; next-intl 4.13.1 does
+            not declare it at all, the lockfile no longer records it, and a
+            real `npm ci` passes.
+
+            No cookies, so it adds no consent obligation. */}
+        <Analytics />
       </body>
     </html>
   );

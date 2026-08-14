@@ -86,10 +86,6 @@ export function findExercise(key: string): CatalogueExercise | undefined {
   return BY_KEY.get(key);
 }
 
-export function isCatalogueKey(key: string): boolean {
-  return BY_KEY.has(key);
-}
-
 /** Catalogue grouped for a <select> with <optgroup>, in listed order. */
 export function exercisesByGroup(): {
   group: MuscleGroup;

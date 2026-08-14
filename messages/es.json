@@ -1034,7 +1034,6 @@
       "emptyBodyMetrics": "Introduce al menos una medida.",
       "generic": "No se ha podido guardar. Inténtalo de nuevo."
     },
-    "exportLink": "Descargar mis datos (JSON)",
     "zones": {
       "CHEST_CM": "Pecho",
       "ARM_CM": "Brazo",
@@ -1430,8 +1429,7 @@
     "requests": {
       "title": "Solicitudes de cita",
       "empty": "Ninguna solicitud pendiente.",
-      "confirm": "Confirmar",
-      "reject": "Rechazar"
+      "confirm": "Confirmar"
     }
   },
   "boundary": {
@@ -1494,9 +1492,7 @@
     "emptyDiet": "Este plan todavía no tiene comidas.",
     "emptyRoutine": "Esta rutina todavía no tiene ejercicios.",
     "openDiet": "Ver para imprimir",
-    "openRoutine": "Ver para imprimir",
     "notes": "Indicaciones",
-    "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}",
     "totals": "Total",
     "totalsValue": "{kcal} kcal · {protein} P · {carbs} HC · {fat} G"
   },
