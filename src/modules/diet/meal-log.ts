@@ -16,9 +16,17 @@ import type { MealStatus } from "@/generated/prisma/client";
  * organizationId comes from the caller's session, never from the request.
  */
 
-export type { MealStatus };
+// The pure half lives in ./meal-status so a client component can import it
+// without pulling Prisma into the browser bundle.
+import {
+  MEAL_NOTE_MAX,
+  NOTE_STATUSES,
+  keepsNote,
+  type DayLog,
+} from "./meal-status";
 
-export type DayLog = Partial<Record<MealSlot, MealStatus>>;
+export type { MealStatus, MealMark, DayLog } from "./meal-status";
+export { MEAL_NOTE_MAX, keepsNote } from "./meal-status";
 
 /** Midnight of a Madrid calendar day, which is what the column stores. */
 function dayKey(day: Date): Date {
@@ -68,7 +76,11 @@ export async function setMealStatus(params: {
         slot: params.slot,
         status: params.status,
       },
-      update: { status: params.status },
+      // Back to DONE drops whatever the patient had written about the change.
+      update: {
+        status: params.status,
+        ...(keepsNote(params.status) ? {} : { note: null }),
+      },
       select: { id: true },
     });
     mealLogId = row.id;
@@ -87,6 +99,37 @@ export async function setMealStatus(params: {
   });
 }
 
+/**
+ * Attach (or clear) the note on a meal already marked. Separate from
+ * setMealStatus because the buttons post on tap and the note is typed after;
+ * folding them into one action would let saving a note change a status.
+ *
+ * Updates nothing when the meal is not marked, or is marked DONE: there is
+ * no divergence to explain. Silent rather than an error - the only way to
+ * reach it is a stale form, and the patient has already moved on.
+ */
+export async function setMealNote(params: {
+  organizationId: string;
+  patientId: string;
+  day: Date;
+  slot: MealSlot;
+  note: string | null;
+}): Promise<void> {
+  const trimmed = params.note?.trim().slice(0, MEAL_NOTE_MAX) || null;
+  await prisma.mealLog.updateMany({
+    where: {
+      organizationId: params.organizationId,
+      patientId: params.patientId,
+      day: dayKey(params.day),
+      slot: params.slot,
+      status: { in: [...NOTE_STATUSES] },
+    },
+    data: { note: trimmed },
+  });
+  // No event: the status change already emitted one, and the payload would
+  // carry nothing new that operator-blindness allows (adr/0004).
+}
+
 /** One day's marks, keyed by slot. */
 export async function getDayLog(
   organizationId: string,
@@ -95,15 +138,54 @@ export async function getDayLog(
 ): Promise<DayLog> {
   const rows = await prisma.mealLog.findMany({
     where: { organizationId, patientId, day: dayKey(day) },
-    select: { slot: true, status: true },
+    select: { slot: true, status: true, note: true },
   });
   const out: DayLog = {};
   for (const row of rows) {
     if ((MEAL_SLOTS as readonly string[]).includes(row.slot)) {
-      out[row.slot as MealSlot] = row.status;
+      out[row.slot as MealSlot] = { status: row.status, note: row.note };
     }
   }
   return out;
+}
+
+export type MealNote = {
+  day: Date;
+  slot: MealSlot;
+  status: MealStatus;
+  note: string;
+};
+
+/**
+ * What the patient wrote about the meals that diverged, newest first. This is
+ * the whole point of the note: before it, a specialist saw that a meal had
+ * changed and nothing about what to.
+ *
+ * Capped, because a record is read in a consultation and a chatty month
+ * should not bury the rest of the page. The caller says how many.
+ */
+export async function recentMealNotes(
+  organizationId: string,
+  patientId: string,
+  since: Date,
+  limit = 20,
+): Promise<MealNote[]> {
+  const rows = await prisma.mealLog.findMany({
+    where: {
+      organizationId,
+      patientId,
+      day: { gte: dayKey(since) },
+      note: { not: null },
+    },
+    orderBy: [{ day: "desc" }, { slot: "asc" }],
+    take: limit,
+    select: { day: true, slot: true, status: true, note: true },
+  });
+  return rows.flatMap((row) =>
+    (MEAL_SLOTS as readonly string[]).includes(row.slot) && row.note
+      ? [{ day: row.day, slot: row.slot as MealSlot, status: row.status, note: row.note }]
+      : [],
+  );
 }
 
 export type MealAdherence = {

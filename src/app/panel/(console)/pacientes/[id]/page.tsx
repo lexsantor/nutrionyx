@@ -36,7 +36,11 @@ import { listNotes } from "@/modules/notes/repository";
 import { listPhotos } from "@/modules/photos/repository";
 import { listDocuments } from "@/modules/documents/repository";
 import { getDietPlan } from "@/modules/diet/repository";
-import { adherenceBySlot, mealAdherence } from "@/modules/diet/meal-log";
+import {
+  adherenceBySlot,
+  mealAdherence,
+  recentMealNotes,
+} from "@/modules/diet/meal-log";
 import {
   getRoutine,
   listSessions,
@@ -73,6 +77,7 @@ export default async function PatientDetailPage({
   const tw = await getTranslations("wizard");
   const tp = await getTranslations("panel.patients");
   const tSlots = await getTranslations("diet.slots");
+  const tLog = await getTranslations("diet.log");
   const tm = await getTranslations("medication");
   const tPhotos = await getTranslations("photos");
 
@@ -108,6 +113,7 @@ export default async function PatientDetailPage({
     weights,
     meals,
     mealsBySlot,
+    mealNotes,
   ] = await Promise.all([
     getTargets(org.id, patient.id),
     listNotes(org.id, patient.id),
@@ -125,6 +131,7 @@ export default async function PatientDetailPage({
     listWeights(org.id, patient.id),
     mealAdherence(org.id, patient.id, since),
     adherenceBySlot(org.id, patient.id, since),
+    recentMealNotes(org.id, patient.id, since),
   ]);
   const recentDoses = allDoses.slice(0, 5);
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
@@ -350,6 +357,37 @@ export default async function PatientDetailPage({
                         </li>
                       );
                     })}
+                  </ul>
+                </div>
+              ) : null}
+              {/* What the patient wrote when the plan and the day diverged.
+                  The percentage above says a meal changed; this says what to,
+                  which is the half that was missing and the half that is worth
+                  reading before the next appointment. */}
+              {mealNotes.length > 0 ? (
+                <div className="flex flex-col gap-1.5 border-b border-hairline py-2.5">
+                  <span className="text-sm text-ink-subtle">
+                    {t("report.mealNotes")}
+                  </span>
+                  <ul className="flex flex-col gap-1.5">
+                    {mealNotes.map((entry) => (
+                      <li
+                        key={`${entry.day.toISOString()}-${entry.slot}`}
+                        className="flex flex-col gap-0.5 text-sm"
+                      >
+                        <span className="text-xs text-ink-subtle">
+                          {format.dateTime(entry.day, {
+                            day: "numeric",
+                            month: "short",
+                          })}
+                          {" · "}
+                          {tSlots(entry.slot)}
+                          {" · "}
+                          {tLog(`status.${entry.status}`)}
+                        </span>
+                        <span className="text-ink-muted">{entry.note}</span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               ) : null}

@@ -725,7 +725,8 @@
       "meals": "Plan de comidas",
       "mealsValue": "{done} de {marked} comidas seguidas · {days, plural, one {# día} other {# días}} con registro",
       "bySlot": "Por comida",
-      "bySlotValue": "{done} de {marked}"
+      "bySlotValue": "{done} de {marked}",
+      "mealNotes": "Qué pasó cuando cambió el plan"
     },
     "documents": {
       "title": "Documentos",
@@ -1171,6 +1172,19 @@
         "DONE": "Hecha",
         "CHANGED": "La cambié",
         "SKIPPED": "Me la salté"
+      },
+      "note": {
+        "label": {
+          "CHANGED": "¿Qué comiste en su lugar? (opcional)",
+          "SKIPPED": "¿Qué pasó? (opcional)"
+        },
+        "placeholder": {
+          "CHANGED": "Ensalada y pollo en vez del arroz",
+          "SKIPPED": "Comí fuera, no me dio tiempo"
+        },
+        "save": "Guardar",
+        "saving": "Guardando...",
+        "saved": "Guardado"
       }
     }
   },

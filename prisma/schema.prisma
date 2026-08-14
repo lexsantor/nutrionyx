@@ -341,6 +341,13 @@ model MealLog {
   day            DateTime   @db.Date
   slot           String
   status         MealStatus
+  /**
+   * What the patient ate instead, or why they skipped. Only meaningful when
+   * the plan and reality diverged, so it is cleared when a meal goes back to
+   * DONE: a note explaining a change that no longer exists is a lie in the
+   * record. Optional by design - a check-in has to stay under a minute.
+   */
+  note           String?
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
