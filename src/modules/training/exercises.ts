@@ -112,7 +112,14 @@ export function exerciseImage(key: string): string | null {
 
 /**
  * Keys with an illustration in public/exercises/. Add a key here only
- * once its file exists — a missing image renders as a broken box.
+ * once its file exists — a missing image renders as a broken box, and
+ * exercises.test.ts fails on a key listed without a file behind it.
+ *
+ * The whole catalogue is illustrated since 2026-08-14 except `remo-maquina`.
+ * Its drawing shows a seated cable row - a back exercise - and the catalogue
+ * files it under CARDIO, where "remo en máquina" means the ergometer. Rather
+ * than ship a picture of the wrong movement onto a prescription, the key is
+ * left out until either the drawing or the grouping is settled.
  *
  * Every file is the same mannequin as public/mannequin-male-front.png,
  * generated with it as the style reference, background removed, cropped
@@ -120,8 +127,47 @@ export function exerciseImage(key: string): string | null {
  * makes the set look like one set.
  */
 export const ILLUSTRATED = new Set<string>([
+  // Chest
   "press-banca",
-  "sentadilla",
-  "press-militar",
+  "press-inclinado",
+  "aperturas",
+  "fondos-paralelas",
+  "flexiones",
+  // Back
   "dominadas",
+  "jalon-al-pecho",
+  "remo-barra",
+  "remo-mancuerna",
+  "peso-muerto",
+  "hiperextensiones",
+  // Legs
+  "sentadilla",
+  "prensa",
+  "zancada",
+  "peso-muerto-rumano",
+  "extension-cuadriceps",
+  "curl-femoral",
+  "elevacion-gemelos",
+  "hip-thrust",
+  // Shoulders
+  "press-militar",
+  "elevaciones-laterales",
+  "pajaro",
+  "face-pull",
+  // Arms
+  "curl-biceps",
+  "curl-martillo",
+  "extension-triceps",
+  "press-frances",
+  // Core
+  "plancha",
+  "plancha-lateral",
+  "crunch",
+  "elevacion-piernas",
+  "rueda-abdominal",
+  // Cardio
+  "carrera",
+  "bici-estatica",
+  "eliptica",
+  "cinta-inclinada",
 ]);

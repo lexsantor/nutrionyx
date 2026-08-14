@@ -36,10 +36,28 @@ describe("exercise catalogue", () => {
     }
   });
 
-  it("returns no image path for an exercise without one", () => {
-    const withoutImage = EXERCISES.find((e) => !ILLUSTRATED.has(e.key));
-    expect(exerciseImage(withoutImage!.key)).toBeNull();
+  // Every exercise has had an illustration since 2026-08-14, so this can no
+  // longer look for one that does not. What it guards is the rule itself: a
+  // key outside ILLUSTRATED gets null rather than a path to a missing file.
+  it("returns no image path for a key that is not illustrated", () => {
     expect(exerciseImage("inventado")).toBeNull();
+    expect(exerciseImage("")).toBeNull();
+    for (const key of ILLUSTRATED) {
+      expect(EXERCISES.some((e) => e.key === key), key).toBe(true);
+    }
+  });
+
+  /**
+   * One known hole, named here so a second one cannot open quietly.
+   * `remo-maquina` sits in CARDIO, where the exercise is the ergometer, and
+   * the drawing on file is a seated cable row. Shipping it would put the
+   * wrong movement on a prescription.
+   */
+  it("illustrates the whole catalogue but for the one known exception", () => {
+    const missing = EXERCISES.filter((e) => !ILLUSTRATED.has(e.key)).map(
+      (e) => e.key,
+    );
+    expect(missing).toEqual(["remo-maquina"]);
   });
 
   it("groups every exercise exactly once, in catalogue order", () => {
