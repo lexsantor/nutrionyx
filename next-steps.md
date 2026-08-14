@@ -149,6 +149,11 @@ than against `src/` was wrong three separate times.
 
 - The screen-reader walk of the calendar and the listbox. Roles, focus and
   keyboard were measured; VoiceOver was never run.
+- ~~Enable Web Analytics on the Vercel project.~~ Done 2026-08-14, and it took
+  a code change with it: the script tag standing in for the package never
+  worked - `/_vercel/insights/script.js` 404s and served the app's own HTML -
+  so `@vercel/analytics` is installed and `<Analytics />` is in the layout. The
+  lockfile trap that motivated the script tag is retired in tasks/lessons.md.
 - Everything in Tier 0 of the roadmap: Resend's sending domain, real fiscal
   data, the legal review, and a Verifactu study before billing is scoped.
 - The exercise illustrations dropped in `imgs/`: two of them are triceps and
