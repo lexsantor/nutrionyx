@@ -174,6 +174,8 @@ export default async function DietPrintPage({
                           ? tp("totalsValue", {
                               kcal: totals.kcal,
                               protein: totals.proteinG,
+                              carbs: totals.carbsG,
+                              fat: totals.fatG,
                             })
                           : ""}
                       </td>

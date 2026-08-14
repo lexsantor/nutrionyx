@@ -332,6 +332,8 @@ export function DietEditor({
                       ? t("editor.totals.value", {
                           kcal: totals.kcal,
                           protein: totals.proteinG,
+                          carbs: totals.carbsG,
+                          fat: totals.fatG,
                         })
                       : t("editor.totals.none");
                   const target =

@@ -288,6 +288,10 @@ describe("day totals (slice-29)", () => {
     // 379*0.6 + 89*1.2 + 165*1.5 = 227 + 107 + 248
     expect(totals.kcal).toBe(582);
     expect(totals.proteinG).toBeCloseTo(7.8 + 1.3 + 46.5, 1);
+    // All three macros, not just protein: the catalogue has carried carbs and
+    // fat since it shipped and dayTotals threw them away.
+    expect(totals.carbsG).toBeCloseTo(40.8 + 27.6 + 0, 1);
+    expect(totals.fatG).toBeCloseTo(3.9 + 0.4 + 5.4, 1);
     expect(totals.uncounted).toBe(1);
   });
 
@@ -298,7 +302,13 @@ describe("day totals (slice-29)", () => {
         alternatives: [],
       },
     };
-    expect(dayTotals(day)).toEqual({ kcal: 0, proteinG: 0, uncounted: 1 });
+    expect(dayTotals(day)).toEqual({
+      kcal: 0,
+      proteinG: 0,
+      carbsG: 0,
+      fatG: 0,
+      uncounted: 1,
+    });
   });
 
   it("drops a key the catalogue no longer has, keeping the text", () => {

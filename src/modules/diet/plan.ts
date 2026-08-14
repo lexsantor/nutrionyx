@@ -281,6 +281,8 @@ export function contentFromEntries(
 export type DayTotals = {
   kcal: number;
   proteinG: number;
+  carbsG: number;
+  fatG: number;
   /** Rows in the day's main meals with no catalogue food behind them. */
   uncounted: number;
 };
@@ -296,6 +298,8 @@ export type DayTotals = {
 export function dayTotals(day: DayPlan): DayTotals {
   let kcal = 0;
   let proteinG = 0;
+  let carbsG = 0;
+  let fatG = 0;
   let uncounted = 0;
 
   for (const slot of MEAL_SLOTS) {
@@ -307,8 +311,18 @@ export function dayTotals(day: DayPlan): DayTotals {
       const macros = macrosFor(row.foodKey, row.grams);
       kcal += macros.kcal;
       proteinG += macros.proteinG;
+      carbsG += macros.carbsG;
+      fatG += macros.fatG;
     }
   }
 
-  return { kcal, proteinG: Math.round(proteinG * 10) / 10, uncounted };
+  // Accumulate the already-rounded per-row figures rather than the raw ones,
+  // so the day total is what someone adding up the visible rows would get.
+  return {
+    kcal,
+    proteinG: Math.round(proteinG * 10) / 10,
+    carbsG: Math.round(carbsG * 10) / 10,
+    fatG: Math.round(fatG * 10) / 10,
+    uncounted,
+  };
 }

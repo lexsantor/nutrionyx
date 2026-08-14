@@ -1112,7 +1112,7 @@
       "gramsLabel": "Gramos",
       "totals": {
         "label": "Total del día",
-        "value": "{kcal} kcal · {protein} g proteína",
+        "value": "{kcal} kcal · {protein} P · {carbs} HC · {fat} G",
         "uncounted": "{count, plural, one {# línea sin contar} other {# líneas sin contar}}",
         "none": "Ninguna línea cuenta todavía",
         "target": "objetivo {kcal} kcal · {protein} g"
@@ -1124,7 +1124,7 @@
       "today": "Hoy",
       "empty": "Tu nutricionista aún no ha publicado tu plan de dieta.",
       "alternative": "Alternativa #{n}",
-      "dayTotals": "{kcal} kcal · {protein} g proteína",
+      "dayTotals": "{kcal} kcal · {protein} P · {carbs} HC · {fat} G",
       "uncounted": "{count, plural, one {# sin contar} other {# sin contar}}"
     },
     "templates": {
@@ -1449,6 +1449,6 @@
     "notes": "Indicaciones",
     "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}",
     "totals": "Total",
-    "totalsValue": "{kcal} kcal · {protein} g prot."
+    "totalsValue": "{kcal} kcal · {protein} P · {carbs} HC · {fat} G"
   }
 }

@@ -151,18 +151,37 @@ export function findFood(key: string | undefined): CatalogueFood | null {
   return key ? (BY_KEY.get(key) ?? null) : null;
 }
 
-export type Macros = { kcal: number; proteinG: number };
+export type Macros = {
+  kcal: number;
+  proteinG: number;
+  carbsG: number;
+  fatG: number;
+};
 
-/** What `grams` of a catalogue food contributes. Zero for an unknown key. */
+const ZERO_MACROS: Macros = { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0 };
+
+function round1(n: number): number {
+  return Math.round(n * 10) / 10;
+}
+
+/**
+ * What `grams` of a catalogue food contributes. Zero for an unknown key.
+ *
+ * All three macros, not just protein: the table has carried `carbsG` and
+ * `fatG` since the catalogue shipped and nothing read them, so a specialist
+ * distributing macros saw one of the three.
+ */
 export function macrosFor(key: string | undefined, grams: number): Macros {
   const food = findFood(key);
   if (!food || !Number.isFinite(grams) || grams <= 0) {
-    return { kcal: 0, proteinG: 0 };
+    return { ...ZERO_MACROS };
   }
   const factor = grams / 100;
   return {
     kcal: Math.round(food.kcal * factor),
-    proteinG: Math.round(food.proteinG * factor * 10) / 10,
+    proteinG: round1(food.proteinG * factor),
+    carbsG: round1(food.carbsG * factor),
+    fatG: round1(food.fatG * factor),
   };
 }
 

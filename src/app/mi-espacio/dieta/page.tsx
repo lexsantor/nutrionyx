@@ -113,6 +113,8 @@ export default async function PatientDietPage() {
                           {t("patient.dayTotals", {
                             kcal: totals.kcal,
                             protein: totals.proteinG,
+                            carbs: totals.carbsG,
+                            fat: totals.fatG,
                           })}
                           {/* Without this a patient reads 330 kcal on a day
                               that also has ten foods nobody weighed. */}

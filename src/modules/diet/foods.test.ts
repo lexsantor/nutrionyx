@@ -43,10 +43,16 @@ describe("food catalogue", () => {
   });
 
   it("scales by grams and ignores unknown keys", () => {
-    expect(macrosFor("pechuga-pollo", 200)).toEqual({ kcal: 330, proteinG: 62 });
-    expect(macrosFor("pechuga-pollo", 0)).toEqual({ kcal: 0, proteinG: 0 });
-    expect(macrosFor("no-existe", 100)).toEqual({ kcal: 0, proteinG: 0 });
-    expect(macrosFor(undefined, 100)).toEqual({ kcal: 0, proteinG: 0 });
+    const zero = { kcal: 0, proteinG: 0, carbsG: 0, fatG: 0 };
+    expect(macrosFor("pechuga-pollo", 200)).toEqual({
+      kcal: 330,
+      proteinG: 62,
+      carbsG: 0,
+      fatG: 7.2,
+    });
+    expect(macrosFor("pechuga-pollo", 0)).toEqual(zero);
+    expect(macrosFor("no-existe", 100)).toEqual(zero);
+    expect(macrosFor(undefined, 100)).toEqual(zero);
     expect(findFood("no-existe")).toBeNull();
   });
 });
