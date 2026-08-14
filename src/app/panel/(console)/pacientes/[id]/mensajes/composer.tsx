@@ -29,6 +29,7 @@ export function Composer({ patientId }: { patientId: string }) {
         pending={isPending}
         sendLabel={t("send")}
         sendingLabel={t("sending")}
+        stalledLabel={t("stalled")}
         hint={t("composerHintSpecialist")}
       >
         {state && "errorKey" in state ? (

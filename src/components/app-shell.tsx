@@ -99,8 +99,15 @@ const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el
 // Unread is not an error, but red is what a person reads as "something is
 // waiting for you" in a sidebar, and the owner asked for it. The same pair
 // the destructive button uses, so it inverts correctly in both themes.
+//
+// No margin here. The first version baked in `ml-auto` for the sidebar and
+// the mobile pill added `ml-1.5` on top; two margin-left utilities of equal
+// specificity settle by stylesheet order, not by the order of the class
+// attribute (tasks/lessons.md), so `ml-auto` won and computed to zero outside
+// a flex row - the badge ended up flush against the label. Each nav says
+// where its own gap comes from.
 const badgePill =
-  "ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-on-destructive";
+  "inline-flex min-w-5 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-on-destructive";
 
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
@@ -142,7 +149,7 @@ function NavItem({
               a four-digit pill would push the label out of its row. */}
           <span
             aria-hidden="true"
-            className={`${badgePill} ${active ? "ring-1 ring-on-primary/30" : ""}`}
+            className={`${badgePill} ml-auto ${active ? "ring-1 ring-on-primary/30" : ""}`}
           >
             {badge > 99 ? "99+" : badge}
           </span>
@@ -276,7 +283,7 @@ function Shell({
                 ) : null}
                 {badges?.[item.key] ? (
                   <>
-                    <span aria-hidden="true" className={`${badgePill} ml-1.5`}>
+                    <span aria-hidden="true" className={`${badgePill} ml-2`}>
                       {badges[item.key] > 99 ? "99+" : badges[item.key]}
                     </span>
                     <span className="sr-only">

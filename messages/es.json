@@ -1369,7 +1369,8 @@
       "yesterday": "Ayer"
     },
     "composerHintPatient": "Tu consulta responde en horario de trabajo. Si es una urgencia, llama al 112.",
-    "composerHintSpecialist": "El paciente ve este mensaje en su espacio. No se puede editar ni borrar."
+    "composerHintSpecialist": "El paciente ve este mensaje en su espacio. No se puede editar ni borrar.",
+    "stalled": "Está tardando más de lo normal. Puede que ya se haya enviado: recarga la página para comprobarlo antes de volver a escribirlo."
   },
   "agenda": {
     "heading": "Agenda",
