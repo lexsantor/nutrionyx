@@ -1,4 +1,4 @@
-import { getTranslations, getFormatter } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { findPatientByAuthUserId } from "@/modules/patient/repository";
@@ -14,7 +14,6 @@ export const dynamic = "force-dynamic";
 
 export default async function PatientMessagesPage() {
   const t = await getTranslations("messages");
-  const format = await getFormatter();
 
   const { data: session } = await auth.getSession();
   if (!session?.user) {
@@ -36,16 +35,13 @@ export default async function PatientMessagesPage() {
           <p className="text-sm text-ink-subtle">{t("patientHint")}</p>
         </div>
 
-        <div className="flex w-full max-w-2xl flex-1 flex-col gap-6">
+        <div className="flex w-full max-w-2xl flex-1 flex-col gap-8">
           <MessageThread
             messages={thread.map((m) => ({
               id: m.id,
               sender: m.sender,
               body: m.body,
-              sentAt: format.dateTime(m.createdAt, {
-                dateStyle: "medium",
-                timeStyle: "short",
-              }),
+              createdAt: m.createdAt,
             }))}
             ownSide="PATIENT"
             emptyText={t("emptyPatient")}

@@ -1347,8 +1347,8 @@
     "patientHeading": "Mensajes",
     "patientHint": "Canal directo y privado con tu consulta. No es para urgencias.",
     "panelHeading": "Mensajes",
-    "emptyPatient": "Aún no hay mensajes. Escribe a tu consulta cuando lo necesites.",
-    "emptyPanel": "Aún no hay mensajes con este paciente.",
+    "emptyPatient": "Aquí empieza tu conversación con la consulta. Escribe una duda sobre tu plan, tu entreno o cómo te has sentido esta semana.",
+    "emptyPanel": "Todavía no habéis hablado por aquí. Un primer mensaje al empezar el plan suele ahorrar una llamada.",
     "composerLabel": "Mensaje",
     "composerPlaceholder": "Escribe un mensaje…",
     "send": "Enviar",
@@ -1362,7 +1362,13 @@
       "consulta": "Tu consulta",
       "patient": "Paciente"
     },
-    "sent": "Mensaje enviado"
+    "sent": "Mensaje enviado",
+    "days": {
+      "today": "Hoy",
+      "yesterday": "Ayer"
+    },
+    "composerHintPatient": "Tu consulta responde en horario de trabajo. Si es una urgencia, llama al 112.",
+    "composerHintSpecialist": "El paciente ve este mensaje en su espacio. No se puede editar ni borrar."
   },
   "agenda": {
     "heading": "Agenda",

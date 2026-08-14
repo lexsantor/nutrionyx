@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getTranslations, getFormatter } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { getPatientDetail } from "@/modules/patient/repository";
@@ -20,7 +20,6 @@ export default async function SpecialistMessagesPage({
 }) {
   const { id } = await params;
   const t = await getTranslations("messages");
-  const format = await getFormatter();
 
   const { org } = await requireSpecialistOrg();
 
@@ -46,16 +45,13 @@ export default async function SpecialistMessagesPage({
           <h1 className="text-2xl font-semibold">{t("panelHeading")}</h1>
         </div>
 
-        <div className="flex max-w-2xl flex-col gap-6">
+        <div className="flex max-w-2xl flex-col gap-8">
           <MessageThread
             messages={thread.map((m) => ({
               id: m.id,
               sender: m.sender,
               body: m.body,
-              sentAt: format.dateTime(m.createdAt, {
-                dateStyle: "medium",
-                timeStyle: "short",
-              }),
+              createdAt: m.createdAt,
             }))}
             ownSide="SPECIALIST"
             emptyText={t("emptyPanel")}

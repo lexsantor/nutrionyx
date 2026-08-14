@@ -2,11 +2,8 @@
 
 import { useActionState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
-import { Button } from "@/components/ui/button";
-import {
-  sendSpecialistMessageAction,
-  type MessageFormState,
-} from "./actions";
+import { ComposerShell } from "@/components/composer-shell";
+import { sendSpecialistMessageAction, type MessageFormState } from "./actions";
 
 export function Composer({ patientId }: { patientId: string }) {
   const t = useTranslations("messages");
@@ -21,39 +18,31 @@ export function Composer({ patientId }: { patientId: string }) {
   }, [state]);
 
   return (
-    <form ref={formRef} action={formAction} className="flex flex-col gap-2">
+    <form ref={formRef} action={formAction}>
       <input type="hidden" name="patientId" value={patientId} />
-      <div className="flex items-end gap-2">
-        <label htmlFor="body" className="sr-only">
-          {t("composerLabel")}
-        </label>
-        <textarea
-          id="body"
-          name="body"
-          required
-          maxLength={4000}
-          rows={2}
-          defaultValue={
-            state && "errorKey" in state ? (state.body ?? "") : ""
-          }
-          placeholder={t("composerPlaceholder")}
-          className="block w-full flex-1 resize-y rounded-[10px] border border-field-border bg-surface-2 px-3.5 py-2.5 text-base text-ink placeholder:text-ink-subtle"
-        />
-        <Button type="submit" disabled={isPending}>
-          {isPending ? t("sending") : t("send")}
-        </Button>
-      </div>
-      {state && "errorKey" in state ? (
-        <p
-          role="alert"
-          className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
-        >
-          {t(`errors.${state.errorKey}`)}
+      <ComposerShell
+        name="body"
+        label={t("composerLabel")}
+        placeholder={t("composerPlaceholder")}
+        maxLength={4000}
+        defaultValue={state && "errorKey" in state ? (state.body ?? "") : ""}
+        pending={isPending}
+        sendLabel={t("send")}
+        sendingLabel={t("sending")}
+        hint={t("composerHintSpecialist")}
+      >
+        {state && "errorKey" in state ? (
+          <p
+            role="alert"
+            className="rounded-[10px] bg-error-soft px-3 py-2 text-sm text-error"
+          >
+            {t(`errors.${state.errorKey}`)}
+          </p>
+        ) : null}
+        <p role="status" className="sr-only">
+          {state && "ok" in state ? t("sent") : ""}
         </p>
-      ) : null}
-      <p role="status" className="sr-only">
-        {state && "ok" in state ? t("sent") : ""}
-      </p>
+      </ComposerShell>
     </form>
   );
 }
