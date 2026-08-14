@@ -96,6 +96,12 @@ const ICON_SIZE = 18;
 const navBase =
   "flex items-center gap-3 rounded-lg px-3 py-2 text-sm no-underline transition-[background-color,color,box-shadow] duration-200 ease-house";
 const navActive = `${navBase} bg-primary font-semibold text-on-primary shadow-el-sm`;
+// Unread is not an error, but red is what a person reads as "something is
+// waiting for you" in a sidebar, and the owner asked for it. The same pair
+// the destructive button uses, so it inverts correctly in both themes.
+const badgePill =
+  "ml-auto inline-flex min-w-5 items-center justify-center rounded-full bg-error px-1.5 py-0.5 text-[11px] font-semibold tabular-nums text-on-destructive";
+
 const navIdle = `${navBase} text-ink-subtle hover:bg-surface-3 hover:text-ink`;
 
 // Declared at module scope (react-hooks/static-components): a component nested
@@ -107,6 +113,8 @@ function NavItem({
   active,
   soon,
   soonLabel,
+  badge,
+  badgeLabel,
 }: {
   href: string;
   label: string;
@@ -114,6 +122,9 @@ function NavItem({
   active: boolean;
   soon?: boolean;
   soonLabel: string;
+  /** Unread count. Absent or zero renders nothing. */
+  badge?: number;
+  badgeLabel?: string;
 }) {
   return (
     <Link
@@ -124,6 +135,20 @@ function NavItem({
       <Icon size={ICON_SIZE} aria-hidden="true" />
       {label}
       {soon ? <span className="sr-only"> ({soonLabel})</span> : null}
+      {badge ? (
+        <>
+          {/* The digit is decoration once the count is spelled out beside it,
+              so only one of the two reaches a screen reader. Capped, because
+              a four-digit pill would push the label out of its row. */}
+          <span
+            aria-hidden="true"
+            className={`${badgePill} ${active ? "ring-1 ring-on-primary/30" : ""}`}
+          >
+            {badge > 99 ? "99+" : badge}
+          </span>
+          <span className="sr-only">{badgeLabel}</span>
+        </>
+      ) : null}
     </Link>
   );
 }
@@ -133,10 +158,14 @@ function Shell({
   account,
   labelNamespace,
   root,
+  badges,
   children,
 }: {
   primary: NavItemDef[];
   account: NavItemDef;
+  /** Unread counts by nav key. Threaded from the layout, which is a server
+   *  component; this module is a client one because its icons are components. */
+  badges?: Record<string, number>;
   /** Where the nav labels come from: "common.nav" or "patientNav". */
   labelNamespace: string;
   /** The area's index route, matched exactly so it does not stay lit. */
@@ -196,6 +225,8 @@ function Shell({
                   active={isActive(item.href)}
                   soon={item.soon}
                   soonLabel={t("soon")}
+                  badge={badges?.[item.key]}
+                  badgeLabel={t("unread", { count: badges?.[item.key] ?? 0 })}
                 />
               </li>
             ))}
@@ -243,6 +274,16 @@ function Shell({
                 {item.soon ? (
                   <span className="sr-only"> ({t("soon")})</span>
                 ) : null}
+                {badges?.[item.key] ? (
+                  <>
+                    <span aria-hidden="true" className={`${badgePill} ml-1.5`}>
+                      {badges[item.key] > 99 ? "99+" : badges[item.key]}
+                    </span>
+                    <span className="sr-only">
+                      {t("unread", { count: badges[item.key] })}
+                    </span>
+                  </>
+                ) : null}
               </Link>
             );
           })}
@@ -259,13 +300,21 @@ function Shell({
   );
 }
 
-export function ConsoleShell({ children }: { children: ReactNode }) {
+export function ConsoleShell({
+  children,
+  unreadMessages = 0,
+}: {
+  children: ReactNode;
+  /** Unread patient messages across the whole consulta. */
+  unreadMessages?: number;
+}) {
   return (
     <Shell
       primary={CONSOLE_NAV}
       account={CONSOLE_ACCOUNT}
       labelNamespace="common.nav"
       root="/panel"
+      badges={{ mensajes: unreadMessages }}
     >
       {children}
     </Shell>
@@ -288,8 +337,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
 export function PatientShell({
   children,
   showMedication = false,
+  unreadMessages = 0,
 }: {
   children: ReactNode;
+  /** Unread messages from this patient's consulta. */
+  unreadMessages?: number;
   /**
    * Medication is opt-in (owner decision 2026-08-13): a patient who does not
    * follow one never sees the entry. The layout derives it from whether a
@@ -306,6 +358,7 @@ export function PatientShell({
       account={PATIENT_ACCOUNT}
       labelNamespace="patientNav"
       root="/mi-espacio"
+      badges={{ messages: unreadMessages }}
     >
       {children}
     </Shell>

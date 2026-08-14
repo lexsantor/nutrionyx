@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import { ConsoleShell } from "@/components/app-shell";
+import { unreadForSpecialist } from "@/modules/messaging/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,7 @@ export default async function ConsoleLayout({
 }: {
   children: ReactNode;
 }) {
-  await requireSpecialistOrg();
-  return <ConsoleShell>{children}</ConsoleShell>;
+  const { org } = await requireSpecialistOrg();
+  const unread = await unreadForSpecialist(org.id);
+  return <ConsoleShell unreadMessages={unread}>{children}</ConsoleShell>;
 }

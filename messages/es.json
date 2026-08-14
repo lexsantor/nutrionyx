@@ -15,7 +15,8 @@
     },
     "skipToContent": "Saltar al contenido",
     "loading": "Cargando…",
-    "soon": "sin activar"
+    "soon": "sin activar",
+    "unread": "{count, plural, one {# mensaje sin leer} other {# mensajes sin leer}}"
   },
   "admin": {
     "title": "Administración de Nutrionyx",

@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { requirePatient } from "@/lib/auth/patient";
 import { PatientShell } from "@/components/app-shell";
 import { getPlan } from "@/modules/medication/repository";
+import { unreadCount } from "@/modules/messaging/repository";
 
 export const dynamic = "force-dynamic";
 
@@ -16,8 +17,13 @@ export default async function PatientLayout({
   const { patient } = await requirePatient();
   // The medication entry exists only for a patient who has a plan. Turning it
   // on is a deliberate act in the profile, not a tab everyone has to ignore.
-  const plan = await getPlan(patient.organizationId, patient.id);
+  const [plan, unread] = await Promise.all([
+    getPlan(patient.organizationId, patient.id),
+    unreadCount(patient.organizationId, patient.id, "PATIENT"),
+  ]);
   return (
-    <PatientShell showMedication={plan !== null}>{children}</PatientShell>
+    <PatientShell showMedication={plan !== null} unreadMessages={unread}>
+      {children}
+    </PatientShell>
   );
 }

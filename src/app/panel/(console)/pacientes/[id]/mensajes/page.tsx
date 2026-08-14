@@ -6,7 +6,9 @@ import { getPatientDetail } from "@/modules/patient/repository";
 import {
   listThread,
   markThreadRead,
+  unreadCount,
 } from "@/modules/messaging/repository";
+import { RefreshOnRead } from "@/components/refresh-on-read";
 import { MessageThread } from "@/components/message-thread";
 import { Composer } from "./composer";
 
@@ -28,6 +30,9 @@ export default async function SpecialistMessagesPage({
     notFound();
   }
 
+  // Counted before marking, so the refresh below fires once and only when
+  // there was actually a badge to clear.
+  const hadUnread = await unreadCount(org.id, patient.id, "SPECIALIST");
   await markThreadRead(org.id, patient.id, "SPECIALIST");
   const thread = await listThread(org.id, patient.id);
 
@@ -61,6 +66,7 @@ export default async function SpecialistMessagesPage({
             }}
           />
           <Composer patientId={patient.id} />
+          <RefreshOnRead when={hadUnread > 0} />
         </div>
       </div>
     </>

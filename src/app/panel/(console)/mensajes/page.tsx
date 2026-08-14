@@ -60,8 +60,10 @@ export default async function InboxPage() {
                     >
                       {nameOf.get(thread.patientId) ?? t("unknownPatient")}
                     </span>
+                    {/* Same red as the sidebar badge: one fact, one colour,
+                        whichever screen you meet it on. */}
                     {thread.unread > 0 ? (
-                      <span className="rounded-full bg-primary px-2 py-0.5 text-xs font-semibold tabular-nums text-on-primary">
+                      <span className="rounded-full bg-error px-2 py-0.5 text-xs font-semibold tabular-nums text-on-destructive">
                         {t("unread", { count: thread.unread })}
                       </span>
                     ) : null}

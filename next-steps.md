@@ -232,9 +232,13 @@ All three are closed; kept here for the next reader.
 - **Suspending a consulta** and a **user-lookup page** in the admin area:
   both need a status column and a migration, for a platform with one
   consulta. YAGNI until there are more.
-- **Unread badge on the console's Mensajes entry.** The shell is a client
-  component and the count would have to be threaded through the layout;
-  the inbox itself already answers the question.
+- ~~**Unread badge on the console's Mensajes entry.**~~ Built 2026-08-14 at the
+  owner's request, on both sides. The reason recorded here still described the
+  work correctly - the shell is a client component and the count is threaded
+  from the layout - it just was not a reason not to do it. The part that was
+  genuinely awkward turned out to be elsewhere: the App Router does not
+  re-render a shared layout on client navigation, so the badge kept its old
+  number after the thread was read until a full reload.
 - **Patient-initiated erasure.** The consulta is the data controller and
   holds the clinical record, so `/mi-espacio/perfil` explains the route and
   points at the specialist rather than offering a button that would only

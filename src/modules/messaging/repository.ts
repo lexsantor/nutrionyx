@@ -69,6 +69,20 @@ export async function unreadCount(
   });
 }
 
+/**
+ * Every unread patient message in the consulta, for the nav badge. A plain
+ * count rather than summing unreadFromPatients: the sidebar asks "how many
+ * are waiting", not "from whom", and that is one query instead of a groupBy
+ * on every navigation.
+ */
+export async function unreadForSpecialist(
+  organizationId: string,
+): Promise<number> {
+  return prisma.message.count({
+    where: { organizationId, sender: "PATIENT", readAt: null },
+  });
+}
+
 /** Unread patient-sent messages per patient, for the panel list badges. */
 export async function unreadFromPatients(
   organizationId: string,
