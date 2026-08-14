@@ -1,5 +1,11 @@
 # Feature tiers - what to change, and what it is worth (2026-08-13)
 
+> **Superseded 2026-08-14 by [roadmap-2026-08-14.md](roadmap-2026-08-14.md).**
+> That one merges these tiers with the ten-platform benchmark, drops the four
+> rows that turned out to be already built, and re-prioritises three. Kept here
+> for the reasoning behind each decision, including the medication change in
+> full at the bottom. Do not plan from this file.
+
 Replaces the 2026-08-10 version, which listed messaging, scheduling,
 documents, progress photos, measurements, export and email notifications as
 future work. All of those shipped.

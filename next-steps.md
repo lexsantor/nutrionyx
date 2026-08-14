@@ -120,8 +120,11 @@ than against `src/` was wrong three separate times.
   work is already done in the slice-29 plan (USDA public domain, CIQUAL with
   attribution, Open Food Facts share-alike and to be avoided, BEDCA's terms
   unconfirmed).
-- The patient's plan shows a day's total but never says how many of its rows
-  are uncounted; the specialist's editor does. Deliberate, worth revisiting.
+- ~~The patient's plan shows a day's total but never says how many of its rows
+  are uncounted; the specialist's editor does.~~ **Wrong, checked 2026-08-14.**
+  The patient's plan does say it, at `mi-espacio/dieta/page.tsx:119`. This note
+  outlived the fix. Fifth status line this week that a document got wrong and
+  `src/` got right.
 
 **Open, and needing the owner:**
 
