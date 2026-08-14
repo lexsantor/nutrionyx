@@ -18,6 +18,19 @@ export const metadata: Metadata = {
     description:
       "La ficha única del paciente para nutricionistas: evaluación, dieta, entreno, medicación, mensajes y citas en un solo lugar.",
   },
+  // Safari ignores the manifest for the home screen: without this, installing
+  // on an iPhone opens a Safari chrome with a screenshot for an icon, and
+  // "installable" would mean Android only.
+  appleWebApp: {
+    capable: true,
+    title: "Nutrionyx",
+    statusBarStyle: "default",
+  },
+  // `appleWebApp.capable` emits the standardised `mobile-web-app-capable`,
+  // not Apple's legacy prefixed name. Which one WebKit honours today could
+  // not be verified here without an iOS device, so both go out: one line, and
+  // the answer stops mattering.
+  other: { "apple-mobile-web-app-capable": "yes" },
 };
 
 // Set the theme before first paint to avoid a flash (design.md 18.2).
