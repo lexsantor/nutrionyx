@@ -314,7 +314,18 @@ export function RoutineEditor({
                           defaultValue={v(`${base}-notes`, exercise.notes ?? "")}
                           aria-label={t("editor.exerciseNotesLabel")}
                           placeholder={t("editor.exerciseNotesPlaceholder")}
-                          className={`w-full ${cell} text-xs placeholder:text-ink-subtle`}
+                          // Same height and size as the picker above it. It
+                          // was the only 12px field in the product - 534 of
+                          // the other 589 measure 14 - and being both smaller
+                          // and shorter than everything around it made the
+                          // one free-text cell in the row the hardest to read.
+                          //
+                          // h-11, not h-9: the native select carries h-9 but
+                          // the custom trigger drawn over it renders at 44,
+                          // and 44 is what the eye compares. It is also the
+                          // Input primitive's own height, so this cell now
+                          // matches every other field in the product.
+                          className={`h-11 w-full ${cell} placeholder:text-ink-subtle`}
                         />
                       </div>
                       <ExerciseThumb
