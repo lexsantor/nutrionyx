@@ -466,10 +466,10 @@ export function DietEditor({
         ))}
       </div>
 
-      {/* Same dock as the routine editor, and it had the same defect: -mx-6
-          made it 24px wider than every card on the page. It ends where the
-          cards end now. */}
-      <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-3 rounded-t-xl border border-b-0 border-hairline bg-surface-1 px-6 py-4">
+      {/* Same dock as the routine editor, and it had the same two defects:
+          -mx-6 made it 24px wider than every card, and the wrapper's pb-10
+          left a gap under it once the scroll reached the end. */}
+      <div className="sticky bottom-0 z-10 -mb-10 flex flex-wrap items-center gap-3 rounded-t-xl border border-b-0 border-hairline bg-surface-1 px-6 py-4">
         <Button type="submit" name="intent" value="save" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>

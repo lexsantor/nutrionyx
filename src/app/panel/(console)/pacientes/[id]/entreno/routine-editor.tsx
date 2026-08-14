@@ -352,8 +352,13 @@ export function RoutineEditor({
           -mx-6 to cancel the wrapper's padding, which made it 24px wider than
           every card on the page and 28px short of the viewport - neither
           aligned nor full-bleed, and it read as broken. Rounded on top and
-          bordered like a card, because the rest of the column is. */}
-      <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-3 rounded-t-xl border border-b-0 border-hairline bg-surface-1 px-6 py-4">
+          bordered like a card, because the rest of the column is.
+
+          -mb-10 eats the console wrapper's pb-10. Without it the dock is
+          pinned to the bottom while you scroll and then rests 40px above it
+          at the end, and a bar that only sometimes reaches the bottom reads
+          as unfinished. Here the dock is the bottom of the page. */}
+      <div className="sticky bottom-0 z-10 -mb-10 flex flex-wrap items-center gap-3 rounded-t-xl border border-b-0 border-hairline bg-surface-1 px-6 py-4">
         <Button type="submit" name="intent" value="save" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
