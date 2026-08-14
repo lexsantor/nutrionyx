@@ -140,3 +140,56 @@ export function firstUnansweredStep(
   });
   return index === -1 ? ASSESSMENT_STEPS.length : index;
 }
+
+/**
+ * A consulta's own questions sit behind the fixed ten, never interleaved, and
+ * are always optional. Both caps exist so the wizard stays a check-in and not
+ * a form: the completion rate has an 80% target in ./metrics.
+ */
+export const MAX_CUSTOM_QUESTIONS = 5;
+export const CUSTOM_PROMPT_MAX = 160;
+export const CUSTOM_ANSWER_MAX = 2000;
+
+/**
+ * Where the wizard lands when no step was requested: the first gap, reading
+ * the fixed steps first and then the consulta's own.
+ *
+ * This arithmetic lives here rather than inline in the page because it is
+ * where an off-by-one strands a patient in an assessment they cannot finish.
+ */
+export function nextStep(
+  fixed: Partial<Record<AssessmentField, unknown>>,
+  customAnswered: readonly boolean[],
+): number {
+  const fixedIndex = firstUnansweredStep(fixed);
+  if (fixedIndex < ASSESSMENT_STEPS.length) return fixedIndex;
+  const gap = customAnswered.findIndex((answered) => !answered);
+  return gap === -1
+    ? ASSESSMENT_STEPS.length + customAnswered.length
+    : ASSESSMENT_STEPS.length + gap;
+}
+
+/**
+ * The furthest step a patient may jump to. While a required fixed step is
+ * open, nothing past it is reachable - that rule is unchanged. Once they are
+ * all answered, every custom question and the review are, because an optional
+ * question must never gate the end of the wizard.
+ */
+export function maxReachableStep(
+  fixed: Partial<Record<AssessmentField, unknown>>,
+  customCount: number,
+): number {
+  const fixedIndex = firstUnansweredStep(fixed);
+  return fixedIndex < ASSESSMENT_STEPS.length
+    ? fixedIndex
+    : ASSESSMENT_STEPS.length + customCount;
+}
+
+/** Which custom question a step index points at, or null for a fixed step. */
+export function customIndexOf(
+  stepIndex: number,
+  customCount: number,
+): number | null {
+  const offset = stepIndex - ASSESSMENT_STEPS.length;
+  return offset >= 0 && offset < customCount ? offset : null;
+}

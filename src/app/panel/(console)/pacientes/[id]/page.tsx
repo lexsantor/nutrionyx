@@ -49,6 +49,7 @@ import { unreadCount } from "@/modules/messaging/repository";
 import { DocumentsCard } from "./documents-card";
 import { bmiCategory } from "@/modules/assessment/computed";
 import { estimateEnergy } from "@/modules/targets/energy";
+import { answeredQuestionsFor } from "@/modules/assessment/questions";
 import { TargetsForm } from "./targets-form";
 import { NoteForm } from "./note-form";
 import { EraseForm } from "./erase-form";
@@ -114,6 +115,7 @@ export default async function PatientDetailPage({
     meals,
     mealsBySlot,
     mealNotes,
+    customAnswers,
   ] = await Promise.all([
     getTargets(org.id, patient.id),
     listNotes(org.id, patient.id),
@@ -132,6 +134,9 @@ export default async function PatientDetailPage({
     mealAdherence(org.id, patient.id, since),
     adherenceBySlot(org.id, patient.id, since),
     recentMealNotes(org.id, patient.id, since),
+    // The consulta's own assessment questions. Retired ones included: the
+    // answer belongs to the record even when the question stopped being asked.
+    assessment ? answeredQuestionsFor(org.id, assessment.id) : Promise.resolve([]),
   ]);
   const recentDoses = allDoses.slice(0, 5);
   const windowWeights = windowMeasurements.filter((m) => m.kind === "WEIGHT");
@@ -494,6 +499,16 @@ export default async function PatientDetailPage({
                     value={assessment.currentMedication}
                   />
                 ) : null}
+                {/* The consulta's own questions, in the same list as the fixed
+                    ones: to whoever reads the record they are the same kind of
+                    answer, and only the wording came from somewhere else. */}
+                {customAnswers.map((answer, index) => (
+                  <Row
+                    key={`${answer.prompt}-${index}`}
+                    label={answer.prompt}
+                    value={answer.value}
+                  />
+                ))}
               </dl>
             ) : (
               <p className="text-sm text-ink-subtle">{t("clinical.none")}</p>

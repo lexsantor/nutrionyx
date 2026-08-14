@@ -22,6 +22,13 @@ type StepProps = {
   initialValue: string | string[] | null;
   /** Current weight, only provided for the targetWeightKg step. */
   currentWeightKg?: number;
+  /**
+   * A consulta's own question. The fixed steps take their heading from the
+   * message catalogue by field name; a custom one has no key there, so it
+   * carries its own wording instead.
+   */
+  customPrompt?: string;
+  customMaxLength?: number;
 };
 
 const inputClass =
@@ -140,6 +147,9 @@ export function WizardStep(props: StepProps) {
   const [numberValue, setNumberValue] = useState(
     typeof props.initialValue === "string" ? props.initialValue : "",
   );
+  // A fixed step is titled from the catalogue by field name; a consulta's own
+  // question has no key there and brings its wording with it.
+  const title = props.customPrompt ?? t(`fields.${props.field}.title`);
   // Each step is a fresh mount (server redirect): move focus to the new
   // question so keyboard and SR users don't restart from <body>.
   const headingRef = useRef<HTMLHeadingElement>(null);
@@ -193,7 +203,7 @@ export function WizardStep(props: StepProps) {
           tabIndex={-1}
           className="text-xl font-semibold"
         >
-          {t(`fields.${props.field}.title`)}
+          {title}
         </h1>
 
         {props.kind === "single" ? (
@@ -274,7 +284,8 @@ export function WizardStep(props: StepProps) {
             <textarea
               name="value"
               rows={4}
-              aria-label={t(`fields.${props.field}.title`)}
+              maxLength={props.customMaxLength}
+              aria-label={title}
               defaultValue={
                 typeof props.initialValue === "string" ? props.initialValue : ""
               }

@@ -13,6 +13,10 @@ import {
   findLatestAssessment,
   saveAnswer,
 } from "@/modules/assessment/repository";
+import {
+  listQuestions,
+  saveAnswer as saveCustomAnswer,
+} from "@/modules/assessment/questions";
 
 export type WizardFormState = { errorKey: string } | null;
 
@@ -37,9 +41,26 @@ export async function submitAnswer(
 ): Promise<WizardFormState> {
   const fieldRaw = formData.get("field") as string;
   const step = ASSESSMENT_STEPS.find((s) => s.field === fieldRaw);
+
+  // Not one of the fixed ten: it is a consulta's own question, identified by
+  // id. saveCustomAnswer re-checks that the id belongs to the caller's org, so
+  // a tampered post reaches nothing.
   if (!step) {
-    return { errorKey: "generic" };
+    const { patient, assessment } = await requirePatientAssessment();
+    const questions = await listQuestions(patient.organizationId);
+    const index = questions.findIndex((q) => q.id === fieldRaw);
+    if (index === -1) {
+      return { errorKey: "generic" };
+    }
+    await saveCustomAnswer({
+      organizationId: patient.organizationId,
+      assessmentId: assessment.id,
+      questionId: fieldRaw,
+      value: (formData.get("value") as string) ?? "",
+    });
+    redirect(`/mi-espacio/evaluacion?paso=${ASSESSMENT_STEPS.length + index + 1}`);
   }
+
   const field = step.field as AssessmentField;
 
   const raw =

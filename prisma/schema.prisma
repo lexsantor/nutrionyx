@@ -126,9 +126,54 @@ model Assessment {
   startedAt   DateTime  @default(now())
   completedAt DateTime?
 
+  customAnswers AssessmentQuestionAnswer[]
+
   @@unique([patientId, version])
   @@index([organizationId])
   @@map("assessments")
+}
+
+/**
+ * A question a consulta adds to the end of the fixed wizard (roadmap
+ * 2026-08-14). Free text only and never required: the completion rate has an
+ * 80% target in modules/assessment/metrics.ts, and a mandatory extra question
+ * can sink it without anyone connecting the two.
+ *
+ * The prompt is write-once. Editing it would silently re-label every answer
+ * already given under the old wording, which is the same reason MedicationDose
+ * snapshots its drug and dose. Removing a question deactivates it instead of
+ * deleting, so the answers stay in the record they belong to.
+ */
+model AssessmentQuestion {
+  id             String   @id @default(cuid())
+  organizationId String
+  prompt         String
+  position       Int
+  active         Boolean  @default(true)
+  createdByAuthUserId String
+  createdAt      DateTime @default(now())
+  answers        AssessmentQuestionAnswer[]
+
+  @@index([organizationId, active, position])
+  @@map("assessment_questions")
+}
+
+model AssessmentQuestionAnswer {
+  id             String             @id @default(cuid())
+  organizationId String
+  assessmentId   String
+  assessment     Assessment         @relation(fields: [assessmentId], references: [id])
+  questionId     String
+  question       AssessmentQuestion @relation(fields: [questionId], references: [id])
+  value          String
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  // One answer per question per assessment; re-answering updates it, which is
+  // what a wizard step the patient can go back to has to allow.
+  @@unique([assessmentId, questionId])
+  @@index([organizationId, assessmentId])
+  @@map("assessment_question_answers")
 }
 
 // Append-only domain events (docs/09: AssessmentStarted, AssessmentCompleted)

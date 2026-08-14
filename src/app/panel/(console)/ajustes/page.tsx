@@ -10,6 +10,8 @@ import {
 import { Card } from "@/components/ui/card";
 import { ProfileForm } from "./profile-form";
 import { SpecialtySettings } from "./specialty-settings";
+import { CustomQuestions } from "./custom-questions";
+import { listQuestions } from "@/modules/assessment/questions";
 import { acceptConsentAction } from "./actions";
 
 export const metadata = { title: "Ajustes" };
@@ -17,9 +19,10 @@ export const dynamic = "force-dynamic";
 
 export default async function SettingsPage() {
   const { org } = await requireSpecialistOrg();
-  const [profile, consentAccepted] = await Promise.all([
+  const [profile, consentAccepted, questions] = await Promise.all([
     getOrgProfile(org.id),
     hasAcceptedConsent(org.id, "DPA", CURRENT_DPA_VERSION),
+    listQuestions(org.id),
   ]);
 
   const t = await getTranslations("settings");
@@ -34,6 +37,10 @@ export default async function SettingsPage() {
 
         <Card>
           <SpecialtySettings current={profile?.specialtyType ?? null} />
+        </Card>
+
+        <Card>
+          <CustomQuestions questions={questions} />
         </Card>
 
         {!consentAccepted ? (

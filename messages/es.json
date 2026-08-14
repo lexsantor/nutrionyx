@@ -137,7 +137,24 @@
     "logoFileHint": "PNG, JPG o WebP, máx. 2 MB. Si subes un archivo, sustituye a la URL.",
     "logoChoose": "Elegir archivo",
     "logoNoFile": "Ningún archivo seleccionado",
-    "logoAlt": "Logo actual de tu consulta"
+    "logoAlt": "Logo actual de tu consulta",
+    "questions": {
+      "title": "Preguntas propias de tu consulta",
+      "hint": "Se añaden al final de la evaluación del paciente, siempre como opcionales. La redacción no se puede editar después: cambiarla reetiquetaría las respuestas ya dadas.",
+      "empty": "Todavía no has añadido ninguna.",
+      "addLabel": "Nueva pregunta",
+      "addPlaceholder": "¿Cocinas tú en casa?",
+      "add": "Añadir",
+      "adding": "Añadiendo...",
+      "remove": "Retirar",
+      "full": "Has llegado al máximo de {max}. Retira alguna para añadir otra.",
+      "errors": {
+        "empty": "Escribe la pregunta.",
+        "tooLong": "La pregunta es demasiado larga.",
+        "full": "Ya tienes el máximo de preguntas.",
+        "generic": "No se pudo guardar. Inténtalo de nuevo."
+      }
+    }
   },
   "home": {
     "badge": "Para nutricionistas · con invitación",

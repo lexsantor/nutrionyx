@@ -8,9 +8,13 @@ import {
 } from "@/modules/assessment/repository";
 import {
   ASSESSMENT_STEPS,
-  firstUnansweredStep,
+  CUSTOM_ANSWER_MAX,
+  customIndexOf,
+  maxReachableStep,
+  nextStep,
   type AssessmentField,
 } from "@/modules/assessment/definition";
+import { answersFor, listQuestions } from "@/modules/assessment/questions";
 import { bmi } from "@/modules/assessment/computed";
 import { WizardStep } from "./wizard-step";
 import { Review, type ReviewEntry } from "./review";
@@ -62,13 +66,24 @@ export default async function WizardPage({
     }));
 
   const answers = answersOf(assessment);
-  const maxReachable = firstUnansweredStep(answers);
+
+  // The consulta's own questions sit behind the fixed ten. They are optional,
+  // so they never gate the end of the wizard, but the landing step has to
+  // reach them: firstUnansweredStep alone would drop a patient straight on
+  // the review the moment the fixed part was done.
+  const [questions, customAnswers] = await Promise.all([
+    listQuestions(patient.organizationId),
+    answersFor(patient.organizationId, assessment.id),
+  ]);
+  const customAnswered = questions.map((q) => customAnswers.has(q.id));
+
+  const maxReachable = maxReachableStep(answers, questions.length);
   const requested = Number.parseInt(paso ?? "", 10);
   const stepIndex = Number.isFinite(requested)
     ? Math.max(0, Math.min(requested, maxReachable))
-    : maxReachable;
+    : nextStep(answers, customAnswered);
 
-  const totalSteps = ASSESSMENT_STEPS.length;
+  const totalSteps = ASSESSMENT_STEPS.length + questions.length;
 
   if (stepIndex >= totalSteps) {
     const t = await getTranslations("wizard");
@@ -88,11 +103,36 @@ export default async function WizardPage({
       return { field: step.field, display };
     });
 
+    for (const question of questions) {
+      entries.push({
+        field: question.id,
+        label: question.prompt,
+        display: customAnswers.get(question.id) ?? null,
+      });
+    }
+
     return (
       <Review
         entries={entries}
         bmiPreview={bmi(Number(answers.weightKg), Number(answers.heightCm))}
         totalSteps={totalSteps}
+      />
+    );
+  }
+
+  const customIndex = customIndexOf(stepIndex, questions.length);
+  if (customIndex !== null) {
+    const question = questions[customIndex];
+    return (
+      <WizardStep
+        field={question.id}
+        kind="text"
+        required={false}
+        stepIndex={stepIndex}
+        totalSteps={totalSteps}
+        initialValue={customAnswers.get(question.id) ?? null}
+        customPrompt={question.prompt}
+        customMaxLength={CUSTOM_ANSWER_MAX}
       />
     );
   }

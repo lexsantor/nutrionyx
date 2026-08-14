@@ -8,6 +8,8 @@ import { completeAction, type WizardFormState } from "./actions";
 
 export type ReviewEntry = {
   field: string;
+  /** A consulta's own question carries its wording; fixed steps look theirs up. */
+  label?: string;
   display: string | null;
 };
 
@@ -43,11 +45,11 @@ export function Review({
           <Link
             key={entry.field}
             href={`/mi-espacio/evaluacion?paso=${index}`}
-            aria-label={`${t("back")}: ${t(`fields.${entry.field}.title`)}`}
+            aria-label={`${t("back")}: ${entry.label ?? t(`fields.${entry.field}.title`)}`}
             className="group flex flex-col gap-1 rounded-xl border border-hairline bg-surface-1 p-4 shadow-el-sm transition-[transform,box-shadow] duration-500 ease-house hover:-translate-y-0.5 hover:border-hairline-strong hover:shadow-el-md active:scale-[0.99] active:duration-150"
           >
             <span className="flex items-center justify-between gap-2 text-xs font-medium text-ink-subtle">
-              {t(`fields.${entry.field}.title`)}
+              {entry.label ?? t(`fields.${entry.field}.title`)}
               <svg
                 width="13"
                 height="13"

@@ -6,6 +6,10 @@ import { auth } from "@/lib/auth/server";
 import { resolveUserRole } from "@/lib/auth/role";
 import { requireSpecialistOrg } from "@/lib/auth/specialist";
 import {
+  addQuestion,
+  deactivateQuestion,
+} from "@/modules/assessment/questions";
+import {
   isSlugTaken,
   updateOrgProfile,
   updateSpecialtyType,
@@ -165,5 +169,37 @@ export async function acceptConsentAction(): Promise<void> {
     termsVersion: CURRENT_DPA_VERSION,
     acceptedByAuthUserId: session.user.id,
   });
+  revalidatePath("/panel/ajustes");
+}
+
+export type QuestionsFormState = { errorKey: string } | { ok: true } | null;
+
+/**
+ * Add one of the consulta's own assessment questions. The wording is
+ * write-once by design, so there is no edit counterpart.
+ */
+export async function addQuestionAction(
+  _prev: QuestionsFormState,
+  formData: FormData,
+): Promise<QuestionsFormState> {
+  const { userId, org } = await requireSpecialistOrg();
+  const result = await addQuestion({
+    organizationId: org.id,
+    prompt: String(formData.get("prompt") ?? ""),
+    authUserId: userId,
+  });
+  if (!result.ok) {
+    return { errorKey: result.errorKey };
+  }
+  revalidatePath("/panel/ajustes");
+  return { ok: true };
+}
+
+/** Retire one. Deactivates, so answers already given stay in their records. */
+export async function removeQuestionAction(formData: FormData): Promise<void> {
+  const { org } = await requireSpecialistOrg();
+  const questionId = String(formData.get("questionId") ?? "");
+  if (!questionId) return;
+  await deactivateQuestion({ organizationId: org.id, questionId });
   revalidatePath("/panel/ajustes");
 }

@@ -1,7 +1,11 @@
 import { describe, expect, it } from "vitest";
 import {
   ASSESSMENT_STEPS,
+  customIndexOf,
   firstUnansweredStep,
+  maxReachableStep,
+  nextStep,
+  type AssessmentField,
   missingRequiredFields,
   validateAnswer,
 } from "./definition";
@@ -118,5 +122,40 @@ describe("firstUnansweredStep", () => {
       currentMedication: "",
     };
     expect(firstUnansweredStep(all)).toBe(ASSESSMENT_STEPS.length);
+  });
+});
+
+describe("custom question step arithmetic", () => {
+  const FIXED = ASSESSMENT_STEPS.length;
+  const complete: Partial<Record<AssessmentField, unknown>> = Object.fromEntries(
+    ASSESSMENT_STEPS.map((s) => [s.field, s.field === "goals" ? ["lose-weight"] : "x"]),
+  );
+
+  it("does not let a custom question be reached over an open fixed step", () => {
+    expect(maxReachableStep({}, 3)).toBe(0);
+    expect(nextStep({}, [false, false, false])).toBe(0);
+  });
+
+  it("opens every custom question and the review once the fixed steps are done", () => {
+    expect(maxReachableStep(complete, 3)).toBe(FIXED + 3);
+    expect(maxReachableStep(complete, 0)).toBe(FIXED);
+  });
+
+  // The trap: firstUnansweredStep returns FIXED when the fixed part is done,
+  // which used to mean "review". Landing there now would skip the consulta's
+  // own questions entirely on the way in.
+  it("lands on the first unanswered custom question, not the review", () => {
+    expect(nextStep(complete, [false, false])).toBe(FIXED);
+    expect(nextStep(complete, [true, false])).toBe(FIXED + 1);
+    expect(nextStep(complete, [true, true])).toBe(FIXED + 2);
+    expect(nextStep(complete, [])).toBe(FIXED);
+  });
+
+  it("maps a step index to a custom question, and only inside the range", () => {
+    expect(customIndexOf(FIXED - 1, 2)).toBeNull();
+    expect(customIndexOf(FIXED, 2)).toBe(0);
+    expect(customIndexOf(FIXED + 1, 2)).toBe(1);
+    expect(customIndexOf(FIXED + 2, 2)).toBeNull();
+    expect(customIndexOf(FIXED, 0)).toBeNull();
   });
 });
