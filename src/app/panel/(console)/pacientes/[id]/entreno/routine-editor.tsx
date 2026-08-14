@@ -344,11 +344,16 @@ export function RoutineEditor({
         ))}
       </div>
 
-      {/* A real bar, not a floating pill: it spans the content column and
-          carries its own surface, so scrolling under it reads as a dock
-          rather than as a button that escaped its card. The console's
-          content wrapper is px-6, which -mx-6 cancels. */}
-      <div className="sticky bottom-0 z-10 -mx-6 flex flex-wrap items-center gap-3 border-t border-hairline bg-surface-1 px-6 py-4">
+      {/* A real bar, not a floating pill: it carries its own surface, so
+          scrolling under it reads as a dock rather than as a button that
+          escaped its card.
+
+          It has to end exactly where the cards end. The first version added
+          -mx-6 to cancel the wrapper's padding, which made it 24px wider than
+          every card on the page and 28px short of the viewport - neither
+          aligned nor full-bleed, and it read as broken. Rounded on top and
+          bordered like a card, because the rest of the column is. */}
+      <div className="sticky bottom-0 z-10 flex flex-wrap items-center gap-3 rounded-t-xl border border-b-0 border-hairline bg-surface-1 px-6 py-4">
         <Button type="submit" name="intent" value="save" disabled={isPending}>
           {isPending ? t("editor.saving") : t("editor.save")}
         </Button>
