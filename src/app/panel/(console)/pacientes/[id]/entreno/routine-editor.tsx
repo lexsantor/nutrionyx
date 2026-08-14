@@ -7,6 +7,7 @@ import { useUnsavedGuard } from "@/lib/use-unsaved-guard";
 import { Input } from "@/components/ui/input";
 import {
   EXERCISES_PER_DAY_MAX,
+  LOAD_MAX,
   NOTES_MAX,
   REPS_MAX,
   SETS_MAX,
@@ -205,6 +206,7 @@ export function RoutineEditor({
                 <div className="flex gap-1.5 px-0.5 text-[11px] font-medium text-ink-subtle">
                   <span className="w-14 shrink-0">{t("editor.setsLabel")}</span>
                   <span className="w-20 shrink-0">{t("editor.repsLabel")}</span>
+                  <span className="w-20 shrink-0 sm:w-28">{t("editor.loadLabel")}</span>
                   <span className="hidden sm:inline">{t("editor.exerciseLabel")}</span>
                 </div>
                 {exercises.map((exercise, rowIndex) => {
@@ -226,6 +228,29 @@ export function RoutineEditor({
                         defaultValue={v(`${base}-reps`, exercise.reps)}
                         aria-label={t("editor.repsLabel")}
                         className={`w-20 shrink-0 tabular-nums ${cell}`}
+                      />
+                      {/* Without a load, "sentadilla 4 × 8" is not a
+                          prescription. Free text like its neighbours: "70 kg",
+                          "RPE 8", "peso corporal". */}
+                      <input
+                        name={`${base}-load`}
+                        type="text"
+                        maxLength={LOAD_MAX}
+                        defaultValue={v(`${base}-load`, exercise.load ?? "")}
+                        aria-label={t("editor.loadLabel")}
+                        placeholder={t("editor.loadPlaceholder")}
+                        // Wider than sets and reps, and wider still from sm
+                        // up: a load is "72,5 kg" but also "peso corporal",
+                        // which scrolled out of sight in a sets-sized box.
+                        //
+                        // Measured: from sm up nothing overflows. On a phone
+                        // the longest values still scroll ~28px inside the
+                        // field, because fitting them inline would need a
+                        // 302px row and there are 292. Accepted rather than
+                        // giving the load a line of its own on every row: a
+                        // routine is written at a desk, and the common values
+                        // ("72,5 kg", "RPE 8") fit at both sizes.
+                        className={`w-20 shrink-0 tabular-nums sm:w-28 ${cell}`}
                       />
                       {/* On a phone the row wraps and the exercise column
                           takes a line of its own, so the remove control

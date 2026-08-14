@@ -3,6 +3,7 @@ import {
   DAYS_PER_WEEK,
   EXERCISES_PER_DAY_MAX,
   EXERCISE_NAME_MAX,
+  LOAD_MAX,
   REPS_MAX,
   SETS_MAX,
   emptyRoutine,
@@ -123,6 +124,15 @@ describe("normalizeRoutine", () => {
         week({ exercises: [{ name: "Remo", sets: "", reps: "x".repeat(REPS_MAX + 1) }] }),
       ),
     ).toBeNull();
+    expect(
+      normalizeRoutine(
+        week({
+          exercises: [
+            { name: "Remo", sets: "", reps: "", load: "x".repeat(LOAD_MAX + 1) },
+          ],
+        }),
+      ),
+    ).toBeNull();
     const tooMany = Array.from({ length: EXERCISES_PER_DAY_MAX + 1 }, () => ({
       name: "Remo",
       sets: "",
@@ -144,7 +154,11 @@ describe("normalizeRoutine", () => {
 
   it("round-trips its own output", () => {
     const once = normalizeRoutine(
-      week({ exercises: [{ name: "Peso muerto", sets: "5", reps: "5" }] }),
+      week({
+        exercises: [
+          { name: "Peso muerto", sets: "5", reps: "5", load: "100 kg" },
+        ],
+      }),
     );
     expect(normalizeRoutine(once)).toEqual(once);
   });
@@ -167,6 +181,21 @@ describe("formatPrescription", () => {
     expect(formatPrescription({ name: "x", sets: "", reps: "12" })).toBe("12");
     expect(formatPrescription({ name: "x", sets: "", reps: "" })).toBe("");
   });
+
+  // The one render point for the patient's routine, the printed sheet and the
+  // library: if the load does not come out of here it reaches none of them.
+  it("appends the load, and holds when only one half exists", () => {
+    expect(
+      formatPrescription({ name: "x", sets: "4", reps: "8", load: "70 kg" }),
+    ).toBe("4 × 8 · 70 kg");
+    expect(
+      formatPrescription({ name: "x", sets: "", reps: "", load: "peso corporal" }),
+    ).toBe("peso corporal");
+    expect(
+      formatPrescription({ name: "x", sets: "3", reps: "", load: "RPE 8" }),
+    ).toBe("3 · RPE 8");
+    expect(formatPrescription({ name: "x", sets: "4", reps: "8" })).toBe("4 × 8");
+  });
 });
 
 describe("routineFromEntries", () => {
@@ -186,10 +215,13 @@ describe("routineFromEntries", () => {
         field(0, 0, "name", "Sentadilla"),
         field(0, 0, "sets", "4"),
         field(0, 0, "reps", "12"),
+        // The editor posts a load column too; the field pattern has to know it
+        // or the value is dropped silently on save.
+        field(0, 0, "load", "70 kg"),
       ]),
     );
     expect(content?.days[0].exercises).toEqual([
-      { name: "Sentadilla", sets: "4", reps: "12" },
+      { name: "Sentadilla", sets: "4", reps: "12", load: "70 kg" },
       { name: "Press banca", sets: "3", reps: "10" },
     ]);
   });

@@ -1246,7 +1246,7 @@
     },
     "editor": {
       "heading": "Rutina de entrenamiento",
-      "hint": "Elige los ejercicios de cada día e indica series y repeticiones. Un día vacío es día de descanso.",
+      "hint": "Elige los ejercicios de cada día e indica series, repeticiones y carga. Un día vacío es día de descanso.",
       "titleLabel": "Título de la rutina",
       "titlePlaceholder": "Fuerza 3 días · agosto",
       "notesLabel": "Indicaciones generales",
@@ -1261,6 +1261,8 @@
       "unsaved": "Tienes cambios sin guardar. ¿Salir igualmente?",
       "setsLabel": "Series",
       "repsLabel": "Repeticiones",
+      "loadLabel": "Carga",
+      "loadPlaceholder": "70 kg",
       "exerciseLabel": "Ejercicio",
       "chooseExercise": "Elegir ejercicio",
       "customExercise": "{name} (fuera de catálogo)",

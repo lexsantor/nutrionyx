@@ -16,6 +16,7 @@ export const DAYS_PER_WEEK = 7;
 export const EXERCISE_NAME_MAX = 120;
 export const SETS_MAX = 12;
 export const REPS_MAX = 24;
+export const LOAD_MAX = 24;
 export const NOTES_MAX = 300;
 export const EXERCISES_PER_DAY_MAX = 20;
 
@@ -34,6 +35,15 @@ export type Exercise = {
   name: string;
   sets: string;
   reps: string;
+  /**
+   * What to lift: "70 kg", "RPE 8", "70%", "peso corporal". Free text for the
+   * same reason as sets and reps, and optional because half of a routine is
+   * bodyweight or machine work nobody numbers.
+   *
+   * Without it "sentadilla 4 × 8" is not a prescription, which is why the
+   * sports sub-role never quite showed up in the product.
+   */
+  load?: string;
   notes?: string;
 };
 
@@ -64,6 +74,7 @@ function normalizeExercise(input: unknown): ExerciseResult {
   const str = (value: unknown) => (typeof value === "string" ? value.trim() : "");
   const sets = str(raw.sets);
   const reps = str(raw.reps);
+  const load = str(raw.load);
   const notes = str(raw.notes);
 
   // A key that no longer resolves is dead weight: drop it and let the
@@ -76,6 +87,7 @@ function normalizeExercise(input: unknown): ExerciseResult {
     name.length > EXERCISE_NAME_MAX ||
     sets.length > SETS_MAX ||
     reps.length > REPS_MAX ||
+    load.length > LOAD_MAX ||
     notes.length > NOTES_MAX
   ) {
     return null;
@@ -87,6 +99,7 @@ function normalizeExercise(input: unknown): ExerciseResult {
 
   const exercise: Exercise = { name, sets, reps };
   if (catalogue) exercise.key = catalogue.key;
+  if (load) exercise.load = load;
   if (notes) exercise.notes = notes;
   return exercise;
 }
@@ -140,16 +153,23 @@ export function isEmptyRoutine(content: RoutineContent): boolean {
   return content.days.every((day) => day.exercises.length === 0);
 }
 
-/** "4 × 12" for a prescription, or whichever half was filled in. */
+/**
+ * "4 × 12 · 70 kg", or whichever parts were filled in. The one place a
+ * prescription is rendered: the patient's routine, the printed sheet and the
+ * library all read it, so the load reaches every surface from here.
+ */
 export function formatPrescription(exercise: Exercise): string {
-  if (exercise.sets && exercise.reps) return `${exercise.sets} × ${exercise.reps}`;
-  return exercise.sets || exercise.reps || "";
+  const volume =
+    exercise.sets && exercise.reps
+      ? `${exercise.sets} × ${exercise.reps}`
+      : exercise.sets || exercise.reps || "";
+  return [volume, exercise.load].filter(Boolean).join(" · ");
 }
 
 /**
  * Rebuild a week from posted editor fields, mirroring diet's helper:
  *
- *   ex-{day}-{row}-{key|name|sets|reps|notes}
+ *   ex-{day}-{row}-{key|name|sets|reps|load|notes}
  *
  * Returns raw content: pass it through normalizeRoutine, which enforces
  * every cap, resolves the catalogue key and drops blank rows.
@@ -157,7 +177,7 @@ export function formatPrescription(exercise: Exercise): string {
 export function routineFromEntries(
   entries: Iterable<[string, string]>,
 ): unknown {
-  const FIELD = /^ex-(\d+)-(\d+)-(key|name|sets|reps|notes)$/;
+  const FIELD = /^ex-(\d+)-(\d+)-(key|name|sets|reps|load|notes)$/;
   const cells = new Map<string, Record<string, string>>();
 
   for (const [key, value] of entries) {
