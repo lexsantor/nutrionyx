@@ -1,5 +1,24 @@
 # Next steps
 
+## Start here, 2026-08-14
+
+The single source of truth for what is open is now
+[docs/build/roadmap-2026-08-14.md](docs/build/roadmap-2026-08-14.md), which
+merges this file's backlog with the ten-platform benchmark. Read that first;
+what follows is context, not a work list.
+
+Six things shipped on 2026-08-14, all with gates green, a browser walk and CI:
+the three macros in the day total (`bd05379`), an energy-expenditure suggestion
+for the kcal target (`fb889f3`), a PWA manifest and icons (`73f5c17`), the note
+a patient leaves when a meal diverged (`14fdc05`), the load in a training
+prescription (`35cf5a4`), and before all of them the sign-up acknowledgement
+and the session guard on `/panel/nueva-organizacion` (`a14d6be`).
+
+Two rows were re-sized after opening the code rather than the plan: skinfolds
+and structured lab results are L, not M, and both wait on one decision - there
+is no surface for a specialist to record a measurement, and `Measurement` has
+no author column. Adding one changes what every row already stored means.
+
 Resume point for a new session, written 2026-08-13 after a long working
 day. [tasks/todo.md](tasks/todo.md) still holds the full slice history and
 [tasks/lessons.md](tasks/lessons.md) the checkable rules; this file is only
