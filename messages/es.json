@@ -10,10 +10,12 @@
       "ajustes": "Ajustes",
       "agenda": "Agenda",
       "biblioteca": "Biblioteca",
-      "mensajes": "Mensajes"
+      "mensajes": "Mensajes",
+      "facturacion": "Facturación"
     },
     "skipToContent": "Saltar al contenido",
-    "loading": "Cargando…"
+    "loading": "Cargando…",
+    "soon": "sin activar"
   },
   "admin": {
     "title": "Administración de Nutrionyx",
@@ -988,7 +990,8 @@
     "diet": "Dieta",
     "training": "Entreno",
     "messages": "Mensajes",
-    "profile": "Mi perfil"
+    "profile": "Mi perfil",
+    "billing": "Facturación"
   },
   "body": {
     "title": "Medidas",
@@ -1489,5 +1492,69 @@
     "exerciseCount": "{count, plural, one {# ejercicio} other {# ejercicios}}",
     "totals": "Total",
     "totalsValue": "{kcal} kcal · {protein} P · {carbs} HC · {fat} G"
+  },
+  "billing": {
+    "specialist": {
+      "title": "Facturación",
+      "subtitle": "Lo que emitirás desde aquí cuando la sección esté activa.",
+      "locked": {
+        "title": "Sección construida, todavía sin activar",
+        "verifactu": "No se emite ninguna factura desde aquí. La AEAT exige factura inalterable (Verifactu) y ese análisis está pendiente, así que activarlo antes sería dimensionarlo mal.",
+        "meanwhile": "Mientras tanto, cobra como lo haces ahora, fuera de la plataforma."
+      },
+      "fiscal": {
+        "title": "Datos fiscales de la consulta",
+        "hint": "Los que llevaría cada factura. Se editan en Ajustes.",
+        "fields": {
+          "legalName": "Razón social",
+          "taxId": "NIF / CIF",
+          "addressLine": "Dirección",
+          "locality": "Localidad",
+          "postalCode": "Código postal"
+        },
+        "unset": "Sin rellenar",
+        "placeholder": "El NIF que hay guardado es un marcador de posición, no uno real. Sustitúyelo en Ajustes antes de emitir nada.",
+        "missing": "Faltan datos fiscales. Una factura no puede emitirse sin ellos.",
+        "edit": "Editar en Ajustes"
+      },
+      "rates": {
+        "title": "Tarifas",
+        "hint": "Los conceptos que podrás facturar. Nada de lo que escribas aquí se guarda todavía.",
+        "concept": "Concepto",
+        "amount": "Importe (€)",
+        "vat": "IVA (%)",
+        "add": "Añadir tarifa"
+      },
+      "invoices": {
+        "title": "Facturas emitidas",
+        "hint": "Aparecerán aquí en cuanto la emisión esté activa.",
+        "empty": "Ninguna. No se ha emitido ni se puede emitir todavía.",
+        "issue": "Emitir factura"
+      }
+    },
+    "patient": {
+      "title": "Facturación",
+      "subtitle": "Tus facturas con la consulta, cuando la sección esté activa.",
+      "locked": {
+        "title": "Sección construida, todavía sin activar",
+        "body": "Aquí no se te cobra nada y no hay ningún pago en marcha. El pago lo acuerdas con tu consulta como hasta ahora; esta sección solo enseña dónde estarán tus facturas cuando se active."
+      },
+      "invoices": {
+        "title": "Mis facturas",
+        "hint": "Las que te emita tu consulta.",
+        "empty": "No tienes ninguna factura aquí."
+      },
+      "method": {
+        "title": "Método de pago",
+        "hint": "Todavía no se puede guardar ninguno.",
+        "holder": "Titular",
+        "add": "Añadir método"
+      },
+      "questions": {
+        "title": "¿Dudas con un cobro?",
+        "hint": "Habla con tu consulta: es quien emite y cobra.",
+        "action": "Escribir a mi consulta"
+      }
+    }
   }
 }

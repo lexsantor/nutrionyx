@@ -18,6 +18,7 @@ import { User } from "reicon-react/icons/User";
 import { Buildings } from "reicon-react/icons/Buildings";
 import { ClipboardList } from "reicon-react/icons/ClipboardList";
 import { Settings } from "reicon-react/icons/Settings";
+import { BillList } from "reicon-react/icons/BillList";
 import { Logout } from "reicon-react/icons/Logout";
 import { ThemeToggle } from "./theme-toggle";
 import { signOut } from "@/lib/auth/sign-out";
@@ -36,7 +37,17 @@ import { signOut } from "@/lib/auth/sign-out";
 // components, which cannot cross the server boundary as props.
 
 type IconType = IconComponent;
-type NavItemDef = { key: string; href: string; icon: IconType };
+type NavItemDef = {
+  key: string;
+  href: string;
+  icon: IconType;
+  /**
+   * The section exists and is reachable, but nothing in it is switched on.
+   * The entry stays dimmed and says so out loud, because a nav item that only
+   * looks different tells a screen reader nothing.
+   */
+  soon?: boolean;
+};
 
 const CONSOLE_NAV: NavItemDef[] = [
   { key: "inicio", href: "/panel", icon: Home },
@@ -44,6 +55,7 @@ const CONSOLE_NAV: NavItemDef[] = [
   { key: "mensajes", href: "/panel/mensajes", icon: ChatRound },
   { key: "agenda", href: "/panel/agenda", icon: Calendar },
   { key: "biblioteca", href: "/panel/biblioteca", icon: Book },
+  { key: "facturacion", href: "/panel/facturacion", icon: BillList, soon: true },
 ];
 const CONSOLE_ACCOUNT: NavItemDef = {
   key: "ajustes",
@@ -58,6 +70,7 @@ const PATIENT_NAV: NavItemDef[] = [
   { key: "medication", href: "/mi-espacio/medicacion", icon: Pills },
   { key: "progress", href: "/mi-espacio/progreso", icon: ChartLine },
   { key: "messages", href: "/mi-espacio/mensajes", icon: ChatRound },
+  { key: "billing", href: "/mi-espacio/facturacion", icon: BillList, soon: true },
 ];
 const PATIENT_ACCOUNT: NavItemDef = {
   key: "profile",
@@ -92,20 +105,25 @@ function NavItem({
   label,
   icon: Icon,
   active,
+  soon,
+  soonLabel,
 }: {
   href: string;
   label: string;
   icon: IconType;
   active: boolean;
+  soon?: boolean;
+  soonLabel: string;
 }) {
   return (
     <Link
       href={href}
       aria-current={active ? "page" : undefined}
-      className={active ? navActive : navIdle}
+      className={`${active ? navActive : navIdle} ${soon && !active ? "opacity-55" : ""}`}
     >
       <Icon size={ICON_SIZE} aria-hidden="true" />
       {label}
+      {soon ? <span className="sr-only"> ({soonLabel})</span> : null}
     </Link>
   );
 }
@@ -138,6 +156,7 @@ function Shell({
         label={label(account.key)}
         icon={account.icon}
         active={isActive(account.href)}
+        soonLabel={t("soon")}
       />
       <div className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-ink-subtle">
         <span>{t("theme")}</span>
@@ -175,6 +194,8 @@ function Shell({
                   label={label(item.key)}
                   icon={item.icon}
                   active={isActive(item.href)}
+                  soon={item.soon}
+                  soonLabel={t("soon")}
                 />
               </li>
             ))}
@@ -212,13 +233,16 @@ function Shell({
                 key={item.key}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={
+                className={`${
                   active
                     ? "whitespace-nowrap rounded-full bg-primary px-3 py-1.5 text-sm font-semibold text-on-primary no-underline shadow-el-sm transition-[background-color,color,box-shadow] duration-200 ease-house"
                     : "whitespace-nowrap rounded-full px-3 py-1.5 text-sm text-ink-subtle no-underline transition-[background-color,color,box-shadow] duration-200 ease-house"
-                }
+                } ${item.soon && !active ? "opacity-55" : ""}`}
               >
                 {label(item.key)}
+                {item.soon ? (
+                  <span className="sr-only"> ({t("soon")})</span>
+                ) : null}
               </Link>
             );
           })}
