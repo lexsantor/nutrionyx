@@ -47,17 +47,13 @@ describe("exercise catalogue", () => {
     }
   });
 
-  /**
-   * One known hole, named here so a second one cannot open quietly.
-   * `remo-maquina` sits in CARDIO, where the exercise is the ergometer, and
-   * the drawing on file is a seated cable row. Shipping it would put the
-   * wrong movement on a prescription.
-   */
-  it("illustrates the whole catalogue but for the one known exception", () => {
+  // No holes left. Kept as an equality rather than a count so a future gap
+  // fails with the key that opened it, not just with a number.
+  it("illustrates the whole catalogue", () => {
     const missing = EXERCISES.filter((e) => !ILLUSTRATED.has(e.key)).map(
       (e) => e.key,
     );
-    expect(missing).toEqual(["remo-maquina"]);
+    expect(missing).toEqual([]);
   });
 
   it("groups every exercise exactly once, in catalogue order", () => {

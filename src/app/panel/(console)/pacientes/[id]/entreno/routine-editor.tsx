@@ -16,7 +16,6 @@ import {
   type RoutineContent,
 } from "@/modules/training/routine";
 import {
-  exerciseImage,
   exercisesByGroup,
   findExercise,
 } from "@/modules/training/exercises";
@@ -290,14 +289,12 @@ export function RoutineEditor({
                             <optgroup key={group} label={t(`groups.${group}`)}>
                               {options.map((option) => (
                                 <option key={option.key} value={option.key}>
-                                  {/* An <option> renders text only, so the
-                                      "has an illustration" cue has to be a
-                                      word, not an icon. */}
-                                  {exerciseImage(option.key)
-                                    ? t("editor.withImage", {
-                                        name: option.name,
-                                      })
-                                    : option.name}
+                                  {/* Plain name. This used to append "(con
+                                      imagen)" back when four of thirty-seven
+                                      were drawn; now that every one is, the
+                                      note marked nothing and only made the
+                                      list harder to read. */}
+                                  {option.name}
                                 </option>
                               ))}
                             </optgroup>
